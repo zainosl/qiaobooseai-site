@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Native 一人公司 · 钟蔚</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;700;900&family=DM+Mono:wght@400;500&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:      #0B0D0F;
+    --bg2:     #13161A;
+    --bg3:     #1C2026;
+    --text:    #F7F8FA;
+    --muted:   #A9B0BA;
+    --dim:     #4A525C;
+    --accent:  #58E1C1;
+    --accent2: #3BB89A;
+    --border:  rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.12);
+  }
+
+  html, body {
+    width: 100%; height: 100%;
+    overflow: hidden;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans SC', sans-serif;
+  }
+
+  /* ── TRACK ── */
+  #track {
+    display: flex;
+    flex-direction: row;
+    width: max-content;
+    height: 100vh;
+    transition: transform 0.75s cubic-bezier(0.77,0,0.175,1);
+    will-change: transform;
+  }
+
+  .screen {
+    width: 100vw;
+    height: 100vh;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 72px;
+    position: relative;
+    overflow: hidden;
+  }
+  .screen::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(88,225,193,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(88,225,193,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+  }
+
+  /* ── NAV ── */
+  #nav {
+    position: fixed; right: 28px; top: 50%;
+    transform: translateY(-50%);
+    display: flex; flex-direction: column; gap: 10px;
+    z-index: 100;
+  }
+  .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%; background: var(--dim);
+    cursor: pointer; transition: all 0.3s;
+  }
+  .dot.active { background: var(--accent); transform: scale(1.5); }
+
+  /* ── PROGRESS ── */
+  #progress {
+    position: fixed; bottom: 0; left: 0; height: 2px;
+    background: var(--accent);
+    transition: width 0.75s cubic-bezier(0.77,0,0.175,1);
+    z-index: 100;
+  }
+
+  /* ── LABELS ── */
+  .screen-label {
+    position: absolute; top: 32px; left: 72px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; letter-spacing: 0.15em;
+    color: var(--dim); text-transform: uppercase;
+  }
+  .arrow-hint {
+    position: absolute; bottom: 36px; right: 72px;
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; color: var(--dim);
+    letter-spacing: 0.1em; cursor: pointer; transition: color 0.3s;
+  }
+  .arrow-hint:hover { color: var(--accent); }
+
+  /* ── SHARED ── */
+  .section-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: 0.25em;
+    color: var(--accent); text-transform: uppercase; margin-bottom: 14px;
+  }
+  .section-title {
+    font-size: clamp(26px, 3.2vw, 44px);
+    font-weight: 700; line-height: 1.15;
+    letter-spacing: -0.02em; margin-bottom: 36px;
+  }
+  .trust-sub {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: 0.2em;
+    color: var(--dim); text-transform: uppercase; margin-bottom: 20px;
+  }
+
+  /* ════ S1: 品牌宣言 ════ */
+  .s1-inner { max-width: 900px; width: 100%; }
+  .s1-tag {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; letter-spacing: 0.2em;
+    color: var(--accent);
+    border: 1px solid rgba(88,225,193,0.3);
+    padding: 5px 14px; border-radius: 2px; margin-bottom: 40px;
+  }
+  .s1-title {
+    font-size: clamp(40px, 5.5vw, 76px);
+    font-weight: 900; line-height: 1.06;
+    letter-spacing: -0.03em; color: var(--text); margin-bottom: 32px;
+  }
+  .s1-title em { color: var(--accent); font-style: normal; }
+  .s1-sub {
+    font-size: clamp(15px, 1.8vw, 21px);
+    font-weight: 300; color: var(--muted);
+    line-height: 1.7; max-width: 600px; margin-bottom: 52px;
+  }
+  .tags { display: flex; gap: 12px; flex-wrap: wrap; }
+  .tag {
+    font-size: 13px; color: var(--muted);
+    border: 1px solid var(--border2);
+    padding: 6px 18px; border-radius: 2px;
+    letter-spacing: 0.05em; transition: all 0.3s;
+  }
+  .tag:hover { border-color: var(--accent); color: var(--accent); }
+  .s1-deco {
+    position: absolute; right: 0; top: 0;
+    width: 45%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    pointer-events: none;
+  }
+  .s1-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 280px; font-weight: 500;
+    color: rgba(88,225,193,0.04); line-height: 1; user-select: none;
+  }
+
+  /* ════ S2: 时代机会 ════ */
+  .s2-inner { max-width: 1000px; width: 100%; }
+  .s2-title {
+    font-size: clamp(26px, 3.2vw, 46px);
+    font-weight: 700; line-height: 1.2;
+    letter-spacing: -0.02em; margin-bottom: 44px; max-width: 700px;
+  }
+  .s2-cols {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1px; background: var(--border);
+    border: 1px solid var(--border); margin-bottom: 40px;
+  }
+  .s2-col { padding: 28px 32px; background: var(--bg); }
+  .s2-col-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: 0.2em;
+    color: var(--dim); margin-bottom: 14px; text-transform: uppercase;
+  }
+  .s2-col-text { font-size: 14px; color: var(--muted); line-height: 1.8; }
+  .s2-col.right .s2-col-text { color: var(--text); }
+  .s2-emphasis {
+    font-size: clamp(13px, 1.5vw, 17px); color: var(--accent);
+    font-weight: 700; padding: 12px 16px;
+    border-left: 3px solid var(--accent);
+    background: rgba(88,225,193,0.05); margin-top: 12px;
+  }
+  .s2-big { display: flex; align-items: baseline; gap: 20px; }
+  .s2-num {
+    font-family: 'DM Mono', monospace;
+    font-size: clamp(72px, 11vw, 148px);
+    font-weight: 500; color: var(--accent);
+    line-height: 1; letter-spacing: -0.04em;
+  }
+  .s2-num-label {
+    font-size: clamp(15px, 1.8vw, 22px);
+    color: var(--muted); font-weight: 300;
+    max-width: 260px; line-height: 1.5;
+  }
+  .s2-num-label strong {
+    color: var(--text); font-weight: 700;
+    display: block; font-size: 1.1em;
+  }
+
+  /* ════ S3: 项目定义 ════ */
+  .s3-inner { max-width: 1100px; width: 100%; }
+  .s3-desc {
+    font-size: 15px; color: var(--muted);
+    line-height: 1.9; max-width: 560px; margin-bottom: 36px;
+  }
+  .s3-desc em { color: var(--accent); font-style: normal; }
+  .s3-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .s3-block {
+    border: 1px solid var(--border);
+    padding: 24px; background: var(--bg2); border-radius: 2px;
+  }
+  .s3-block-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: 0.2em;
+    color: var(--dim); margin-bottom: 14px; text-transform: uppercase;
+  }
+  .s3-people { list-style: none; padding: 0; }
+  .s3-people li {
+    font-size: 13px; color: var(--muted);
+    line-height: 1.9; padding-left: 14px; position: relative; margin-bottom: 2px;
+  }
+  .s3-people li::before {
+    content: '·'; position: absolute; left: 0; color: var(--accent);
+  }
+  .s3-pain-list { display: flex; flex-direction: column; gap: 8px; }
+  .s3-pain {
+    font-size: 12px; color: var(--muted);
+    padding: 9px 12px; background: var(--bg3);
+    border-left: 2px solid var(--dim);
+    line-height: 1.5; transition: border-color 0.3s, color 0.3s;
+  }
+  .s3-pain:hover { border-color: var(--accent); color: var(--text); }
+
+  /* ════ S4: 项目边界 ════ */
+  .s4-inner { max-width: 1000px; width: 100%; }
+  .compare-list { display: flex; flex-direction: column; gap: 12px; margin-top: 36px; }
+  .compare-row {
+    display: grid; grid-template-columns: 1fr 24px 1fr;
+    align-items: stretch; border: 1px solid var(--border);
+  }
+  .compare-left, .compare-right {
+    padding: 16px 22px; font-size: 13px; line-height: 1.7;
+  }
+  .compare-left { background: var(--bg2); color: var(--dim); }
+  .compare-left span {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: 0.15em;
+    display: block; color: #3A3F45; margin-bottom: 4px;
+  }
+  .compare-right { background: var(--bg3); color: var(--text); border-left: 2px solid var(--accent); }
+  .compare-right span {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: 0.15em;
+    display: block; color: var(--accent); margin-bottom: 4px;
+  }
+  .compare-mid {
+    display: flex; align-items: center; justify-content: center;
+    background: var(--border); font-size: 10px; color: var(--dim);
+    writing-mode: vertical-rl; letter-spacing: 0.1em;
+  }
+
+  /* ════ S5: 项目目标 ════ */
+  .s5-inner { max-width: 1000px; width: 100%; }
+  .goal-cards { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; margin-top: 40px; }
+  .goal-card {
+    border: 1px solid var(--border);
+    padding: 32px 26px; background: var(--bg2);
+    transition: border-color 0.3s, transform 0.3s; cursor: default;
+  }
+  .goal-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+  .goal-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 56px; font-weight: 500;
+    color: rgba(88,225,193,0.12); line-height: 1;
+    margin-bottom: 18px; letter-spacing: -0.04em;
+  }
+  .goal-title { font-size: 17px; font-weight: 700; color: var(--text); margin-bottom: 12px; line-height: 1.3; }
+  .goal-title em { color: var(--accent); font-style: normal; }
+  .goal-desc { font-size: 13px; color: var(--muted); line-height: 1.8; }
+
+  /* ════ S6: 信任建立 ════ */
+  .s6-inner { max-width: 900px; width: 100%; }
+  .trust-split { display: grid; grid-template-columns: 1fr 1px 1fr; margin-top: 40px; }
+  .trust-divider { background: var(--border); }
+  .trust-left, .trust-right { padding: 0 44px; }
+  .trust-left { padding-left: 0; }
+  .trust-stats { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+  .trust-stat {
+    font-size: 14px; color: var(--muted);
+    display: flex; align-items: center; gap: 12px; line-height: 1.5;
+  }
+  .trust-stat::before {
+    content: ''; width: 4px; height: 4px;
+    background: var(--accent); border-radius: 50%; flex-shrink: 0;
+  }
+  .trust-core {
+    font-size: clamp(18px, 2.2vw, 28px);
+    font-weight: 900; color: var(--text);
+    letter-spacing: -0.02em;
+    padding: 20px 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    margin: 20px 0;
+  }
+  .trust-core .x { color: var(--accent); }
+  .trust-why { font-size: 13px; color: var(--muted); line-height: 1.9; }
+  .trust-why strong { color: var(--text); }
+
+  /* ════ S7: 邀请加入 ════ */
+  .s7-inner { max-width: 1100px; width: 100%; }
+  .invite-cols { display: grid; grid-template-columns: 1fr 1px 1fr; margin-top: 40px; }
+  .invite-col { padding: 0 36px; }
+  .invite-col:first-child { padding-left: 0; }
+  .invite-divider { background: var(--border); }
+  .invite-role {
+    font-size: 17px; font-weight: 700; color: var(--text);
+    margin-bottom: 24px; padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .invite-role em { color: var(--accent); font-style: normal; }
+  .invite-section { margin-bottom: 22px; }
+  .invite-section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: 0.2em;
+    color: var(--dim); text-transform: uppercase; margin-bottom: 12px;
+  }
+  .invite-items { display: flex; flex-direction: column; gap: 7px; }
+  .invite-item {
+    font-size: 12px; color: var(--muted);
+    padding: 8px 12px; background: var(--bg2);
+    border-left: 2px solid var(--border2);
+    line-height: 1.5; transition: all 0.25s;
+  }
+  .invite-item:hover { border-color: var(--accent); color: var(--text); }
+  .invite-item em { color: var(--accent); font-style: normal; font-size: 11px; }
+  .invite-note {
+    font-size: 11px; color: var(--accent); margin-top: 8px;
+    padding: 7px 12px;
+    border: 1px solid rgba(88,225,193,0.2);
+    background: rgba(88,225,193,0.04); line-height: 1.5;
+  }
+
+  /* ════ S8: 项目进展 ════ */
+  .s8-inner { max-width: 1000px; width: 100%; }
+  .progress-split { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; margin-top: 40px; }
+  .progress-intro { font-size: 13px; color: var(--muted); margin-bottom: 14px; line-height: 1.7; }
+  .progress-items { display: flex; flex-direction: column; gap: 9px; }
+  .progress-item {
+    display: flex; align-items: flex-start; gap: 12px;
+    font-size: 13px; color: var(--muted); line-height: 1.6;
+  }
+  .progress-check {
+    width: 15px; height: 15px;
+    border: 1px solid var(--accent); border-radius: 50%;
+    flex-shrink: 0; margin-top: 2px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .progress-check::after {
+    content: ''; width: 5px; height: 5px;
+    background: var(--accent); border-radius: 50%;
+  }
+  .stats-row { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; margin-top: 20px; }
+  .stat-card { background: var(--bg2); border: 1px solid var(--border); padding: 18px; }
+  .stat-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 28px; font-weight: 500; color: var(--accent); line-height: 1; margin-bottom: 5px;
+  }
+  .stat-label { font-size: 11px; color: var(--dim); }
+  .tl-items { display: flex; flex-direction: column; }
+  .tl-item { display: grid; grid-template-columns: 72px 1px 1fr; align-items: stretch; min-height: 66px; }
+  .tl-month {
+    font-family: 'DM Mono', monospace; font-size: 12px; color: var(--accent);
+    padding: 14px 18px 14px 0; display: flex; align-items: flex-start; font-weight: 500;
+  }
+  .tl-line-wrap { display: flex; flex-direction: column; align-items: center; }
+  .tl-dot {
+    width: 7px; height: 7px;
+    border: 1px solid var(--accent); border-radius: 50%;
+    background: var(--bg); margin-top: 16px; flex-shrink: 0;
+  }
+  .tl-line { flex: 1; width: 1px; background: var(--border2); }
+  .tl-content { font-size: 12px; color: var(--muted); padding: 14px 0 14px 18px; line-height: 1.6; }
+
+  /* ════ S9: 筛选 ════ */
+  .s9-inner { max-width: 1000px; width: 100%; }
+  .fit-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; margin-top: 40px; }
+  .fit-section-title {
+    font-size: 14px; font-weight: 700; margin-bottom: 16px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .fit-badge {
+    font-size: 11px; font-family: 'DM Mono', monospace;
+    padding: 3px 10px; border-radius: 2px; letter-spacing: 0.1em;
+  }
+  .fit-badge.yes { background: rgba(88,225,193,0.1); color: var(--accent); }
+  .fit-badge.no  { background: rgba(90,90,90,0.2); color: var(--dim); }
+  .fit-hint { font-size: 12px; color: var(--dim); margin-bottom: 12px; }
+  .fit-items { display: flex; flex-direction: column; gap: 9px; }
+  .fit-item { font-size: 13px; line-height: 1.6; padding: 11px 14px; border-left: 2px solid; }
+  .fit-item.yes { border-color: var(--accent); color: var(--text); background: rgba(88,225,193,0.04); }
+  .fit-item.no  { border-color: var(--dim); color: var(--dim); background: var(--bg2); }
+
+  /* ════ S10: CTA ════ */
+  .s10-inner { max-width: 960px; width: 100%; }
+  .s10-layout { display: grid; grid-template-columns: 1fr 220px; gap: 60px; align-items: start; }
+  .s10-left { text-align: left; }
+  .cta-eyebrow {
+    font-family: 'DM Mono', monospace; font-size: 11px;
+    letter-spacing: 0.2em; color: var(--accent);
+    text-transform: uppercase; margin-bottom: 20px;
+  }
+  .cta-title {
+    font-size: clamp(28px, 4.2vw, 54px);
+    font-weight: 900; line-height: 1.1;
+    letter-spacing: -0.03em; margin-bottom: 22px;
+  }
+  .cta-desc { font-size: 14px; color: var(--muted); line-height: 1.9; max-width: 520px; margin-bottom: 36px; }
+  .cta-buttons { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 36px; }
+  .btn-primary {
+    background: var(--accent); color: #0B0D0F;
+    border: none; padding: 14px 30px;
+    font-size: 14px; font-weight: 700;
+    font-family: 'Noto Sans SC', sans-serif;
+    cursor: pointer; border-radius: 2px; letter-spacing: 0.05em; transition: all 0.25s;
+  }
+  .btn-primary:hover { background: var(--accent2); transform: translateY(-2px); }
+  .btn-secondary {
+    background: transparent; color: var(--text);
+    border: 1px solid var(--border2); padding: 14px 30px;
+    font-size: 14px; font-weight: 400;
+    font-family: 'Noto Sans SC', sans-serif;
+    cursor: pointer; border-radius: 2px; letter-spacing: 0.05em; transition: all 0.25s;
+  }
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+  .cta-hint { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--dim); letter-spacing: 0.1em; margin-bottom: 28px; }
+  .cta-closer { font-size: 17px; font-weight: 700; color: var(--muted); border-top: 1px solid var(--border); padding-top: 24px; line-height: 1.6; }
+  .cta-closer em { color: var(--text); font-style: normal; }
+  .cta-modal {
+    position: fixed; inset: 0;
+    display: none;
+    align-items: center; justify-content: center;
+    padding: 24px;
+    background: rgba(11,13,15,0.78);
+    z-index: 1000;
+  }
+  .cta-modal.open { display: flex; }
+  .cta-modal-card {
+    position: relative;
+    width: min(460px, 100%);
+    padding: 28px;
+    background: linear-gradient(180deg, rgba(19,22,26,0.98), rgba(11,13,15,0.98));
+    border: 1px solid var(--border2);
+    border-radius: 12px;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.38);
+  }
+  .cta-modal-close {
+    position: absolute; top: 14px; right: 14px;
+    width: 34px; height: 34px;
+    border: 1px solid var(--border2);
+    border-radius: 50%;
+    background: transparent; color: var(--muted);
+    cursor: pointer; transition: all 0.3s;
+  }
+  .cta-modal-close:hover { color: var(--accent); border-color: var(--accent); }
+  .cta-modal-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: 0.18em;
+    color: var(--accent); text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .cta-modal-title {
+    font-size: clamp(24px, 3vw, 32px);
+    font-weight: 700; line-height: 1.2;
+    margin-bottom: 14px;
+  }
+  .cta-modal-desc {
+    font-size: 14px; color: var(--muted);
+    line-height: 1.8; margin-bottom: 20px;
+  }
+  .wechat-id-box {
+    border: 1px solid rgba(88,225,193,0.25);
+    background: rgba(88,225,193,0.07);
+    border-radius: 10px;
+    padding: 18px;
+  }
+  .wechat-id-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: 0.18em;
+    color: var(--dim); text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .wechat-id-value {
+    font-family: 'DM Mono', monospace;
+    font-size: clamp(20px, 4vw, 28px);
+    color: var(--accent);
+    word-break: break-all;
+  }
+
+  /* QR code box */
+  .s10-right { display: none; }
+
+  /* ════ MOBILE ════ */
+  @media (max-width: 768px) {
+    html, body { overflow: auto; height: auto; }
+    #track { flex-direction: column; width: 100%; height: auto; transform: none !important; transition: none; }
+    .screen { width: 100%; height: auto; min-height: 100vh; padding: 80px 24px 60px; }
+    #nav, .arrow-hint { display: none; }
+    .s2-cols, .s3-grid, .trust-split, .invite-cols,
+    .progress-split, .fit-cols, .goal-cards, .s10-layout { grid-template-columns: 1fr; }
+    .compare-row { grid-template-columns: 1fr; border: 1px solid var(--border); }
+    .compare-mid { display: none; }
+    .trust-divider, .invite-divider { display: none; }
+    .trust-left, .trust-right,
+    .invite-col, .invite-col:first-child { padding: 0; margin-bottom: 28px; }
+    .s10-right { margin-top: 32px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="nav"></div>
+<div id="progress"></div>
+
+<div id="track">
+
+  <!-- ══ S1: 品牌宣言 ══ -->
+  <section class="screen" id="s0">
+    <div class="screen-label">01 / 宣言</div>
+    <div class="s1-deco"><span class="s1-num">3</span></div>
+    <div class="s1-inner">
+      <div class="s1-tag">乔不不斯 · AI Native · 一人公司</div>
+      <h1 class="s1-title">
+        用 <em>3 个月时间</em>，<br>
+        从 <em>0 到 1</em> 跑通<br>
+        AI Native<br>一人公司商业模式
+      </h1>
+      <p class="s1-sub">帮助本来能创造更大价值的职场人，构建自己的AI一人公司，实现自己的个人商业路径。</p>
+      <div class="tags">
+        <span class="tag">实现人生使命</span>
+        <span class="tag">享受认知进化</span>
+        <span class="tag">享受自由生活</span>
+      </div>
+    </div>
+    <div class="arrow-hint" onclick="goTo(1)">向右滑动 →</div>
+  </section>
+
+  <!-- ══ S2: 时代机会 ══ -->
+  <section class="screen" id="s1">
+    <div class="screen-label">02 / 机会</div>
+    <div class="s2-inner">
+      <h2 class="s2-title">AI 正在重构个体能力，<br>也正在重构组织边界。</h2>
+      <div class="s2-cols">
+        <div class="s2-col">
+          <div class="s2-col-label">危机</div>
+          <p class="s2-col-text">
+            裁员正在各行各业发生，传统职场路径的上限越来越清晰。
+            大量精英人才正在被迫重新思考自己的未来。
+          </p>
+        </div>
+        <div class="s2-col right">
+          <div class="s2-col-label">机会</div>
+          <p class="s2-col-text">AI 正在让个体拥有前所未有的商业杠杆。</p>
+          <div class="s2-emphasis">一个人，也有机会做出一家百万到千万级的公司。</div>
+        </div>
+      </div>
+      <div class="s2-big">
+        <span class="s2-num">12</span>
+        <span class="s2-num-label">
+          <strong>窗口期：12个月</strong>
+          重构个人职业路径
+        </span>
+      </div>
+    </div>
+    <div class="arrow-hint" onclick="goTo(2)">下一屏 →</div>
+  </section>
+
+  <!-- ══ S3: 项目定义 ══ -->
+  <section class="screen" id="s2">
+    <div class="screen-label">03 / 项目</div>
+    <div class="s3-inner">
+      <div class="section-eyebrow">PROJECT DEFINITION</div>
+      <h2 class="section-title">我在做一个什么项目？</h2>
+      <p class="s3-desc">
+        帮助那些本来能创造更大价值的职场人，在<em>不盲目裸辞</em>的前提下，找到一条<合适自己的、<em>不会轻易被 AI 吃掉</em>的<em>一人公司商业模式</em>，并正式启动验证。
+      </p>
+      <div class="s3-grid">
+        <div class="s3-block">
+          <div class="s3-block-label">我想帮助的是这样一群人</div>
+          <ul class="s3-people">
+            <li>工作 5 到 15 年，在公司里做出过结果</li>
+            <li>有自己的核心所长：专业能力、判断能力、表达能力、项目协同能力</li>
+            <li>不想继续把精力消耗在职场和草台班子工作里</li>
+            <li>开始意识到职场路径有上限，想做属于自己的事，但不想盲目裸辞</li>
+            <li>隐约知道自己想做什么，却不知道怎么真正开始</li>
+          </ul>
+        </div>
+        <div class="s3-block">
+          <div class="s3-block-label">他们真正卡住的，通常是这些问题</div>
+          <div class="s3-pain-list">
+            <div class="s3-pain">有几个方向，但不知道先做哪个</div>
+            <div class="s3-pain">反复怀疑「我到底能不能做」</div>
+            <div class="s3-pain">担心太多人在做，自己没有竞争力</div>
+            <div class="s3-pain">担心做出来的东西很快被 AI 替代</div>
+            <div class="s3-pain">有方向，但不知道第一步怎么启动和验证</div>
+            <div class="s3-pain">已经开始做一点，但没有反馈，开始怀疑方向不对</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="arrow-hint" onclick="goTo(3)">下一屏 →</div>
+  </section>
+
+  <!-- ══ S4: 项目边界 ══ -->
+  <section class="screen" id="s3">
+    <div class="screen-label">04 / 边界</div>
+    <div class="s4-inner">
+      <div class="section-eyebrow">SCOPE</div>
+      <h2 class="section-title">这个项目是什么，不是什么？</h2>
+      <div class="compare-list">
+        <div class="compare-row">
+          <div class="compare-left">
+            <span>这不是</span>成熟创业者教人快速搞钱的项目
+          </div>
+          <div class="compare-mid">vs</div>
+          <div class="compare-right">
+            <span>这是</span>一个普通职场人真正从 0 到 1 推进的一人公司项目，从需求验证开始，走到产品、服务与收入闭环
+          </div>
+        </div>
+        <div class="compare-row">
+          <div class="compare-left">
+            <span>这不是</span>市面常见的个人 IP / 超级个体项目
+          </div>
+          <div class="compare-mid">vs</div>
+          <div class="compare-right">
+            <span>这是</span>一条从垂类场景切入、结合 AI、适合职场人启动验证的路线
+          </div>
+        </div>
+        <div class="compare-row">
+          <div class="compare-left">
+            <span>这不是</span>纯靠 AI、只讲 AI 工具的项目
+          </div>
+          <div class="compare-mid">vs</div>
+          <div class="compare-right">
+            <span>这是</span>一次对 AI Native 一人公司真实运作方式的探索
+          </div>
+        </div>
+        <div class="compare-row">
+          <div class="compare-left">
+            <span>这不是</span>停留在纸面上的想法
+          </div>
+          <div class="compare-mid">vs</div>
+          <div class="compare-right">
+            <span>这是</span>一个已经完成前期推演、正在进入验证阶段的项目
+          </div>
+        </div>
+        <div class="compare-row">
+          <div class="compare-left">
+            <span>这不是</span>闭门完成、对外包装的项目
+          </div>
+          <div class="compare-mid">vs</div>
+          <div class="compare-right">
+            <span>这是</span>一个欢迎合作伙伴与种子用户一起共创的开源项目
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="arrow-hint" onclick="goTo(4)">下一屏 →</div>
+  </section>
+
+  <!-- ══ S5: 项目目标 ══ -->
+  <section class="screen" id="s4">
+    <div class="screen-label">05 / 目标</div>
+    <div class="s5-inner">
+      <div class="section-eyebrow">GOALS</div>
+      <h2 class="section-title">这个项目要达成什么目标？</h2>
+      <div class="goal-cards">
+        <div class="goal-card">
+          <div class="goal-num">01</div>
+          <div class="goal-title">让你从迷茫到启动，到验证商业模式跑通</div>
+          <p class="goal-desc">
+            完成从人生愿景确立、商业模式选择、用户场景、个人定位、产品方案到付费与交付闭环的验证。
+          </p>
+        </div>
+        <div class="goal-card">
+          <div class="goal-num">02</div>
+          <div class="goal-title">让你做一个真正 <em>AI Native</em> 的一人公司</div>
+          <p class="goal-desc">
+            把 AI 用到市场调研、用户分析、内容生产、产品设计、交付与效率优化中，
+            形成一套可复用的方法论。
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="arrow-hint" onclick="goTo(5)">下一屏 →</div>
+  </section>
+
+  <!-- ══ S6: 信任建立 ══ -->
+  <section class="screen" id="s5">
+    <div class="screen-label">06 / 关于我</div>
+    <div class="s6-inner">
+      <div class="section-eyebrow">WHY ME</div>
+      <h2 class="section-title">为什么是我</h2>
+      <div class="trust-split">
+        <div class="trust-left">
+          <div class="trust-sub">我是谁？</div>
+          <div class="trust-stats">
+            <div class="trust-stat">8年实操AI产品经验</div>
+            <div class="trust-stat">普通大学，从小公司做到 AI 大厂产品 1 号位</div>
+            <div class="trust-stat">负责业务 AI 软硬件产品线规划，营收超千万</div>
+            <div class="trust-stat">擅长产品落地、商业闭环、深度认知体系、AI理解运用</div>
+          </div>
+          <div class="trust-core">懂产品 <span class="x">×</span> 懂AI <span class="x">×</span> 懂商业</div>
+        </div>
+        <div class="trust-divider"></div>
+        <div class="trust-right">
+          <div class="trust-sub">我为什么做这件事？</div>
+          <p class="trust-why">
+            我不想 10 年后，依然在公司体系里，为别人的目标奋斗。<br><br>
+            我想尽可能帮助和影响更多人，<strong>提升人类的思维水平</strong>。<br><br>
+            我想做的，是帮助更多像我一样的人，找到真正属于自己的商业路径，
+            并把这件事长期做下去。<br><br>
+            <div class="s2-emphasis">这是我会长期亲自下场的人生选择。</div>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="arrow-hint" onclick="goTo(6)">下一屏 →</div>
+  </section>
+
+  <!-- ══ S7: 邀请加入 ══ -->
+  <section class="screen" id="s6">
+    <div class="screen-label">07 / 邀请</div>
+    <div class="s7-inner">
+      <div class="section-eyebrow">JOIN US</div>
+      <h2 class="section-title">邀请你作为种子用户，把这套商业模式从想法推到验证跑通</h2>
+      <div class="invite-cols">
+        <!-- 种子用户可获得 -->
+        <div class="invite-col">
+          <div class="invite-role"><em>种子用户可获得</em></div>
+          <div class="invite-section">
+            <div class="invite-items">
+              <div class="invite-item">看到一个AI一人公司是怎么从0到1启动跑通的</div>
+              <div class="invite-item">获得围绕转型AI一人公司的早起优惠服务</div>
+              <div class="invite-item">获得AI一人公司构建中的产品、商业与认知体系框架</div>
+              <div class="invite-item">学会用 AI 参与真实业务流程，获得成熟的AI工具</div>
+              <div class="invite-item">帮助你在3个月之内构建属于自己的AI一人公司</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="invite-divider"></div>
+
+        <!-- 成为种子用户的条件 -->
+        <div class="invite-col">
+          <div class="invite-role"><em>成为种子用户的条件</em></div>
+          <div class="invite-section">
+            <div class="invite-items">
+              <div class="invite-item">你符合“想启动一人公司却不知道从哪里开始”的画像</div>
+              <div class="invite-item">对一人公司、个人商业路径、AI构建业务有真实兴趣</div>
+              <div class="invite-item">不是纯围观，愿意投入时间参与反馈、交流与验证过程</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="arrow-hint" onclick="goTo(7)">下一屏 →</div>
+  </section>
+
+  <!-- ══ S8: 项目进展 ══ -->
+  <section class="screen" id="s7">
+    <div class="screen-label">08 / 进展</div>
+    <div class="s8-inner">
+      <div class="section-eyebrow">PROGRESS</div>
+      <h2 class="section-title">项目进展与计划</h2>
+      <div class="progress-split">
+        <!-- 左：当前进展 -->
+        <div>
+          <div class="trust-sub" style="margin-bottom:14px;">当前进展</div>
+          <p class="progress-intro">这件事不是从零开始，而是已经进入真实验证阶段。</p>
+          <div class="progress-items">
+            <div class="progress-item">
+              <span class="progress-check"></span>
+              已经完成多轮商业模式加减法
+            </div>
+            <div class="progress-item">
+              <span class="progress-check"></span>
+              已经做过类似模式调研、商业预判和市场分析
+            </div>
+            <div class="progress-item">
+              <span class="progress-check"></span>
+              已经开始验证用户需求假设
+            </div>
+            <div class="progress-item">
+              <span class="progress-check"></span>
+              已经有初步的种子客户
+            </div>
+          </div>
+          <div class="stats-row">
+            <div class="stat-card">
+              <div class="stat-num">700</div>
+              <div class="stat-label">公众号 2 个月增长</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-num">15K</div>
+              <div class="stat-label">单篇最高阅读量</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-num">100</div>
+              <div class="stat-label">优化 CTA 后加微信</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-num">~100</div>
+              <div class="stat-label">日常篇均阅读量</div>
+            </div>
+          </div>
+        </div>
+        <!-- 右：里程碑时间线 -->
+        <div>
+          <div class="trust-sub" style="margin-bottom:14px;">接下来怎么推进</div>
+          <div class="tl-items">
+            <div class="tl-item">
+              <div class="tl-month">4月</div>
+              <div class="tl-line-wrap"><div class="tl-dot"></div><div class="tl-line"></div></div>
+              <div class="tl-content">完成用户调研与分析，明确问题和人群</div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-month">5月</div>
+              <div class="tl-line-wrap"><div class="tl-dot"></div><div class="tl-line"></div></div>
+              <div class="tl-content">验证解决方案假设，打磨产品与交付</div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-month">6月</div>
+              <div class="tl-line-wrap"><div class="tl-dot"></div><div class="tl-line"></div></div>
+              <div class="tl-content">验证单元模型是否成立</div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-month">7月</div>
+              <div class="tl-line-wrap"><div class="tl-dot"></div></div>
+              <div class="tl-content">完整跑通商业模式闭环</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="arrow-hint" onclick="goTo(8)">下一屏 →</div>
+  </section>
+
+  <!-- ══ S9: 筛选 ══ -->
+  <section class="screen" id="s8">
+    <div class="screen-label">09 / 筛选</div>
+    <div class="s9-inner">
+      <div class="section-eyebrow">FIT CHECK</div>
+      <h2 class="section-title">这条路，不适合所有人。</h2>
+      <div class="fit-cols">
+        <!-- 适合 -->
+        <div>
+          <div class="fit-section-title">
+            适合加入的人 <span class="fit-badge yes">YES</span>
+          </div>
+          <div class="fit-items">
+            <div class="fit-item yes">从职场出来，找到第二增长曲线</div>
+            <div class="fit-item yes">把一人公司商业模式从 0 到 1 跑通</div>
+            <div class="fit-item yes">让 AI 真正融入自己的工作体系</div>
+            <div class="fit-item yes">成为更懂产品、商业与教练的人</div>
+            <div class="fit-item yes">搭建属于自己的知识体系</div>
+            <div class="fit-item yes">链接懂一人公司、懂产品商业的人脉与工作资源</div>
+          </div>
+        </div>
+        <!-- 不适合 -->
+        <div>
+          <div class="fit-section-title">
+            不适合加入的人 <span class="fit-badge no">NO</span>
+          </div>
+          <p class="fit-hint">&nbsp;</p>
+          <div class="fit-items">
+            <div class="fit-item no">只想旁观，不想真正投入</div>
+            <div class="fit-item no">只想快速搞钱，不想认真验证</div>
+            <div class="fit-item no">等别人给标准答案，不愿自己思考</div>
+            <div class="fit-item no">时间太少，无法参与</div>
+            <div class="fit-item no">ego 太重，无法接受反馈</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="arrow-hint" onclick="goTo(9)">最终页 →</div>
+  </section>
+
+  <!-- ══ S10: CTA ══ -->
+  <section class="screen" id="s9">
+    <div class="screen-label">10 / 加入</div>
+    <div class="s10-inner">
+      <div class="s10-layout">
+        <!-- 左侧文案 -->
+        <div class="s10-left">
+          <div class="cta-eyebrow">FINAL CALL</div>
+          <h2 class="cta-title">如果你认真看到这里，<br>欢迎加入。</h2>
+          <p class="cta-desc">
+            我想验证一件事：<br>
+            一个普通但足够清醒、愿意持续进化的人，<br>
+            能不能借助 AI 和商业思维，走出一条真正属于自己的路？<br><br>
+            这不是一个已经准备好所有答案的项目。<br>
+            这是一个值得和对的人一起，把答案做出来的项目。
+          </p>
+          <div class="cta-buttons">
+            <button class="btn-primary" onclick="openWechatModal('种子用户')">申请种子用户</button>
+            <button class="btn-secondary" onclick="openWechatModal('合作伙伴')">申请合作伙伴</button>
+          </div>
+          <div class="cta-hint">申请后我会尽快与你沟通</div>
+          <div class="cta-closer">别只停留在「我也想过」。<em>这次，我们真的开始。</em></div>
+        </div>
+        <div class="s10-right"></div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /track -->
+
+<div class="cta-modal" id="ctaModal" aria-hidden="true">
+  <div class="cta-modal-card" role="dialog" aria-modal="true" aria-labelledby="ctaModalTitle">
+    <button class="cta-modal-close" type="button" onclick="closeWechatModal()" aria-label="关闭弹窗">×</button>
+    <div class="cta-modal-label" id="ctaModalLabel">JOIN</div>
+    <div class="cta-modal-title" id="ctaModalTitle">添加微信进一步沟通</div>
+    <div class="cta-modal-desc" id="ctaModalDesc">如果你想加入，现在可以直接添加下面这个微信号。</div>
+    <div class="wechat-id-box">
+      <div class="wechat-id-label">WeChat ID</div>
+      <div class="wechat-id-value">qiaoboose01</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const ctaModal = document.getElementById('ctaModal');
+const ctaModalLabel = document.getElementById('ctaModalLabel');
+const ctaModalTitle = document.getElementById('ctaModalTitle');
+const ctaModalDesc = document.getElementById('ctaModalDesc');
+
+function openWechatModal(role) {
+  const isSeedUser = role === '种子用户';
+  ctaModalLabel.textContent = isSeedUser ? 'SEED USER' : 'PARTNER';
+  ctaModalTitle.textContent = `申请成为${role}`;
+  ctaModalDesc.textContent = `请添加微信 qiaoboose01，并备注“${role}”，我会尽快和你联系。`;
+  ctaModal.classList.add('open');
+  ctaModal.setAttribute('aria-hidden', 'false');
+}
+
+function closeWechatModal() {
+  ctaModal.classList.remove('open');
+  ctaModal.setAttribute('aria-hidden', 'true');
+}
+
+ctaModal.addEventListener('click', e => {
+  if (e.target === ctaModal) closeWechatModal();
+});
+
+window.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && ctaModal.classList.contains('open')) closeWechatModal();
+});
+
+/* ── 横向滚动控制 ── */
+const TOTAL = 10;
+let cur = 0;
+let animating = false;
+
+const track = document.getElementById('track');
+const navEl  = document.getElementById('nav');
+const progEl = document.getElementById('progress');
+
+// 生成导航圆点
+for (let i = 0; i < TOTAL; i++) {
+  const d = document.createElement('div');
+  d.className = 'dot' + (i === 0 ? ' active' : '');
+  d.onclick = () => goTo(i);
+  navEl.appendChild(d);
+}
+
+function goTo(idx) {
+  if (idx < 0 || idx >= TOTAL || animating) return;
+  if (window.innerWidth <= 768) return;       // 移动端不处理
+
+  animating = true;
+  cur = idx;
+
+  track.style.transform = `translateX(-${cur * window.innerWidth}px)`;
+  document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === cur));
+  progEl.style.width = ((cur / (TOTAL - 1)) * 100) + '%';
+
+  setTimeout(() => { animating = false; }, 800);
+}
+
+// 鼠标滚轮
+let wheelAccum = 0, wheelTimer = null;
+window.addEventListener('wheel', e => {
+  if (window.innerWidth <= 768) return;
+  e.preventDefault();
+  wheelAccum += (e.deltaY || e.deltaX);
+  clearTimeout(wheelTimer);
+  wheelTimer = setTimeout(() => {
+    if (wheelAccum > 50)  goTo(cur + 1);
+    if (wheelAccum < -50) goTo(cur - 1);
+    wheelAccum = 0;
+  }, 50);
+}, { passive: false });
+
+// 键盘
+window.addEventListener('keydown', e => {
+  if (window.innerWidth <= 768) return;
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') goTo(cur + 1);
+  if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   goTo(cur - 1);
+});
+
+// 触摸滑动（桌面宽度）
+let touchStartX = 0;
+window.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+window.addEventListener('touchend', e => {
+  if (window.innerWidth <= 768) return;
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  if (dx < -60) goTo(cur + 1);
+  if (dx > 60)  goTo(cur - 1);
+});
+
+// 窗口缩放时修正位置
+window.addEventListener('resize', () => {
+  if (window.innerWidth > 768)
+    track.style.transform = `translateX(-${cur * window.innerWidth}px)`;
+});
+
+// 初始化进度条
+progEl.style.width = '0%';
+</script>
+</body>
+</html>
