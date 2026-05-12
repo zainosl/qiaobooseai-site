@@ -1285,7 +1285,7 @@
 const API_BASE_URL = &#x27;https://feishu-api-woad.vercel.app&#x27;;
 const WECHAT_ID = &#x27;qiaoboose01&#x27;;
 
-const state = { step: 0, answers: {}, computed: {}, submission_id: &#x27;&#x27; };
+const state = { step: 0, answers: {}, computed: {}, submission_id: &#x27;&#x27;, debug_id: `dbg_${Date.now()}_${Math.random().toString(36).slice(2,8)}` };
 
 const steps = [
   { title:&#x27;背景与资产&#x27;, help:&#x27;先看你是不是有可迁移的经验、能力和个人业务基础。&#x27;, questions:[&#x27;occupation_type&#x27;,&#x27;years_experience&#x27;,&#x27;transferable_abilities&#x27;,&#x27;asset_list&#x27;,&#x27;possible_business_forms&#x27;] },
@@ -1608,14 +1608,56 @@ function ctaContent(seg){
   return {title:&#x27;你可以先保存结果，暂时不用急着找我咨询&#x27;, body:&#x27;你现在可能还处在很早期的观察和思考阶段，不一定需要马上做一对一咨询。建议先按上面的行动建议做一次低成本验证，再决定是否继续投入。&#x27;, note:&#x27;不用急着做决定，先减少无效信息摄入。&#x27;};
 }
 
+function logClientEvent(event, data = {}){
+  const entry = { ts:new Date().toISOString(), event, debug_id:state.debug_id, submission_id:state.submission_id, ...data };
+  console.log(&#x27;[path-calibrator]&#x27;, entry);
+  try {
+    const key = &#x27;path_calibrator_debug_logs&#x27;;
+    const logs = JSON.parse(localStorage.getItem(key) || &#x27;[]&#x27;);
+    logs.push(entry);
+    localStorage.setItem(key, JSON.stringify(logs.slice(-30)));
+  } catch(_) {}
+}
+async function postJsonWithRetry(path, payload, options = {}){
+  const attempts = options.attempts || 3;
+  const label = options.label || path;
+  let lastError;
+  for(let attempt=1; attempt&lt;=attempts; attempt++){
+    try{
+      logClientEvent(`${label}_attempt`, { attempt, url:`${API_BASE_URL}${path}` });
+      const resp = await fetch(`${API_BASE_URL}${path}`, { method:&#x27;POST&#x27;, headers:{&#x27;Content-Type&#x27;:&#x27;application/json&#x27;}, body:JSON.stringify(payload) });
+      const text = await resp.text();
+      let data = {};
+      try { data = text ? JSON.parse(text) : {}; } catch(_) { data = { raw:text }; }
+      logClientEvent(`${label}_response`, { attempt, status:resp.status, ok:resp.ok, response:data });
+      if(!resp.ok || data.ok === false) throw new Error(data.error || `HTTP ${resp.status}`);
+      return data;
+    }catch(e){
+      lastError = e;
+      logClientEvent(`${label}_failed_attempt`, { attempt, error:e.message });
+      if(attempt &lt; attempts) await sleep(600 * attempt);
+    }
+  }
+  throw lastError;
+}
 function buildPayload(){
-  return { submission_id: state.submission_id, timestamp:new Date().toISOString(), source:getUrlParam(&#x27;source&#x27;)||getUrlParam(&#x27;utm_source&#x27;)||&#x27;direct&#x27;, utm_source:getUrlParam(&#x27;utm_source&#x27;), utm_campaign:getUrlParam(&#x27;utm_campaign&#x27;), page_url:location.href, referrer:document.referrer, user_agent:navigator.userAgent, answers:{...state.answers, desired_outcome:state.answers.desired_outcome_label}, computed:state.computed };
+  return { debug_id: state.debug_id, client_debug_id: state.debug_id, submission_id: state.submission_id, timestamp:new Date().toISOString(), source:getUrlParam(&#x27;source&#x27;)||getUrlParam(&#x27;utm_source&#x27;)||&#x27;direct&#x27;, utm_source:getUrlParam(&#x27;utm_source&#x27;), utm_campaign:getUrlParam(&#x27;utm_campaign&#x27;), page_url:location.href, referrer:document.referrer, user_agent:navigator.userAgent, answers:{...state.answers, desired_outcome:state.answers.desired_outcome_label}, computed:state.computed };
 }
 async function submitPathCheck(){
-  try{ await fetch(`${API_BASE_URL}/api/submit-path-check`, {method:&#x27;POST&#x27;, headers:{&#x27;Content-Type&#x27;:&#x27;application/json&#x27;}, body:JSON.stringify(buildPayload())}); }catch(e){ console.warn(&#x27;submit failed&#x27;, e); }
+  const payload = buildPayload();
+  try{
+    const result = await postJsonWithRetry(&#x27;/api/submit-path-check&#x27;, payload, { label:&#x27;submit_path_check&#x27;, attempts:3 });
+    try { localStorage.setItem(&#x27;path_calibrator_last_submit_success&#x27;, JSON.stringify({ debug_id:state.debug_id, submission_id:state.submission_id, result, ts:new Date().toISOString() })); } catch(_) {}
+    return result;
+  }catch(e){
+    console.warn(&#x27;submit failed&#x27;, e);
+    logClientEvent(&#x27;submit_path_check_final_failed&#x27;, { error:e.message });
+    try { localStorage.setItem(&#x27;path_calibrator_last_submit_failed&#x27;, JSON.stringify({ debug_id:state.debug_id, submission_id:state.submission_id, payload, error:e.message, ts:new Date().toISOString() })); } catch(_) {}
+  }
 }
 async function trackCTA(action){
-  try{ await fetch(`${API_BASE_URL}/api/track-cta`, {method:&#x27;POST&#x27;, headers:{&#x27;Content-Type&#x27;:&#x27;application/json&#x27;}, body:JSON.stringify({ event_id:`cta_${Date.now()}_${Math.random().toString(36).slice(2,8)}`, submission_id:state.submission_id, timestamp:new Date().toISOString(), cta_type:state.computed.cta_type, cta_action:action, user_segment:state.computed.user_segment, source:getUrlParam(&#x27;source&#x27;)||getUrlParam(&#x27;utm_source&#x27;)||&#x27;direct&#x27;, utm_source:getUrlParam(&#x27;utm_source&#x27;), utm_campaign:getUrlParam(&#x27;utm_campaign&#x27;), page_url:location.href, referrer:document.referrer, user_agent:navigator.userAgent })}); }catch(e){ console.warn(&#x27;cta failed&#x27;, e); }
+  const payload = { debug_id:state.debug_id, client_debug_id:state.debug_id, event_id:`cta_${Date.now()}_${Math.random().toString(36).slice(2,8)}`, submission_id:state.submission_id, timestamp:new Date().toISOString(), cta_type:state.computed.cta_type, cta_action:action, user_segment:state.computed.user_segment, source:getUrlParam(&#x27;source&#x27;)||getUrlParam(&#x27;utm_source&#x27;)||&#x27;direct&#x27;, utm_source:getUrlParam(&#x27;utm_source&#x27;), utm_campaign:getUrlParam(&#x27;utm_campaign&#x27;), page_url:location.href, referrer:document.referrer, user_agent:navigator.userAgent };
+  try{ return await postJsonWithRetry(&#x27;/api/track-cta&#x27;, payload, { label:`track_cta_${action}`, attempts:2 }); }catch(e){ console.warn(&#x27;cta failed&#x27;, e); logClientEvent(&#x27;track_cta_final_failed&#x27;, { action, error:e.message }); }
 }
 function copyWechat(){ navigator.clipboard.writeText(WECHAT_ID).then(()=&gt;alert(&#x27;微信号已复制&#x27;)); trackCTA(&#x27;copy_wechat&#x27;); }
 function copyResult(){ navigator.clipboard.writeText(resultText()).then(()=&gt;alert(&#x27;结果已复制&#x27;)); }
