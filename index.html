@@ -1532,13 +1532,130 @@ async function generateResult(){
   window.scrollTo({top:0,behavior:&#x27;smooth&#x27;});
   const delay = 2000 + Math.floor(Math.random() * 3001);
   await sleep(delay);
-  renderResult();
-  await submitPathCheck();
+  try{
+    await submitPathCheck();
+    renderResult();
+  }catch(e){
+    renderSubmitError(e);
+  }
+}
+
+function renderSubmitError(err){
+  logClientEvent(&#x27;submit_before_result_blocked&#x27;, { error:err && err.message ? err.message : String(err) });
+  document.getElementById(&#x27;result&#x27;).innerHTML = `
+    &lt;div class=&quot;loading-card&quot;&gt;
+      &lt;div class=&quot;loading-title&quot;&gt;数据保存失败，请重试&lt;/div&gt;
+      &lt;div class=&quot;loading-sub&quot;&gt;为了避免你的校准结果丢失，需要先确认数据已经成功回收到表格中，再展示完整结果报告。请检查网络后重新提交。&lt;/div&gt;
+      &lt;div class=&quot;nav&quot; style=&quot;justify-content:center;margin-top:18px;&quot;&gt;
+        &lt;button class=&quot;btn-primary&quot; onclick=&quot;generateResult()&quot;&gt;重新保存并生成结果&lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;`;
+  document.getElementById(&#x27;result&#x27;).classList.remove(&#x27;hidden&#x27;);
 }
 
 function resultText(){
   const d=pathDiagnosis(), c=state.computed, a=state.answers;
-  return `一人公司探索路径校准结果\n\n${d.name}\n${d.one}\n\n校准说明：${d.mismatch}\n\n你的关键证据：\n- 实际动作：${fmtList(a.action_list)}\n- 时间投入：${a.current_time_spent}\n- 当前卡点：${fmtList(a.primary_question)}\n- 最想拿到的结果：${a.desired_outcome_label}\n\n下一步优先检查：${c.recommended_check_point}\n\n行动建议：\n${actionPlan().map(x=&gt;`${x[0]}. ${x[1]}`).join(&#x27;\n&#x27;)}`;
+  return `一人公司探索路径校准结果\n\n${d.name}\n${d.one}\n\n校准说明：${d.mismatch}\n\n你的关键证据：\n- 实际动作：${fmtList(a.action_list)}\n- 时间投入：${fmtList(a.current_time_spent)}\n- 当前卡点：${fmtList(a.primary_question)}\n- 最想拿到的结果：${a.desired_outcome_label}\n\n下一步优先检查：${c.recommended_check_point}\n\n行动建议：\n${actionPlan().map(x=&gt;`${x[0]}. ${x[1]}`).join(&#x27;\n&#x27;)}`;
+}
+
+function mdValue(v){ return arr(v).filter(Boolean).join(&#x27;、&#x27;) || &#x27;未填写&#x27;; }
+function mdLine(s){ return String(s ?? &#x27;&#x27;).replace(/\r?\n/g, &#x27; &#x27;).trim(); }
+function calibrationMarkdown(){
+  const d=pathDiagnosis(), c=state.computed, a=state.answers;
+  const answerLines = [];
+  steps.forEach(step =&gt; {
+    answerLines.push(`\n### ${step.title}`);
+    step.questions.forEach(key =&gt; {
+      const item = q[key];
+      const title = mdLine(questionTitle(item));
+      answerLines.push(`- ${title}：${mdValue(a[key])}`);
+      const extraKey = item.extraKey || `${key}_other`;
+      if(a[extraKey]) answerLines.push(`  - 补充说明：${mdLine(a[extraKey])}`);
+    });
+  });
+  const evidence = evidenceRows().map(r =&gt; `| ${mdLine(r[0])} | ${mdLine(r[1])} | ${mdLine(r[2])} |`).join(&#x27;\n&#x27;);
+  const actions = actionPlan().map(x =&gt; `${x[0]}. ${mdLine(x[1])}`).join(&#x27;\n&#x27;);
+  const avoids = avoidItems().map(x =&gt; `- ${mdLine(x)}`).join(&#x27;\n&#x27;);
+  const cta = ctaContent(c.user_segment);
+  return `# 一人公司探索路径校准结果
+
+生成时间：${new Date().toLocaleString(&#x27;zh-CN&#x27;)}
+提交编号：${state.submission_id || &#x27;未生成&#x27;}
+
+## 用户选择信息
+${answerLines.join(&#x27;\n&#x27;)}
+
+## 结果页信息
+
+### 你的路径校准结果
+
+${d.name}
+
+${d.one}
+
+- 系统校准阶段：${c.calibrated_stage}
+- 时间浪费风险：${c.time_waste_risk}
+- 优先任务：${d.task}
+- 用户分层：${c.user_segment}
+- CTA 类型：${c.cta_type}
+
+### 一句话结论
+
+${d.one}
+
+### 为什么这样判断
+
+${d.detail}
+
+${d.mismatch}
+
+### 你填写的信息如何支持这个判断
+
+| 你填的信息 | 你的选择 | 它说明什么 |
+| --- | --- | --- |
+${evidence}
+
+### 你最可能浪费时间的地方
+
+${riskCopy(c.time_waste_risk)}
+
+结合你的当前投入：${mdValue(a.current_time_spent)}。如果它没有直接服务于「${d.task}」，就要警惕它变成看起来很努力、实际没有推进的动作。
+
+### 接下来 4 周的校准行动
+
+${actions}
+
+### 这阶段先别急着做
+
+${avoids}
+
+### 下一步优先检查点
+
+${c.recommended_check_point}
+
+### 后续建议
+
+${cta.title}
+
+${cta.body}
+
+${cta.note}
+`;
+}
+function downloadMarkdownFile(content, filename){
+  const blob = new Blob([content], { type:&#x27;text/markdown;charset=utf-8&#x27; });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement(&#x27;a&#x27;);
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+function downloadCalibrationMarkdown(){
+  const filename = `一人公司路径校准结果-${state.submission_id || Date.now()}.md`;
+  downloadMarkdownFile(calibrationMarkdown(), filename);
 }
 
 function renderResult(){
@@ -1593,7 +1710,7 @@ function renderResult(){
     &lt;/div&gt;
 
     &lt;div class=&quot;section cta-box&quot;&gt;&lt;h3&gt;${esc(cta.title)}&lt;/h3&gt;&lt;p&gt;${esc(cta.body)}&lt;/p&gt;&lt;div class=&quot;wechat&quot;&gt;&lt;span class=&quot;wechat-code&quot;&gt;微信：${esc(WECHAT_ID)}&lt;/span&gt;&lt;button class=&quot;btn-secondary&quot; onclick=&quot;copyWechat()&quot;&gt;复制微信号&lt;/button&gt;&lt;/div&gt;&lt;p class=&quot;small&quot;&gt;${esc(cta.note)}&lt;/p&gt;&lt;/div&gt;
-    &lt;div class=&quot;nav&quot;&gt;&lt;button class=&quot;btn-secondary&quot; onclick=&quot;copyResult()&quot;&gt;复制校正结果&lt;/button&gt;&lt;button class=&quot;btn-ghost&quot; onclick=&quot;location.reload()&quot;&gt;重新检查&lt;/button&gt;&lt;/div&gt;`;
+    &lt;div class=&quot;nav&quot;&gt;&lt;button class=&quot;btn-secondary&quot; onclick=&quot;downloadCalibrationMarkdown()&quot;&gt;下载校正结果&lt;/button&gt;&lt;button class=&quot;btn-ghost&quot; onclick=&quot;location.reload()&quot;&gt;重新检查&lt;/button&gt;&lt;/div&gt;`;
   document.getElementById(&#x27;result&#x27;).innerHTML = html;
   document.getElementById(&#x27;result&#x27;).classList.remove(&#x27;hidden&#x27;);
   trackCTA(&#x27;view_cta&#x27;);
@@ -1640,8 +1757,11 @@ async function postJsonWithRetry(path, payload, options = {}){
   }
   throw lastError;
 }
+function getParentPageUrl(){
+  try { return window.parent && window.parent.location ? window.parent.location.href : &#x27;&#x27;; } catch(_) { return &#x27;&#x27;; }
+}
 function buildPayload(){
-  return { debug_id: state.debug_id, client_debug_id: state.debug_id, submission_id: state.submission_id, timestamp:new Date().toISOString(), source:getUrlParam(&#x27;source&#x27;)||getUrlParam(&#x27;utm_source&#x27;)||&#x27;direct&#x27;, utm_source:getUrlParam(&#x27;utm_source&#x27;), utm_campaign:getUrlParam(&#x27;utm_campaign&#x27;), page_url:location.href, referrer:document.referrer, user_agent:navigator.userAgent, answers:{...state.answers, desired_outcome:state.answers.desired_outcome_label}, computed:state.computed };
+  return { debug_id: state.debug_id, client_debug_id: state.debug_id, submission_id: state.submission_id, timestamp:new Date().toISOString(), source:getUrlParam(&#x27;source&#x27;)||getUrlParam(&#x27;utm_source&#x27;)||&#x27;direct&#x27;, utm_source:getUrlParam(&#x27;utm_source&#x27;), utm_campaign:getUrlParam(&#x27;utm_campaign&#x27;), page_url:location.href, parent_page_url:getParentPageUrl(), referrer:document.referrer, user_agent:navigator.userAgent, answers:{...state.answers, desired_outcome:state.answers.desired_outcome_label}, computed:state.computed };
 }
 async function submitPathCheck(){
   const payload = buildPayload();
@@ -1653,10 +1773,11 @@ async function submitPathCheck(){
     console.warn(&#x27;submit failed&#x27;, e);
     logClientEvent(&#x27;submit_path_check_final_failed&#x27;, { error:e.message });
     try { localStorage.setItem(&#x27;path_calibrator_last_submit_failed&#x27;, JSON.stringify({ debug_id:state.debug_id, submission_id:state.submission_id, payload, error:e.message, ts:new Date().toISOString() })); } catch(_) {}
+    throw e;
   }
 }
 async function trackCTA(action){
-  const payload = { debug_id:state.debug_id, client_debug_id:state.debug_id, event_id:`cta_${Date.now()}_${Math.random().toString(36).slice(2,8)}`, submission_id:state.submission_id, timestamp:new Date().toISOString(), cta_type:state.computed.cta_type, cta_action:action, user_segment:state.computed.user_segment, source:getUrlParam(&#x27;source&#x27;)||getUrlParam(&#x27;utm_source&#x27;)||&#x27;direct&#x27;, utm_source:getUrlParam(&#x27;utm_source&#x27;), utm_campaign:getUrlParam(&#x27;utm_campaign&#x27;), page_url:location.href, referrer:document.referrer, user_agent:navigator.userAgent };
+  const payload = { debug_id:state.debug_id, client_debug_id:state.debug_id, event_id:`cta_${Date.now()}_${Math.random().toString(36).slice(2,8)}`, submission_id:state.submission_id, timestamp:new Date().toISOString(), cta_type:state.computed.cta_type, cta_action:action, user_segment:state.computed.user_segment, source:getUrlParam(&#x27;source&#x27;)||getUrlParam(&#x27;utm_source&#x27;)||&#x27;direct&#x27;, utm_source:getUrlParam(&#x27;utm_source&#x27;), utm_campaign:getUrlParam(&#x27;utm_campaign&#x27;), page_url:location.href, parent_page_url:getParentPageUrl(), referrer:document.referrer, user_agent:navigator.userAgent };
   try{ return await postJsonWithRetry(&#x27;/api/track-cta&#x27;, payload, { label:`track_cta_${action}`, attempts:2 }); }catch(e){ console.warn(&#x27;cta failed&#x27;, e); logClientEvent(&#x27;track_cta_final_failed&#x27;, { action, error:e.message }); }
 }
 function copyWechat(){ navigator.clipboard.writeText(WECHAT_ID).then(()=&gt;alert(&#x27;微信号已复制&#x27;)); trackCTA(&#x27;copy_wechat&#x27;); }
