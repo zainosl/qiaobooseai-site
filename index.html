@@ -1547,9 +1547,10 @@ function renderSubmitError(err){
   document.getElementById(&#x27;result&#x27;).innerHTML = `
     &lt;div class=&quot;loading-card&quot;&gt;
       &lt;div class=&quot;loading-title&quot;&gt;数据保存失败，请重试&lt;/div&gt;
-      &lt;div class=&quot;loading-sub&quot;&gt;为了避免你的校准结果丢失，需要先确认数据已经成功回收到表格中，再展示完整结果报告。请检查网络后重新提交。&lt;/div&gt;
-      &lt;div class=&quot;nav&quot; style=&quot;justify-content:center;margin-top:18px;&quot;&gt;
+      &lt;div class=&quot;loading-sub&quot;&gt;校准结果生成时出现了问题，请重试&lt;/div&gt;
+      &lt;div class=&quot;nav&quot; style=&quot;justify-content:center;margin-top:18px;gap:12px;flex-wrap:wrap;&quot;&gt;
         &lt;button class=&quot;btn-primary&quot; onclick=&quot;generateResult()&quot;&gt;重新保存并生成结果&lt;/button&gt;
+        &lt;button class=&quot;btn-secondary&quot; onclick=&quot;downloadCalibrationMarkdown()&quot;&gt;下载校准报告&lt;/button&gt;
       &lt;/div&gt;
     &lt;/div&gt;`;
   document.getElementById(&#x27;result&#x27;).classList.remove(&#x27;hidden&#x27;);
