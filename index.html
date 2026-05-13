@@ -1284,6 +1284,8 @@
 &lt;script&gt;
 const API_BASE_URL = &#x27;https://feishu-api-woad.vercel.app&#x27;;
 const WECHAT_ID = &#x27;qiaoboose01&#x27;;
+const CALIBRATOR_VERSION = &#x27;2026-05-13-reliability-v2&#x27;;
+const SITE_COMMIT = &#x27;e697edd-plus-reliability&#x27;;
 
 const state = { step: 0, answers: {}, computed: {}, submission_id: &#x27;&#x27;, debug_id: `dbg_${Date.now()}_${Math.random().toString(36).slice(2,8)}` };
 
@@ -1670,6 +1672,7 @@ function renderResult(){
       &lt;div class=&quot;archetype-name&quot;&gt;${esc(d.name)}&lt;/div&gt;
       &lt;div class=&quot;tag-cloud&quot;&gt;&lt;span class=&quot;tag&quot;&gt;${esc(c.calibrated_stage)}&lt;/span&gt;&lt;span class=&quot;tag&quot;&gt;时间浪费风险：${esc(c.time_waste_risk)}&lt;/span&gt;&lt;span class=&quot;tag&quot;&gt;优先任务：${esc(d.task)}&lt;/span&gt;&lt;/div&gt;
       &lt;div class=&quot;archetype-sub&quot;&gt;${esc(d.one)}&lt;/div&gt;
+      &lt;div class=&quot;small&quot; style=&quot;margin-top:14px;color:var(--muted);&quot;&gt;本次结果已保存，保存编号：${esc(state.submission_id)}&lt;/div&gt;
     &lt;/div&gt;
 
     &lt;div class=&quot;section result-section&quot;&gt;
@@ -1761,10 +1764,14 @@ function getParentPageUrl(){
   try { return window.parent && window.parent.location ? window.parent.location.href : &#x27;&#x27;; } catch(_) { return &#x27;&#x27;; }
 }
 function buildPayload(){
-  return { debug_id: state.debug_id, client_debug_id: state.debug_id, submission_id: state.submission_id, timestamp:new Date().toISOString(), source:getUrlParam(&#x27;source&#x27;)||getUrlParam(&#x27;utm_source&#x27;)||&#x27;direct&#x27;, utm_source:getUrlParam(&#x27;utm_source&#x27;), utm_campaign:getUrlParam(&#x27;utm_campaign&#x27;), page_url:location.href, parent_page_url:getParentPageUrl(), referrer:document.referrer, user_agent:navigator.userAgent, answers:{...state.answers, desired_outcome:state.answers.desired_outcome_label}, computed:state.computed };
+  return { debug_id: state.debug_id, client_debug_id: state.debug_id, submission_id: state.submission_id, timestamp:new Date().toISOString(), source:getUrlParam(&#x27;source&#x27;)||getUrlParam(&#x27;utm_source&#x27;)||&#x27;direct&#x27;, utm_source:getUrlParam(&#x27;utm_source&#x27;), utm_campaign:getUrlParam(&#x27;utm_campaign&#x27;), page_url:location.href, parent_page_url:getParentPageUrl(), referrer:document.referrer, user_agent:navigator.userAgent, frontend_version:CALIBRATOR_VERSION, site_commit:SITE_COMMIT, browser_language:navigator.language, screen_size:`${window.screen?.width || &#x27;&#x27;}x${window.screen?.height || &#x27;&#x27;}`, timezone:Intl.DateTimeFormat().resolvedOptions().timeZone, answers:{...state.answers, desired_outcome:state.answers.desired_outcome_label}, computed:state.computed };
+}
+function saveLastPayload(payload){
+  try { localStorage.setItem(&#x27;path_calibrator_last_payload&#x27;, JSON.stringify({ ...payload, saved_at:new Date().toISOString() })); } catch(_) {}
 }
 async function submitPathCheck(){
   const payload = buildPayload();
+  saveLastPayload(payload);
   try{
     const result = await postJsonWithRetry(&#x27;/api/submit-path-check&#x27;, payload, { label:&#x27;submit_path_check&#x27;, attempts:3 });
     try { localStorage.setItem(&#x27;path_calibrator_last_submit_success&#x27;, JSON.stringify({ debug_id:state.debug_id, submission_id:state.submission_id, result, ts:new Date().toISOString() })); } catch(_) {}
@@ -1777,7 +1784,7 @@ async function submitPathCheck(){
   }
 }
 async function trackCTA(action){
-  const payload = { debug_id:state.debug_id, client_debug_id:state.debug_id, event_id:`cta_${Date.now()}_${Math.random().toString(36).slice(2,8)}`, submission_id:state.submission_id, timestamp:new Date().toISOString(), cta_type:state.computed.cta_type, cta_action:action, user_segment:state.computed.user_segment, source:getUrlParam(&#x27;source&#x27;)||getUrlParam(&#x27;utm_source&#x27;)||&#x27;direct&#x27;, utm_source:getUrlParam(&#x27;utm_source&#x27;), utm_campaign:getUrlParam(&#x27;utm_campaign&#x27;), page_url:location.href, parent_page_url:getParentPageUrl(), referrer:document.referrer, user_agent:navigator.userAgent };
+  const payload = { debug_id:state.debug_id, client_debug_id:state.debug_id, event_id:`cta_${Date.now()}_${Math.random().toString(36).slice(2,8)}`, submission_id:state.submission_id, timestamp:new Date().toISOString(), cta_type:state.computed.cta_type, cta_action:action, user_segment:state.computed.user_segment, source:getUrlParam(&#x27;source&#x27;)||getUrlParam(&#x27;utm_source&#x27;)||&#x27;direct&#x27;, utm_source:getUrlParam(&#x27;utm_source&#x27;), utm_campaign:getUrlParam(&#x27;utm_campaign&#x27;), page_url:location.href, parent_page_url:getParentPageUrl(), referrer:document.referrer, user_agent:navigator.userAgent, frontend_version:CALIBRATOR_VERSION, site_commit:SITE_COMMIT };
   try{ return await postJsonWithRetry(&#x27;/api/track-cta&#x27;, payload, { label:`track_cta_${action}`, attempts:2 }); }catch(e){ console.warn(&#x27;cta failed&#x27;, e); logClientEvent(&#x27;track_cta_final_failed&#x27;, { action, error:e.message }); }
 }
 function copyWechat(){ navigator.clipboard.writeText(WECHAT_ID).then(()=&gt;alert(&#x27;微信号已复制&#x27;)); trackCTA(&#x27;copy_wechat&#x27;); }

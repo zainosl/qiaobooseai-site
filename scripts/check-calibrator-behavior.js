@@ -12,4 +12,11 @@ assert(!html.includes('复制校正结果'), 'old copy calibration result label 
 assert(html.includes('## 用户选择信息'), 'markdown includes user choices section');
 assert(html.includes('## 结果页信息'), 'markdown includes result information section');
 assert(html.includes('parent_page_url'), 'payload includes parent_page_url for iframe observability');
+assert(html.includes('CALIBRATOR_VERSION'), 'payload includes frontend version constant');
+assert(html.includes('path_calibrator_last_payload'), 'frontend stores last payload locally');
+assert(html.includes('保存编号'), 'result page shows save number');
+assert(html.includes('browser_language'), 'payload includes browser language');
+assert(html.includes('screen_size'), 'payload includes screen size');
+assert(html.includes('timezone'), 'payload includes timezone');
+
 process.exit(process.exitCode || 0);
