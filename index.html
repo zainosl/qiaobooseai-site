@@ -1291,6 +1291,7 @@ const API_BASE_URL = API_BASE_URLS[0];
 const WECHAT_ID = &#x27;qiaoboose01&#x27;;
 const CALIBRATOR_VERSION = &#x27;2026-05-13-reliability-v2&#x27;;
 const SITE_COMMIT = &#x27;e697edd-plus-reliability&#x27;;
+const REQUEST_TIMEOUT_MS = 12000;
 
 const state = { step: 0, answers: {}, computed: {}, submission_id: &#x27;&#x27;, debug_id: `dbg_${Date.now()}_${Math.random().toString(36).slice(2,8)}` };
 
@@ -1757,8 +1758,15 @@ async function postJsonWithRetry(path, payload, options = {}){
       try{
         const url = `${baseUrl}${path}`;
         logClientEvent(`${label}_attempt`, { attempt, api_base_url:baseUrl, url });
-        const resp = await fetch(url, { method:&#x27;POST&#x27;, headers:{&#x27;Content-Type&#x27;:&#x27;application/json&#x27;}, body:JSON.stringify(payload) });
-        const text = await resp.text();
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() =&gt; controller.abort(), REQUEST_TIMEOUT_MS);
+        let resp, text;
+        try {
+          resp = await fetch(url, { method:&#x27;POST&#x27;, headers:{&#x27;Content-Type&#x27;:&#x27;application/json&#x27;}, body:JSON.stringify(payload), signal:controller.signal });
+          text = await resp.text();
+        } finally {
+          clearTimeout(timeoutId);
+        }
         let data = {};
         try { data = text ? JSON.parse(text) : {}; } catch(_) { data = { raw:text }; }
         logClientEvent(`${label}_response`, { attempt, api_base_url:baseUrl, status:resp.status, ok:resp.ok, response:data });
