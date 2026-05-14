@@ -22,4 +22,11 @@ assert(html.includes('校准结果生成时出现了问题，请重试'), 'failu
 assert(html.includes('下载校准报告'), 'failure page can download markdown report');
 assert(!html.includes('为了避免你的校准结果丢失，需要先确认数据已经成功回收到表格中，再展示完整结果报告。请检查网络后重新提交。'), 'old failure wording removed');
 
+
+assert(html.includes('const API_BASE_URLS'), 'uses multiple API base URLs');
+assert(html.includes('submit_path_check',) && html.includes('attempts:5'), 'submissions retry attempts increased to 5');
+assert(html.includes('api_base_url'), 'logs selected API base url');
+assert(html.includes('for(const baseUrl of apiBaseUrls)'), 'tries API base URLs in sequence');
+assert(html.includes('Math.min(8000'), 'uses capped exponential backoff');
+
 process.exit(process.exitCode || 0);
