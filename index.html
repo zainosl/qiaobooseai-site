@@ -1282,7 +1282,12 @@
   &lt;/div&gt;
 
 &lt;script&gt;
-const API_BASE_URL = &#x27;https://feishu-api-woad.vercel.app&#x27;;
+const API_BASE_URLS = [
+  &#x27;https://feishu-api-woad.vercel.app&#x27;
+  // 备用 API 可在 Cloudflare Worker / 国内云函数部署后追加到这里，例如：
+  // &#x27;https://qiaobooseai-feishu-backup.your-subdomain.workers.dev&#x27;
+];
+const API_BASE_URL = API_BASE_URLS[0];
 const WECHAT_ID = &#x27;qiaoboose01&#x27;;
 const CALIBRATOR_VERSION = &#x27;2026-05-13-reliability-v2&#x27;;
 const SITE_COMMIT = &#x27;e697edd-plus-reliability&#x27;;
@@ -1739,25 +1744,33 @@ function logClientEvent(event, data = {}){
     localStorage.setItem(key, JSON.stringify(logs.slice(-30)));
   } catch(_) {}
 }
+function getApiBaseUrls(){
+  return API_BASE_URLS.filter(Boolean).map(x =&gt; String(x).replace(/\/$/, &#x27;&#x27;));
+}
 async function postJsonWithRetry(path, payload, options = {}){
-  const attempts = options.attempts || 3;
+  const attempts = options.attempts || 5;
   const label = options.label || path;
+  const apiBaseUrls = getApiBaseUrls();
   let lastError;
-  for(let attempt=1; attempt&lt;=attempts; attempt++){
-    try{
-      logClientEvent(`${label}_attempt`, { attempt, url:`${API_BASE_URL}${path}` });
-      const resp = await fetch(`${API_BASE_URL}${path}`, { method:&#x27;POST&#x27;, headers:{&#x27;Content-Type&#x27;:&#x27;application/json&#x27;}, body:JSON.stringify(payload) });
-      const text = await resp.text();
-      let data = {};
-      try { data = text ? JSON.parse(text) : {}; } catch(_) { data = { raw:text }; }
-      logClientEvent(`${label}_response`, { attempt, status:resp.status, ok:resp.ok, response:data });
-      if(!resp.ok || data.ok === false) throw new Error(data.error || `HTTP ${resp.status}`);
-      return data;
-    }catch(e){
-      lastError = e;
-      logClientEvent(`${label}_failed_attempt`, { attempt, error:e.message });
-      if(attempt &lt; attempts) await sleep(600 * attempt);
+  for(const baseUrl of apiBaseUrls){
+    for(let attempt=1; attempt&lt;=attempts; attempt++){
+      try{
+        const url = `${baseUrl}${path}`;
+        logClientEvent(`${label}_attempt`, { attempt, api_base_url:baseUrl, url });
+        const resp = await fetch(url, { method:&#x27;POST&#x27;, headers:{&#x27;Content-Type&#x27;:&#x27;application/json&#x27;}, body:JSON.stringify(payload) });
+        const text = await resp.text();
+        let data = {};
+        try { data = text ? JSON.parse(text) : {}; } catch(_) { data = { raw:text }; }
+        logClientEvent(`${label}_response`, { attempt, api_base_url:baseUrl, status:resp.status, ok:resp.ok, response:data });
+        if(!resp.ok || data.ok === false) throw new Error(data.error || `HTTP ${resp.status}`);
+        return data;
+      }catch(e){
+        lastError = e;
+        logClientEvent(`${label}_failed_attempt`, { attempt, api_base_url:baseUrl, error:e.message });
+        if(attempt &lt; attempts) await sleep(Math.min(8000, 1000 * Math.pow(2, attempt - 1)));
+      }
     }
+    logClientEvent(`${label}_api_base_exhausted`, { api_base_url:baseUrl, error:lastError && lastError.message });
   }
   throw lastError;
 }
@@ -1774,7 +1787,7 @@ async function submitPathCheck(){
   const payload = buildPayload();
   saveLastPayload(payload);
   try{
-    const result = await postJsonWithRetry(&#x27;/api/submit-path-check&#x27;, payload, { label:&#x27;submit_path_check&#x27;, attempts:3 });
+    const result = await postJsonWithRetry(&#x27;/api/submit-path-check&#x27;, payload, { label:&#x27;submit_path_check&#x27;, attempts:5 });
     try { localStorage.setItem(&#x27;path_calibrator_last_submit_success&#x27;, JSON.stringify({ debug_id:state.debug_id, submission_id:state.submission_id, result, ts:new Date().toISOString() })); } catch(_) {}
     return result;
   }catch(e){
@@ -1786,7 +1799,7 @@ async function submitPathCheck(){
 }
 async function trackCTA(action){
   const payload = { debug_id:state.debug_id, client_debug_id:state.debug_id, event_id:`cta_${Date.now()}_${Math.random().toString(36).slice(2,8)}`, submission_id:state.submission_id, timestamp:new Date().toISOString(), cta_type:state.computed.cta_type, cta_action:action, user_segment:state.computed.user_segment, source:getUrlParam(&#x27;source&#x27;)||getUrlParam(&#x27;utm_source&#x27;)||&#x27;direct&#x27;, utm_source:getUrlParam(&#x27;utm_source&#x27;), utm_campaign:getUrlParam(&#x27;utm_campaign&#x27;), page_url:location.href, parent_page_url:getParentPageUrl(), referrer:document.referrer, user_agent:navigator.userAgent, frontend_version:CALIBRATOR_VERSION, site_commit:SITE_COMMIT };
-  try{ return await postJsonWithRetry(&#x27;/api/track-cta&#x27;, payload, { label:`track_cta_${action}`, attempts:2 }); }catch(e){ console.warn(&#x27;cta failed&#x27;, e); logClientEvent(&#x27;track_cta_final_failed&#x27;, { action, error:e.message }); }
+  try{ return await postJsonWithRetry(&#x27;/api/track-cta&#x27;, payload, { label:`track_cta_${action}`, attempts:3 }); }catch(e){ console.warn(&#x27;cta failed&#x27;, e); logClientEvent(&#x27;track_cta_final_failed&#x27;, { action, error:e.message }); }
 }
 function copyWechat(){ navigator.clipboard.writeText(WECHAT_ID).then(()=&gt;alert(&#x27;微信号已复制&#x27;)); trackCTA(&#x27;copy_wechat&#x27;); }
 function copyResult(){ navigator.clipboard.writeText(resultText()).then(()=&gt;alert(&#x27;结果已复制&#x27;)); }
