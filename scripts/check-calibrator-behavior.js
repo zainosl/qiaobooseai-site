@@ -29,4 +29,10 @@ assert(html.includes('api_base_url'), 'logs selected API base url');
 assert(html.includes('for(const baseUrl of apiBaseUrls)'), 'tries API base URLs in sequence');
 assert(html.includes('Math.min(8000'), 'uses capped exponential backoff');
 
+
+assert(html.includes('REQUEST_TIMEOUT_MS'), 'has per-request timeout constant');
+assert(html.includes('AbortController'), 'uses AbortController to avoid stuck fetch');
+assert(html.includes('setTimeout(() =&gt; controller.abort()') || html.includes('setTimeout(() => controller.abort()'), 'aborts hung requests');
+assert(html.includes('clearTimeout(timeoutId)'), 'clears request timeout after response');
+
 process.exit(process.exitCode || 0);
