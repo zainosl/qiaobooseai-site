@@ -1291,7 +1291,7 @@ const API_BASE_URL = API_BASE_URLS[0];
 const WECHAT_ID = &#x27;qiaoboose01&#x27;;
 const CALIBRATOR_VERSION = &#x27;2026-05-13-reliability-v2&#x27;;
 const SITE_COMMIT = &#x27;e697edd-plus-reliability&#x27;;
-const REQUEST_TIMEOUT_MS = 12000;
+const REQUEST_TIMEOUT_MS = 15000;
 
 const state = { step: 0, answers: {}, computed: {}, submission_id: &#x27;&#x27;, debug_id: `dbg_${Date.now()}_${Math.random().toString(36).slice(2,8)}` };
 
@@ -1552,7 +1552,7 @@ function renderSubmitError(err){
   logClientEvent(&#x27;submit_before_result_blocked&#x27;, { error:err && err.message ? err.message : String(err) });
   document.getElementById(&#x27;result&#x27;).innerHTML = `
     &lt;div class=&quot;loading-card&quot;&gt;
-      &lt;div class=&quot;loading-title&quot;&gt;数据保存失败，请重试&lt;/div&gt;
+      &lt;div class=&quot;loading-title&quot;&gt;校准结果生成失败&lt;/div&gt;
       &lt;div class=&quot;loading-sub&quot;&gt;校准结果生成时出现了问题，请重试&lt;/div&gt;
       &lt;div class=&quot;nav&quot; style=&quot;justify-content:center;margin-top:18px;gap:12px;flex-wrap:wrap;&quot;&gt;
         &lt;button class=&quot;btn-primary&quot; onclick=&quot;generateResult()&quot;&gt;重新保存并生成结果&lt;/button&gt;
