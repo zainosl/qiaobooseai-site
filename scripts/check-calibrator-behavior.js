@@ -31,6 +31,9 @@ assert(html.includes('Math.min(8000'), 'uses capped exponential backoff');
 
 
 assert(html.includes('REQUEST_TIMEOUT_MS'), 'has per-request timeout constant');
+assert(html.includes('const REQUEST_TIMEOUT_MS = 15000'), 'request timeout is 15 seconds');
+assert(html.includes('校准结果生成失败'), 'failure title avoids data save wording');
+assert(!html.includes('数据保存失败，请重试'), 'old data-save failure title removed');
 assert(html.includes('AbortController'), 'uses AbortController to avoid stuck fetch');
 assert(html.includes('setTimeout(() =&gt; controller.abort()') || html.includes('setTimeout(() => controller.abort()'), 'aborts hung requests');
 assert(html.includes('clearTimeout(timeoutId)'), 'clears request timeout after response');
