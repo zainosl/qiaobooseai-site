@@ -1287,42 +1287,44 @@ const API_BASE_URLS = [
 ];
 const API_BASE_URL = API_BASE_URLS[0];
 const WECHAT_ID = &#x27;qiaoboose01&#x27;;
-const CALIBRATOR_VERSION = &#x27;2026-05-14-aliyun-fc&#x27;;
+const CALIBRATOR_VERSION = &#x27;2026-05-14-restructured-no-price-signal&#x27;;
 const SITE_COMMIT = &#x27;e697edd-plus-reliability&#x27;;
 const REQUEST_TIMEOUT_MS = 15000;
 
 const state = { step: 0, answers: {}, computed: {}, submission_id: &#x27;&#x27;, debug_id: `dbg_${Date.now()}_${Math.random().toString(36).slice(2,8)}` };
 
 const steps = [
-  { title:&#x27;背景与资产&#x27;, help:&#x27;先看你是不是有可迁移的经验、能力和个人业务基础。&#x27;, questions:[&#x27;occupation_type&#x27;,&#x27;years_experience&#x27;,&#x27;transferable_abilities&#x27;,&#x27;asset_list&#x27;,&#x27;possible_business_forms&#x27;] },
+  { title:&#x27;职业背景、工作方式与价值观&#x27;, help:&#x27;先看你的职业身份、工作方式、可迁移资产和长期价值取向。&#x27;, questions:[&#x27;occupation_type&#x27;,&#x27;years_experience&#x27;,&#x27;work_mode&#x27;,&#x27;transferable_abilities&#x27;,&#x27;asset_list&#x27;,&#x27;value_orientation&#x27;,&#x27;possible_business_forms&#x27;] },
   { title:&#x27;当前阶段&#x27;, help:&#x27;识别你现在处在一人公司探索的哪个阶段。&#x27;, questions:[&#x27;stage_self_select&#x27;] },
-  { title:&#x27;行动与投入&#x27;, help:&#x27;看看你最近到底做了什么，以及时间主要花在哪里。&#x27;, questions:[&#x27;action_list&#x27;,&#x27;current_time_spent&#x27;] },
-  { title:&#x27;困惑与结果&#x27;, help:&#x27;识别你最想解决的问题，以及最想付费拿到的阶段性结果。&#x27;, questions:[&#x27;primary_question&#x27;,&#x27;desired_outcome_label&#x27;,&#x27;outcome_urgency&#x27;] },
-  { title:&#x27;付费信号&#x27;, help:&#x27;最后看你过往付费行为、价格接受度和决策方式。&#x27;, questions:[&#x27;past_paid_max_amount_range&#x27;,&#x27;acceptable_price_range&#x27;,&#x27;decision_speed&#x27;] }
+  { title:&#x27;真实业务动作&#x27;, help:&#x27;这里只看过去 3 个月进入真实世界的业务动作，不把学习、买课或工具使用算作业务推进。&#x27;, questions:[&#x27;action_list&#x27;,&#x27;current_time_focus&#x27;] },
+  { title:&#x27;当前卡点与目标结果&#x27;, help:&#x27;识别你最想解决的问题，以及最影响你下一步时间投入的阶段性结果。&#x27;, questions:[&#x27;primary_question&#x27;,&#x27;desired_outcome_label&#x27;,&#x27;outcome_urgency&#x27;] },
+  { title:&#x27;成长推进方式&#x27;, help:&#x27;最后看你遇到重要卡点时如何推进、是否重视外部反馈，以及更适合什么支持方式。&#x27;, questions:[&#x27;problem_solving_style&#x27;,&#x27;growth_investment_behavior&#x27;,&#x27;support_preference&#x27;] }
 ];
 
 const q = {
-  occupation_type: { type:&#x27;single&#x27;, title:&#x27;你目前的职业/身份更接近哪一种？&#x27;, options:[&#x27;企业职场人&#x27;,&#x27;管理者/团队负责人&#x27;,&#x27;创业者/小企业主&#x27;,&#x27;独立软件服务者&#x27;,&#x27;技术/产品/运营/设计/市场/销售等专业角色&#x27;,&#x27;教育、心理、法律、财务、医疗、HR 等专业服务角色&#x27;,&#x27;咨询师/培训师/教练/顾问&#x27;,&#x27;内容创作者/自媒体从业者&#x27;,&#x27;自由职业&#x27;], extra:&#x27;其他&#x27;, extraKey:&#x27;occupation_type_other&#x27; },
-  years_experience: { type:&#x27;single&#x27;, title:&#x27;你的工作/专业积累大概有多久？&#x27;, options:[&#x27;0-3 年&#x27;,&#x27;3-5 年&#x27;,&#x27;5-10 年&#x27;,&#x27;10-15 年&#x27;,&#x27;15 年以上&#x27;,&#x27;暂时没有明确专业积累&#x27;] },
-  transferable_abilities: { type:&#x27;multi&#x27;, max:3, title:&#x27;你觉得自己目前最核心、最能迁移出来的能力是什么？&#x27;, hint:&#x27;最多选 3 项。&#x27;, options:[&#x27;专业技能/行业经验&#x27;,&#x27;解决复杂问题的能力&#x27;,&#x27;管理、组织、项目推进能力&#x27;,&#x27;咨询、诊断、陪伴、反馈能力&#x27;,&#x27;内容表达、写作、演讲、课程能力&#x27;,&#x27;销售、成交、客户沟通能力&#x27;,&#x27;产品、运营、增长、商业化能力&#x27;,&#x27;AI 工具应用/流程自动化能力&#x27;,&#x27;资源连接、社群运营、人脉整合能力&#x27;,&#x27;暂时说不清楚&#x27;], extra:&#x27;其他&#x27;, extraKey:&#x27;transferable_abilities_other&#x27;  },
-  asset_list: { type:&#x27;multi&#x27;, title:&#x27;你目前有哪些可以被转化为个人业务的基础？&#x27;, options:[&#x27;某个行业/岗位的专业经验&#x27;,&#x27;有产品、运营、销售、管理等可迁移能力&#x27;,&#x27;帮自己/别人解决过的具体问题&#x27;,&#x27;有可复用的方法、流程、SOP 或经验总结&#x27;,&#x27;有成功案例或可展示成果&#x27;,&#x27;有内容表达经验，如写作、视频、直播、分享&#x27;,&#x27;有咨询、培训、陪跑、社群、顾问经验&#x27;,&#x27;有客户、用户、学员或行业资源&#x27;,&#x27;有 AI 应用或提效经验&#x27;,&#x27;暂时说不清楚&#x27;], extra:&#x27;其他&#x27;, extraKey:&#x27;asset_list_other&#x27;  },
-  possible_business_forms: { type:&#x27;multi&#x27;, max:3, title:&#x27;如果未来真的做自己的事，你觉得它更可能接近哪种形态？&#x27;, hint:&#x27;最多选 3 项。&#x27;, options:[&#x27;咨询/顾问服务&#x27;,&#x27;线上/线下课程&#x27;,&#x27;训练营/陪跑/社群&#x27;,&#x27;内容 IP / 自媒体&#x27;,&#x27;企业服务/项目制服务&#x27;,&#x27;AI 工具/软件/自动化产品&#x27;,&#x27;电商/卖货/实体/本地服务&#x27;,&#x27;投资/交易/副业项目&#x27;,&#x27;还不确定&#x27;], extra:&#x27;其他&#x27;, extraKey:&#x27;possible_business_forms_other&#x27;  },
+  occupation_type: { type:&#x27;single&#x27;, title:&#x27;你目前的职业/身份更接近哪一种？&#x27;, options:[&#x27;企业职场人/专业岗位从业者&#x27;,&#x27;管理者/团队负责人&#x27;,&#x27;自由职业者/独立服务者&#x27;,&#x27;咨询师/培训师/教练/顾问&#x27;,&#x27;内容创作者/自媒体从业者&#x27;,&#x27;创业者/小企业主&#x27;,&#x27;技术/产品/运营/设计/市场/销售等专业角色&#x27;,&#x27;教育、心理、法律、财务、医疗、HR 等专业服务角色&#x27;,&#x27;暂时没有稳定职业身份&#x27;,&#x27;其他&#x27;], extra:&#x27;如果选择其他，可以补充你的职业/身份&#x27;, extraKey:&#x27;professional_identity&#x27; },
+  years_experience: { type:&#x27;single&#x27;, title:&#x27;你的工作/专业积累大概有多久？&#x27;, options:[&#x27;0-3 年&#x27;,&#x27;3-5 年&#x27;,&#x27;5-10 年&#x27;,&#x27;10-15 年&#x27;,&#x27;15 年以上&#x27;,&#x27;不适用/暂时没有明确专业积累&#x27;] },
+  work_mode: { type:&#x27;multi&#x27;, max:4, title:&#x27;你的工作状态，更接近下面哪种情况？&#x27;, hint:&#x27;最多选 4 项。&#x27;, options:[&#x27;主要按流程执行&#x27;,&#x27;需要稳定输出专业能力&#x27;,&#x27;需要持续学习新东西&#x27;,&#x27;需要解决复杂问题&#x27;,&#x27;需要对结果负责&#x27;,&#x27;收入和个人能力强相关&#x27;,&#x27;更依赖个人品牌/信任&#x27;,&#x27;时间自由度低，但收入相对稳定&#x27;,&#x27;我正在尝试建立自己的业务闭环&#x27;,&#x27;暂时说不清楚&#x27;,&#x27;其他&#x27;], extra:&#x27;如果选择其他，可以补充你的工作状态&#x27;, extraKey:&#x27;work_mode_other&#x27; },
+  transferable_abilities: { type:&#x27;multi&#x27;, max:3, title:&#x27;你觉得自己目前最核心、最能迁移出来的能力是什么？&#x27;, hint:&#x27;最多选 3 项。&#x27;, options:[&#x27;专业技能/行业经验&#x27;,&#x27;解决复杂问题的能力&#x27;,&#x27;管理、组织、项目推进能力&#x27;,&#x27;咨询、诊断、陪伴、反馈能力&#x27;,&#x27;内容表达、写作、演讲、课程能力&#x27;,&#x27;销售、成交、客户沟通能力&#x27;,&#x27;产品、运营、增长、商业化能力&#x27;,&#x27;AI 工具应用/流程自动化能力&#x27;,&#x27;资源连接、社群运营、人脉整合能力&#x27;,&#x27;暂时说不清楚&#x27;,&#x27;其他&#x27;], extra:&#x27;如果选择其他，可以补充你的可迁移能力&#x27;, extraKey:&#x27;transferable_abilities_other&#x27; },
+  asset_list: { type:&#x27;multi&#x27;, title:&#x27;你目前有哪些可以被转化为个人业务的基础？&#x27;, options:[&#x27;某个行业/岗位的专业经验&#x27;,&#x27;帮别人解决过具体问题&#x27;,&#x27;有可复用的方法、流程、SOP 或经验总结&#x27;,&#x27;有成功案例或可展示成果&#x27;,&#x27;有内容表达经验，如写作、视频、直播、分享&#x27;,&#x27;有咨询、培训、陪跑、社群、顾问经验&#x27;,&#x27;有客户、用户、学员或行业资源&#x27;,&#x27;有 AI 应用或提效经验&#x27;,&#x27;有产品、运营、销售、管理等可迁移能力&#x27;,&#x27;暂时说不清楚&#x27;,&#x27;其他&#x27;], extra:&#x27;如果选择其他，可以补充你的个人业务基础&#x27;, extraKey:&#x27;asset_list_other&#x27; },
+  value_orientation: { type:&#x27;multi&#x27;, max:3, title:&#x27;你对下面哪种状态感受最强？&#x27;, hint:&#x27;最多选 3 项。&#x27;, options:[&#x27;我不想长期重复低价值工作&#x27;,&#x27;我希望未来更多靠认知而不是工时赚钱&#x27;,&#x27;我希望未来有更自主的时间安排&#x27;,&#x27;我希望积累属于自己的长期资产&#x27;,&#x27;我不想长期依赖单一平台/公司&#x27;,&#x27;我希望自己的能力能够持续复利&#x27;,&#x27;我希望收入不要只和上班时间绑定&#x27;,&#x27;我希望未来能有更强的自主掌控感&#x27;,&#x27;暂时说不清楚&#x27;,&#x27;其他&#x27;], extra:&#x27;如果选择其他，可以补充你的真实感受&#x27;, extraKey:&#x27;value_orientation_other&#x27; },
+  possible_business_forms: { type:&#x27;multi&#x27;, max:3, title:&#x27;如果未来真的做自己的事，你觉得它更可能接近哪种形态？&#x27;, hint:&#x27;最多选 3 项。&#x27;, options:[&#x27;咨询/顾问服务&#x27;,&#x27;课程/训练营&#x27;,&#x27;陪跑/社群&#x27;,&#x27;内容 IP / 自媒体&#x27;,&#x27;自由职业服务&#x27;,&#x27;企业服务/项目制服务&#x27;,&#x27;AI 工具/软件/自动化产品&#x27;,&#x27;电商/卖货/实体/本地服务&#x27;,&#x27;投资/交易/副业项目&#x27;,&#x27;还不确定&#x27;,&#x27;其他&#x27;], extra:&#x27;如果选择其他，可以补充你想到的业务形态&#x27;, extraKey:&#x27;possible_business_forms_other&#x27; },
   stage_self_select: { type:&#x27;single&#x27;, title:&#x27;你现在更接近哪种状态？&#x27;, options:[
     {label:&#x27;阶段 0：只是对现在的工作/状态不太满意，但还没有认真想过做自己的事&#x27;, value:&#x27;阶段 0&#x27;},
     {label:&#x27;阶段 1：开始有想做自己的事的念头，但还没下定决心，也不知道适合做什么&#x27;, value:&#x27;阶段 1&#x27;},
     {label:&#x27;阶段 2：比较确定想做自己的事，但方向还不清楚，或者有几个方向没定下来&#x27;, value:&#x27;阶段 2&#x27;},
-    {label:&#x27;阶段 3：方向很清楚，但不知道怎么启动、怎么做产品、怎么找用户/客户，怎么用AI提效&#x27;, value:&#x27;阶段 3&#x27;},
+    {label:&#x27;阶段 3：方向很清楚，但不知道怎么启动、怎么做产品、怎么找用户/客户，怎么用 AI 提效&#x27;, value:&#x27;阶段 3&#x27;},
     {label:&#x27;阶段 4：已经有初步产品/服务/客户，但还不稳定，不知道怎么持续获客或稳定交付&#x27;, value:&#x27;阶段 4&#x27;},
     {label:&#x27;阶段 5：已经有相对稳定的业务模式，想继续放大&#x27;, value:&#x27;阶段 5&#x27;}
   ] },
-  action_list: { type:&#x27;multi&#x27;, title:&#x27;过去 3 个月，你为这件事做过哪些实际动作？&#x27;, options:[&#x27;只是想过，还没有实际行动&#x27;,&#x27;梳理过自己的能力、兴趣或方向&#x27;,&#x27;写过计划、定位或商业模式想法&#x27;,&#x27;发过相关内容/朋友圈/文章/视频&#x27;,&#x27;找潜在用户/客户聊过&#x27;,&#x27;做过用户访谈或需求调研&#x27;,&#x27;做过试服务、体验版或 MVP&#x27;,&#x27;收过钱，有过付费客户/用户&#x27;,&#x27;付费买过相关课程、社群、咨询、陪跑或工具&#x27;] , extra:&#x27;其他&#x27;, extraKey:&#x27;action_list_other&#x27; },
-  current_time_spent: { type:&#x27;multi&#x27;, title:&#x27;你现在主要把时间花在哪里？&#x27;, options:[&#x27;主要还在想和看内容，没有固定投入&#x27;,&#x27;在梳理自己适合做什么&#x27;,&#x27;在学习AI、课程、案例或工具&#x27;,&#x27;在做内容/账号/表达&#x27;,&#x27;在设计产品、课程、服务或方案&#x27;,&#x27;在找用户/客户聊天或做调研&#x27;,&#x27;在尝试获客、报价或成交&#x27;,&#x27;在交付已有客户/用户&#x27;,&#x27;在优化已有业务或放大&#x27;] , extra:&#x27;其他&#x27;, extraKey:&#x27;current_time_spent_other&#x27; },
-  primary_question: { type:&#x27;multi&#x27;, max:3, title:&#x27;你现在最想解决什么问题？&#x27;,  hint:&#x27;最多选 3 项。&#x27;,options:[&#x27;我到底要不要做自己的事&#x27;,&#x27;我适合做什么方向&#x27;,&#x27;我的经验/能力能不能转成一个个人业务&#x27;,&#x27;我应该服务谁、解决什么问题&#x27;,&#x27;我怎么把想法变成具体产品/服务&#x27;,&#x27;我怎么找到第一批用户/客户&#x27;,&#x27;我怎么表达价值、让别人愿意了解我&#x27;,&#x27;我怎么定价、沟通、成交&#x27;,&#x27;我怎么稳定获客、稳定交付或稳定收入&#x27;,&#x27;我怎么把已有业务继续放大&#x27;,&#x27;我现在不是不知道，而是缺执行节奏和外部反馈&#x27;], extra:&#x27;其他&#x27;, extraKey:&#x27;primary_question_other&#x27;  },
-  desired_outcome_label: { type:&#x27;single&#x27;, title:&#x27;如果接下来 4-8 周只能帮你拿到一个阶段性结果，你最希望是哪一个？&#x27;, options:[&#x27;判断我到底适不适合做自己的事&#x27;,&#x27;明确一个更适合自己的方向&#x27;,&#x27;判断我的经验/能力是否适合转成知识服务或个人业务&#x27;,&#x27;明确我应该服务谁、解决什么问题&#x27;,&#x27;把想法变成第一个具体产品/服务&#x27;,&#x27;找到第一批潜在用户/客户&#x27;,&#x27;设计内容表达、获客路径或信任建立方式&#x27;,&#x27;设计定价、沟通路径或成交方式&#x27;,&#x27;推动一次真实报价/成交验证&#x27;,&#x27;建立稳定执行节奏和外部反馈&#x27;,&#x27;完成业务的稳定变现&#x27;] , extra:&#x27;其他&#x27;, extraKey:&#x27;desired_outcome_label_other&#x27;  },
+  action_list: { type:&#x27;multi&#x27;, title:&#x27;过去 3 个月，你为这件事做过哪些真实动作？&#x27;, options:[&#x27;只是想过，还没有实际行动&#x27;,&#x27;梳理过自己的方向/定位&#x27;,&#x27;发过相关内容或表达观点&#x27;,&#x27;找潜在用户/客户聊过&#x27;,&#x27;做过用户访谈或需求调研&#x27;,&#x27;做过试服务、体验版或 MVP&#x27;,&#x27;发起过报价或合作邀请&#x27;,&#x27;有过真实付费客户/用户&#x27;,&#x27;有过复购、转介绍或持续合作&#x27;,&#x27;正在稳定交付&#x27;,&#x27;其他&#x27;], extra:&#x27;如果选择其他，可以补充你的真实业务动作&#x27;, extraKey:&#x27;action_list_other&#x27; },
+  current_time_focus: { type:&#x27;multi&#x27;, max:3, title:&#x27;你现在主要把时间投入在哪些事情上？&#x27;, hint:&#x27;最多选 3 项。&#x27;, options:[&#x27;思考方向和路径&#x27;,&#x27;做内容/表达观点&#x27;,&#x27;找用户/客户交流&#x27;,&#x27;设计产品/服务&#x27;,&#x27;获客/成交&#x27;,&#x27;客户交付&#x27;,&#x27;优化已有业务&#x27;,&#x27;AI/系统提效&#x27;,&#x27;信息输入和学习&#x27;,&#x27;暂时比较混乱&#x27;,&#x27;其他&#x27;], extra:&#x27;如果选择其他，可以补充你当前的时间投入&#x27;, extraKey:&#x27;current_time_focus_other&#x27; },
+  primary_question: { type:&#x27;multi&#x27;, max:3, title:&#x27;你现在最想解决什么问题？&#x27;,  hint:&#x27;最多选 3 项。&#x27;, options:[&#x27;我到底要不要做自己的事&#x27;,&#x27;我适合做什么方向&#x27;,&#x27;我的经验/能力能不能转成一个个人业务&#x27;,&#x27;我应该服务谁、解决什么问题&#x27;,&#x27;我怎么把想法变成具体产品/服务&#x27;,&#x27;我怎么找到第一批用户/客户&#x27;,&#x27;我怎么表达价值、让别人愿意了解我&#x27;,&#x27;我怎么定价、沟通、成交&#x27;,&#x27;我怎么稳定获客、稳定交付或稳定收入&#x27;,&#x27;我怎么把已有业务继续放大&#x27;,&#x27;我现在不是不知道，而是缺执行节奏和外部反馈&#x27;,&#x27;其他&#x27;], extra:&#x27;如果选择其他，可以补充你现在最想解决的问题&#x27;, extraKey:&#x27;primary_question_other&#x27; },
+  desired_outcome_label: { type:&#x27;single&#x27;, title:&#x27;如果接下来 4-8 周只能帮你拿到一个阶段性结果，你最希望是哪一个？&#x27;, options:[&#x27;判断我到底适不适合做自己的事&#x27;,&#x27;明确一个更适合自己的方向&#x27;,&#x27;判断我的经验/能力是否适合转成知识服务或个人业务&#x27;,&#x27;明确我应该服务谁、解决什么问题&#x27;,&#x27;把想法变成第一个具体产品/服务&#x27;,&#x27;找到第一批潜在用户/客户&#x27;,&#x27;设计内容表达、获客路径或信任建立方式&#x27;,&#x27;设计定价、沟通路径或成交方式&#x27;,&#x27;推动一次真实报价/成交验证&#x27;,&#x27;建立稳定执行节奏和外部反馈&#x27;,&#x27;完成业务的稳定变现&#x27;,&#x27;其他&#x27;], extra:&#x27;如果选择其他，可以补充你最想拿到的阶段性结果&#x27;, extraKey:&#x27;desired_outcome_label_other&#x27; },
   outcome_urgency: { type:&#x27;single&#x27;, title:&#x27;上面这个结果，对你现在有多重要？&#x27;, options:[&#x27;只是有点想弄清楚，不急&#x27;,&#x27;有影响，但暂时可以自己慢慢摸索&#x27;,&#x27;比较重要，会明显影响我接下来怎么投入时间&#x27;,&#x27;很重要，不解决就容易继续浪费时间&#x27;,&#x27;非常重要，我已经被这个问题卡住了&#x27;] },
-  past_paid_max_amount_range: { type:&#x27;single&#x27;, title:&#x27;过去一年，你为类似问题付过的最高金额大概是多少？&#x27;, options:[&#x27;没有付过费&#x27;,&#x27;500 元以内&#x27;,&#x27;500-1000 元&#x27;,&#x27;1000-3000 元&#x27;,&#x27;3000-6000 元&#x27;,&#x27;6000-10000 元&#x27;,&#x27;10000 元以上&#x27;,&#x27;不方便说 / 记不清&#x27;], extra:&#x27;如果愿意，可以写一下你买过什么产品/课程/服务（可选）&#x27;, extraKey:&#x27;past_paid_item_optional&#x27; },
-  acceptable_price_range: { type:&#x27;single&#x27;, dynamicTitle:true, title:&#x27;如果有人能帮你围绕「{outcome}」做一次 4-8 周的具体推进，帮你少走弯路、少浪费时间，你能接受的价格区间是？&#x27;, options:[&#x27;目前不考虑付费&#x27;,&#x27;500 元以内&#x27;,&#x27;500-1000 元&#x27;,&#x27;1000-3000 元&#x27;,&#x27;3000-6000 元&#x27;,&#x27;6000-10000 元&#x27;,&#x27;10000 元以上&#x27;,&#x27;要看具体方案和可信度&#x27;] },
-  decision_speed: { type:&#x27;single&#x27;, title:&#x27;如果你觉得这件事真的适合你，你通常会怎么决策？&#x27;, options:[&#x27;我可以自己快速决定&#x27;,&#x27;我会考虑几天&#x27;,&#x27;我需要比较不同方案&#x27;,&#x27;我需要和家人/合伙人商量&#x27;,&#x27;我通常会观望很久&#x27;] }
+  problem_solving_style: { type:&#x27;multi&#x27;, max:3, title:&#x27;当你遇到重要卡点时，你通常更接近哪种状态？&#x27;, hint:&#x27;最多选 3 项。&#x27;, options:[&#x27;我会先自己研究和尝试&#x27;,&#x27;我会大量搜索案例和信息&#x27;,&#x27;我会找同行/朋友交流&#x27;,&#x27;我会主动请教有经验的人&#x27;,&#x27;我愿意借助工具提高效率&#x27;,&#x27;我希望有人帮我减少试错&#x27;,&#x27;我更希望有人给我反馈和校准&#x27;,&#x27;我容易想很多，但推进较慢&#x27;,&#x27;暂时说不清楚&#x27;,&#x27;其他&#x27;], extra:&#x27;如果选择其他，可以补充你遇到卡点时的状态&#x27;, extraKey:&#x27;problem_solving_style_other&#x27; },
+  growth_investment_behavior: { type:&#x27;multi&#x27;, title:&#x27;过去一年，你在哪些事情上有过主动成长投入？&#x27;, options:[&#x27;买过课程/训练营&#x27;,&#x27;用过 AI / 效率工具&#x27;,&#x27;参加过社群/线下交流&#x27;,&#x27;请教过顾问/教练/前辈&#x27;,&#x27;系统学习过某个主题&#x27;,&#x27;做过副业/个人项目尝试&#x27;,&#x27;长期输出内容&#x27;,&#x27;做过长期复盘或记录&#x27;,&#x27;暂时主要靠自己摸索&#x27;,&#x27;其他&#x27;], extra:&#x27;如果选择其他，可以补充你的成长投入&#x27;, extraKey:&#x27;growth_investment_behavior_other&#x27; },
+  support_preference: { type:&#x27;multi&#x27;, max:2, title:&#x27;如果接下来推进你最想解决的问题，你更希望哪种方式？&#x27;, hint:&#x27;最多选 2 项。&#x27;, options:[&#x27;我想先自己慢慢探索&#x27;,&#x27;我希望有人给我一个清晰路径&#x27;,&#x27;我希望得到具体反馈和校准&#x27;,&#x27;我希望有人陪我一起推进&#x27;,&#x27;我希望尽量减少试错&#x27;,&#x27;我更适合边做边调整&#x27;,&#x27;我现在还不确定&#x27;,&#x27;其他&#x27;], extra:&#x27;如果选择其他，可以补充你更希望的推进方式&#x27;, extraKey:&#x27;support_preference_other&#x27; }
 };
 
 function start(){ document.getElementById(&#x27;intro&#x27;).classList.add(&#x27;hidden&#x27;); document.getElementById(&#x27;app&#x27;).classList.remove(&#x27;hidden&#x27;); render(); }
@@ -1400,15 +1402,15 @@ const esc = s =&gt; String(s ?? &#x27;&#x27;).replace(/[&amp;&lt;&gt;&quot;&#x27
 
 function scoreActions(actions){
   let score=0; const a=actions||[];
-  if(a.includes(&#x27;梳理过自己的能力、兴趣或方向&#x27;)) score=Math.max(score,1);
-  if(a.includes(&#x27;写过计划、定位或商业模式想法&#x27;)) score=Math.max(score,1);
-  if(a.includes(&#x27;发过相关内容/朋友圈/文章/视频&#x27;)) score=Math.max(score,2);
+  if(a.includes(&#x27;梳理过自己的方向/定位&#x27;)) score=Math.max(score,1);
+  if(a.includes(&#x27;发过相关内容或表达观点&#x27;)) score=Math.max(score,2);
   if(a.includes(&#x27;找潜在用户/客户聊过&#x27;)) score=Math.max(score,3);
   if(a.includes(&#x27;做过用户访谈或需求调研&#x27;)) score=Math.max(score,3);
   if(a.includes(&#x27;做过试服务、体验版或 MVP&#x27;)) score=Math.max(score,4);
-  if(a.includes(&#x27;报过价或发起过服务邀请&#x27;)) score=Math.max(score,5);
-  if(a.includes(&#x27;收过钱，有过付费客户/用户&#x27;)) score=Math.max(score,6);
-  if(a.includes(&#x27;买过相关课程、社群、咨询、陪跑或工具&#x27;) || a.includes(&#x27;付费买过相关课程、社群、咨询、陪跑或工具&#x27;)) score += 1;
+  if(a.includes(&#x27;发起过报价或合作邀请&#x27;)) score=Math.max(score,5);
+  if(a.includes(&#x27;有过真实付费客户/用户&#x27;)) score=Math.max(score,6);
+  if(a.includes(&#x27;有过复购、转介绍或持续合作&#x27;)) score=Math.max(score,7);
+  if(a.includes(&#x27;正在稳定交付&#x27;)) score=Math.max(score,8);
   return score;
 }
 
@@ -1419,31 +1421,54 @@ function calc(){
   const assetScore = (a.asset_list||[]).filter(x=&gt;![&#x27;暂时说不清楚&#x27;,&#x27;其他&#x27;].includes(x)).length;
   const transferScore = (a.transferable_abilities||[]).filter(x=&gt;![&#x27;暂时说不清楚&#x27;,&#x27;其他&#x27;].includes(x)).length;
   const forms = a.possible_business_forms || [];
-  const ksForms = [&#x27;咨询/顾问服务&#x27;,&#x27;线上/线下课程&#x27;,&#x27;课程/训练营&#x27;,&#x27;训练营/陪跑/社群&#x27;,&#x27;陪跑/社群&#x27;,&#x27;内容 IP / 自媒体&#x27;,&#x27;企业服务/项目制服务&#x27;,&#x27;自由职业服务&#x27;];
+  const ksForms = [&#x27;咨询/顾问服务&#x27;,&#x27;课程/训练营&#x27;,&#x27;陪跑/社群&#x27;,&#x27;内容 IP / 自媒体&#x27;,&#x27;企业服务/项目制服务&#x27;,&#x27;自由职业服务&#x27;];
   const ksInterest = forms.some(x=&gt;ksForms.includes(x)) ? &#x27;高&#x27; : (forms.includes(&#x27;还不确定&#x27;) ? &#x27;不明确&#x27; : &#x27;低&#x27;);
   let calibrated = s0;
   if(s0&gt;=3 &amp;&amp; actionScore&lt;=1 &amp;&amp; hasAny(a.primary_question, [&#x27;我适合做什么方向&#x27;,&#x27;我的经验/能力能不能转成一个个人业务&#x27;])) calibrated = 2;
   if(s0&lt;=2 &amp;&amp; actionScore&gt;=4) calibrated = 3;
-  if(s0&lt;=3 &amp;&amp; (a.action_list||[]).includes(&#x27;收过钱，有过付费客户/用户&#x27;)) calibrated = 4;
+  if(s0&lt;=3 &amp;&amp; (a.action_list||[]).includes(&#x27;有过真实付费客户/用户&#x27;)) calibrated = 4;
+  if(s0&lt;=4 &amp;&amp; ((a.action_list||[]).includes(&#x27;有过复购、转介绍或持续合作&#x27;) || (a.action_list||[]).includes(&#x27;正在稳定交付&#x27;))) calibrated = Math.max(calibrated,4);
   const calibratedStage = `阶段 ${calibrated}`;
-  const profileScore = ([&#x27;3-5 年&#x27;,&#x27;5-10 年&#x27;,&#x27;10-15 年&#x27;,&#x27;15 年以上&#x27;].includes(a.years_experience)?1:0) + (assetScore&gt;=3?1:0) + (ksInterest===&#x27;高&#x27;?1:0) + ([2,3,4].includes(calibrated)?1:0) + (actionScore&gt;=2?1:0);
-  const profileMatch = profileScore&gt;=4?&#x27;高&#x27;:(profileScore&gt;=2?&#x27;中&#x27;:&#x27;低&#x27;);
-  const highRisk = (calibrated&lt;=2 &amp;&amp; [&#x27;在做内容/账号/表达&#x27;,&#x27;在设计产品、课程、服务或方案&#x27;,&#x27;在尝试获客、报价或成交&#x27;].includes(a.current_time_spent)) || (calibrated===3 &amp;&amp; [&#x27;主要还在想和看内容，没有固定投入&#x27;,&#x27;在学习方法、课程、案例或工具&#x27;,&#x27;在学习AI、课程、案例或工具&#x27;].includes(a.current_time_spent));
+
+  const work = a.work_mode || [];
+  const values = a.value_orientation || [];
+  const problemStyle = a.problem_solving_style || [];
+  const growth = a.growth_investment_behavior || [];
+  const support = a.support_preference || [];
+  const focus = a.current_time_focus || [];
+
+  const complexityScore = [&#x27;需要稳定输出专业能力&#x27;,&#x27;需要持续学习新东西&#x27;,&#x27;需要解决复杂问题&#x27;,&#x27;需要对结果负责&#x27;,&#x27;收入和个人能力强相关&#x27;,&#x27;更依赖个人品牌/信任&#x27;,&#x27;我正在尝试建立自己的业务闭环&#x27;].filter(x=&gt;work.includes(x)).length;
+  const timeValueScore = [&#x27;我不想长期重复低价值工作&#x27;,&#x27;我希望未来更多靠认知而不是工时赚钱&#x27;,&#x27;我希望未来有更自主的时间安排&#x27;,&#x27;我希望积累属于自己的长期资产&#x27;,&#x27;我不想长期依赖单一平台/公司&#x27;,&#x27;我希望自己的能力能够持续复利&#x27;,&#x27;我希望收入不要只和上班时间绑定&#x27;,&#x27;我希望未来能有更强的自主掌控感&#x27;].filter(x=&gt;values.includes(x)).length + [&#x27;我希望有人帮我减少试错&#x27;,&#x27;我更希望有人给我反馈和校准&#x27;].filter(x=&gt;problemStyle.includes(x)).length;
+  const feedbackScore = [&#x27;我会找同行/朋友交流&#x27;,&#x27;我会主动请教有经验的人&#x27;,&#x27;我更希望有人给我反馈和校准&#x27;].filter(x=&gt;problemStyle.includes(x)).length + [&#x27;我希望得到具体反馈和校准&#x27;,&#x27;我希望有人陪我一起推进&#x27;,&#x27;我更适合边做边调整&#x27;].filter(x=&gt;support.includes(x)).length;
+  const growthScore = [&#x27;需要持续学习新东西&#x27;,&#x27;需要解决复杂问题&#x27;,&#x27;我正在尝试建立自己的业务闭环&#x27;].filter(x=&gt;work.includes(x)).length + [&#x27;用过 AI / 效率工具&#x27;,&#x27;请教过顾问/教练/前辈&#x27;,&#x27;系统学习过某个主题&#x27;,&#x27;做过副业/个人项目尝试&#x27;,&#x27;长期输出内容&#x27;,&#x27;做过长期复盘或记录&#x27;].filter(x=&gt;growth.includes(x)).length;
+  const supportScore = [&#x27;我希望有人给我一个清晰路径&#x27;,&#x27;我希望得到具体反馈和校准&#x27;,&#x27;我希望有人陪我一起推进&#x27;,&#x27;我希望尽量减少试错&#x27;,&#x27;我更适合边做边调整&#x27;].filter(x=&gt;support.includes(x)).length + [&#x27;我希望有人帮我减少试错&#x27;,&#x27;我更希望有人给我反馈和校准&#x27;].filter(x=&gt;problemStyle.includes(x)).length;
+
+  const profileScore = ([&#x27;3-5 年&#x27;,&#x27;5-10 年&#x27;,&#x27;10-15 年&#x27;,&#x27;15 年以上&#x27;].includes(a.years_experience)?1:0) + (assetScore&gt;=3?1:0) + (ksInterest===&#x27;高&#x27;?1:0) + ([2,3,4].includes(calibrated)?1:0) + (complexityScore&gt;=3?1:0) + (actionScore&gt;=2?1:0);
+  const profileMatch = profileScore&gt;=5?&#x27;高&#x27;:(profileScore&gt;=3?&#x27;中&#x27;:&#x27;低&#x27;);
+  const highRisk = (calibrated&lt;=2 &amp;&amp; [&#x27;做内容/表达观点&#x27;,&#x27;设计产品/服务&#x27;,&#x27;获客/成交&#x27;].some(x=&gt;focus.includes(x))) || (calibrated===3 &amp;&amp; [&#x27;信息输入和学习&#x27;,&#x27;思考方向和路径&#x27;,&#x27;暂时比较混乱&#x27;].some(x=&gt;focus.includes(x)));
   const timeRisk = highRisk ? &#x27;高&#x27; : ((actionScore&lt;=1 &amp;&amp; calibrated&gt;=2) || (calibrated!==s0) ? &#x27;中&#x27; : &#x27;低&#x27;);
-  const paidRank = [&#x27;没有付过费&#x27;,&#x27;500 元以内&#x27;,&#x27;500-1000 元&#x27;,&#x27;1000-3000 元&#x27;,&#x27;3000-6000 元&#x27;,&#x27;6000-10000 元&#x27;,&#x27;10000 元以上&#x27;,&#x27;不方便说 / 记不清&#x27;].indexOf(a.past_paid_max_amount_range);
-  const priceRank = [&#x27;目前不考虑付费&#x27;,&#x27;500 元以内&#x27;,&#x27;500-1000 元&#x27;,&#x27;1000-3000 元&#x27;,&#x27;3000-6000 元&#x27;,&#x27;6000-10000 元&#x27;,&#x27;10000 元以上&#x27;,&#x27;要看具体方案和可信度&#x27;].indexOf(a.acceptable_price_range);
   const urgentStrong = [&#x27;很重要，不解决就容易继续浪费时间&#x27;,&#x27;非常重要，我已经被这个问题卡住了&#x27;].includes(a.outcome_urgency);
-  const fastDecision = [&#x27;我可以自己快速决定&#x27;,&#x27;我会考虑几天&#x27;].includes(a.decision_speed);
-  const paymentScore = (urgentStrong?1:0) + (paidRank&gt;=3 &amp;&amp; paidRank&lt;=6?1:0) + ((priceRank&gt;=4 &amp;&amp; priceRank&lt;=6) || a.acceptable_price_range===&#x27;要看具体方案和可信度&#x27;?1:0) + (fastDecision?1:0) + (actionScore&gt;=2?1:0);
-  const paymentSignal = paymentScore&gt;=4?&#x27;强&#x27;:(paymentScore&gt;=2?&#x27;中&#x27;:&#x27;弱&#x27;);
+  const growthDrive = growthScore&gt;=5?&#x27;高&#x27;:(growthScore&gt;=3?&#x27;中&#x27;:&#x27;低&#x27;);
+  const timeValue = timeValueScore&gt;=4?&#x27;高&#x27;:(timeValueScore&gt;=2?&#x27;中&#x27;:&#x27;低&#x27;);
+  const feedbackAwareness = feedbackScore&gt;=3?&#x27;高&#x27;:(feedbackScore&gt;=1?&#x27;中&#x27;:&#x27;低&#x27;);
+  const longTermPotentialScore = (urgentStrong?1:0) + (timeValue===&#x27;高&#x27;?1:0) + (feedbackAwareness===&#x27;高&#x27;?1:0) + (supportScore&gt;=2?1:0) + (growthDrive!==&#x27;低&#x27;?1:0) + (actionScore&gt;=2?1:0);
+  const longTermPaidPotential = longTermPotentialScore&gt;=5?&#x27;高&#x27;:(longTermPotentialScore&gt;=3?&#x27;中&#x27;:&#x27;低&#x27;);
   const ksPotential = (assetScore&gt;=4 &amp;&amp; ksInterest===&#x27;高&#x27; &amp;&amp; [2,3,4].includes(calibrated)) ? &#x27;高&#x27; : (assetScore&gt;=2 || ksInterest===&#x27;高&#x27; ? &#x27;中&#x27; : &#x27;暂不明确&#x27;);
   let segment = &#x27;P3&#x27;;
-  if([2,3,4].includes(calibrated) &amp;&amp; profileMatch===&#x27;高&#x27; &amp;&amp; [&#x27;高&#x27;,&#x27;中&#x27;].includes(ksPotential) &amp;&amp; [&#x27;强&#x27;,&#x27;中&#x27;].includes(paymentSignal)) segment=&#x27;P0&#x27;;
+  if([2,3,4].includes(calibrated) &amp;&amp; profileMatch===&#x27;高&#x27; &amp;&amp; [&#x27;高&#x27;,&#x27;中&#x27;].includes(ksPotential) &amp;&amp; [&#x27;高&#x27;,&#x27;中&#x27;].includes(longTermPaidPotential)) segment=&#x27;P0&#x27;;
   else if([1,2,3].includes(calibrated) &amp;&amp; profileMatch!==&#x27;低&#x27;) segment=&#x27;P1&#x27;;
   else if([4,5].includes(calibrated) || ksInterest===&#x27;低&#x27;) segment=&#x27;P2&#x27;;
   const ctaType = segment===&#x27;P0&#x27;?&#x27;P0_CONSULTATION&#x27;:segment===&#x27;P1&#x27;?&#x27;P1_WECHAT_NURTURE&#x27;:segment===&#x27;P2&#x27;?&#x27;P2_KEEP_IN_TOUCH&#x27;:&#x27;P3_CONTENT_ONLY&#x27;;
   const checkPoint = recommendedCheck(calibrated, a.desired_outcome_label);
-  state.computed = { transferable_ability_score:transferScore, asset_score:assetScore, knowledge_service_interest:ksInterest, non_knowledge_service_path:ksInterest===&#x27;低&#x27;, stage_score_initial:s0, calibrated_stage:calibratedStage, action_score:actionScore, current_action_focus:a.current_time_spent, blocker_type:blockerType(a.primary_question), desired_paid_result:a.desired_outcome_label, pain_intensity: urgentStrong?&#x27;强&#x27;:&#x27;中&#x27;, has_paid_before:a.past_paid_max_amount_range!==&#x27;没有付过费&#x27;, price_acceptance: paymentSignal===&#x27;强&#x27;?&#x27;中高&#x27;:paymentSignal, profile_match:profileMatch, time_waste_risk:timeRisk, payment_intent_signal:paymentSignal, knowledge_service_potential:ksPotential, user_segment:segment, recommended_check_point:checkPoint, cta_type:ctaType };
+  state.computed = {
+    occupation_type:a.occupation_type, professional_identity:a.professional_identity,
+    learning_pressure:work.includes(&#x27;需要持续学习新东西&#x27;), result_responsibility:work.includes(&#x27;需要对结果负责&#x27;), complexity_level:complexityScore, income_skill_dependency:work.includes(&#x27;收入和个人能力强相关&#x27;), personal_brand_dependency:work.includes(&#x27;更依赖个人品牌/信任&#x27;), business_building_tendency:work.includes(&#x27;我正在尝试建立自己的业务闭环&#x27;),
+    transferable_ability_score:transferScore, asset_score:assetScore, knowledge_service_interest:ksInterest, non_knowledge_service_path:ksInterest===&#x27;低&#x27;,
+    autonomy_need:values.includes(&#x27;我希望未来有更自主的时间安排&#x27;) || values.includes(&#x27;我希望未来能有更强的自主掌控感&#x27;), leverage_awareness:values.includes(&#x27;我希望未来更多靠认知而不是工时赚钱&#x27;) || values.includes(&#x27;我希望自己的能力能够持续复利&#x27;), anti_time_selling_tendency:values.includes(&#x27;我不想长期重复低价值工作&#x27;) || values.includes(&#x27;我希望收入不要只和上班时间绑定&#x27;), long_term_asset_awareness:values.includes(&#x27;我希望积累属于自己的长期资产&#x27;),
+    stage_score_initial:s0, calibrated_stage:calibratedStage, action_score:actionScore, validation_level:actionScore&gt;=4?&#x27;高&#x27;:(actionScore&gt;=2?&#x27;中&#x27;:&#x27;低&#x27;), monetization_stage:actionScore&gt;=6?&#x27;已成交/交付&#x27;:(actionScore&gt;=5?&#x27;接近成交&#x27;:&#x27;未成交&#x27;), current_action_focus:focus, execution_focus:focus, stage_match_level:timeRisk===&#x27;低&#x27;?&#x27;匹配&#x27;:&#x27;可能错配&#x27;, blocker_type:blockerType(a.primary_question), desired_stage_result:a.desired_outcome_label, pain_intensity: urgentStrong?&#x27;强&#x27;:&#x27;中&#x27;,
+    feedback_awareness:feedbackAwareness, trial_error_avoidance:problemStyle.includes(&#x27;我希望有人帮我减少试错&#x27;) || support.includes(&#x27;我希望尽量减少试错&#x27;), execution_block:problemStyle.includes(&#x27;我容易想很多，但推进较慢&#x27;), ai_adoption:growth.includes(&#x27;用过 AI / 效率工具&#x27;), external_support_usage:growth.includes(&#x27;请教过顾问/教练/前辈&#x27;) || growth.includes(&#x27;参加过社群/线下交流&#x27;), long_term_growth_tendency:growthDrive, coaching_fit:supportScore&gt;=2?&#x27;高&#x27;:(supportScore&gt;=1?&#x27;中&#x27;:&#x27;低&#x27;), feedback_need:feedbackAwareness, execution_support_need:support.includes(&#x27;我希望有人陪我一起推进&#x27;),
+    profile_match:profileMatch, time_waste_risk:timeRisk, payment_intent_signal:longTermPaidPotential, long_term_paid_potential:longTermPaidPotential, high_growth_drive:growthDrive, high_time_value_sense:timeValue, knowledge_service_potential:ksPotential, user_segment:segment, recommended_check_point:checkPoint, cta_type:ctaType
+  };
 }
 
 function blockerType(x){
@@ -1481,7 +1506,7 @@ function evidenceRows(){
   return [
     [&#x27;你自选的当前阶段&#x27;, a.stage_self_select, `系统校准为 ${c.calibrated_stage}，会结合行动证据而不是只看自我判断。`],
     [&#x27;过去 3 个月实际动作&#x27;, fmtList(a.action_list), `行动成熟度约为 ${c.action_score}/6，用来判断你是否已经进入真实反馈或成交验证。`],
-    [&#x27;当前主要时间投入&#x27;, a.current_time_spent, `这是判断时间浪费风险的关键。如果投入动作早于/晚于阶段，就容易空转。`],
+    [&#x27;当前主要时间投入&#x27;, fmtList(a.current_time_focus), `这是判断时间浪费风险的关键。如果投入动作早于/晚于阶段，就容易空转。`],
     [&#x27;当前最想解决的问题&#x27;, fmtList(a.primary_question), `你的真实卡点更接近「${c.blocker_type}」，行动建议会围绕这个卡点生成。`],
     [&#x27;最想拿到的阶段性结果&#x27;, a.desired_outcome_label, `这决定接下来 4-8 周应该追求的不是宏大目标，而是一个可推进的阶段结果。`],
     [&#x27;已有资产与能力&#x27;, `${fmtList(a.transferable_abilities)}；${fmtList(a.asset_list)}`, `资产分 ${c.asset_score}，能力分 ${c.transferable_ability_score}。它们决定你能从哪里开始验证，而不是决定你“适不适合”。`]
@@ -1547,7 +1572,7 @@ async function generateResult(){
 }
 
 function renderSubmitError(err){
-  logClientEvent(&#x27;submit_before_result_blocked&#x27;, { error:err && err.message ? err.message : String(err) });
+  logClientEvent(&#x27;submit_before_result_blocked&#x27;, { error:err &amp;&amp; err.message ? err.message : String(err) });
   document.getElementById(&#x27;result&#x27;).innerHTML = `
     &lt;div class=&quot;loading-card&quot;&gt;
       &lt;div class=&quot;loading-title&quot;&gt;校准结果生成失败&lt;/div&gt;
@@ -1562,7 +1587,7 @@ function renderSubmitError(err){
 
 function resultText(){
   const d=pathDiagnosis(), c=state.computed, a=state.answers;
-  return `一人公司探索路径校准结果\n\n${d.name}\n${d.one}\n\n校准说明：${d.mismatch}\n\n你的关键证据：\n- 实际动作：${fmtList(a.action_list)}\n- 时间投入：${fmtList(a.current_time_spent)}\n- 当前卡点：${fmtList(a.primary_question)}\n- 最想拿到的结果：${a.desired_outcome_label}\n\n下一步优先检查：${c.recommended_check_point}\n\n行动建议：\n${actionPlan().map(x=&gt;`${x[0]}. ${x[1]}`).join(&#x27;\n&#x27;)}`;
+  return `一人公司探索路径校准结果\n\n${d.name}\n${d.one}\n\n校准说明：${d.mismatch}\n\n你的关键证据：\n- 实际动作：${fmtList(a.action_list)}\n- 时间投入：${fmtList(a.current_time_focus)}\n- 当前卡点：${fmtList(a.primary_question)}\n- 最想拿到的结果：${a.desired_outcome_label}\n\n下一步优先检查：${c.recommended_check_point}\n\n行动建议：\n${actionPlan().map(x=&gt;`${x[0]}. ${x[1]}`).join(&#x27;\n&#x27;)}`;
 }
 
 function mdValue(v){ return arr(v).filter(Boolean).join(&#x27;、&#x27;) || &#x27;未填写&#x27;; }
@@ -1626,7 +1651,7 @@ ${evidence}
 
 ${riskCopy(c.time_waste_risk)}
 
-结合你的当前投入：${mdValue(a.current_time_spent)}。如果它没有直接服务于「${d.task}」，就要警惕它变成看起来很努力、实际没有推进的动作。
+结合你的当前投入：${mdValue(a.current_time_focus)}。如果它没有直接服务于「${d.task}」，就要警惕它变成看起来很努力、实际没有推进的动作。
 
 ### 接下来 4 周的校准行动
 
@@ -1699,7 +1724,7 @@ function renderResult(){
 
     &lt;div class=&quot;section result-section&quot;&gt;
       &lt;h3&gt;⚠️ 你最可能浪费时间的地方&lt;/h3&gt;
-      &lt;div class=&quot;result-box&quot;&gt;${esc(riskCopy(c.time_waste_risk))}&lt;br&gt;&lt;br&gt;&lt;strong style=&quot;color:var(--text);&quot;&gt;结合你的当前投入：&lt;/strong&gt;${esc(a.current_time_spent)}。如果它没有直接服务于「${esc(d.task)}」，就要警惕它变成看起来很努力、实际没有推进的动作。&lt;/div&gt;
+      &lt;div class=&quot;result-box&quot;&gt;${esc(riskCopy(c.time_waste_risk))}&lt;br&gt;&lt;br&gt;&lt;strong style=&quot;color:var(--text);&quot;&gt;结合你的当前投入：&lt;/strong&gt;${esc(fmtList(a.current_time_focus))}。如果它没有直接服务于「${esc(d.task)}」，就要警惕它变成看起来很努力、实际没有推进的动作。&lt;/div&gt;
     &lt;/div&gt;
 
     &lt;div class=&quot;section result-section&quot;&gt;
@@ -1776,12 +1801,12 @@ async function postJsonWithRetry(path, payload, options = {}){
         if(attempt &lt; attempts) await sleep(Math.min(8000, 1000 * Math.pow(2, attempt - 1)));
       }
     }
-    logClientEvent(`${label}_api_base_exhausted`, { api_base_url:baseUrl, error:lastError && lastError.message });
+    logClientEvent(`${label}_api_base_exhausted`, { api_base_url:baseUrl, error:lastError &amp;&amp; lastError.message });
   }
   throw lastError;
 }
 function getParentPageUrl(){
-  try { return window.parent && window.parent.location ? window.parent.location.href : &#x27;&#x27;; } catch(_) { return &#x27;&#x27;; }
+  try { return window.parent &amp;&amp; window.parent.location ? window.parent.location.href : &#x27;&#x27;; } catch(_) { return &#x27;&#x27;; }
 }
 function buildPayload(){
   return { debug_id: state.debug_id, client_debug_id: state.debug_id, submission_id: state.submission_id, timestamp:new Date().toISOString(), source:getUrlParam(&#x27;source&#x27;)||getUrlParam(&#x27;utm_source&#x27;)||&#x27;direct&#x27;, utm_source:getUrlParam(&#x27;utm_source&#x27;), utm_campaign:getUrlParam(&#x27;utm_campaign&#x27;), page_url:location.href, parent_page_url:getParentPageUrl(), referrer:document.referrer, user_agent:navigator.userAgent, frontend_version:CALIBRATOR_VERSION, site_commit:SITE_COMMIT, browser_language:navigator.language, screen_size:`${window.screen?.width || &#x27;&#x27;}x${window.screen?.height || &#x27;&#x27;}`, timezone:Intl.DateTimeFormat().resolvedOptions().timeZone, answers:{...state.answers, desired_outcome:state.answers.desired_outcome_label}, computed:state.computed };
