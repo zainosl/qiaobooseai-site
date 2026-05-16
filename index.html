@@ -569,12 +569,262 @@
   }
   .tool-entry-btn:hover { background: var(--accent2); transform: translateY(-2px); }
 
+  /* ════ ANIMATIONS & MICRO-INTERACTIONS ════ */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes slideInLeft {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes pulseGlow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(88,225,193,0); }
+    50% { box-shadow: 0 0 20px 4px rgba(88,225,193,0.15); }
+  }
+  @keyframes progressShimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  /* Screen content entrance */
+  .screen.in-view .section-eyebrow,
+  .screen.in-view .section-title,
+  .screen.in-view .s1-tag,
+  .screen.in-view .s1-title,
+  .screen.in-view .s1-sub,
+  .screen.in-view .tags,
+  .screen.in-view .s2-title,
+  .screen.in-view .s2-cols,
+  .screen.in-view .s2-big,
+  .screen.in-view .s3-desc,
+  .screen.in-view .s3-grid,
+  .screen.in-view .compare-list,
+  .screen.in-view .goal-cards,
+  .screen.in-view .trust-split,
+  .screen.in-view .invite-cols,
+  .screen.in-view .progress-split,
+  .screen.in-view .fit-cols,
+  .screen.in-view .s10-layout {
+    animation: fadeInUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .screen .section-eyebrow,
+  .screen .section-title,
+  .screen .s1-tag,
+  .screen .s1-title,
+  .screen .s1-sub,
+  .screen .tags,
+  .screen .s2-title,
+  .screen .s2-cols,
+  .screen .s2-big,
+  .screen .s3-desc,
+  .screen .s3-grid,
+  .screen .compare-list,
+  .screen .goal-cards,
+  .screen .trust-split,
+  .screen .invite-cols,
+  .screen .progress-split,
+  .screen .fit-cols,
+  .screen .s10-layout {
+    opacity: 0;
+  }
+  .screen.in-view .s1-tag { animation-delay: 0s; }
+  .screen.in-view .s1-title { animation-delay: 0.1s; }
+  .screen.in-view .s1-sub { animation-delay: 0.2s; }
+  .screen.in-view .tags { animation-delay: 0.3s; }
+  .screen.in-view .section-eyebrow { animation-delay: 0s; }
+  .screen.in-view .section-title { animation-delay: 0.08s; }
+  .screen.in-view .s2-title { animation-delay: 0.08s; }
+  .screen.in-view .s2-cols { animation-delay: 0.18s; }
+  .screen.in-view .s2-big { animation-delay: 0.28s; }
+  .screen.in-view .s3-desc { animation-delay: 0.1s; }
+  .screen.in-view .s3-grid { animation-delay: 0.2s; }
+  .screen.in-view .compare-list { animation-delay: 0.15s; }
+  .screen.in-view .goal-cards { animation-delay: 0.15s; }
+  .screen.in-view .trust-split { animation-delay: 0.15s; }
+  .screen.in-view .invite-cols { animation-delay: 0.15s; }
+  .screen.in-view .progress-split { animation-delay: 0.15s; }
+  .screen.in-view .fit-cols { animation-delay: 0.15s; }
+  .screen.in-view .s10-layout { animation-delay: 0.1s; }
+
+  /* Enhanced nav dots */
+  .dot {
+    position: relative;
+    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .dot::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 1px solid transparent;
+    transition: all 0.4s;
+  }
+  .dot.active::after {
+    border-color: rgba(88,225,193,0.3);
+  }
+  .dot:hover:not(.active) {
+    background: var(--muted);
+    transform: scale(1.3);
+  }
+
+  /* Enhanced progress bar */
+  #progress {
+    background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent));
+    background-size: 200% 100%;
+    animation: progressShimmer 3s linear infinite;
+    box-shadow: 0 0 12px rgba(88,225,193,0.3);
+  }
+
+  /* Screen label with current indicator */
+  .screen-label {
+    transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .screen.in-view .screen-label {
+    color: var(--accent);
+    animation: slideInLeft 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  /* Enhanced card interactions */
+  .s3-block, .goal-card, .stat-card, .tool-entry-card {
+    transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .s3-block:hover {
+    border-color: var(--border2);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  }
+  .goal-card:hover {
+    box-shadow: 0 16px 48px rgba(0,0,0,0.25), 0 0 0 1px rgba(88,225,193,0.15);
+  }
+  .stat-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  }
+  .tool-entry-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 36px 120px rgba(0,0,0,0.35), 0 0 0 1px rgba(88,225,193,0.2);
+  }
+
+  /* Arrow hint pulse */
+  .arrow-hint {
+    animation: fadeIn 1.2s 1s both;
+  }
+  .screen.in-view .arrow-hint {
+    animation: fadeIn 0.6s 0.8s both;
+  }
+
+  /* Tab switch animation */
+  .page-pane {
+    transition: opacity 0.3s ease;
+  }
+  .page-pane.hidden {
+    opacity: 0;
+    display: none !important;
+  }
+
+  /* Enhanced mainTabs */
+  #mainTabs {
+    transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    border-radius: 10px;
+  }
+  .main-tab-btn {
+    border-radius: 6px;
+    position: relative;
+    overflow: hidden;
+  }
+  .main-tab-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(88,225,193,0.1), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .main-tab-btn.active::before {
+    opacity: 1;
+  }
+
+  /* Smooth scroll indicator for current section */
+  .nav-tooltip {
+    position: fixed;
+    right: 50px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--dim);
+    opacity: 0;
+    transition: opacity 0.4s, transform 0.4s;
+    pointer-events: none;
+    z-index: 99;
+    white-space: nowrap;
+  }
+  .nav-tooltip.visible {
+    opacity: 1;
+    transform: translateY(-50%) translateX(-4px);
+  }
+
+  /* Button press feedback */
+  .btn-primary:active, .btn-secondary:active, .tool-entry-btn:active {
+    transform: translateY(0) scale(0.97);
+  }
+
+  /* Subtle grid background animation on active screen */
+  .screen.in-view::before {
+    animation: fadeIn 1.5s both;
+  }
+
+  /* Compare row hover */
+  .compare-row {
+    transition: all 0.3s;
+  }
+  .compare-row:hover {
+    border-color: var(--border2);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  }
+
+  /* Timeline item hover */
+  .tl-item {
+    transition: all 0.25s;
+  }
+  .tl-item:hover .tl-content {
+    color: var(--text);
+  }
+  .tl-item:hover .tl-dot {
+    background: var(--accent);
+    box-shadow: 0 0 8px rgba(88,225,193,0.4);
+  }
+
+  /* Fit item stagger */
+  .fit-item {
+    transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .fit-item:hover {
+    transform: translateX(4px);
+  }
+
+  /* CTA modal enhanced */
+  .cta-modal {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  .cta-modal.open .cta-modal-card {
+    animation: fadeInUp 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
   /* ════ MOBILE ════ */
   @media (max-width: 768px) {
     html, body { overflow: auto; height: auto; }
     #track { flex-direction: column; width: 100%; height: auto; transform: none !important; transition: none; }
     .screen { width: 100%; height: auto; min-height: 100vh; padding: 80px 24px 60px; }
-    #nav, .arrow-hint { display: none; }
+    #nav, .arrow-hint, .nav-tooltip { display: none; }
     .s2-cols, .s3-grid, .trust-split, .invite-cols,
     .progress-split, .fit-cols, .goal-cards, .s10-layout { grid-template-columns: 1fr; }
     .compare-row { grid-template-columns: 1fr; border: 1px solid var(--border); }
@@ -583,6 +833,26 @@
     .trust-left, .trust-right,
     .invite-col, .invite-col:first-child { padding: 0; margin-bottom: 28px; }
     .s10-right { margin-top: 32px; }
+    /* Mobile: all screens visible by default */
+    .screen .section-eyebrow,
+    .screen .section-title,
+    .screen .s1-tag,
+    .screen .s1-title,
+    .screen .s1-sub,
+    .screen .tags,
+    .screen .s2-title,
+    .screen .s2-cols,
+    .screen .s2-big,
+    .screen .s3-desc,
+    .screen .s3-grid,
+    .screen .compare-list,
+    .screen .goal-cards,
+    .screen .trust-split,
+    .screen .invite-cols,
+    .screen .progress-split,
+    .screen .fit-cols,
+    .screen .s10-layout { opacity: 1; animation: none; }
+    .screen.in-view .screen-label { animation: none; color: var(--accent); }
   }
 
 
@@ -1085,22 +1355,23 @@
   &lt;title&gt;一人公司探索路径校准器&lt;/title&gt;
   &lt;style&gt;
   :root {
-    --bg:      #0B0D0F;
-    --bg2:     #13161A;
-    --bg3:     #1C2026;
+    --bg:      #080A0C;
+    --bg2:     #0F1216;
+    --bg3:     #1A1F27;
     --text:    #F7F8FA;
     --muted:   #A9B0BA;
-    --dim:     #4A525C;
+    --dim:     #5A6370;
     --accent:  #58E1C1;
     --accent2: #3BB89A;
-    --border:  rgba(255,255,255,0.07);
-    --border2: rgba(255,255,255,0.12);
-    --surface: var(--bg2);
-    --card:    var(--bg3);
-    --card2:   var(--bg2);
+    --border:  rgba(255,255,255,0.11);
+    --border2: rgba(255,255,255,0.18);
+    --surface: #0F1216;
+    --card:    #1A1F27;
+    --card2:   #131720;
+    --card-elevated: #252B35;
     --accent3: #7AF2D8;
-    --accent-dim: rgba(88,225,193,0.10);
-    --accent-glow: rgba(88,225,193,0.30);
+    --accent-dim: rgba(88,225,193,0.12);
+    --accent-glow: rgba(88,225,193,0.35);
     --success: var(--accent);
     --danger:  #F6B66B;
   }  * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -1108,94 +1379,99 @@
   body {
     font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, &quot;Noto Sans SC&quot;, sans-serif;
     background:
-      radial-gradient(circle at 50% -10%, rgba(88,225,193,0.10), transparent 38%),
-      radial-gradient(circle at 85% 12%, rgba(168,85,247,0.06), transparent 30%),
+      radial-gradient(ellipse at 50% -5%, rgba(88,225,193,0.12), transparent 42%),
+      radial-gradient(ellipse at 85% 8%, rgba(168,85,247,0.07), transparent 32%),
+      radial-gradient(ellipse at 15% 60%, rgba(88,225,193,0.04), transparent 35%),
       var(--bg);
     color: var(--text);
-    line-height: 1.65;
+    line-height: 1.6;
     min-height: 100vh;
+    font-size: 14px;
   }
   .wrap { max-width: 840px; margin: 0 auto; padding: 32px 20px 60px; }
   .hidden { display: none !important; }
 
-  .hero { min-height: 100vh; display: flex; align-items: center; padding: 28px 0 54px; }
+  .hero { min-height: 100vh; display: flex; align-items: center; padding: 32px 0 56px; }
   .hero-inner { width: 100%; }
-  .hero-header { text-align: center; margin-bottom: 28px; }
+  .hero-header { text-align: center; margin-bottom: 32px; }
   .eyebrow {
     display: inline-flex; align-items: center; gap: 8px;
     color: var(--accent); background: var(--accent-dim); border: 1px solid rgba(88,225,193,0.28);
-    padding: 7px 12px; border-radius: 999px; font-size: 12px; font-weight: 700; letter-spacing: .08em;
-    margin-bottom: 18px;
+    padding: 7px 14px; border-radius: 999px; font-size: 12px; font-weight: 700; letter-spacing: .1em;
+    margin-bottom: 20px;
   }
   .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 14px var(--accent-glow); }
   h1 {
-    max-width: 760px; margin: 0 auto 14px;
-    font-size: clamp(32px, 5.3vw, 54px); line-height: 1.12; letter-spacing: -1.2px; font-weight: 850;
+    max-width: 760px; margin: 0 auto 16px;
+    font-size: clamp(32px, 5.3vw, 52px); line-height: 1.15; letter-spacing: -1.2px; font-weight: 850;
     background: linear-gradient(135deg, #58E1C1, #3BB89A, #7AF2D8);
     -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 24px rgba(88,225,193,.18));
   }
   h1 em, .subtitle em { font-style: normal; }
-  .subtitle { max-width: 640px; margin: 0 auto; color: var(--muted); font-size: 16px; line-height: 1.8; }
+  .subtitle { max-width: 620px; margin: 0 auto; color: var(--dim); font-size: 15px; line-height: 1.7; }
   .hero-card, .card {
-    background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 28px;
-    position: relative; overflow: hidden; box-shadow: 0 22px 70px rgba(0,0,0,.22);
+    background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 32px;
+    position: relative; overflow: hidden; box-shadow: 0 24px 80px rgba(0,0,0,.30);
     animation: cardIn .45s cubic-bezier(.4,0,.2,1);
   }
   .hero-card::before, .card::before {
     content: &#x27;&#x27;; position: absolute; top: 0; left: 0; right: 0; height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(88,225,193,0.34), transparent);
+    background: linear-gradient(90deg, transparent, rgba(88,225,193,0.45), transparent);
   }
   @keyframes cardIn { from { opacity: 0; transform: translateY(16px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
   .hero-note {
-    color: var(--muted); background: var(--card2); border: 1px solid var(--border); border-radius: 12px;
-    padding: 18px 20px; font-size: 14.5px; line-height: 1.75; margin-bottom: 18px;
+    color: var(--muted); background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 12px;
+    padding: 16px 20px; font-size: 14px; line-height: 1.7; margin-bottom: 20px;
   }
-  .hero-features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 18px 0 22px; }
+  .hero-features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 20px 0 24px; }
   .feature {
-    background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 15px 14px;
+    background: rgba(255,255,255,.02); border: 1px solid rgba(255,255,255,.06); border-radius: 12px; padding: 16px 14px;
   }
-  .feature b { display: block; color: var(--text); font-size: 14px; margin-bottom: 4px; }
-  .feature span { display: block; color: var(--dim); font-size: 12.5px; line-height: 1.5; }
-  .hero-actions { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 6px; }
-  .privacy { color: var(--dim); font-size: 12.5px; text-align: center; }
+  .feature b { display: block; color: var(--muted); font-size: 13px; margin-bottom: 4px; font-weight: 700; }
+  .feature span { display: block; color: var(--dim); font-size: 12px; line-height: 1.5; }
+  .hero-actions { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 8px; }
+  .privacy { color: var(--dim); font-size: 12px; text-align: center; }
 
   .progress { display: flex; justify-content: space-between; margin-bottom: 34px; position: relative; padding: 0 12px; height: auto; background: transparent; gap: 0; }
   .progress::before { content: &#x27;&#x27;; position: absolute; top: 14px; left: 30px; right: 30px; height: 2px; background: var(--border); z-index: 0; }
   .pitem { position: relative; z-index: 1; width: 30px; height: 30px; border-radius: 50%; background: var(--surface); border: 2px solid var(--border); }
   .pitem.active { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 16px var(--accent-glow); }
   .pitem.done { background: var(--success); border-color: var(--success); }
-  .step-meta { color: var(--accent); font-size: 12px; font-weight: 700; letter-spacing: .08em; text-align: center; margin-bottom: 8px; }
-  .q-title { text-align: center; font-size: clamp(25px, 4vw, 34px); line-height: 1.25; letter-spacing: -.5px; margin: 0 0 8px; font-weight: 800; color: var(--text); }
-  .q-help { max-width: 580px; color: var(--muted); margin: 0 auto 26px; text-align: center; font-size: 14.5px; }
-  .question { margin: 18px 0; padding: 24px; background: var(--card2); border: 1px solid var(--border); border-radius: 16px; }
-  .question h3 { margin: 0 0 14px; font-size: 18px; line-height: 1.45; font-weight: 700; color: var(--text); }
+  .step-meta { color: var(--accent); font-size: 12px; font-weight: 700; letter-spacing: .1em; text-align: center; margin-bottom: 8px; }
+  .q-title { text-align: center; font-size: clamp(24px, 4vw, 32px); line-height: 1.25; letter-spacing: -.5px; margin: 0 0 8px; font-weight: 800; color: var(--text); }
+  .q-help { max-width: 560px; color: var(--muted); margin: 0 auto 24px; text-align: center; font-size: 14px; line-height: 1.6; }
+  .question { margin: 16px 0; padding: 24px; background: rgba(255,255,255,0.025); border: 1px solid var(--border); border-radius: 16px; }
+  .question h3 { margin: 0 0 12px; font-size: 16px; line-height: 1.5; font-weight: 700; color: var(--text); }
   .question .hint { color: var(--accent); background: var(--accent-dim); border: 1px solid rgba(88,225,193,.20); display:inline-block; padding: 4px 8px; border-radius: 8px; font-size: 12px; margin-bottom: 12px; }
   .options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
   .option { background: var(--surface); border: 1.5px solid var(--border); border-radius: 12px; padding: 14px 16px; cursor: pointer; transition: all .2s ease; display: flex; align-items: flex-start; gap: 12px; color: var(--text); min-height: 54px; }
   .option:hover { border-color: rgba(88,225,193,.42); background: rgba(88,225,193,.05); transform: translateY(-1px); }
-  .option.selected { border-color: var(--accent); background: var(--accent-dim); box-shadow: 0 0 0 1px var(--accent); }
-  .check { width: 20px; height: 20px; border: 2px solid var(--border); border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; font-size: 12px; color: transparent; transition: all .2s; }
+  .option.selected { border-color: var(--accent); background: rgba(88,225,193,.14); box-shadow: 0 0 0 1px rgba(88,225,193,.35); }
+  .check { width: 20px; height: 20px; border: 2px solid var(--border); border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; font-size: 12px; color: transparent; transition: all .22s cubic-bezier(.4,0,.2,1); }
   .radio .check { border-radius: 50%; }
-  .option.selected .check { background: var(--accent); border-color: var(--accent); color: var(--bg); }
-  .option-title { font-size: 14px; line-height: 1.55; font-weight: 500; }
-  .option-desc { color: var(--dim); font-size: 12px; margin-top: 2px; }
-  input[type=&quot;text&quot;], textarea { width: 100%; padding: 13px 14px; border-radius: 12px; border: 1.5px solid var(--border); background: var(--surface); color: var(--text); font: inherit; outline: none; }
-  input[type=&quot;text&quot;]:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(88,225,193,.10); }
+  .option.selected .check { background: var(--accent); border-color: var(--accent); color: var(--bg); transform: scale(1.1); box-shadow: 0 0 8px rgba(88,225,193,.3); }
+  .option-title { font-size: 14px; line-height: 1.5; font-weight: 500; }
+  .option-desc { color: var(--dim); font-size: 12px; margin-top: 2px; line-height: 1.5; }
+  input[type=&quot;text&quot;], textarea { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1.5px solid var(--border); background: var(--surface); color: var(--text); font: inherit; outline: none; transition: border-color .2s, box-shadow .2s, background .2s; }
+  input[type=&quot;text&quot;]:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(88,225,193,.12), 0 4px 16px rgba(0,0,0,.15); background: rgba(15,18,22,.8); }
   .nav { display: grid; grid-template-columns: auto 1fr; gap: 12px; margin-top: 24px; }
-  button { border: 0; border-radius: 12px; padding: 15px 24px; font-weight: 750; font-size: 15px; cursor: pointer; transition: all .2s; font-family: inherit; }
-  .btn-primary { color: #fff; background: linear-gradient(135deg, var(--accent), var(--accent2)); box-shadow: 0 8px 24px rgba(88,225,193,.24); }
-  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 10px 30px rgba(88,225,193,.34); }
+  button { border: 0; border-radius: 12px; padding: 14px 24px; font-weight: 750; font-size: 14px; cursor: pointer; transition: all .22s cubic-bezier(.4,0,.2,1); font-family: inherit; }
+  .btn-primary { color: #fff; background: linear-gradient(135deg, var(--accent), var(--accent2)); box-shadow: 0 8px 24px rgba(88,225,193,.24); font-size: 15px; padding: 16px 28px; }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 36px rgba(88,225,193,.38); }
+  .btn-primary:active { transform: translateY(0) scale(.97); box-shadow: 0 4px 12px rgba(88,225,193,.20); transition-duration:.1s; }
   .btn-secondary, .btn-ghost { background: var(--surface); color: var(--text); border: 1.5px solid var(--border); }
-  .btn-secondary:hover, .btn-ghost:hover { border-color: rgba(88,225,193,.45); color: var(--accent); }
+  .btn-secondary:hover, .btn-ghost:hover { border-color: rgba(88,225,193,.45); color: var(--accent); transform: translateY(-1px); }
+  .btn-secondary:active, .btn-ghost:active { transform: translateY(0) scale(.97); transition-duration:.1s; }
   button:disabled { opacity: .45; cursor: not-allowed; transform: none !important; }
   .warn { padding: 12px 14px; border-radius: 12px; background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(88,225,193,.26); margin-top: 14px; }
-  .result-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 22px 0 26px; }
+  .result-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 24px 0; }
   .metric { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 20px; }
-  .metric .label { color: var(--dim); font-size: 12px; margin-bottom: 6px; }
-  .metric .value { font-size: 25px; font-weight: 850; color: var(--accent); }
-  .section { background: var(--card2); border: 1px solid var(--border); border-radius: 16px; padding: 22px; margin: 14px 0; }
-  .section h3 { margin: 0 0 10px; font-size: 18px; font-weight: 750; }
-  .section p { color: var(--muted); font-size: 14.5px; margin: 0 0 6px; }
+  .metric .label { color: var(--dim); font-size: 12px; margin-bottom: 6px; letter-spacing: .02em; }
+  .metric .value { font-size: 24px; font-weight: 850; color: var(--accent); }
+  .section { background: var(--card2); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 16px 0; }
+  .section h3 { margin: 0 0 8px; font-size: 16px; font-weight: 750; }
+  .section p { color: var(--muted); font-size: 14px; margin: 0 0 6px; line-height: 1.6; }
   .tag { display: inline-block; padding: 4px 9px; border-radius: 999px; font-size: 12px; font-weight: 700; margin: 2px 4px 2px 0; background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(88,225,193,.24); }
   .tag.green, .tag.blue, .tag.orange { background: var(--accent-dim); color: var(--accent); border-color: rgba(88,225,193,.24); }
   .cta-box { background: linear-gradient(180deg, rgba(26,30,42,.98), rgba(17,22,32,.98)); border-color: rgba(88,225,193,.35); }
@@ -1236,6 +1512,84 @@
     .nav { grid-template-columns: 1fr; }
     h1 { font-size: clamp(31px, 9vw, 42px); }
   }
+
+  .path-map { padding: 28px; background: linear-gradient(135deg, rgba(88,225,193,.10), rgba(59,184,154,.03)); border:1px solid rgba(88,225,193,.24); border-radius:22px; box-shadow:0 22px 70px rgba(0,0,0,.28); }
+  .path-map-head { display:flex; justify-content:space-between; gap:18px; align-items:flex-start; margin-bottom:24px; }
+  .path-map-kicker { font-family:&#x27;DM Mono&#x27;,monospace; font-size:11px; letter-spacing:.18em; color:var(--accent); text-transform:uppercase; margin-bottom:8px; }
+  .path-map-title { font-size:24px; font-weight:800; letter-spacing:-.02em; color:var(--text); }
+  .path-map-sub { color:var(--muted); line-height:1.8; margin-top:8px; font-size:14px; }
+  .path-risk-badge { flex:0 0 auto; border:1px solid rgba(88,225,193,.32); background:rgba(11,13,15,.62); border-radius:999px; padding:9px 14px; color:var(--accent); font-weight:700; font-size:13px; }
+  .path-line { display:grid; grid-template-columns:repeat(6,1fr); gap:8px; position:relative; margin:18px 0 24px; }
+  .path-node { position:relative; min-height:96px; padding:14px 10px; border:1px solid var(--border); background:rgba(255,255,255,.035); border-radius:16px; text-align:center; color:var(--muted); }
+  .path-node.active { border-color:rgba(88,225,193,.72); background:rgba(88,225,193,.11); color:var(--text); box-shadow:0 0 0 1px rgba(88,225,193,.12) inset; }
+  .path-node.next { border-color:rgba(255,255,255,.20); background:rgba(255,255,255,.06); }
+  .path-node-num { font-family:&#x27;DM Mono&#x27;,monospace; font-size:13px; color:var(--accent); margin-bottom:8px; }
+  .path-node-name { font-size:13px; font-weight:700; line-height:1.35; }
+  .path-node-note { margin-top:8px; font-size:11px; color:var(--dim); line-height:1.4; }
+  .path-map-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-top:18px; }
+  .path-map-item { padding:16px; border:1px solid var(--border); border-radius:16px; background:rgba(11,13,15,.42); }
+  .path-map-label { font-size:12px; color:var(--dim); margin-bottom:8px; }
+  .path-map-value { color:var(--text); font-size:14px; line-height:1.65; }
+  @media (max-width: 720px) { .path-map-head{flex-direction:column;} .path-line{grid-template-columns:repeat(2,1fr);} .path-map-grid{grid-template-columns:1fr;} }
+
+
+  /* ── Dashboard / report visual upgrade ── */
+  .wrap { max-width: 1180px; }
+  .hero { overflow:hidden; }
+  .hero::after { content:&#x27;&#x27;; position:absolute; inset:-40% -20% auto auto; width:560px; height:560px; background:radial-gradient(circle, rgba(88,225,193,.18), transparent 62%); filter:blur(6px); pointer-events:none; animation: pulse-glow 6s ease-in-out infinite alternate; }
+  @keyframes pulse-glow { 0% { opacity:.7; } 100% { opacity:1; } }
+  .eyebrow { width:max-content; }
+  .hero-header { position:relative; z-index:1; }
+  .hero-card { display:grid; grid-template-columns: 1.05fr .95fr; gap:18px; align-items:stretch; }
+  .hero-note { margin:0; display:flex; align-items:center; }
+  .hero-actions { grid-column:1/-1; display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+  .hero-actions .small { margin:0; }
+  .btn-primary { box-shadow:0 12px 34px rgba(88,225,193,.14), 0 0 0 1px rgba(88,225,193,.12); animation: btn-breathe 3s ease-in-out infinite; }
+  .btn-primary:hover { transform:translateY(-1px); box-shadow:0 16px 42px rgba(88,225,193,.24); animation:none; }
+  @keyframes btn-breathe { 0%,100% { box-shadow:0 12px 34px rgba(88,225,193,.14), 0 0 0 1px rgba(88,225,193,.12); } 50% { box-shadow:0 12px 34px rgba(88,225,193,.22), 0 0 0 1px rgba(88,225,193,.18); } }
+  .calibration-shell { display:grid; grid-template-columns: 280px minmax(0,1fr); gap:18px; align-items:start; background:transparent; border:0; box-shadow:none; padding:0; overflow:visible; }
+  .calibration-shell::before { display:none; }
+  .calibration-rail { position:sticky; top:20px; border:1px solid rgba(255,255,255,.10); border-radius:22px; background:rgba(10,12,15,.78); backdrop-filter:blur(24px) saturate(1.3); padding:18px; box-shadow:0 12px 40px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.05); }
+  .rail-kicker { font-family:&#x27;DM Mono&#x27;,monospace; color:var(--accent); letter-spacing:.18em; font-size:10px; text-transform:uppercase; margin-bottom:8px; opacity:.8; }
+  .rail-title { font-weight:800; font-size:16px; color:var(--muted); margin-bottom:8px; }
+  .rail-sub { color:var(--dim); font-size:12px; line-height:1.7; margin-bottom:18px; }
+  .rail-step { display:grid; grid-template-columns:26px 1fr; gap:10px; align-items:start; padding:11px 0; border-top:1px solid rgba(255,255,255,.06); color:var(--muted); transition: color .2s, opacity .2s; }
+  .rail-step:first-of-type { border-top:0; }
+  .rail-dot { width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; border:1px solid var(--border2); font-family:&#x27;DM Mono&#x27;,monospace; font-size:10px; color:var(--dim); transition: all .25s cubic-bezier(.4,0,.2,1); }
+  .rail-step.active .rail-dot { background:var(--accent); color:var(--bg); border-color:var(--accent); box-shadow:0 0 20px var(--accent-glow); transform:scale(1.12); }
+  .rail-step.done .rail-dot { border-color:rgba(88,225,193,.5); color:var(--accent); }
+  .rail-step-name { font-size:13px; font-weight:700; color:inherit; line-height:1.35; }
+  .rail-step.active .rail-step-name { color:var(--text); }
+  .rail-step-help { color:var(--dim); font-size:11px; line-height:1.45; margin-top:4px; }
+  .calibration-main { border:1px solid rgba(255,255,255,.12); border-radius:24px; background:linear-gradient(180deg, rgba(22,26,33,.92), rgba(12,15,19,.88)); box-shadow:0 22px 70px rgba(0,0,0,.40), inset 0 1px 0 rgba(255,255,255,.06); padding:30px; position:relative; overflow:hidden; }
+  .calibration-main::before { content:&#x27;&#x27;; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg, transparent, rgba(88,225,193,.50), transparent); }
+  .calibration-main::after { content:&#x27;&#x27;; position:absolute; top:-60%; left:50%; transform:translateX(-50%); width:80%; height:60%; background:radial-gradient(ellipse, rgba(88,225,193,.08), transparent 70%); pointer-events:none; }
+  .progress { margin-bottom:24px; }
+  .pitem { width:9px; height:9px; border-width:0; opacity:.55; transition: width .3s cubic-bezier(.4,0,.2,1), opacity .3s, background .3s; }
+  .pitem.active { width:34px; border-radius:999px; opacity:1; }
+  .pitem.done { opacity:.8; }
+  .progress::before { top:4px; left:12px; right:12px; height:1px; }
+  .step-meta { text-align:left; font-family:&#x27;DM Mono&#x27;,monospace; letter-spacing:.16em; text-transform:uppercase; opacity:.7; }
+  .q-title { text-align:left; max-width:760px; font-size:clamp(22px, 3.5vw, 28px); }
+  .q-help { text-align:left; margin-left:0; max-width:760px; border-left:2px solid rgba(88,225,193,.45); padding-left:14px; color:var(--dim); }
+  .question { border-radius:18px; background:rgba(15,18,22,.65); border-color:rgba(255,255,255,.12); box-shadow: 0 4px 24px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.04); position:relative; }
+  .question::after { content:&#x27;&#x27;; position:absolute; top:0; left:20%; right:20%; height:1px; background:linear-gradient(90deg, transparent, rgba(255,255,255,.12), transparent); pointer-events:none; }
+  .question h3 { font-size:17px; }
+  .option { border-radius:14px; background:rgba(255,255,255,.045); border-color:rgba(255,255,255,.12); position:relative; transition: all .22s cubic-bezier(.4,0,.2,1); }
+  .option:hover { background:rgba(88,225,193,.06); border-color:rgba(88,225,193,.35); transform:translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,.18); }
+  .option:active { transform:translateY(0) scale(.985); transition-duration:.1s; }
+  .option.selected { box-shadow: 0 0 0 2px rgba(88,225,193,.45), 0 4px 16px rgba(88,225,193,.12), inset 0 0 20px rgba(88,225,193,.04); background:rgba(88,225,193,.16); border-color:var(--accent); transform:translateY(0); }
+  .option.selected::before { content:''; position:absolute; left:0; top:10px; bottom:10px; width:4px; border-radius:999px; background:var(--accent); box-shadow: 0 0 8px rgba(88,225,193,.5); }
+  #result.card { max-width:1060px; padding:0; background:transparent; border:0; box-shadow:none; }
+  #result.card::before { display:none; }
+  #result .section, #result .archetype-card, #result .path-map { margin-bottom:18px; }
+  .report-section-no { font-family:&#x27;DM Mono&#x27;,monospace; color:var(--accent); letter-spacing:.18em; font-size:10px; text-transform:uppercase; margin-bottom:8px; }
+  .report-cover { padding:28px; border:1px solid var(--border); border-radius:24px; background:linear-gradient(180deg, rgba(28,32,38,.88), rgba(11,13,15,.78)); box-shadow:0 24px 80px rgba(0,0,0,.30), inset 0 1px 0 rgba(255,255,255,.05); margin-bottom:18px; position:relative; overflow:hidden; }
+  .report-cover::before { content:&#x27;&#x27;; position:absolute; top:-40%; left:30%; width:40%; height:80%; background:radial-gradient(ellipse, rgba(88,225,193,.06), transparent 70%); pointer-events:none; }
+  .report-cover-title { font-size:30px; font-weight:900; letter-spacing:-.03em; margin-bottom:10px; }
+  .report-cover-meta { display:flex; gap:10px; flex-wrap:wrap; color:var(--muted); font-size:12px; }
+  @media (max-width: 860px) { .hero-card{grid-template-columns:1fr;} .calibration-shell{grid-template-columns:1fr;} .calibration-rail{position:relative; top:0;} .rail-sub{display:none;} }
+
 &lt;/style&gt;
 &lt;/head&gt;
 &lt;body&gt;
@@ -1250,7 +1604,7 @@
 
         &lt;div class=&quot;hero-card&quot;&gt;
           &lt;div class=&quot;hero-note&quot;&gt;
-            3 分钟检查你当前的一人公司所处阶段、行动路线和真实困惑，帮你判断现在做的事是否和当前阶段匹配，让你少走弯路。
+            3 分钟检查你当前的一人公司所处阶段、行动路线和真实困惑，帮你判断现在做的事是否和阶段匹配，避免把时间花在不属于当前阶段的问题上。
           &lt;/div&gt;
           &lt;div class=&quot;hero-features&quot; aria-hidden=&quot;true&quot;&gt;
             &lt;div class=&quot;feature&quot;&gt;&lt;b&gt;01 阶段识别&lt;/b&gt;&lt;span&gt;判断你处在 0-5 阶段的哪一步。&lt;/span&gt;&lt;/div&gt;
@@ -1258,24 +1612,32 @@
             &lt;div class=&quot;feature&quot;&gt;&lt;b&gt;03 下一步校准&lt;/b&gt;&lt;span&gt;给出最需要优先检查的关键点。&lt;/span&gt;&lt;/div&gt;
           &lt;/div&gt;
           &lt;div class=&quot;hero-actions&quot;&gt;
-            &lt;button class=&quot;btn-primary&quot; onclick=&quot;start()&quot;&gt;开始路径检查 →&lt;/button&gt;
+            &lt;button class=&quot;btn-primary&quot; onclick=&quot;start()&quot;&gt;生成我的路径地图 →&lt;/button&gt;
             &lt;div class=&quot;privacy&quot;&gt;本工具只用于生成你的路径检查结果。除非你主动添加微信，否则不会联系你。&lt;/div&gt;
           &lt;/div&gt;
         &lt;/div&gt;
       &lt;/div&gt;
     &lt;/section&gt;
 
-    &lt;section id=&quot;app&quot; class=&quot;card hidden&quot;&gt;
-      &lt;div class=&quot;progress&quot; id=&quot;progress&quot;&gt;&lt;/div&gt;
-      &lt;div class=&quot;step-meta&quot; id=&quot;stepMeta&quot;&gt;&lt;/div&gt;
-      &lt;h2 class=&quot;q-title&quot; id=&quot;stepTitle&quot;&gt;&lt;/h2&gt;
-      &lt;p class=&quot;q-help&quot; id=&quot;stepHelp&quot;&gt;&lt;/p&gt;
-      &lt;div id=&quot;questions&quot;&gt;&lt;/div&gt;
-      &lt;div id=&quot;warning&quot; class=&quot;warn hidden&quot;&gt;&lt;/div&gt;
-      &lt;div class=&quot;nav&quot;&gt;
-        &lt;button class=&quot;btn-secondary&quot; id=&quot;prevBtn&quot; onclick=&quot;prevStep()&quot;&gt;上一步&lt;/button&gt;
-        &lt;button class=&quot;btn-primary&quot; id=&quot;nextBtn&quot; onclick=&quot;nextStep()&quot;&gt;继续检查&lt;/button&gt;
-      &lt;/div&gt;
+    &lt;section id=&quot;app&quot; class=&quot;card calibration-shell hidden&quot;&gt;
+      &lt;aside class=&quot;calibration-rail&quot;&gt;
+        &lt;div class=&quot;rail-kicker&quot;&gt;PATH CALIBRATION&lt;/div&gt;
+        &lt;div class=&quot;rail-title&quot;&gt;路径校准流程&lt;/div&gt;
+        &lt;div class=&quot;rail-sub&quot;&gt;每一步都不是为了收集信息，而是为了判断：你现在的时间有没有花在当前阶段最关键的问题上。&lt;/div&gt;
+        &lt;div id=&quot;stepRail&quot;&gt;&lt;/div&gt;
+      &lt;/aside&gt;
+      &lt;main class=&quot;calibration-main&quot;&gt;
+        &lt;div class=&quot;progress&quot; id=&quot;progress&quot;&gt;&lt;/div&gt;
+        &lt;div class=&quot;step-meta&quot; id=&quot;stepMeta&quot;&gt;&lt;/div&gt;
+        &lt;h2 class=&quot;q-title&quot; id=&quot;stepTitle&quot;&gt;&lt;/h2&gt;
+        &lt;p class=&quot;q-help&quot; id=&quot;stepHelp&quot;&gt;&lt;/p&gt;
+        &lt;div id=&quot;questions&quot;&gt;&lt;/div&gt;
+        &lt;div id=&quot;warning&quot; class=&quot;warn hidden&quot;&gt;&lt;/div&gt;
+        &lt;div class=&quot;nav&quot;&gt;
+          &lt;button class=&quot;btn-secondary&quot; id=&quot;prevBtn&quot; onclick=&quot;prevStep()&quot;&gt;上一步&lt;/button&gt;
+          &lt;button class=&quot;btn-primary&quot; id=&quot;nextBtn&quot; onclick=&quot;nextStep()&quot;&gt;继续校准&lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/main&gt;
     &lt;/section&gt;
 
     &lt;section id=&quot;result&quot; class=&quot;card hidden&quot;&gt;&lt;/section&gt;
@@ -1283,7 +1645,8 @@
 
 &lt;script&gt;
 const API_BASE_URLS = [
-  &#x27;https://feishu-webhook-dojmuojwfc.cn-hangzhou.fcapp.run&#x27;
+  &#x27;https://feishu-webhook-dojmuojwfc.cn-hangzhou.fcapp.run&#x27;,
+  &#x27;https://feishu-api-woad.vercel.app&#x27;
 ];
 const API_BASE_URL = API_BASE_URLS[0];
 const WECHAT_ID = &#x27;qiaoboose01&#x27;;
@@ -1294,11 +1657,11 @@ const REQUEST_TIMEOUT_MS = 15000;
 const state = { step: 0, answers: {}, computed: {}, submission_id: &#x27;&#x27;, debug_id: `dbg_${Date.now()}_${Math.random().toString(36).slice(2,8)}` };
 
 const steps = [
-  { title:&#x27;职业背景、工作方式与价值观&#x27;, help:&#x27;先看你的职业身份、工作方式、可迁移资产和长期价值取向。&#x27;, questions:[&#x27;occupation_type&#x27;,&#x27;years_experience&#x27;,&#x27;work_mode&#x27;,&#x27;transferable_abilities&#x27;,&#x27;asset_list&#x27;,&#x27;value_orientation&#x27;,&#x27;possible_business_forms&#x27;] },
-  { title:&#x27;当前阶段&#x27;, help:&#x27;识别你现在处在一人公司探索的哪个阶段。&#x27;, questions:[&#x27;stage_self_select&#x27;] },
-  { title:&#x27;真实业务动作&#x27;, help:&#x27;这里只看过去 3 个月进入真实世界的业务动作，不把学习、买课或工具使用算作业务推进。&#x27;, questions:[&#x27;action_list&#x27;,&#x27;current_time_focus&#x27;] },
-  { title:&#x27;当前卡点与目标结果&#x27;, help:&#x27;识别你最想解决的问题，以及最影响你下一步时间投入的阶段性结果。&#x27;, questions:[&#x27;primary_question&#x27;,&#x27;desired_outcome_label&#x27;,&#x27;outcome_urgency&#x27;] },
-  { title:&#x27;成长推进方式&#x27;, help:&#x27;最后看你遇到重要卡点时如何推进、是否重视外部反馈，以及更适合什么支持方式。&#x27;, questions:[&#x27;problem_solving_style&#x27;,&#x27;growth_investment_behavior&#x27;,&#x27;support_preference&#x27;] }
+  { title:&#x27;扫描职业资产&#x27;, help:&#x27;不是所有人都适合从同一种方式启动一人公司。先看你有哪些可迁移资产，是否适合从专业经验、知识服务、内容、工具或项目制服务切入。&#x27;, questions:[&#x27;occupation_type&#x27;,&#x27;years_experience&#x27;,&#x27;work_mode&#x27;,&#x27;transferable_abilities&#x27;,&#x27;asset_list&#x27;,&#x27;value_orientation&#x27;,&#x27;possible_business_forms&#x27;] },
+  { title:&#x27;定位当前阶段&#x27;, help:&#x27;很多时间浪费，不是因为你不努力，而是因为你用了后一个阶段的方法，去解决前一个阶段的问题。&#x27;, questions:[&#x27;stage_self_select&#x27;] },
+  { title:&#x27;核对真实行动&#x27;, help:&#x27;系统不会只看你怎么描述自己，而会结合你过去 3 个月做过什么真实动作，校准你实际处在哪个阶段。&#x27;, questions:[&#x27;action_list&#x27;,&#x27;current_time_focus&#x27;] },
+  { title:&#x27;识别关键卡点&#x27;, help:&#x27;你现在最想解决的问题，决定了接下来 2-4 周最值得投入的事情。&#x27;, questions:[&#x27;primary_question&#x27;,&#x27;desired_outcome_label&#x27;,&#x27;outcome_urgency&#x27;] },
+  { title:&#x27;匹配推进方式&#x27;, help:&#x27;同一个阶段，不同人的推进方式不同。有人适合自己摸索，有人更需要路径、反馈或外部校准。&#x27;, questions:[&#x27;problem_solving_style&#x27;,&#x27;growth_investment_behavior&#x27;,&#x27;support_preference&#x27;] }
 ];
 
 const q = {
@@ -1339,11 +1702,13 @@ function questionTitle(item){
 
 function render(){
   document.getElementById(&#x27;progress&#x27;).innerHTML = steps.map((_,i)=&gt;`&lt;div class=&quot;pitem ${i&lt;state.step?&#x27;done&#x27;:&#x27;&#x27;} ${i===state.step?&#x27;active&#x27;:&#x27;&#x27;}&quot;&gt;&lt;/div&gt;`).join(&#x27;&#x27;);
-  document.getElementById(&#x27;stepMeta&#x27;).textContent = `第 ${state.step+1} 步 / 共 ${steps.length} 步`;
+  const rail = document.getElementById(&#x27;stepRail&#x27;);
+  if(rail) rail.innerHTML = steps.map((s,i)=&gt;`&lt;div class=&quot;rail-step ${i&lt;state.step?&#x27;done&#x27;:&#x27;&#x27;} ${i===state.step?&#x27;active&#x27;:&#x27;&#x27;}&quot;&gt;&lt;div class=&quot;rail-dot&quot;&gt;${String(i+1).padStart(2,&#x27;0&#x27;)}&lt;/div&gt;&lt;div&gt;&lt;div class=&quot;rail-step-name&quot;&gt;${s.title}&lt;/div&gt;&lt;div class=&quot;rail-step-help&quot;&gt;${i===0?&#x27;职业资产&#x27;:i===1?&#x27;阶段定位&#x27;:i===2?&#x27;行动证据&#x27;:i===3?&#x27;卡点目标&#x27;:&#x27;推进方式&#x27;}&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;`).join(&#x27;&#x27;);
+  document.getElementById(&#x27;stepMeta&#x27;).textContent = `路径校准 ${String(state.step+1).padStart(2,&#x27;0&#x27;)} / ${String(steps.length).padStart(2,&#x27;0&#x27;)}`;
   document.getElementById(&#x27;stepTitle&#x27;).textContent = steps[state.step].title;
   document.getElementById(&#x27;stepHelp&#x27;).textContent = steps[state.step].help;
   document.getElementById(&#x27;prevBtn&#x27;).style.visibility = state.step===0 ? &#x27;hidden&#x27; : &#x27;visible&#x27;;
-  document.getElementById(&#x27;nextBtn&#x27;).textContent = state.step===steps.length-1 ? &#x27;生成路径检查结果&#x27; : &#x27;继续检查&#x27;;
+  document.getElementById(&#x27;nextBtn&#x27;).textContent = state.step===steps.length-1 ? &#x27;生成我的路径地图&#x27; : &#x27;继续校准 →&#x27;;
   document.getElementById(&#x27;warning&#x27;).classList.add(&#x27;hidden&#x27;);
   document.getElementById(&#x27;questions&#x27;).innerHTML = steps[state.step].questions.map(renderQuestion).join(&#x27;&#x27;);
 }
@@ -1625,12 +1990,12 @@ function renderLoading(){
   document.getElementById(&#x27;result&#x27;).innerHTML = `
     &lt;div class=&quot;loading-card&quot;&gt;
       &lt;div class=&quot;loader-ring&quot; aria-hidden=&quot;true&quot;&gt;&lt;/div&gt;
-      &lt;div class=&quot;loading-title&quot;&gt;正在生成你的路径校准结果&lt;/div&gt;
-      &lt;div class=&quot;loading-sub&quot;&gt;系统正在结合你的当前阶段、最近行动、时间投入、真实卡点和目标结果，生成一份更贴近你当前状态的分析。&lt;/div&gt;
+      &lt;div class=&quot;loading-title&quot;&gt;正在生成你的一人公司路径地图&lt;/div&gt;
+      &lt;div class=&quot;loading-sub&quot;&gt;系统正在结合你的当前阶段、最近行动、时间投入、真实卡点和目标结果，生成一张更贴近你当前状态的路径地图。&lt;/div&gt;
       &lt;div class=&quot;loading-steps&quot;&gt;
         &lt;div&gt;&lt;span&gt;01&lt;/span&gt; 校准当前阶段&lt;/div&gt;
         &lt;div&gt;&lt;span&gt;02&lt;/span&gt; 识别时间浪费风险&lt;/div&gt;
-        &lt;div&gt;&lt;span&gt;03&lt;/span&gt; 生成下一步行动建议&lt;/div&gt;
+        &lt;div&gt;&lt;span&gt;03&lt;/span&gt; 绘制下一站与校准行动&lt;/div&gt;
       &lt;/div&gt;
     &lt;/div&gt;`;
   document.getElementById(&#x27;result&#x27;).classList.remove(&#x27;hidden&#x27;);
@@ -1700,6 +2065,15 @@ function calibrationMarkdown(){
 ${answerLines.join(&#x27;\n&#x27;)}
 
 ## 结果页信息
+
+### 你的一人公司路径地图
+
+- 当前位置：${pathMapData().current}
+- 时间浪费风险：${c.time_waste_risk}
+- 你正在做：${mdValue(a.current_time_focus)}
+- 真正该优先做：${d.task}
+- 下一站：${pathMapData().next}
+- 2-4 周校准目标：${pathMapData().goal}
 
 ### 你的路径校准结果
 
@@ -1780,6 +2154,38 @@ function downloadCalibrationMarkdown(){
   downloadMarkdownFile(calibrationMarkdown(), filename);
 }
 
+
+function pathMapData(){
+  const a=state.answers, c=state.computed, d=pathDiagnosis();
+  const n=stageNum(c.calibrated_stage);
+  const names=[&#x27;动机澄清&#x27;,&#x27;方向试探&#x27;,&#x27;方向验证&#x27;,&#x27;0-1闭环&#x27;,&#x27;稳定闭环&#x27;,&#x27;系统放大&#x27;];
+  const nextNames=[&#x27;进入低成本探索&#x27;,&#x27;选择一个小方向&#x27;,&#x27;真实用户验证&#x27;,&#x27;完成反馈闭环&#x27;,&#x27;形成可重复路径&#x27;,&#x27;找到主瓶颈并系统化&#x27;];
+  const nextIndex = Math.min(5, n+1);
+  return {n,names,nextNames,nextIndex,d,
+    current:`阶段 ${n}｜${names[n] || d.task}`,
+    risk:`时间浪费风险：${c.time_waste_risk}`,
+    doing:fmtList(a.current_time_focus),
+    priority:d.task,
+    next:`阶段 ${nextIndex}｜${nextNames[n] || names[nextIndex]}`,
+    goal:actionPlan()[0]?.[1] || c.recommended_check_point
+  };
+}
+function renderPathMap(){
+  const m=pathMapData();
+  const nodes=m.names.map((name,i)=&gt;`&lt;div class=&quot;path-node ${i===m.n?&#x27;active&#x27;:&#x27;&#x27;} ${i===m.nextIndex&amp;&amp;i!==m.n?&#x27;next&#x27;:&#x27;&#x27;}&quot;&gt;&lt;div class=&quot;path-node-num&quot;&gt;${i}&lt;/div&gt;&lt;div class=&quot;path-node-name&quot;&gt;${esc(name)}&lt;/div&gt;&lt;div class=&quot;path-node-note&quot;&gt;${i===m.n?&#x27;你在这里&#x27;:(i===m.nextIndex?&#x27;下一站&#x27;:&#x27;&#x27;)}&lt;/div&gt;&lt;/div&gt;`).join(&#x27;&#x27;);
+  return `&lt;div class=&quot;path-map&quot;&gt;
+    &lt;div class=&quot;path-map-head&quot;&gt;&lt;div&gt;&lt;div class=&quot;path-map-kicker&quot;&gt;PATH MAP&lt;/div&gt;&lt;div class=&quot;path-map-title&quot;&gt;你的一人公司路径地图&lt;/div&gt;&lt;div class=&quot;path-map-sub&quot;&gt;这张地图只回答一件事：你现在的时间，应该投向哪个阶段的问题，哪里最容易浪费。&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;path-risk-badge&quot;&gt;${esc(m.risk)}&lt;/div&gt;&lt;/div&gt;
+    &lt;div class=&quot;path-line&quot;&gt;${nodes}&lt;/div&gt;
+    &lt;div class=&quot;path-map-grid&quot;&gt;
+      &lt;div class=&quot;path-map-item&quot;&gt;&lt;div class=&quot;path-map-label&quot;&gt;当前位置&lt;/div&gt;&lt;div class=&quot;path-map-value&quot;&gt;${esc(m.current)}&lt;/div&gt;&lt;/div&gt;
+      &lt;div class=&quot;path-map-item&quot;&gt;&lt;div class=&quot;path-map-label&quot;&gt;你正在做&lt;/div&gt;&lt;div class=&quot;path-map-value&quot;&gt;${esc(m.doing)}&lt;/div&gt;&lt;/div&gt;
+      &lt;div class=&quot;path-map-item&quot;&gt;&lt;div class=&quot;path-map-label&quot;&gt;真正该优先做&lt;/div&gt;&lt;div class=&quot;path-map-value&quot;&gt;${esc(m.priority)}&lt;/div&gt;&lt;/div&gt;
+      &lt;div class=&quot;path-map-item&quot;&gt;&lt;div class=&quot;path-map-label&quot;&gt;下一站&lt;/div&gt;&lt;div class=&quot;path-map-value&quot;&gt;${esc(m.next)}&lt;/div&gt;&lt;/div&gt;
+      &lt;div class=&quot;path-map-item&quot; style=&quot;grid-column:1/-1;&quot;&gt;&lt;div class=&quot;path-map-label&quot;&gt;2-4 周校准目标&lt;/div&gt;&lt;div class=&quot;path-map-value&quot;&gt;${esc(m.goal)}&lt;/div&gt;&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;`;
+}
+
 function renderResult(){
   const a=state.answers,c=state.computed,d=pathDiagnosis();
   const cta = ctaContent(c.user_segment);
@@ -1788,7 +2194,16 @@ function renderResult(){
   const actions = actionPlan().map(x=&gt;`&lt;div class=&quot;action-item&quot;&gt;&lt;div class=&quot;action-week&quot;&gt;${esc(x[0])}&lt;/div&gt;&lt;div class=&quot;action-text&quot;&gt;${esc(x[1])}&lt;/div&gt;&lt;/div&gt;`).join(&#x27;&#x27;);
   const avoids = avoidItems().map(x=&gt;`&lt;div class=&quot;avoid-item&quot;&gt;${esc(x)}&lt;/div&gt;`).join(&#x27;&#x27;);
   const support = supportModeAdvice().map(x=&gt;`&lt;div class=&quot;avoid-item&quot;&gt;${esc(x)}&lt;/div&gt;`).join(&#x27;&#x27;);
+  const pathMap = renderPathMap();
   const html = `
+    &lt;div class=&quot;report-cover&quot;&gt;
+      &lt;div class=&quot;report-section-no&quot;&gt;CALIBRATION REPORT&lt;/div&gt;
+      &lt;div class=&quot;report-cover-title&quot;&gt;你的一人公司路径校准报告&lt;/div&gt;
+      &lt;div class=&quot;report-cover-meta&quot;&gt;&lt;span&gt;保存编号：${esc(state.submission_id)}&lt;/span&gt;&lt;span&gt;当前阶段：${esc(c.calibrated_stage)}&lt;/span&gt;&lt;span&gt;时间浪费风险：${esc(c.time_waste_risk)}&lt;/span&gt;&lt;/div&gt;
+    &lt;/div&gt;
+
+    ${pathMap}
+
     &lt;div class=&quot;archetype-card&quot;&gt;
       &lt;div class=&quot;archetype-label&quot;&gt;你的路径校准结果&lt;/div&gt;
       &lt;div class=&quot;archetype-name&quot;&gt;${esc(d.name)}&lt;/div&gt;
@@ -1798,44 +2213,44 @@ function renderResult(){
     &lt;/div&gt;
 
     &lt;div class=&quot;section result-section&quot;&gt;
-      &lt;h3&gt;🎯 一句话结论&lt;/h3&gt;
+      &lt;div class=&quot;report-section-no&quot;&gt;01 / KEY JUDGEMENT&lt;/div&gt;&lt;h3&gt;🎯 一句话结论&lt;/h3&gt;
       &lt;div class=&quot;positioning-box&quot;&gt;${esc(d.one)}&lt;/div&gt;
     &lt;/div&gt;
 
     &lt;div class=&quot;section result-section&quot;&gt;
-      &lt;h3&gt;🧩 你的探索画像&lt;/h3&gt;
+      &lt;div class=&quot;report-section-no&quot;&gt;02 / PROFILE&lt;/div&gt;&lt;h3&gt;🧩 你的探索画像&lt;/h3&gt;
       ${profile}
     &lt;/div&gt;
 
     &lt;div class=&quot;section result-section&quot;&gt;
-      &lt;h3&gt;🧭 为什么这样判断&lt;/h3&gt;
+      &lt;div class=&quot;report-section-no&quot;&gt;03 / EVIDENCE&lt;/div&gt;&lt;h3&gt;🧭 为什么这样判断&lt;/h3&gt;
       &lt;div class=&quot;result-box&quot;&gt;&lt;p&gt;${esc(d.detail)}&lt;/p&gt;&lt;p style=&quot;margin-top:10px;color:var(--text);&quot;&gt;${esc(d.mismatch)}&lt;/p&gt;&lt;/div&gt;
     &lt;/div&gt;
 
     &lt;div class=&quot;section result-section&quot;&gt;
-      &lt;h3&gt;📌 你填写的信息如何支持这个判断&lt;/h3&gt;
+      &lt;div class=&quot;report-section-no&quot;&gt;04 / DATA POINTS&lt;/div&gt;&lt;h3&gt;📌 你填写的信息如何支持这个判断&lt;/h3&gt;
       &lt;div class=&quot;result-box&quot; style=&quot;padding:0; overflow:hidden;&quot;&gt;
         &lt;table class=&quot;matrix-table&quot;&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;width:24%&quot;&gt;你填的信息&lt;/th&gt;&lt;th style=&quot;width:34%&quot;&gt;你的选择&lt;/th&gt;&lt;th style=&quot;width:42%&quot;&gt;它说明什么&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;${evidence}&lt;/tbody&gt;&lt;/table&gt;
       &lt;/div&gt;
     &lt;/div&gt;
 
     &lt;div class=&quot;section result-section&quot;&gt;
-      &lt;h3&gt;⚠️ 你最可能浪费时间的地方&lt;/h3&gt;
+      &lt;div class=&quot;report-section-no&quot;&gt;05 / TIME RISK&lt;/div&gt;&lt;h3&gt;⚠️ 你最可能浪费时间的地方&lt;/h3&gt;
       &lt;div class=&quot;result-box&quot;&gt;${esc(currentWasteInsight())}&lt;br&gt;&lt;br&gt;${esc(riskCopy(c.time_waste_risk))}&lt;/div&gt;
     &lt;/div&gt;
 
     &lt;div class=&quot;section result-section&quot;&gt;
-      &lt;h3&gt;🔁 你现在最需要的不是 X，而是 Y&lt;/h3&gt;
+      &lt;div class=&quot;report-section-no&quot;&gt;06 / CALIBRATION&lt;/div&gt;&lt;h3&gt;🔁 你现在最需要的不是 X，而是 Y&lt;/h3&gt;
       &lt;div class=&quot;positioning-box&quot;&gt;${esc(notXButY())}&lt;/div&gt;
     &lt;/div&gt;
 
     &lt;div class=&quot;section result-section&quot;&gt;
-      &lt;h3&gt;🚀 接下来 2-4 周的校准行动&lt;/h3&gt;
+      &lt;div class=&quot;report-section-no&quot;&gt;07 / ACTION MAP&lt;/div&gt;&lt;h3&gt;🚀 接下来 2-4 周的校准行动&lt;/h3&gt;
       ${actions}
     &lt;/div&gt;
 
     &lt;div class=&quot;section result-section&quot;&gt;
-      &lt;h3&gt;🧪 你更适合的推进方式&lt;/h3&gt;
+      &lt;div class=&quot;report-section-no&quot;&gt;08 / WORK MODE&lt;/div&gt;&lt;h3&gt;🧪 你更适合的推进方式&lt;/h3&gt;
       &lt;div class=&quot;avoid-list&quot;&gt;${support}&lt;/div&gt;
     &lt;/div&gt;
 
@@ -1883,11 +2298,13 @@ async function postJsonWithRetry(path, payload, options = {}){
   const label = options.label || path;
   const apiBaseUrls = getApiBaseUrls();
   let lastError;
-  for(const baseUrl of apiBaseUrls){
-    for(let attempt=1; attempt&lt;=attempts; attempt++){
+  for(let baseIndex=0; baseIndex&lt;apiBaseUrls.length; baseIndex++){
+    const baseUrl = apiBaseUrls[baseIndex];
+    const attemptsForBase = apiBaseUrls.length &gt; 1 ? (baseIndex === 0 ? Math.min(2, attempts) : attempts) : attempts;
+    for(let attempt=1; attempt&lt;=attemptsForBase; attempt++){
       try{
         const url = `${baseUrl}${path}`;
-        logClientEvent(`${label}_attempt`, { attempt, api_base_url:baseUrl, url });
+        logClientEvent(`${label}_attempt`, { attempt, attempts_for_base:attemptsForBase, api_base_url:baseUrl, url });
         const controller = new AbortController();
         const timeoutId = setTimeout(() =&gt; controller.abort(), REQUEST_TIMEOUT_MS);
         let resp, text;
@@ -1900,12 +2317,12 @@ async function postJsonWithRetry(path, payload, options = {}){
         let data = {};
         try { data = text ? JSON.parse(text) : {}; } catch(_) { data = { raw:text }; }
         logClientEvent(`${label}_response`, { attempt, api_base_url:baseUrl, status:resp.status, ok:resp.ok, response:data });
-        if(!resp.ok || data.ok === false) throw new Error(data.error || `HTTP ${resp.status}`);
+        if(!resp.ok || data.ok !== true) throw new Error(data.error || `HTTP ${resp.status}: invalid API response`);
         return data;
       }catch(e){
         lastError = e;
         logClientEvent(`${label}_failed_attempt`, { attempt, api_base_url:baseUrl, error:e.message });
-        if(attempt &lt; attempts) await sleep(Math.min(8000, 1000 * Math.pow(2, attempt - 1)));
+        if(attempt &lt; attemptsForBase) await sleep(Math.min(8000, 1000 * Math.pow(2, attempt - 1)));
       }
     }
     logClientEvent(`${label}_api_base_exhausted`, { api_base_url:baseUrl, error:lastError &amp;&amp; lastError.message });
@@ -1969,7 +2386,7 @@ function openWechatModal(role) {
   const isSeedUser = role === '种子用户';
   ctaModalLabel.textContent = isSeedUser ? 'SEED USER' : 'PARTNER';
   ctaModalTitle.textContent = `申请成为${role}`;
-  ctaModalDesc.textContent = `请添加微信 qiaoboose01，并备注“${role}”，我会尽快和你联系。`;
+  ctaModalDesc.textContent = `请添加微信 qiaoboose01，并备注"${role}"，我会尽快和你联系。`;
   ctaModal.classList.add('open');
   ctaModal.setAttribute('aria-hidden', 'false');
 }
@@ -1987,6 +2404,20 @@ window.addEventListener('keydown', e => {
   if (e.key === 'Escape' && ctaModal.classList.contains('open')) closeWechatModal();
 });
 
+/* ── Nav Tooltip (section name hint) ── */
+const screenNames = ['宣言', '机会', '定义', '边界', '目标', '信任', '邀请', '进展', '筛选', 'CTA'];
+const navTooltip = document.createElement('div');
+navTooltip.className = 'nav-tooltip';
+document.body.appendChild(navTooltip);
+let tooltipTimer = null;
+
+function showNavTooltip(idx) {
+  navTooltip.textContent = `${String(idx + 1).padStart(2, '0')} / ${screenNames[idx] || ''}`;
+  navTooltip.classList.add('visible');
+  clearTimeout(tooltipTimer);
+  tooltipTimer = setTimeout(() => navTooltip.classList.remove('visible'), 2000);
+}
+
 /* ── 横向滚动控制 ── */
 const TOTAL = 10;
 let cur = 0;
@@ -1995,6 +2426,7 @@ let animating = false;
 const track = document.getElementById('track');
 const navEl  = document.getElementById('nav');
 const progEl = document.getElementById('progress');
+const screens = document.querySelectorAll('.screen');
 
 // 生成导航圆点
 for (let i = 0; i < TOTAL; i++) {
@@ -2006,14 +2438,26 @@ for (let i = 0; i < TOTAL; i++) {
 
 function goTo(idx) {
   if (idx < 0 || idx >= TOTAL || animating) return;
-  if (window.innerWidth <= 768) return;       // 移动端不处理
+  if (window.innerWidth <= 768) return;
 
   animating = true;
+  const prev = cur;
   cur = idx;
+
+  // Remove in-view from previous screen
+  if (screens[prev]) screens[prev].classList.remove('in-view');
 
   track.style.transform = `translateX(-${cur * window.innerWidth}px)`;
   document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === cur));
   progEl.style.width = ((cur / (TOTAL - 1)) * 100) + '%';
+
+  // Add in-view to current screen after a brief delay for transform to start
+  setTimeout(() => {
+    if (screens[cur]) screens[cur].classList.add('in-view');
+  }, 100);
+
+  // Show nav tooltip
+  showNavTooltip(cur);
 
   setTimeout(() => { animating = false; }, 800);
 }
@@ -2058,8 +2502,21 @@ window.addEventListener('resize', () => {
     track.style.transform = `translateX(-${cur * window.innerWidth}px)`;
 });
 
-// 初始化进度条
+// 初始化：第一屏立即显示
 progEl.style.width = '0%';
+if (screens[0]) screens[0].classList.add('in-view');
+
+// Mobile: IntersectionObserver for scroll-triggered animations
+if (window.innerWidth <= 768) {
+  const mobileObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+      }
+    });
+  }, { threshold: 0.15 });
+  screens.forEach(s => mobileObserver.observe(s));
+}
 </script>
 </body>
 </html>
