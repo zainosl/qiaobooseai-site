@@ -2015,15 +2015,28 @@ function currentWasteInsight(){
   const a=state.answers, c=state.computed, n=stageNum(c.calibrated_stage), focus=arr(a.current_time_focus);
   const f=fmtList(focus);
   if(n&lt;=2 &amp;&amp; focus.some(x=&gt;[&#x27;做内容/表达观点&#x27;,&#x27;设计产品/服务&#x27;,&#x27;获客/成交&#x27;].includes(x))){
-    return `你现在的时间投入里有「${f}」。这些动作本身不一定错，但对阶段 ${n} 来说可能稍微提前：如果方向、人群和真实问题还没验证清楚，后面的内容、产品和获客动作都可能建立在错误前提上。`;
+    return `你现在的时间投入里有「${f}」。这些动作本身不一定错，但对阶段 ${n} 来说，最大的风险是动作已经提前到了内容、产品或获客，而方向、人群和真实问题还没有被验证清楚。这样继续投入，后面越努力，越可能是在放大一个还没被确认的前提。接下来更适合先把候选方向压缩到 1-2 个，用真实对话确认：谁真的有这个问题、现在怎么解决、愿不愿意为结果付出成本。`;
   }
   if(n===3 &amp;&amp; focus.some(x=&gt;[&#x27;信息输入和学习&#x27;,&#x27;思考方向和路径&#x27;,&#x27;暂时比较混乱&#x27;].includes(x))){
-    return `你现在的时间投入里有「${f}」。对阶段 3 来说，最大的风险不是方向不够完美，而是没有足够进入真实用户反馈。继续学习会让你感觉在推进，但未必能增加验证密度。`;
+    return `你现在的时间投入里有「${f}」。对阶段 3 来说，最大的风险不是方向不够完美，而是没有足够进入真实用户反馈。继续学习、继续思考会让你感觉自己在推进，但它不一定会增加验证密度。接下来要检查的是：你有没有把方向变成一个具体服务邀请，有没有发给真实潜在用户，有没有拿到回应、试用反馈、报价反馈或明确拒绝原因。`;
   }
   if(n&gt;=4 &amp;&amp; focus.some(x=&gt;[&#x27;思考方向和路径&#x27;,&#x27;信息输入和学习&#x27;,&#x27;暂时比较混乱&#x27;].includes(x))){
-    return `你已经进入阶段 ${n}，但当前投入里仍有「${f}」。这个阶段更需要复盘已有客户、交付和成交路径，而不是重新回到大量输入和方向思考。`;
+    return `你已经进入阶段 ${n}，但当前投入里仍有「${f}」。这个阶段最大的风险，是明明已经有客户或交付线索，却又回到大量输入和方向思考，导致没有复盘出可重复路径。接下来更值得展开的是：最近的客户从哪里来、为什么信任你、为什么愿意买、交付后得到了什么、这条路径能不能被复制。`;
   }
-  return `你当前主要投入在「${f}」。从阶段 ${n} 看，这些动作大体没有明显错位，但仍建议给每个动作绑定一个可验证结果，否则动作会越来越多，真正的反馈却不一定增加。`;
+  return `你当前主要投入在「${f}」。从阶段 ${n} 看，这些动作大体没有明显错位，说明你不是明显跑偏。真正需要警惕的是：动作本身看起来正确，但没有绑定可验证结果。接下来建议给每个动作补上一个检查点，例如一次真实对话、一次明确邀请、一次报价反馈、一次客户复盘或一个可追踪指标，否则动作会越来越多，真正能帮助你进入下一步的证据却不一定增加。`;
+}
+function timeFitBriefInsight(){
+  const a=state.answers, c=state.computed, n=stageNum(c.calibrated_stage), focus=arr(a.current_time_focus);
+  if(n&lt;=2 &amp;&amp; focus.some(x=&gt;[&#x27;做内容/表达观点&#x27;,&#x27;设计产品/服务&#x27;,&#x27;获客/成交&#x27;].includes(x))){
+    return `你的时间投入有一部分已经提前到内容、产品或获客；当前更需要先确认方向、人群和真实问题。`;
+  }
+  if(n===3 &amp;&amp; focus.some(x=&gt;[&#x27;信息输入和学习&#x27;,&#x27;思考方向和路径&#x27;,&#x27;暂时比较混乱&#x27;].includes(x))){
+    return `你的时间投入仍偏向输入和思考；阶段 3 更需要把注意力转向真实反馈密度。`;
+  }
+  if(n&gt;=4 &amp;&amp; focus.some(x=&gt;[&#x27;思考方向和路径&#x27;,&#x27;信息输入和学习&#x27;,&#x27;暂时比较混乱&#x27;].includes(x))){
+    return `你的时间投入有回到方向思考的倾向；阶段 ${n} 更需要复盘已有客户、成交和交付路径。`;
+  }
+  return `你的时间投入和阶段任务大体匹配；接下来要确保每个动作都对应一个可验证结果。`;
 }
 
 function notXButY(){
@@ -2411,7 +2424,7 @@ function diagnosticReasoningRows(){
     {
       title:&#x27;最后看你的时间投入有没有偏离当前阶段&#x27;,
       main:`你当前的主要时间投入是「${fmtList(a.current_time_focus)}」。`,
-      evidence:currentWasteInsight()
+      evidence:timeFitBriefInsight()
     }
   ];
 }
@@ -2436,7 +2449,7 @@ function renderResult(){
       &lt;div class=&quot;report-section-no&quot;&gt;02 / CALIBRATION RESULT&lt;/div&gt;&lt;h3&gt;为什么这样判断｜你的阶段校准结果&lt;/h3&gt;
       &lt;p class=&quot;evidence-intro&quot;&gt;这一部分先给你结果，再说明结果背后的几个关键判断：当前阶段哪些指标已经够了，哪些还没够，以及你的时间投入有没有偏离当前阶段。&lt;/p&gt;
       ${renderDiagnosticReasoning()}
-      &lt;div class=&quot;reasoning-conclusion&quot;&gt;所以，这次校准的重点不是让你理解一条复杂推理链，而是帮你确认：现在最该补的仍然是「${esc(d.task)}」这个阶段任务。当前更适合先按「${esc(d.name)}」推进。&lt;/div&gt;
+      &lt;div class=&quot;reasoning-conclusion&quot;&gt;所以，现在最值得确认的是：你还需要优先补上「${esc(d.task)}」这个阶段任务，而不是急着把动作铺得更大。当前更适合先按「${esc(d.name)}」推进。&lt;/div&gt;
       &lt;details class=&quot;data-points-details&quot;&gt;
         &lt;summary&gt;Data Points｜查看你的填写信息如何支撑这个判断&lt;/summary&gt;
         &lt;div class=&quot;result-box&quot; style=&quot;padding:0; overflow:hidden; margin-top:10px;&quot;&gt;
