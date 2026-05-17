@@ -2212,13 +2212,19 @@ ${avoids}
 
 ${support}
 
-### 进入下一阶段的早期信号：${m.next}
+## 05 当前阶段与下一阶段的成功指标
 
-接下来不是把动作做得更多，而是尽快让这些信号出现。只要这些信号开始出现，就说明你正在从当前阶段往下一阶段移动。
+${successIndicatorFocusCopy()}
 
-${nextStageSignalItems().map(x=&gt;`- ${x}`).join(&#x27;\n&#x27;)}
+### ${currentStageReadyForNext() ? &#x27;先确认&#x27; : &#x27;重点关注&#x27;}：${m.current}
 
-## 05 后续进一步讨论 / 保存说明
+${stageSuccessIndicatorItems(m.n).map(x=&gt;`- ${x}`).join(&#x27;\n&#x27;)}
+
+### ${currentStageReadyForNext() ? &#x27;重点关注&#x27; : &#x27;先作为参考&#x27;}：${m.next}
+
+${stageSuccessIndicatorItems(m.nextIndex).map(x=&gt;`- ${x}`).join(&#x27;\n&#x27;)}
+
+## 06 后续进一步讨论 / 保存说明
 
 ${cta.title}
 
@@ -2340,21 +2346,41 @@ function renderEiofsCards(){
   const miss=e.missing.map(x=&gt;`&lt;li&gt;${esc(x)}&lt;/li&gt;`).join(&#x27;&#x27;);
   return `&lt;div class=&quot;eiofs-grid&quot;&gt;&lt;div class=&quot;eiofs-card&quot;&gt;&lt;b&gt;你已经出现的正向信号&lt;/b&gt;&lt;ul&gt;${pos}&lt;/ul&gt;&lt;/div&gt;&lt;div class=&quot;eiofs-card missing&quot;&gt;&lt;b&gt;你还缺的关键证据&lt;/b&gt;&lt;ul&gt;${miss}&lt;/ul&gt;&lt;/div&gt;&lt;/div&gt;`;
 }
-function nextStageSignalItems(){
-  const n=stageNum(state.computed.calibrated_stage);
+function stageSuccessIndicatorItems(stageIndex){
   const map={
-    0:[&#x27;你能说清自己想离开什么，以及真正想长期经营什么问题。&#x27;,&#x27;你完成了 2-3 次低成本观察或交流，对真实代价有基本判断。&#x27;],
-    1:[&#x27;你能连续 2-4 周围绕一个小主题稳定投入，而不是每天换方向。&#x27;,&#x27;你的表达或交流开始得到至少一次外部回应。&#x27;],
-    2:[&#x27;你能把候选方向压缩到 1-2 个，并说清服务谁、解决什么问题。&#x27;,&#x27;潜在用户访谈里开始反复出现相似痛点、现有替代方案和付出成本。&#x27;],
-    3:[&#x27;你发出明确的服务邀请或报价后，拿到了真实回应、试用反馈或明确拒绝原因。&#x27;,&#x27;你开始看到首单、试服务转化，或至少 5-10 个足够具体的用户反馈。&#x27;],
-    4:[&#x27;你能复盘出客户为什么买、从哪里来、交付后得到什么结果。&#x27;,&#x27;你能把触达、沟通、报价、交付、复盘整理成一套可重复的小闭环。&#x27;],
-    5:[&#x27;你能清楚识别当前增长主瓶颈，并用指标持续追踪。&#x27;,&#x27;你开始用流程、AI、产品结构或协作减少对个人工时的依赖。&#x27;]
+    0:[&#x27;能区分“讨厌当前状态”和“想长期经营自己的事”，不再只靠情绪逃离。&#x27;,&#x27;能说出 1-2 个值得继续观察的问题域，并完成几次低成本观察或交流。&#x27;],
+    1:[&#x27;能连续 2-4 周围绕一个小主题稳定投入，而不是每天切换方向。&#x27;,&#x27;围绕这个主题的表达或交流，开始得到至少一次外部回应。&#x27;],
+    2:[&#x27;能把候选方向压缩到 1-2 个，并说清服务谁、解决什么问题、为什么是你。&#x27;,&#x27;潜在用户对话里开始反复出现相似痛点、现有替代方案和真实付出成本。&#x27;],
+    3:[&#x27;能发出明确的服务邀请或报价，并拿到真实回应、试用反馈或明确拒绝原因。&#x27;,&#x27;开始看到首单、试服务转化，或至少 5-10 个足够具体的用户反馈。&#x27;],
+    4:[&#x27;能复盘出客户为什么买、从哪里来、交付后得到了什么结果。&#x27;,&#x27;能把触达、沟通、报价、交付、复盘整理成一套可重复的小闭环。&#x27;],
+    5:[&#x27;能清楚识别当前增长主瓶颈，并用指标持续追踪。&#x27;,&#x27;开始用流程、AI、产品结构或协作减少对个人工时的依赖。&#x27;]
   };
-  return map[n] || map[2];
+  return map[Math.max(0, Math.min(5, stageIndex))] || map[2];
 }
-function renderEiofsPrescription(){
-  const e=eiofsData(), m=pathMapData();
-  return `&lt;div class=&quot;eiofs-card&quot; style=&quot;margin-top:18px;&quot;&gt;&lt;b&gt;进入下一阶段的早期信号：${esc(m.next)}&lt;/b&gt;&lt;div style=&quot;color:var(--muted);font-size:13px;line-height:1.7;margin:8px 0 10px;&quot;&gt;接下来不是把动作做得更多，而是尽快让这些信号出现。只要这些信号开始出现，就说明你正在从当前阶段往下一阶段移动。&lt;/div&gt;&lt;ul&gt;${nextStageSignalItems().map(x=&gt;`&lt;li&gt;${esc(x)}&lt;/li&gt;`).join(&#x27;&#x27;)}&lt;/ul&gt;&lt;/div&gt;`;
+function currentStageReadyForNext(){
+  const a=state.answers, c=state.computed, n=stageNum(c.calibrated_stage), actions=arr(a.action_list), growth=arr(a.growth_investment_behavior);
+  const hasUserTalk=actions.some(x=&gt;[&#x27;找潜在用户/客户聊过&#x27;,&#x27;做过用户访谈或需求调研&#x27;].includes(x));
+  const hasOffer=actions.includes(&#x27;发起过报价或合作邀请&#x27;);
+  const hasPaid=actions.some(x=&gt;[&#x27;有过真实付费客户/用户&#x27;,&#x27;有过复购、转介绍或持续合作&#x27;,&#x27;正在稳定交付&#x27;].includes(x));
+  const hasRepeat=actions.some(x=&gt;[&#x27;有过复购、转介绍或持续合作&#x27;,&#x27;正在稳定交付&#x27;].includes(x));
+  if(n&lt;=0) return arr(a.current_time_focus).includes(&#x27;思考方向和路径&#x27;) || (c.action_score||0)&gt;=1;
+  if(n===1) return growth.includes(&#x27;长期输出内容&#x27;) || growth.includes(&#x27;做过长期复盘或记录&#x27;) || (c.action_score||0)&gt;=2;
+  if(n===2) return hasUserTalk || (c.action_score||0)&gt;=3;
+  if(n===3) return hasOffer || hasPaid || (c.action_score||0)&gt;=4;
+  if(n===4) return hasRepeat || (hasPaid &amp;&amp; (c.action_score||0)&gt;=5);
+  return c.high_growth_drive===&#x27;高&#x27; || (c.action_score||0)&gt;=5;
+}
+function successIndicatorFocusCopy(){
+  const ready=currentStageReadyForNext(), m=pathMapData();
+  return ready
+    ? `你在「${m.current}」已经出现了一些关键证据，可以开始把注意力放到「${m.next}」的早期信号上。下面仍然保留当前阶段指标，方便你确认基础没有松动。`
+    : `你现在更应该先盯住「${m.current}」的早期成功指标。下一阶段指标可以先作为方向感参考，不需要立刻追求。`;
+}
+function renderSuccessIndicatorsSection(){
+  const m=pathMapData(), ready=currentStageReadyForNext();
+  const current=stageSuccessIndicatorItems(m.n).map(x=&gt;`&lt;li&gt;${esc(x)}&lt;/li&gt;`).join(&#x27;&#x27;);
+  const next=stageSuccessIndicatorItems(m.nextIndex).map(x=&gt;`&lt;li&gt;${esc(x)}&lt;/li&gt;`).join(&#x27;&#x27;);
+  return `&lt;div class=&quot;section result-section&quot;&gt;&lt;div class=&quot;report-section-no&quot;&gt;05 / SUCCESS INDICATORS&lt;/div&gt;&lt;h3&gt;当前阶段与下一阶段的成功指标&lt;/h3&gt;&lt;p class=&quot;evidence-intro&quot;&gt;${esc(successIndicatorFocusCopy())}&lt;/p&gt;&lt;div class=&quot;eiofs-grid&quot;&gt;&lt;div class=&quot;eiofs-card ${ready?&#x27;&#x27;:&#x27;missing&#x27;}&quot;&gt;&lt;b&gt;${ready?&#x27;先确认：&#x27;:&#x27;重点关注：&#x27;}${esc(m.current)}&lt;/b&gt;&lt;ul&gt;${current}&lt;/ul&gt;&lt;/div&gt;&lt;div class=&quot;eiofs-card ${ready?&#x27;&#x27;:&#x27;missing&#x27;}&quot;&gt;&lt;b&gt;${ready?&#x27;重点关注：&#x27;:&#x27;先作为参考：&#x27;}${esc(m.next)}&lt;/b&gt;&lt;ul&gt;${next}&lt;/ul&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;`;
 }
 
 function pathMapData(){
@@ -2485,10 +2511,11 @@ function renderResult(){
       &lt;div class=&quot;avoid-list&quot;&gt;${avoids}&lt;/div&gt;
       &lt;h3 style=&quot;margin-top:20px;&quot;&gt;推进方式提醒&lt;/h3&gt;
       &lt;div class=&quot;avoid-list&quot;&gt;${support}&lt;/div&gt;
-      ${renderEiofsPrescription()}
     &lt;/div&gt;
 
-    &lt;div class=&quot;section cta-box&quot;&gt;&lt;div class=&quot;report-section-no&quot;&gt;05 / NEXT STEP&lt;/div&gt;&lt;h3&gt;${esc(cta.title)}&lt;/h3&gt;&lt;p&gt;${esc(cta.body)}&lt;/p&gt;${ctaBullets?`&lt;ul class=&quot;cta-bullets&quot;&gt;${ctaBullets}&lt;/ul&gt;`:&#x27;&#x27;}&lt;p class=&quot;small&quot;&gt;${esc(cta.note || &#x27;&#x27;)}&lt;/p&gt;${cta.showWechat===false?&#x27;&#x27;:`&lt;div class=&quot;wechat&quot;&gt;&lt;span class=&quot;wechat-code&quot;&gt;微信：${esc(WECHAT_ID)}&lt;/span&gt;&lt;/div&gt;`}${ctaActionsHtml(cta)}&lt;/div&gt;`;
+    ${renderSuccessIndicatorsSection()}
+
+    &lt;div class=&quot;section cta-box&quot;&gt;&lt;div class=&quot;report-section-no&quot;&gt;06 / NEXT STEP&lt;/div&gt;&lt;h3&gt;${esc(cta.title)}&lt;/h3&gt;&lt;p&gt;${esc(cta.body)}&lt;/p&gt;${ctaBullets?`&lt;ul class=&quot;cta-bullets&quot;&gt;${ctaBullets}&lt;/ul&gt;`:&#x27;&#x27;}&lt;p class=&quot;small&quot;&gt;${esc(cta.note || &#x27;&#x27;)}&lt;/p&gt;${cta.showWechat===false?&#x27;&#x27;:`&lt;div class=&quot;wechat&quot;&gt;&lt;span class=&quot;wechat-code&quot;&gt;微信：${esc(WECHAT_ID)}&lt;/span&gt;&lt;/div&gt;`}${ctaActionsHtml(cta)}&lt;/div&gt;`;
   document.getElementById(&#x27;result&#x27;).innerHTML = html;
   document.getElementById(&#x27;result&#x27;).classList.remove(&#x27;hidden&#x27;);
   trackCTA(&#x27;view_cta&#x27;);
