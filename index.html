@@ -1582,7 +1582,7 @@
   .option:hover { background:rgba(88,225,193,.06); border-color:rgba(88,225,193,.35); transform:translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,.18); }
   .option:active { transform:translateY(0) scale(.985); transition-duration:.1s; }
   .option.selected { box-shadow: 0 0 0 2px rgba(88,225,193,.45), 0 4px 16px rgba(88,225,193,.12), inset 0 0 20px rgba(88,225,193,.04); background:rgba(88,225,193,.16); border-color:var(--accent); transform:translateY(0); }
-  .option.selected::before { content:''; position:absolute; left:0; top:10px; bottom:10px; width:4px; border-radius:999px; background:var(--accent); box-shadow: 0 0 8px rgba(88,225,193,.5); }
+  .option.selected::before { content:&#x27;&#x27;; position:absolute; left:0; top:10px; bottom:10px; width:4px; border-radius:999px; background:var(--accent); box-shadow: 0 0 8px rgba(88,225,193,.5); }
   #result.card { max-width:1060px; padding:0; background:transparent; border:0; box-shadow:none; }
   #result.card::before { display:none; }
   #result .section, #result .archetype-card, #result .path-map { margin-bottom:18px; }
@@ -1592,6 +1592,77 @@
   .report-cover-title { font-size:30px; font-weight:900; letter-spacing:-.03em; margin-bottom:10px; }
   .report-cover-meta { display:flex; gap:10px; flex-wrap:wrap; color:var(--muted); font-size:12px; }
   @media (max-width: 860px) { .hero-card{grid-template-columns:1fr;} .calibration-shell{grid-template-columns:1fr;} .calibration-rail{position:relative; top:0;} .rail-sub{display:none;} }
+
+  .diagnosis-summary { margin:18px 0 0; padding:18px; border:1px solid rgba(88,225,193,.22); border-radius:18px; background:rgba(11,13,15,.46); }
+  .diagnosis-title { font-size:clamp(26px,4vw,40px); line-height:1.18; font-weight:900; color:var(--accent); letter-spacing:-.03em; margin:6px 0 12px; }
+  .diagnosis-one { color:var(--text); font-size:16px; line-height:1.8; font-weight:700; margin-top:10px; }
+  .diagnosis-tags { display:flex; flex-wrap:wrap; gap:8px; margin:14px 0 0; }
+  .diagnosis-tag { padding:8px 11px; border-radius:999px; background:rgba(88,225,193,.11); border:1px solid rgba(88,225,193,.25); color:var(--accent); font-size:12px; font-weight:750; }
+  .diagnosis-note { margin-top:16px; padding:14px 16px; border-left:3px solid var(--accent); background:rgba(88,225,193,.08); border-radius:12px; color:var(--muted); line-height:1.75; }
+  .path-node.self { border-style:dashed; border-color:rgba(169,176,186,.55); background:rgba(169,176,186,.06); }
+  .path-node.self .path-node-num { color:var(--muted); }
+  .path-node.active.self { border-style:solid; border-color:rgba(88,225,193,.72); }
+  .path-node.next { border-color:rgba(88,225,193,.42); background:rgba(88,225,193,.055); }
+  .path-legend { display:flex; flex-wrap:wrap; gap:8px; margin:12px 0 2px; color:var(--dim); font-size:12px; }
+  .legend-pill { display:inline-flex; align-items:center; gap:6px; padding:6px 9px; border:1px solid var(--border); border-radius:999px; background:rgba(255,255,255,.03); }
+  .legend-dot { width:8px; height:8px; border-radius:50%; background:var(--accent); }
+  .legend-dot.self { background:transparent; border:1px dashed var(--muted); }
+  .legend-dot.next { background:transparent; border:1px solid var(--accent); }
+  .download-prompt { margin-top:18px; padding:18px; border:1px solid rgba(88,225,193,.26); border-radius:18px; background:linear-gradient(135deg, rgba(88,225,193,.11), rgba(88,225,193,.035)); display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+  .download-prompt strong { color:var(--text); display:block; margin-bottom:4px; }
+  .download-prompt span { color:var(--muted); font-size:13px; line-height:1.7; }
+  .evidence-intro { color:var(--muted); line-height:1.75; margin-bottom:16px; }
+  .profile-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin:16px 0; }
+  .profile-mini { padding:14px; border:1px solid var(--border); border-radius:14px; background:rgba(255,255,255,.03); }
+  .profile-mini b { display:block; color:var(--text); margin-bottom:6px; }
+  .profile-mini span { color:var(--muted); font-size:13px; line-height:1.65; }
+  .prescription-goal { padding:18px; border-radius:16px; border:1px solid rgba(88,225,193,.28); background:rgba(88,225,193,.09); color:var(--text); font-size:16px; line-height:1.7; font-weight:750; margin-bottom:14px; }
+  .cta-actions { display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-top:18px; }
+  .cta-actions.download-first .btn-secondary { order:-1; }
+  .cta-bullets { margin:14px 0 0; padding-left:18px; color:var(--muted); line-height:1.75; }
+  .cta-bullets li { margin:4px 0; }
+  @media (max-width:720px){ .profile-grid{grid-template-columns:1fr;} .download-prompt{align-items:stretch;} .download-prompt button{width:100%;} }
+
+  .path-node-signal { margin-top:8px; padding-top:8px; border-top:1px solid rgba(255,255,255,.07); color:var(--dim); font-size:11px; line-height:1.45; }
+  .eiofs-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-top:14px; }
+  .eiofs-card { padding:16px; border:1px solid rgba(88,225,193,.20); border-radius:16px; background:rgba(88,225,193,.055); }
+  .eiofs-card b { display:block; color:var(--text); margin-bottom:8px; font-size:14px; }
+  .eiofs-card ul { margin:0; padding-left:18px; color:var(--muted); font-size:13px; line-height:1.75; }
+  .eiofs-card li { margin:3px 0; }
+  .eiofs-card.missing { border-color:rgba(246,182,107,.24); background:rgba(246,182,107,.055); }
+  .eiofs-card.missing b { color:#F6B66B; }
+  .eiofs-logic { margin-top:14px; padding:16px; border:1px solid rgba(88,225,193,.22); border-radius:16px; background:rgba(11,13,15,.42); color:var(--muted); line-height:1.75; }
+  .eiofs-logic strong { color:var(--text); }
+  .eiofs-matrix { margin-top:18px; padding:18px; border:1px solid rgba(255,255,255,.10); border-radius:18px; background:rgba(11,13,15,.42); overflow:hidden; }
+  .eiofs-matrix-head { display:flex; justify-content:space-between; gap:12px; align-items:flex-start; margin-bottom:12px; }
+  .eiofs-matrix-title { color:var(--text); font-size:15px; font-weight:800; }
+  .eiofs-matrix-sub { color:var(--dim); font-size:12px; line-height:1.6; margin-top:4px; }
+  .eiofs-matrix-scroll { overflow-x:auto; padding-bottom:4px; }
+  .eiofs-matrix-table { width:100%; min-width:980px; border-collapse:separate; border-spacing:0; font-size:12px; }
+  .eiofs-matrix-table th, .eiofs-matrix-table td { padding:10px 9px; border-right:1px solid rgba(255,255,255,.07); border-bottom:1px solid rgba(255,255,255,.07); vertical-align:top; line-height:1.55; }
+  .eiofs-matrix-table th { color:var(--accent); background:rgba(88,225,193,.07); font-weight:800; position:sticky; top:0; z-index:1; }
+  .eiofs-matrix-table th:first-child, .eiofs-matrix-table td:first-child { position:sticky; left:0; z-index:2; background:rgba(15,18,22,.96); color:var(--text); font-weight:800; min-width:92px; }
+  .eiofs-matrix-table th:first-child { z-index:3; background:rgba(20,28,31,.98); }
+  .eiofs-matrix-table td.active-stage, .eiofs-matrix-table th.active-stage { background:rgba(88,225,193,.12); color:var(--text); box-shadow:inset 2px 0 0 rgba(88,225,193,.55); }
+  .eiofs-matrix-table td.next-stage, .eiofs-matrix-table th.next-stage { background:rgba(88,225,193,.055); }
+  .eiofs-matrix-table td.self-stage { background:rgba(169,176,186,.055); }
+  @media (max-width:720px){ .eiofs-grid{grid-template-columns:1fr;} .eiofs-matrix{padding:14px;} }
+
+  .reasoning-map { margin-top:16px; display:grid; gap:12px; }
+  .reasoning-step { display:grid; grid-template-columns:56px 1fr; gap:14px; padding:16px; border:1px solid rgba(255,255,255,.10); border-radius:16px; background:rgba(11,13,15,.44); }
+  .reasoning-step.result-focus { border-color:rgba(88,225,193,.22); background:linear-gradient(135deg, rgba(88,225,193,.08), rgba(11,13,15,.44)); }
+  .reasoning-step-num { width:42px; height:42px; border-radius:13px; display:flex; align-items:center; justify-content:center; background:rgba(88,225,193,.12); border:1px solid rgba(88,225,193,.28); color:var(--accent); font-weight:900; font-family:var(--mono); }
+  .reasoning-step-title { color:var(--text); font-size:15px; font-weight:800; margin-bottom:6px; }
+  .reasoning-step-main { color:var(--text); line-height:1.75; font-size:15px; font-weight:650; }
+  .reasoning-step-evidence { margin-top:8px; color:var(--muted); font-size:13px; line-height:1.7; }
+  .reasoning-conclusion { margin-top:14px; padding:18px; border-radius:16px; border:1px solid rgba(88,225,193,.28); background:linear-gradient(135deg, rgba(88,225,193,.11), rgba(88,225,193,.035)); color:var(--text); line-height:1.75; font-weight:750; }
+  .data-points-details { margin-top:16px; border:1px solid rgba(255,255,255,.08); border-radius:16px; background:rgba(11,13,15,.28); overflow:hidden; }
+  .data-points-details summary { cursor:pointer; list-style:none; padding:14px 16px; color:var(--text); font-size:15px; font-weight:800; display:flex; justify-content:space-between; gap:12px; align-items:center; }
+  .data-points-details summary::-webkit-details-marker { display:none; }
+  .data-points-details summary::after { content:&#x27;展开明细&#x27;; color:var(--accent); font-size:12px; font-family:var(--mono); font-weight:800; }
+  .data-points-details[open] summary::after { content:&#x27;收起明细&#x27;; }
+  .data-points-details .result-box { border-left:0; border-right:0; border-bottom:0; border-radius:0; margin-top:0!important; }
+  @media (max-width:720px){ .reasoning-step{grid-template-columns:1fr;} .reasoning-step-num{width:36px;height:36px;} .data-points-details summary{align-items:flex-start; flex-direction:column;} }
 
 &lt;/style&gt;
 &lt;/head&gt;
@@ -1981,13 +2052,6 @@ function supportModeAdvice(){
   return lines;
 }
 
-function ctaBridgeCopy(seg){
-  if(seg===&#x27;P0&#x27;) return &#x27;从你的结果看，你有一定专业资产或真实行动基础，当前卡点也比较明确，同时对时间浪费和外部反馈比较敏感。所以如果你想继续校准，适合做一次围绕当前阶段的具体问题咨询。&#x27;;
-  if(seg===&#x27;P1&#x27;) return &#x27;从你的结果看，你已经有探索意愿，但当前路径还不一定需要很重的服务。更适合先保持连接，继续观察案例和方法，等方向或问题更具体时再进一步校准。&#x27;;
-  if(seg===&#x27;P2&#x27;) return &#x27;从你的结果看，你的路径可能和这个工具重点服务的人群不完全一样，但仍然有参考价值。可以先保持交流，不急着做更重的决策。&#x27;;
-  return &#x27;从你的结果看，你现在更适合先保存这份校准结果，做一次低成本验证，再判断是否需要外部帮助。&#x27;;
-}
-
 function sleep(ms){ return new Promise(resolve =&gt; setTimeout(resolve, ms)); }
 function renderLoading(){
   document.getElementById(&#x27;result&#x27;).innerHTML = `
@@ -2035,110 +2099,119 @@ function renderSubmitError(err){
 
 function resultText(){
   const d=pathDiagnosis(), c=state.computed, a=state.answers;
-  return `一人公司探索路径校准结果\n\n${d.name}\n${d.one}\n\n校准说明：${d.mismatch}\n\n你的关键证据：\n- 实际动作：${fmtList(a.action_list)}\n- 时间投入：${fmtList(a.current_time_focus)}\n- 当前卡点：${fmtList(a.primary_question)}\n- 最想拿到的结果：${a.desired_outcome_label}\n\n下一步优先检查：${c.recommended_check_point}\n\n行动建议：\n${actionPlan().map(x=&gt;`${x[0]}. ${x[1]}`).join(&#x27;\n&#x27;)}`;
+  return `一人公司路径校准报告\n\n${d.name}\n${d.one}\n\n校准说明：${d.mismatch}\n\n你的关键证据：\n- 实际动作：${fmtList(a.action_list)}\n- 时间投入：${fmtList(a.current_time_focus)}\n- 当前卡点：${fmtList(a.primary_question)}\n- 最想拿到的结果：${a.desired_outcome_label}\n\n时间浪费风险：${c.time_waste_risk}\n${currentWasteInsight()}\n\n行动处方：\n${actionPlan().map(x=&gt;`${x[0]}. ${x[1]}`).join(&#x27;\n&#x27;)}`;
 }
 
 function mdValue(v){ return arr(v).filter(Boolean).join(&#x27;、&#x27;) || &#x27;未填写&#x27;; }
 function mdLine(s){ return String(s ?? &#x27;&#x27;).replace(/\r?\n/g, &#x27; &#x27;).trim(); }
 function calibrationMarkdown(){
-  const d=pathDiagnosis(), c=state.computed, a=state.answers;
-  const answerLines = [];
-  steps.forEach(step =&gt; {
-    answerLines.push(`\n### ${step.title}`);
-    step.questions.forEach(key =&gt; {
-      const item = q[key];
-      const title = mdLine(questionTitle(item));
-      answerLines.push(`- ${title}：${mdValue(a[key])}`);
-      const extraKey = item.extraKey || `${key}_other`;
-      if(a[extraKey]) answerLines.push(`  - 补充说明：${mdLine(a[extraKey])}`);
-    });
-  });
-  const profile = explorationProfileRows().map(r =&gt; `- ${mdLine(r[0])}：${mdLine(r[1])}`).join(&#x27;\n&#x27;);
+  const d=pathDiagnosis(), c=state.computed, a=state.answers, m=pathMapData();
   const evidence = evidenceRows().map(r =&gt; `| ${mdLine(r[0])} | ${mdLine(r[1])} | ${mdLine(r[2])} |`).join(&#x27;\n&#x27;);
   const actions = actionPlan().map(x =&gt; `${x[0]}. ${mdLine(x[1])}`).join(&#x27;\n&#x27;);
   const support = supportModeAdvice().map(x =&gt; `- ${mdLine(x)}`).join(&#x27;\n&#x27;);
   const avoids = avoidItems().map(x =&gt; `- ${mdLine(x)}`).join(&#x27;\n&#x27;);
   const cta = ctaContent(c.user_segment);
-  return `# 一人公司探索路径校准结果
+  const eiofs = eiofsData();
+  return `# 一人公司路径校准报告
 
 生成时间：${new Date().toLocaleString(&#x27;zh-CN&#x27;)}
-提交编号：${state.submission_id || &#x27;未生成&#x27;}
+报告编号：${state.submission_id || &#x27;未生成&#x27;}
 
-## 用户选择信息
-${answerLines.join(&#x27;\n&#x27;)}
-
-## 结果页信息
-
-### 你的一人公司路径地图
-
-- 当前位置：${pathMapData().current}
-- 时间浪费风险：${c.time_waste_risk}
-- 你正在做：${mdValue(a.current_time_focus)}
-- 真正该优先做：${d.task}
-- 下一站：${pathMapData().next}
-- 2-4 周校准目标：${pathMapData().goal}
-
-### 你的路径校准结果
+## 01 路径校准诊断
 
 ${d.name}
 
 ${d.one}
 
-- 系统校准阶段：${c.calibrated_stage}
+- 原自评阶段：${m.selfStage}
+- 系统校准阶段：阶段 ${m.n}｜${m.names[m.n] || d.task}
+- 下一站：${m.next}
 - 时间浪费风险：${c.time_waste_risk}
 - 优先任务：${d.task}
 
-### 你的探索画像
+${m.calibrationCopy}
 
-${profile}
+### 路径地图中的早期成功指标矩阵
 
-### 为什么这样判断
+${eiofsMatrixMarkdown()}
 
-${d.detail}
+### 你进入下一阶段的早期迹象
 
-${d.mismatch}
+已出现的正向信号：
+${eiofs.positive.map(x=&gt;`- ${x}`).join(&#x27;\n&#x27;)}
 
-### 你填写的信息如何支持这个判断
+还缺的关键证据：
+${eiofs.missing.map(x=&gt;`- ${x}`).join(&#x27;\n&#x27;)}
+
+## 02 为什么这样判断｜你的阶段校准结果
+
+这一部分先给你结果，再说明结果背后的几个关键判断：当前阶段哪些指标已经够了，哪些还没够，以及你的时间投入有没有偏离当前阶段。
+
+### 01 先给结论：你现在最适合按哪个阶段推进
+
+${diagnosticReasoningRows()[0].main}
+
+${diagnosticReasoningRows()[0].evidence}
+
+### 02 你已经满足了当前阶段的一部分指标
+
+${diagnosticReasoningRows()[1].main}
+
+${diagnosticReasoningRows()[1].evidence}
+
+### 03 但当前阶段的关键指标还没有完全达标
+
+${diagnosticReasoningRows()[2].main}
+
+${diagnosticReasoningRows()[2].evidence}
+
+### 04 你的时间投入有没有偏离当前阶段
+
+${diagnosticReasoningRows()[3].main}
+
+${diagnosticReasoningRows()[3].evidence}
+
+### Data Points｜你的填写信息如何支撑这个判断
 
 | 你填的信息 | 你的选择 | 它说明什么 |
 | --- | --- | --- |
 ${evidence}
 
-### 你最可能浪费时间的地方
+## 03 你最可能浪费时间的地方
+
+风险等级：${c.time_waste_risk}
 
 ${currentWasteInsight()}
 
 ${riskCopy(c.time_waste_risk)}
 
-### 你现在最需要的是什么？
+## 04 接下来 2-4 周的行动处方
 
-${notXButY()}
-
-### 接下来 2-4 周的校准行动
+阶段性目标：${c.recommended_check_point}
 
 ${actions}
 
-### 你更适合的推进方式
+### 构建下一阶段早期成功指标
 
-${support}
+${eiofs.prescription.map(x=&gt;`- ${x}`).join(&#x27;\n&#x27;)}
 
 ### 这阶段先别急着做
 
 ${avoids}
 
-### 下一步优先检查点
+### 推进方式提醒
 
-${c.recommended_check_point}
+${support}
 
-### 后续建议
+## 05 后续进一步讨论 / 保存说明
 
 ${cta.title}
 
-${ctaBridgeCopy(c.user_segment)}
-
 ${cta.body}
 
-${cta.note}
+${(cta.bullets || []).map(x=&gt;`- ${x}`).join(&#x27;\n&#x27;)}
+
+建议保留这份校准报告。接下来 2-4 周，你可以对照里面的阶段判断、风险点和行动处方，检查自己有没有继续把时间花在低效动作上。
 `;
 }
 function downloadMarkdownFile(content, filename){
@@ -2153,122 +2226,242 @@ function downloadMarkdownFile(content, filename){
   URL.revokeObjectURL(url);
 }
 function downloadCalibrationMarkdown(){
-  const filename = `一人公司路径校准结果-${state.submission_id || Date.now()}.md`;
+  const filename = `一人公司路径校准报告-${state.submission_id || Date.now()}.md`;
   downloadMarkdownFile(calibrationMarkdown(), filename);
+  trackCTA(&#x27;download_report&#x27;);
 }
 
+
+function eiofsStageBriefs(){
+  return [&#x27;动机清楚&#x27;,&#x27;连续探索&#x27;,&#x27;痛点重复&#x27;,&#x27;真实反馈&#x27;,&#x27;复购转介绍&#x27;,&#x27;系统杠杆&#x27;];
+}
+function eiofsMatrixData(){
+  return [
+    {dim:&#x27;承诺强度&#x27;, values:[&#x27;愿意认真辨认不满来源，而不是只逃离职场&#x27;,&#x27;愿意连续 2-4 周投入一个小主题&#x27;,&#x27;愿意砍掉方向，聚焦 1-2 个候选方向&#x27;,&#x27;愿意发起真实邀请 / 报价，面对拒绝&#x27;,&#x27;愿意复盘成交与交付，不乱开新方向&#x27;,&#x27;愿意用系统替代个人硬扛&#x27;]},
+    {dim:&#x27;问题清晰度&#x27;, values:[&#x27;能区分“讨厌现状”和“想经营自己的事”&#x27;,&#x27;能说出 1-3 个想探索的问题域&#x27;,&#x27;能描述目标用户、问题、现有替代方案&#x27;,&#x27;能说清一个人群、一个问题、一个结果&#x27;,&#x27;能说清客户为什么买、为什么满意&#x27;,&#x27;能识别增长主瓶颈&#x27;]},
+    {dim:&#x27;用户 / 市场反馈&#x27;, values:[&#x27;与真实做过的人交流，理解代价&#x27;,&#x27;小范围表达后有人回应&#x27;,&#x27;潜在用户访谈出现重复痛点&#x27;,&#x27;有试用、真实回应、拒绝原因&#x27;,&#x27;有付费客户反馈、复购 / 转介绍苗头&#x27;,&#x27;有稳定数据反馈和增长实验&#x27;]},
+    {dim:&#x27;价值表达&#x27;, values:[&#x27;能表达自己长期想解决的问题&#x27;,&#x27;能输出小观点、小观察&#x27;,&#x27;能用用户语言描述痛点&#x27;,&#x27;能写出 100 字服务邀请&#x27;,&#x27;能沉淀稳定销售表达 / 案例&#x27;,&#x27;能形成品牌叙事和可复制内容系统&#x27;]},
+    {dim:&#x27;产品 / 服务成形度&#x27;, values:[&#x27;暂不要求产品，只要求问题域&#x27;,&#x27;有最小探索主题&#x27;,&#x27;有最小验证假设&#x27;,&#x27;有最小服务切口 / MVP&#x27;,&#x27;有可重复交付包&#x27;,&#x27;有产品矩阵 / 标准化交付&#x27;]},
+    {dim:&#x27;获客 / 触达&#x27;, values:[&#x27;开始观察目标人群在哪里&#x27;,&#x27;能找到少量同频对象&#x27;,&#x27;能约到潜在用户访谈&#x27;,&#x27;能主动触达 5-10 个潜在客户&#x27;,&#x27;有稳定线索来源&#x27;,&#x27;有可放大的渠道 / 转介绍系统&#x27;]},
+    {dim:&#x27;变现 / 交易信号&#x27;, values:[&#x27;不看收入，看是否愿意付出时间&#x27;,&#x27;不看收入，看是否有人愿意继续聊&#x27;,&#x27;有人承认问题重要，愿意试用 / 等待&#x27;,&#x27;有报价、试单、首单或强购买意向&#x27;,&#x27;有复购、转介绍、稳定成交&#x27;,&#x27;有单位经济模型和现金流稳定性&#x27;]},
+    {dim:&#x27;迭代系统&#x27;, values:[&#x27;有记录和反思，不冲动投入&#x27;,&#x27;有每周复盘探索主题&#x27;,&#x27;访谈后能调整方向假设&#x27;,&#x27;每次反馈后改服务表达&#x27;,&#x27;用客户数据改交付 / 获客&#x27;,&#x27;用指标、流程、AI、协作优化系统&#x27;]}
+  ];
+}
+function renderEiofsMatrix(m){
+  const stages=[&#x27;0 动机辨认&#x27;,&#x27;1 念头形成&#x27;,&#x27;2 方向验证&#x27;,&#x27;3 0-1闭环&#x27;,&#x27;4 稳定闭环&#x27;,&#x27;5 系统放大&#x27;];
+  const head=stages.map((s,i)=&gt;`&lt;th class=&quot;${i===m.n?&#x27;active-stage&#x27;:&#x27;&#x27;} ${i===m.nextIndex&amp;&amp;i!==m.n?&#x27;next-stage&#x27;:&#x27;&#x27;}&quot;&gt;${esc(s)}&lt;/th&gt;`).join(&#x27;&#x27;);
+  const rows=eiofsMatrixData().map(row=&gt;`&lt;tr&gt;&lt;td&gt;${esc(row.dim)}&lt;/td&gt;${row.values.map((v,i)=&gt;`&lt;td class=&quot;${i===m.n?&#x27;active-stage&#x27;:&#x27;&#x27;} ${i===m.nextIndex&amp;&amp;i!==m.n?&#x27;next-stage&#x27;:&#x27;&#x27;} ${i===m.self?&#x27;self-stage&#x27;:&#x27;&#x27;}&quot;&gt;${esc(v)}&lt;/td&gt;`).join(&#x27;&#x27;)}&lt;/tr&gt;`).join(&#x27;&#x27;);
+  return `&lt;div class=&quot;eiofs-matrix&quot;&gt;&lt;div class=&quot;eiofs-matrix-head&quot;&gt;&lt;div&gt;&lt;div class=&quot;eiofs-matrix-title&quot;&gt;不同阶段的早期成功指标&lt;/div&gt;&lt;div class=&quot;eiofs-matrix-sub&quot;&gt;横向看阶段，纵向看维度；高亮列是你当前更适合优先构建的指标。&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;eiofs-matrix-scroll&quot;&gt;&lt;table class=&quot;eiofs-matrix-table&quot;&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;维度&lt;/th&gt;${head}&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;${rows}&lt;/tbody&gt;&lt;/table&gt;&lt;/div&gt;&lt;/div&gt;`;
+}
+function eiofsMatrixMarkdown(){
+  const stages=[&#x27;阶段 0：动机辨认&#x27;,&#x27;阶段 1：念头形成&#x27;,&#x27;阶段 2：方向验证&#x27;,&#x27;阶段 3：0-1 闭环&#x27;,&#x27;阶段 4：稳定闭环&#x27;,&#x27;阶段 5：系统放大&#x27;];
+  const header=`| 维度 | ${stages.join(&#x27; | &#x27;)} |`;
+  const sep=`|---|${stages.map(()=&gt; &#x27;---&#x27;).join(&#x27;|&#x27;)}|`;
+  const rows=eiofsMatrixData().map(row=&gt;`| ${row.dim} | ${row.values.join(&#x27; | &#x27;)} |`).join(&#x27;\n&#x27;);
+  return `${header}\n${sep}\n${rows}`;
+}
+function eiofsStageName(n){
+  const names=[&#x27;动机清楚&#x27;,&#x27;连续探索&#x27;,&#x27;方向证据&#x27;,&#x27;真实反馈&#x27;,&#x27;可重复闭环&#x27;,&#x27;系统杠杆&#x27;];
+  return names[n] || &#x27;阶段信号&#x27;;
+}
+function eiofsData(){
+  const a=state.answers, c=state.computed, n=stageNum(c.calibrated_stage);
+  const actions=arr(a.action_list), focus=arr(a.current_time_focus), support=arr(a.support_preference), growth=arr(a.growth_investment_behavior);
+  const hasUserTalk=actions.some(x=&gt;[&#x27;找潜在用户/客户聊过&#x27;,&#x27;做过用户访谈或需求调研&#x27;].includes(x));
+  const hasMvp=actions.some(x=&gt;[&#x27;做过试服务、体验版或 MVP&#x27;].includes(x));
+  const hasOffer=actions.some(x=&gt;[&#x27;发起过报价或合作邀请&#x27;].includes(x));
+  const hasPaid=actions.some(x=&gt;[&#x27;有过真实付费客户/用户&#x27;,&#x27;有过复购、转介绍或持续合作&#x27;,&#x27;正在稳定交付&#x27;].includes(x));
+  const hasRepeat=actions.some(x=&gt;[&#x27;有过复购、转介绍或持续合作&#x27;,&#x27;正在稳定交付&#x27;].includes(x));
+  const feedbackNeed=support.some(x=&gt;[&#x27;我希望得到具体反馈和校准&#x27;,&#x27;我希望尽量减少试错&#x27;,&#x27;我更适合边做边调整&#x27;].includes(x));
+  const hasReflection=growth.includes(&#x27;做过长期复盘或记录&#x27;) || growth.includes(&#x27;长期输出内容&#x27;);
+  const map={
+    0:{
+      positive:[&#x27;你已经开始认真辨认当前状态，而不是直接把不满等同于“马上创业”。&#x27;, focus.includes(&#x27;思考方向和路径&#x27;)?&#x27;你已经把注意力放到路径判断上，这是动机辨认期的重要信号。&#x27;:&#x27;你已经开始通过这次校准观察自己是否适合继续投入。&#x27;],
+      missing:[&#x27;还需要把“不满来源”和“长期想经营的问题”分开写清楚。&#x27;,&#x27;还需要做 2-3 次低成本观察，了解真实做自己事情的人付出了什么代价。&#x27;],
+      prescription:[&#x27;列出 3 个具体不满来源，标注它们是环境问题、收入问题、成长问题还是自主感问题。&#x27;,&#x27;找 2 个已经在做自己事情的人聊真实代价，而不是只看成功案例。&#x27;],
+      logic:&#x27;阶段 0 的早期成功指标不是产品或收入，而是能否从情绪逃离进入理性观察。&#x27;
+    },
+    1:{
+      positive:[&#x27;你已经有探索念头，并开始围绕方向和路径投入注意力。&#x27;, hasReflection?&#x27;你有输出或复盘基础，说明有机会形成稳定探索节奏。&#x27;:&#x27;你正在尝试把想法转成更明确的探索主题。&#x27;],
+      missing:[&#x27;还需要连续 2-4 周围绕一个小主题投入，而不是不断切换方向。&#x27;,&#x27;还需要拿到至少一次外部回应，验证这个主题不只停留在自己脑内。&#x27;],
+      prescription:[&#x27;选一个最小探索主题，连续 7 天记录自己愿意主动研究、表达和讨论什么。&#x27;,&#x27;围绕这个主题发出 1 个小观点或找 2 个人聊，看是否有人愿意继续回应。&#x27;],
+      logic:&#x27;阶段 1 的早期成功指标是持续探索和初步回应，而不是马上确定产品。&#x27;
+    },
+    2:{
+      positive:[&#x27;你已经进入方向验证期，关键是把候选方向放到真实用户场景里。&#x27;, hasUserTalk?&#x27;你已经出现用户对话信号，这是方向验证的重要正向证据。&#x27;:&#x27;你已经开始意识到方向需要通过真实问题来验证。&#x27;],
+      missing:[&#x27;还需要每个候选方向至少 3-5 次潜在用户对话。&#x27;,&#x27;还需要确认用户是否已经为这个问题付出过时间、金钱或机会成本。&#x27;],
+      prescription:[&#x27;把候选方向压缩到 1-2 个，并分别写清服务谁、解决什么问题、为什么是你。&#x27;,&#x27;每个方向找 3 个潜在用户访谈，记录重复痛点和现有替代方案。&#x27;],
+      logic:&#x27;阶段 2 的早期成功指标是“用户真实痛点 × 自身能力 × 可验证切口”是否开始出现交集。&#x27;
+    },
+    3:{
+      positive:[&#x27;你已经有较清楚方向，开始接近 0-1 闭环。&#x27;, hasUserTalk?&#x27;你已经有潜在用户交流，这是进入真实反馈闭环的正向信号。&#x27;:&#x27;你已经具备把方向拿出去验证的条件。&#x27;, hasMvp?&#x27;你已经做过试服务或 MVP，说明服务成形度开始出现。&#x27;:&#x27;你的下一步重点是把方向压缩成可发出的服务邀请。&#x27;],
+      missing:[hasOffer?&#x27;还需要提高真实回应密度，而不是只停留在一次报价。&#x27;:&#x27;还缺一次明确的服务邀请或报价动作。&#x27;, hasPaid?&#x27;还需要复盘首批客户为什么愿意买。&#x27;:&#x27;还缺 5-10 个真实回应、试用反馈或明确拒绝原因。&#x27;],
+      prescription:[&#x27;把服务切口压缩成一个人群、一个问题、一个可交付结果。&#x27;,&#x27;写一版 100 字服务邀请，主动发给 5-10 个潜在用户，记录回应、试用、报价和拒绝原因。&#x27;],
+      logic:&#x27;阶段 3 的早期成功指标不是继续打磨定位，而是能否通过最小服务邀请拿到真实回应、试用反馈、拒绝原因或首单。&#x27;
+    },
+    4:{
+      positive:[hasPaid?&#x27;你已经出现真实付费或交付信号，这是从 0-1 走向稳定闭环的关键证据。&#x27;:&#x27;你已经有初步客户/服务基础，下一步要验证它是否可重复。&#x27;, hasRepeat?&#x27;你已经出现复购、转介绍或持续合作信号。&#x27;:&#x27;你正在接近可重复成交与稳定交付的验证点。&#x27;],
+      missing:[&#x27;还需要复盘客户为什么买、从哪里来、交付后得到了什么。&#x27;,&#x27;还需要把成交路径和交付流程拆成可重复步骤。&#x27;],
+      prescription:[&#x27;复盘最近 1-3 个客户：来源、信任触点、购买原因、交付结果和下一步可能性。&#x27;,&#x27;把触达、沟通、报价、交付、复盘整理成一张可重复流程图。&#x27;],
+      logic:&#x27;阶段 4 的早期成功指标不是“有过客户”本身，而是首批客户能否被解释、复盘和复制。&#x27;
+    },
+    5:{
+      positive:[hasRepeat?&#x27;你已经有持续交付或复购信号，具备系统化基础。&#x27;:&#x27;你已经进入稳定业务阶段，重点转向主瓶颈和杠杆。&#x27;, c.high_growth_drive===&#x27;高&#x27;?&#x27;你的成长驱动较强，适合把经验沉淀成系统。&#x27;:&#x27;你需要从个人经验转向流程、指标和资产。&#x27;],
+      missing:[&#x27;还需要明确当前增长主瓶颈：获客、成交、交付、复购、产品结构还是系统效率。&#x27;,&#x27;还需要用指标、流程、AI 或协作减少对个人工时的依赖。&#x27;],
+      prescription:[&#x27;列出当前业务 3 个瓶颈，只选最限制增长的一个做 2-4 周优化。&#x27;,&#x27;把重复工作拆成必须你做、AI 可辅助、可流程化、可外包四类。&#x27;],
+      logic:&#x27;阶段 5 的早期成功指标是业务能否从个人工时驱动，进入流程、产品、渠道、AI 和案例资产驱动。&#x27;
+    }
+  };
+  const data=map[n] || map[2];
+  data.positive=data.positive.filter(Boolean).slice(0,3);
+  data.missing=data.missing.filter(Boolean).slice(0,3);
+  data.prescription=data.prescription.filter(Boolean).slice(0,3);
+  data.stageLabel=`阶段 ${n}｜${eiofsStageName(n)}`;
+  return data;
+}
+function renderEiofsCards(){
+  const e=eiofsData();
+  const pos=e.positive.map(x=&gt;`&lt;li&gt;${esc(x)}&lt;/li&gt;`).join(&#x27;&#x27;);
+  const miss=e.missing.map(x=&gt;`&lt;li&gt;${esc(x)}&lt;/li&gt;`).join(&#x27;&#x27;);
+  return `&lt;div class=&quot;eiofs-grid&quot;&gt;&lt;div class=&quot;eiofs-card&quot;&gt;&lt;b&gt;你已经出现的正向信号&lt;/b&gt;&lt;ul&gt;${pos}&lt;/ul&gt;&lt;/div&gt;&lt;div class=&quot;eiofs-card missing&quot;&gt;&lt;b&gt;你还缺的关键证据&lt;/b&gt;&lt;ul&gt;${miss}&lt;/ul&gt;&lt;/div&gt;&lt;/div&gt;`;
+}
+function renderEiofsPrescription(){
+  const e=eiofsData();
+  return `&lt;div class=&quot;eiofs-card&quot; style=&quot;margin-top:14px;&quot;&gt;&lt;b&gt;构建下一阶段早期成功指标&lt;/b&gt;&lt;ul&gt;${e.prescription.map(x=&gt;`&lt;li&gt;${esc(x)}&lt;/li&gt;`).join(&#x27;&#x27;)}&lt;/ul&gt;&lt;/div&gt;`;
+}
 
 function pathMapData(){
   const a=state.answers, c=state.computed, d=pathDiagnosis();
   const n=stageNum(c.calibrated_stage);
+  const self=stageNum(a.stage_self_select);
   const names=[&#x27;动机澄清&#x27;,&#x27;方向试探&#x27;,&#x27;方向验证&#x27;,&#x27;0-1闭环&#x27;,&#x27;稳定闭环&#x27;,&#x27;系统放大&#x27;];
   const nextNames=[&#x27;进入低成本探索&#x27;,&#x27;选择一个小方向&#x27;,&#x27;真实用户验证&#x27;,&#x27;完成反馈闭环&#x27;,&#x27;形成可重复路径&#x27;,&#x27;找到主瓶颈并系统化&#x27;];
   const nextIndex = Math.min(5, n+1);
-  return {n,names,nextNames,nextIndex,d,
+  const selfStage = Number.isFinite(self) ? `阶段 ${self}｜${names[self] || &#x27;&#x27;}` : (a.stage_self_select || &#x27;未填写&#x27;);
+  const calibratedStage = `阶段 ${n}｜${names[n] || d.task}`;
+  const next = `阶段 ${nextIndex}｜${nextNames[n] || names[nextIndex]}`;
+  const isCalibrated = self !== n;
+  const calibrationCopy = isCalibrated
+    ? `你原本判断自己在${selfStage}，但从你过去 3 个月的实际行动、当前卡点和目标结果看，系统更建议你先按${calibratedStage}推进。这不是否定你的判断，而是说明：在进入下一站之前，你可能还需要先补上当前阶段最关键的反馈闭环。`
+    : `你的自我判断和系统校准基本一致。接下来关键不是重新找方向，而是围绕当前阶段的核心任务，提高真实反馈密度，推动自己进入下一站。`;
+  return {n,self,names,nextNames,nextIndex,d,selfStage,calibratedStage,next,isCalibrated,calibrationCopy,
     current:`阶段 ${n}｜${names[n] || d.task}`,
     risk:`时间浪费风险：${c.time_waste_risk}`,
-    doing:fmtList(a.current_time_focus),
-    priority:d.task,
-    next:`阶段 ${nextIndex}｜${nextNames[n] || names[nextIndex]}`,
-    goal:actionPlan()[0]?.[1] || c.recommended_check_point
+    priority:d.task
   };
 }
 function renderPathMap(){
-  const m=pathMapData();
-  const nodes=m.names.map((name,i)=&gt;`&lt;div class=&quot;path-node ${i===m.n?&#x27;active&#x27;:&#x27;&#x27;} ${i===m.nextIndex&amp;&amp;i!==m.n?&#x27;next&#x27;:&#x27;&#x27;}&quot;&gt;&lt;div class=&quot;path-node-num&quot;&gt;${i}&lt;/div&gt;&lt;div class=&quot;path-node-name&quot;&gt;${esc(name)}&lt;/div&gt;&lt;div class=&quot;path-node-note&quot;&gt;${i===m.n?&#x27;你在这里&#x27;:(i===m.nextIndex?&#x27;下一站&#x27;:&#x27;&#x27;)}&lt;/div&gt;&lt;/div&gt;`).join(&#x27;&#x27;);
+  const m=pathMapData(), c=state.computed, d=m.d;
+  const nodes=m.names.map((name,i)=&gt;{
+    const notes=[];
+    if(i===m.self) notes.push(m.isCalibrated?&#x27;原自评&#x27;:&#x27;自评一致&#x27;);
+    if(i===m.n) notes.push(&#x27;系统校准&#x27;);
+    if(i===m.nextIndex&amp;&amp;i!==m.n) notes.push(&#x27;下一站&#x27;);
+    return `&lt;div class=&quot;path-node ${i===m.n?&#x27;active&#x27;:&#x27;&#x27;} ${i===m.self?&#x27;self&#x27;:&#x27;&#x27;} ${i===m.nextIndex&amp;&amp;i!==m.n?&#x27;next&#x27;:&#x27;&#x27;}&quot;&gt;&lt;div class=&quot;path-node-num&quot;&gt;${i}&lt;/div&gt;&lt;div class=&quot;path-node-name&quot;&gt;${esc(name)}&lt;/div&gt;&lt;div class=&quot;path-node-note&quot;&gt;${notes.join(&#x27; / &#x27;)}&lt;/div&gt;&lt;div class=&quot;path-node-signal&quot;&gt;早期指标：${esc(eiofsStageBriefs()[i])}&lt;/div&gt;&lt;/div&gt;`;
+  }).join(&#x27;&#x27;);
   return `&lt;div class=&quot;path-map&quot;&gt;
-    &lt;div class=&quot;path-map-head&quot;&gt;&lt;div&gt;&lt;div class=&quot;path-map-kicker&quot;&gt;PATH MAP&lt;/div&gt;&lt;div class=&quot;path-map-title&quot;&gt;你的一人公司路径地图&lt;/div&gt;&lt;div class=&quot;path-map-sub&quot;&gt;这张地图只回答一件事：你现在的时间，应该投向哪个阶段的问题，哪里最容易浪费。&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;path-risk-badge&quot;&gt;${esc(m.risk)}&lt;/div&gt;&lt;/div&gt;
-    &lt;div class=&quot;path-line&quot;&gt;${nodes}&lt;/div&gt;
-    &lt;div class=&quot;path-map-grid&quot;&gt;
-      &lt;div class=&quot;path-map-item&quot;&gt;&lt;div class=&quot;path-map-label&quot;&gt;当前位置&lt;/div&gt;&lt;div class=&quot;path-map-value&quot;&gt;${esc(m.current)}&lt;/div&gt;&lt;/div&gt;
-      &lt;div class=&quot;path-map-item&quot;&gt;&lt;div class=&quot;path-map-label&quot;&gt;你正在做&lt;/div&gt;&lt;div class=&quot;path-map-value&quot;&gt;${esc(m.doing)}&lt;/div&gt;&lt;/div&gt;
-      &lt;div class=&quot;path-map-item&quot;&gt;&lt;div class=&quot;path-map-label&quot;&gt;真正该优先做&lt;/div&gt;&lt;div class=&quot;path-map-value&quot;&gt;${esc(m.priority)}&lt;/div&gt;&lt;/div&gt;
-      &lt;div class=&quot;path-map-item&quot;&gt;&lt;div class=&quot;path-map-label&quot;&gt;下一站&lt;/div&gt;&lt;div class=&quot;path-map-value&quot;&gt;${esc(m.next)}&lt;/div&gt;&lt;/div&gt;
-      &lt;div class=&quot;path-map-item&quot; style=&quot;grid-column:1/-1;&quot;&gt;&lt;div class=&quot;path-map-label&quot;&gt;2-4 周校准目标&lt;/div&gt;&lt;div class=&quot;path-map-value&quot;&gt;${esc(m.goal)}&lt;/div&gt;&lt;/div&gt;
+    &lt;div class=&quot;path-map-head&quot;&gt;&lt;div&gt;&lt;div class=&quot;path-map-kicker&quot;&gt;CALIBRATION DIAGNOSIS&lt;/div&gt;&lt;div class=&quot;path-map-title&quot;&gt;你的路径校准诊断&lt;/div&gt;&lt;div class=&quot;path-map-sub&quot;&gt;先看清楚：你原本判断自己在哪，系统校准后建议按哪个阶段推进，以及下一站是什么。&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;path-risk-badge&quot;&gt;${esc(m.risk)}&lt;/div&gt;&lt;/div&gt;
+    &lt;div class=&quot;diagnosis-summary&quot;&gt;
+      &lt;div class=&quot;report-section-no&quot;&gt;SYSTEM CALIBRATED STAGE&lt;/div&gt;
+      &lt;div class=&quot;diagnosis-title&quot;&gt;${esc(d.name)}&lt;/div&gt;
+      &lt;div class=&quot;diagnosis-one&quot;&gt;${esc(d.one)}&lt;/div&gt;
+      &lt;div class=&quot;diagnosis-tags&quot;&gt;&lt;span class=&quot;diagnosis-tag&quot;&gt;原自评：${esc(m.selfStage)}&lt;/span&gt;&lt;span class=&quot;diagnosis-tag&quot;&gt;系统校准：${esc(m.calibratedStage)}&lt;/span&gt;&lt;span class=&quot;diagnosis-tag&quot;&gt;下一站：${esc(m.next)}&lt;/span&gt;&lt;span class=&quot;diagnosis-tag&quot;&gt;优先任务：${esc(d.task)}&lt;/span&gt;&lt;/div&gt;
     &lt;/div&gt;
+    &lt;div class=&quot;path-line&quot;&gt;${nodes}&lt;/div&gt;
+    &lt;div class=&quot;path-legend&quot;&gt;&lt;span class=&quot;legend-pill&quot;&gt;&lt;i class=&quot;legend-dot self&quot;&gt;&lt;/i&gt;原自评阶段&lt;/span&gt;&lt;span class=&quot;legend-pill&quot;&gt;&lt;i class=&quot;legend-dot&quot;&gt;&lt;/i&gt;系统校准阶段&lt;/span&gt;&lt;span class=&quot;legend-pill&quot;&gt;&lt;i class=&quot;legend-dot next&quot;&gt;&lt;/i&gt;下一站&lt;/span&gt;&lt;/div&gt;
+    ${renderEiofsMatrix(m)}
+    &lt;div class=&quot;diagnosis-note&quot;&gt;${esc(m.calibrationCopy)}&lt;/div&gt;
+    ${renderEiofsCards()}
+    &lt;div class=&quot;download-prompt&quot;&gt;&lt;div&gt;&lt;strong&gt;建议先下载这份校准报告&lt;/strong&gt;&lt;span&gt;接下来 2-4 周，你可以对照里面的阶段判断、风险点和行动处方，检查自己有没有继续把时间花在低效动作上。&lt;/span&gt;&lt;/div&gt;&lt;button class=&quot;btn-primary&quot; onclick=&quot;downloadCalibrationMarkdown()&quot;&gt;下载校准报告&lt;/button&gt;&lt;/div&gt;
   &lt;/div&gt;`;
+}
+
+function ctaActionsHtml(cta){
+  if(cta.showWechat === false){
+    return `&lt;div class=&quot;cta-actions&quot;&gt;&lt;button class=&quot;btn-primary&quot; onclick=&quot;downloadCalibrationMarkdown()&quot;&gt;下载校准报告&lt;/button&gt;&lt;button class=&quot;btn-ghost&quot; onclick=&quot;location.reload()&quot;&gt;重新检查&lt;/button&gt;&lt;/div&gt;`;
+  }
+  const cls = cta.downloadPrimary ? &#x27;cta-actions download-first&#x27; : &#x27;cta-actions&#x27;;
+  const wechatBtn = `&lt;button class=&quot;btn-primary&quot; onclick=&quot;copyWechat()&quot;&gt;${esc(cta.button || &#x27;复制微信号&#x27;)}&lt;/button&gt;`;
+  const downloadBtn = `&lt;button class=&quot;btn-secondary&quot; onclick=&quot;downloadCalibrationMarkdown()&quot;&gt;下载校准报告&lt;/button&gt;`;
+  return `&lt;div class=&quot;${cls}&quot;&gt;${wechatBtn}${downloadBtn}&lt;button class=&quot;btn-ghost&quot; onclick=&quot;location.reload()&quot;&gt;重新检查&lt;/button&gt;&lt;/div&gt;`;
+}
+
+function diagnosticReasoningRows(){
+  const a=state.answers, c=state.computed, d=pathDiagnosis(), m=pathMapData(), e=eiofsData();
+  const n=stageNum(c.calibrated_stage);
+  const positive=e.positive.map(x=&gt;String(x).replace(/[。；;]+$/,&#x27;&#x27;)).join(&#x27;；&#x27;);
+  const missing=e.missing.map(x=&gt;String(x).replace(/[。；;]+$/,&#x27;&#x27;)).join(&#x27;；&#x27;);
+  return [
+    {
+      title:&#x27;先给结论：你现在最适合按哪个阶段推进&#x27;,
+      main:`当前结果是：先按「${d.name}」推进。`,
+      evidence:m.isCalibrated ? `你原本判断自己在${m.selfStage}，但系统没有直接采纳自评，而是把实际行动、当前卡点、时间投入和阶段指标放在一起校准。` : `你的自我判断和系统校准基本一致，都指向${m.calibratedStage}。这说明你对当前位置的感知比较准确。`,
+      focus:true
+    },
+    {
+      title:&#x27;你已经满足了当前阶段的一部分指标&#x27;,
+      main:positive ? `已经出现的有效信号：${positive}。` : &#x27;你已经完成了这次路径校准，说明你开始把模糊状态转成可判断的信息。&#x27;,
+      evidence:`这些不是“下一阶段要求”，而是用来判断你为什么会被放在阶段 ${n} 的当前证据。`
+    },
+    {
+      title:&#x27;但当前阶段的关键指标还没有完全达标&#x27;,
+      main:missing ? `还没补上的关键证据：${missing}。` : &#x27;当前阶段最需要继续补足的是更密集、更具体的真实反馈。&#x27;,
+      evidence:&#x27;所以这里不是在要求你提前完成下一阶段，而是在提醒：如果这些当前阶段证据不足，直接跳到更后面的动作会更容易空转。&#x27;
+    },
+    {
+      title:&#x27;最后看你的时间投入有没有偏离当前阶段&#x27;,
+      main:`你当前的主要时间投入是「${fmtList(a.current_time_focus)}」。`,
+      evidence:currentWasteInsight()
+    }
+  ];
+}
+function renderDiagnosticReasoning(){
+  const rows=diagnosticReasoningRows();
+  return `&lt;div class=&quot;reasoning-map&quot;&gt;${rows.map((r,i)=&gt;`&lt;div class=&quot;reasoning-step ${r.focus?&#x27;result-focus&#x27;:&#x27;&#x27;}&quot;&gt;&lt;div class=&quot;reasoning-step-num&quot;&gt;${String(i+1).padStart(2,&#x27;0&#x27;)}&lt;/div&gt;&lt;div&gt;&lt;div class=&quot;reasoning-step-title&quot;&gt;${esc(r.title)}&lt;/div&gt;&lt;div class=&quot;reasoning-step-main&quot;&gt;${esc(r.main)}&lt;/div&gt;&lt;div class=&quot;reasoning-step-evidence&quot;&gt;${esc(r.evidence)}&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;`).join(&#x27;&#x27;)}&lt;/div&gt;`;
 }
 
 function renderResult(){
   const a=state.answers,c=state.computed,d=pathDiagnosis();
   const cta = ctaContent(c.user_segment);
-  const profile = explorationProfileRows().map(r=&gt;`&lt;div class=&quot;action-item&quot;&gt;&lt;div class=&quot;action-week&quot;&gt;${esc(r[0])}&lt;/div&gt;&lt;div class=&quot;action-text&quot;&gt;${esc(r[1])}&lt;/div&gt;&lt;/div&gt;`).join(&#x27;&#x27;);
+  const profile = explorationProfileRows().map(r=&gt;`&lt;div class=&quot;profile-mini&quot;&gt;&lt;b&gt;${esc(r[0])}&lt;/b&gt;&lt;span&gt;${esc(r[1])}&lt;/span&gt;&lt;/div&gt;`).join(&#x27;&#x27;);
   const evidence = evidenceRows().map(r=&gt;`&lt;tr&gt;&lt;td&gt;&lt;strong&gt;${esc(r[0])}&lt;/strong&gt;&lt;/td&gt;&lt;td&gt;${esc(r[1])}&lt;/td&gt;&lt;td style=&quot;color:var(--muted);&quot;&gt;${esc(r[2])}&lt;/td&gt;&lt;/tr&gt;`).join(&#x27;&#x27;);
   const actions = actionPlan().map(x=&gt;`&lt;div class=&quot;action-item&quot;&gt;&lt;div class=&quot;action-week&quot;&gt;${esc(x[0])}&lt;/div&gt;&lt;div class=&quot;action-text&quot;&gt;${esc(x[1])}&lt;/div&gt;&lt;/div&gt;`).join(&#x27;&#x27;);
   const avoids = avoidItems().map(x=&gt;`&lt;div class=&quot;avoid-item&quot;&gt;${esc(x)}&lt;/div&gt;`).join(&#x27;&#x27;);
   const support = supportModeAdvice().map(x=&gt;`&lt;div class=&quot;avoid-item&quot;&gt;${esc(x)}&lt;/div&gt;`).join(&#x27;&#x27;);
-  const pathMap = renderPathMap();
+  const ctaBullets = (cta.bullets || []).map(x=&gt;`&lt;li&gt;${esc(x)}&lt;/li&gt;`).join(&#x27;&#x27;);
   const html = `
-    &lt;div class=&quot;report-cover&quot;&gt;
-      &lt;div class=&quot;report-section-no&quot;&gt;CALIBRATION REPORT&lt;/div&gt;
-      &lt;div class=&quot;report-cover-title&quot;&gt;你的一人公司路径校准报告&lt;/div&gt;
-      &lt;div class=&quot;report-cover-meta&quot;&gt;&lt;span&gt;保存编号：${esc(state.submission_id)}&lt;/span&gt;&lt;span&gt;当前阶段：${esc(c.calibrated_stage)}&lt;/span&gt;&lt;span&gt;时间浪费风险：${esc(c.time_waste_risk)}&lt;/span&gt;&lt;/div&gt;
-    &lt;/div&gt;
+    ${renderPathMap()}
 
-    ${pathMap}
-
-    &lt;div class=&quot;archetype-card&quot;&gt;
-      &lt;div class=&quot;archetype-label&quot;&gt;你的路径校准结果&lt;/div&gt;
-      &lt;div class=&quot;archetype-name&quot;&gt;${esc(d.name)}&lt;/div&gt;
-      &lt;div class=&quot;tag-cloud&quot;&gt;&lt;span class=&quot;tag&quot;&gt;${esc(c.calibrated_stage)}&lt;/span&gt;&lt;span class=&quot;tag&quot;&gt;时间浪费风险：${esc(c.time_waste_risk)}&lt;/span&gt;&lt;span class=&quot;tag&quot;&gt;优先任务：${esc(d.task)}&lt;/span&gt;&lt;/div&gt;
-      &lt;div class=&quot;archetype-sub&quot;&gt;${esc(d.one)}&lt;/div&gt;
-      &lt;div class=&quot;small&quot; style=&quot;margin-top:14px;color:var(--muted);&quot;&gt;本次结果已保存，保存编号：${esc(state.submission_id)}&lt;/div&gt;
+    &lt;div class=&quot;section result-section&quot;&gt;
+      &lt;div class=&quot;report-section-no&quot;&gt;02 / CALIBRATION RESULT&lt;/div&gt;&lt;h3&gt;为什么这样判断｜你的阶段校准结果&lt;/h3&gt;
+      &lt;p class=&quot;evidence-intro&quot;&gt;这一部分先给你结果，再说明结果背后的几个关键判断：当前阶段哪些指标已经够了，哪些还没够，以及你的时间投入有没有偏离当前阶段。&lt;/p&gt;
+      ${renderDiagnosticReasoning()}
+      &lt;div class=&quot;reasoning-conclusion&quot;&gt;所以，这次校准的重点不是让你理解一条复杂推理链，而是帮你确认：现在最该补的仍然是「${esc(d.task)}」这个阶段任务。当前更适合先按「${esc(d.name)}」推进。&lt;/div&gt;
+      &lt;details class=&quot;data-points-details&quot;&gt;
+        &lt;summary&gt;Data Points｜查看你的填写信息如何支撑这个判断&lt;/summary&gt;
+        &lt;div class=&quot;result-box&quot; style=&quot;padding:0; overflow:hidden; margin-top:10px;&quot;&gt;
+          &lt;table class=&quot;matrix-table&quot;&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;width:24%&quot;&gt;你填的信息&lt;/th&gt;&lt;th style=&quot;width:34%&quot;&gt;你的选择&lt;/th&gt;&lt;th style=&quot;width:42%&quot;&gt;它说明什么&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;${evidence}&lt;/tbody&gt;&lt;/table&gt;
+        &lt;/div&gt;
+      &lt;/details&gt;
     &lt;/div&gt;
 
     &lt;div class=&quot;section result-section&quot;&gt;
-      &lt;div class=&quot;report-section-no&quot;&gt;01 / KEY JUDGEMENT&lt;/div&gt;&lt;h3&gt;🎯 一句话结论&lt;/h3&gt;
-      &lt;div class=&quot;positioning-box&quot;&gt;${esc(d.one)}&lt;/div&gt;
+      &lt;div class=&quot;report-section-no&quot;&gt;03 / TIME WASTE RISK&lt;/div&gt;&lt;h3&gt;你最可能浪费时间的地方&lt;/h3&gt;
+      &lt;div class=&quot;result-box&quot;&gt;风险等级：&lt;strong style=&quot;color:var(--accent);&quot;&gt;${esc(c.time_waste_risk)}&lt;/strong&gt;&lt;br&gt;&lt;br&gt;${esc(currentWasteInsight())}&lt;br&gt;&lt;br&gt;${esc(riskCopy(c.time_waste_risk))}&lt;/div&gt;
     &lt;/div&gt;
 
     &lt;div class=&quot;section result-section&quot;&gt;
-      &lt;div class=&quot;report-section-no&quot;&gt;02 / PROFILE&lt;/div&gt;&lt;h3&gt;🧩 你的探索画像&lt;/h3&gt;
-      ${profile}
-    &lt;/div&gt;
-
-    &lt;div class=&quot;section result-section&quot;&gt;
-      &lt;div class=&quot;report-section-no&quot;&gt;03 / EVIDENCE&lt;/div&gt;&lt;h3&gt;🧭 为什么这样判断&lt;/h3&gt;
-      &lt;div class=&quot;result-box&quot;&gt;&lt;p&gt;${esc(d.detail)}&lt;/p&gt;&lt;p style=&quot;margin-top:10px;color:var(--text);&quot;&gt;${esc(d.mismatch)}&lt;/p&gt;&lt;/div&gt;
-    &lt;/div&gt;
-
-    &lt;div class=&quot;section result-section&quot;&gt;
-      &lt;div class=&quot;report-section-no&quot;&gt;04 / DATA POINTS&lt;/div&gt;&lt;h3&gt;📌 你填写的信息如何支持这个判断&lt;/h3&gt;
-      &lt;div class=&quot;result-box&quot; style=&quot;padding:0; overflow:hidden;&quot;&gt;
-        &lt;table class=&quot;matrix-table&quot;&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;width:24%&quot;&gt;你填的信息&lt;/th&gt;&lt;th style=&quot;width:34%&quot;&gt;你的选择&lt;/th&gt;&lt;th style=&quot;width:42%&quot;&gt;它说明什么&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;${evidence}&lt;/tbody&gt;&lt;/table&gt;
-      &lt;/div&gt;
-    &lt;/div&gt;
-
-    &lt;div class=&quot;section result-section&quot;&gt;
-      &lt;div class=&quot;report-section-no&quot;&gt;05 / TIME RISK&lt;/div&gt;&lt;h3&gt;⚠️ 你最可能浪费时间的地方&lt;/h3&gt;
-      &lt;div class=&quot;result-box&quot;&gt;${esc(currentWasteInsight())}&lt;br&gt;&lt;br&gt;${esc(riskCopy(c.time_waste_risk))}&lt;/div&gt;
-    &lt;/div&gt;
-
-    &lt;div class=&quot;section result-section&quot;&gt;
-      &lt;div class=&quot;report-section-no&quot;&gt;06 / CALIBRATION&lt;/div&gt;&lt;h3&gt;🔁 你现在最需要的不是 X，而是 Y&lt;/h3&gt;
-      &lt;div class=&quot;positioning-box&quot;&gt;${esc(notXButY())}&lt;/div&gt;
-    &lt;/div&gt;
-
-    &lt;div class=&quot;section result-section&quot;&gt;
-      &lt;div class=&quot;report-section-no&quot;&gt;07 / ACTION MAP&lt;/div&gt;&lt;h3&gt;🚀 接下来 2-4 周的校准行动&lt;/h3&gt;
+      &lt;div class=&quot;report-section-no&quot;&gt;04 / ACTION PRESCRIPTION&lt;/div&gt;&lt;h3&gt;接下来 2-4 周的行动处方&lt;/h3&gt;
+      &lt;div class=&quot;prescription-goal&quot;&gt;阶段性目标：${esc(c.recommended_check_point)}&lt;/div&gt;
       ${actions}
-    &lt;/div&gt;
-
-    &lt;div class=&quot;section result-section&quot;&gt;
-      &lt;div class=&quot;report-section-no&quot;&gt;08 / WORK MODE&lt;/div&gt;&lt;h3&gt;🧪 你更适合的推进方式&lt;/h3&gt;
+      ${renderEiofsPrescription()}
+      &lt;h3 style=&quot;margin-top:20px;&quot;&gt;这阶段先别急着做&lt;/h3&gt;
+      &lt;div class=&quot;avoid-list&quot;&gt;${avoids}&lt;/div&gt;
+      &lt;h3 style=&quot;margin-top:20px;&quot;&gt;推进方式提醒&lt;/h3&gt;
       &lt;div class=&quot;avoid-list&quot;&gt;${support}&lt;/div&gt;
     &lt;/div&gt;
 
-    &lt;div class=&quot;section result-section&quot;&gt;
-      &lt;h3&gt;⛔ 这阶段先别急着做&lt;/h3&gt;
-      &lt;div class=&quot;avoid-list&quot;&gt;${avoids}&lt;/div&gt;
-    &lt;/div&gt;
-
-    &lt;div class=&quot;section result-section&quot;&gt;
-      &lt;h3&gt;✅ 下一步优先检查点&lt;/h3&gt;
-      &lt;div class=&quot;result-box&quot; style=&quot;border-left:3px solid var(--accent);&quot;&gt;${esc(c.recommended_check_point)}&lt;/div&gt;
-    &lt;/div&gt;
-
-    &lt;div class=&quot;section cta-box&quot;&gt;&lt;h3&gt;${esc(cta.title)}&lt;/h3&gt;&lt;p&gt;${esc(ctaBridgeCopy(c.user_segment))}&lt;/p&gt;&lt;p&gt;${esc(cta.body)}&lt;/p&gt;&lt;div class=&quot;wechat&quot;&gt;&lt;span class=&quot;wechat-code&quot;&gt;微信：${esc(WECHAT_ID)}&lt;/span&gt;&lt;button class=&quot;btn-secondary&quot; onclick=&quot;copyWechat()&quot;&gt;复制微信号&lt;/button&gt;&lt;/div&gt;&lt;p class=&quot;small&quot;&gt;${esc(cta.note)}&lt;/p&gt;&lt;/div&gt;
-    &lt;div class=&quot;nav&quot;&gt;&lt;button class=&quot;btn-secondary&quot; onclick=&quot;downloadCalibrationMarkdown()&quot;&gt;下载校正结果&lt;/button&gt;&lt;button class=&quot;btn-ghost&quot; onclick=&quot;location.reload()&quot;&gt;重新检查&lt;/button&gt;&lt;/div&gt;`;
+    &lt;div class=&quot;section cta-box&quot;&gt;&lt;div class=&quot;report-section-no&quot;&gt;05 / NEXT STEP&lt;/div&gt;&lt;h3&gt;${esc(cta.title)}&lt;/h3&gt;&lt;p&gt;${esc(cta.body)}&lt;/p&gt;${ctaBullets?`&lt;ul class=&quot;cta-bullets&quot;&gt;${ctaBullets}&lt;/ul&gt;`:&#x27;&#x27;}&lt;p class=&quot;small&quot;&gt;${esc(cta.note || &#x27;&#x27;)}&lt;/p&gt;${cta.showWechat===false?&#x27;&#x27;:`&lt;div class=&quot;wechat&quot;&gt;&lt;span class=&quot;wechat-code&quot;&gt;微信：${esc(WECHAT_ID)}&lt;/span&gt;&lt;/div&gt;`}${ctaActionsHtml(cta)}&lt;/div&gt;`;
   document.getElementById(&#x27;result&#x27;).innerHTML = html;
   document.getElementById(&#x27;result&#x27;).classList.remove(&#x27;hidden&#x27;);
   trackCTA(&#x27;view_cta&#x27;);
@@ -2277,11 +2470,44 @@ function renderResult(){
 function riskCopy(v){ return v===&#x27;低&#x27;?&#x27;你现在做的事大体符合当前阶段，时间投入大概率是在有效推进。但仍建议保持一个可验证的阶段目标，避免动作越来越散。&#x27;:v===&#x27;中&#x27;?&#x27;你的方向大体有推进价值，但部分动作可能稍微提前或滞后。中风险的意思不是“做错了”，而是需要先确认关键前提，再继续加大投入。&#x27;:&#x27;你可能正在把时间花在不属于当前阶段的事情上。高风险不是说你不努力，而是现在的努力可能没有打在阶段最关键的问题上。&#x27;; }
 
 function ctaContent(seg){
-  if(seg===&#x27;P0&#x27;) return {title:&#x27;如果你想进一步校准，可以和我做一次一对一深度咨询&#x27;, body:&#x27;从你的结果看，你已经有一定基础和明确卡点。如果你愿意，可以加我微信，我们重点看：当前阶段是否判断准确、哪里最可能浪费时间、你的下一步验证动作怎么设计。&#x27;, note:&#x27;咨询会重点围绕你当前阶段最关键的问题展开，帮助判断下一步怎么验证更省时间。&#x27;};
-  if(seg===&#x27;P1&#x27;) return {title:&#x27;你可以先加我微信，继续观察和校准路径&#x27;, body:&#x27;你现在未必需要马上做深度咨询，但可以先保持连接。我会持续分享一人公司探索、少走弯路、路径校准相关内容。等你的方向或问题更清楚时，再进一步判断。&#x27;, note:&#x27;添加微信后，可以先看后续内容和案例。&#x27;};
-  if(seg===&#x27;P2&#x27;) return {title:&#x27;你可以先加我微信，继续观察和校准路径&#x27;, body:&#x27;你的路径有参考价值。如果你愿意，可以加我微信，后续有相关话题时继续交流。&#x27;, note:&#x27;不一定需要马上咨询，可以先保持交流。&#x27;};
-  return {title:&#x27;你可以先保存结果，暂时不用急着找我咨询&#x27;, body:&#x27;你现在可能还处在很早期的观察和思考阶段，不一定需要马上做一对一咨询。建议先按上面的行动建议做一次低成本验证，再决定是否继续投入。&#x27;, note:&#x27;不用急着做决定，先减少无效信息摄入。&#x27;};
+  if(seg===&#x27;P0&#x27;) return {
+    title:&#x27;如果你想更快进入下一个阶段&#x27;,
+    body:&#x27;这份报告已经帮你定位到当前阶段和主要风险。下一步更关键的是：把诊断落到你的具体服务切口、反馈对象和 2-4 周行动里。你可以加我微信，备注「路径复诊」。&#x27;,
+    bullets:[&#x27;我们可以结合你的具体情况和更多同类案例，一起讨论哪个动作最可能让你更快拿到真实反馈。&#x27;,&#x27;一起看看哪些动作可能继续浪费时间。&#x27;,&#x27;一起把接下来 2-4 周压缩成一个更有效的验证闭环。&#x27;],
+    note:&#x27;也建议先下载校准报告，带着报告里的阶段判断、风险点和行动处方，再继续讨论下一步。&#x27;,
+    button:&#x27;复制微信号，做一次路径复诊&#x27;,
+    downloadPrimary:false,
+    copyMessage:&#x27;已复制微信号。添加时备注「路径复诊」，我们可以围绕你的阶段判断和下一步验证动作继续讨论。&#x27;
+  };
+  if(seg===&#x27;P1&#x27;) return {
+    title:&#x27;如果你想进一步确认这份结果&#x27;,
+    body:&#x27;你现在未必需要马上做很重的咨询，但如果你看完结果后，对自己的阶段、风险或下一步行动还有疑问，可以先加微信继续讨论。你可以备注「路径校准」。&#x27;,
+    bullets:[&#x27;我们可以结合你的具体情况和一些同类案例，一起确认这个阶段判断是否贴近你的真实状态。&#x27;,&#x27;一起确认当前最容易浪费时间的地方是否准确。&#x27;,&#x27;一起看看接下来有没有一个更轻、更容易启动的验证动作。&#x27;],
+    note:&#x27;如果你还不确定要不要进一步讨论，建议先下载校准报告，接下来 2-4 周对照行动，再决定是否继续确认。&#x27;,
+    button:&#x27;复制微信号，继续确认结果&#x27;,
+    downloadPrimary:true,
+    copyMessage:&#x27;已复制微信号。添加时备注「路径校准」，可以继续确认这份结果里的阶段和行动建议。&#x27;
+  };
+  if(seg===&#x27;P2&#x27;) return {
+    title:&#x27;如果你想继续核对这份结果&#x27;,
+    body:&#x27;这份结果可以作为你接下来行动的一份路径参考。如果你看完后，对阶段判断、时间风险或行动建议还有疑问，可以加微信继续交流。&#x27;,
+    bullets:[&#x27;我们可以结合你的具体情况，一起看看这份结果里哪些判断最值得参考。&#x27;,&#x27;也可以一起确认哪些行动建议需要按你的真实处境调整。&#x27;],
+    note:&#x27;建议先下载校准报告，方便之后回看阶段判断和行动处方。&#x27;,
+    button:&#x27;复制微信号，交流一下结果&#x27;,
+    downloadPrimary:true,
+    copyMessage:&#x27;已复制微信号。添加时备注「路径校准」，可以简单交流你对结果的疑问。&#x27;
+  };
+  return {
+    title:&#x27;你可以先保存这份结果&#x27;,
+    body:&#x27;这份校准报告可以先作为你接下来行动的参考。你不需要马上做进一步讨论，更适合先按照上面的行动处方，做一次低成本验证。&#x27;,
+    bullets:[&#x27;接下来 2-4 周，可以用这份报告对照自己的阶段判断、时间风险和行动处方。&#x27;,&#x27;如果之后你发现自己又卡住了，或者想重新校准阶段，可以再回来查看这份结果。&#x27;],
+    note:&#x27;建议先下载校准报告，保存这次阶段判断、风险点和行动处方。&#x27;,
+    showWechat:false,
+    downloadPrimary:true
+  };
 }
+
+function ctaBridgeCopy(seg){ return &#x27;&#x27;; }
 
 function logClientEvent(event, data = {}){
   const entry = { ts:new Date().toISOString(), event, debug_id:state.debug_id, submission_id:state.submission_id, ...data };
@@ -2359,7 +2585,7 @@ async function trackCTA(action){
   const payload = { debug_id:state.debug_id, client_debug_id:state.debug_id, event_id:`cta_${Date.now()}_${Math.random().toString(36).slice(2,8)}`, submission_id:state.submission_id, timestamp:new Date().toISOString(), cta_type:state.computed.cta_type, cta_action:action, user_segment:state.computed.user_segment, source:getUrlParam(&#x27;source&#x27;)||getUrlParam(&#x27;utm_source&#x27;)||&#x27;direct&#x27;, utm_source:getUrlParam(&#x27;utm_source&#x27;), utm_campaign:getUrlParam(&#x27;utm_campaign&#x27;), page_url:location.href, parent_page_url:getParentPageUrl(), referrer:document.referrer, user_agent:navigator.userAgent, frontend_version:CALIBRATOR_VERSION, site_commit:SITE_COMMIT };
   try{ return await postJsonWithRetry(&#x27;/api/track-cta&#x27;, payload, { label:`track_cta_${action}`, attempts:3 }); }catch(e){ console.warn(&#x27;cta failed&#x27;, e); logClientEvent(&#x27;track_cta_final_failed&#x27;, { action, error:e.message }); }
 }
-function copyWechat(){ navigator.clipboard.writeText(WECHAT_ID).then(()=&gt;alert(&#x27;微信号已复制&#x27;)); trackCTA(&#x27;copy_wechat&#x27;); }
+function copyWechat(){ const cta=ctaContent(state.computed.user_segment); navigator.clipboard.writeText(WECHAT_ID).then(()=&gt;alert(cta.copyMessage || &#x27;微信号已复制&#x27;)); trackCTA(&#x27;copy_wechat&#x27;); }
 function copyResult(){ navigator.clipboard.writeText(resultText()).then(()=&gt;alert(&#x27;结果已复制&#x27;)); }
 &lt;/script&gt;
 &lt;/body&gt;
