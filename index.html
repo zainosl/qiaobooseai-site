@@ -1618,7 +1618,10 @@
   .profile-mini span { color:var(--muted); font-size:13px; line-height:1.65; }
   .prescription-goal { padding:18px; border-radius:16px; border:1px solid rgba(88,225,193,.28); background:rgba(88,225,193,.09); color:var(--text); font-size:16px; line-height:1.7; font-weight:750; margin-bottom:14px; }
   .cta-actions { display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-top:18px; }
-  .cta-actions.download-first .btn-secondary { order:-1; }
+  .cta-actions .wechat-code { margin-right:2px; }
+  .cta-actions.download-first .btn-secondary { order:2; }
+  .cta-actions.download-first .btn-ghost { order:3; }
+  .cta-save-hint { font-size:12px!important; color:var(--dim)!important; margin-top:10px!important; line-height:1.6!important; }
   .cta-bullets { margin:14px 0 0; padding-left:18px; color:var(--muted); line-height:1.75; }
   .cta-bullets li { margin:4px 0; }
   @media (max-width:720px){ .profile-grid{grid-template-columns:1fr;} .download-prompt{align-items:stretch;} .download-prompt button{width:100%;} }
@@ -2430,13 +2433,16 @@ function renderPathMap(){
 }
 
 function ctaActionsHtml(cta){
+  const hint = &#x27;&lt;p class=&quot;cta-save-hint&quot;&gt;本次校准没有在网页端保存，如有需要点击下载报告。&lt;/p&gt;&#x27;;
+  const downloadBtn = `&lt;button class=&quot;btn-secondary&quot; onclick=&quot;downloadCalibrationMarkdown()&quot;&gt;下载校准报告&lt;/button&gt;`;
+  const recheckBtn = `&lt;button class=&quot;btn-ghost&quot; onclick=&quot;location.reload()&quot;&gt;重新检查&lt;/button&gt;`;
   if(cta.showWechat === false){
-    return `&lt;div class=&quot;cta-actions&quot;&gt;&lt;button class=&quot;btn-primary&quot; onclick=&quot;downloadCalibrationMarkdown()&quot;&gt;下载校准报告&lt;/button&gt;&lt;button class=&quot;btn-ghost&quot; onclick=&quot;location.reload()&quot;&gt;重新检查&lt;/button&gt;&lt;/div&gt;`;
+    return `&lt;div class=&quot;cta-actions&quot;&gt;&lt;button class=&quot;btn-primary&quot; onclick=&quot;downloadCalibrationMarkdown()&quot;&gt;下载校准报告&lt;/button&gt;${recheckBtn}&lt;/div&gt;${hint}`;
   }
   const cls = cta.downloadPrimary ? &#x27;cta-actions download-first&#x27; : &#x27;cta-actions&#x27;;
+  const wechatCode = `&lt;span class=&quot;wechat-code&quot;&gt;微信：${esc(WECHAT_ID)}&lt;/span&gt;`;
   const wechatBtn = `&lt;button class=&quot;btn-primary&quot; onclick=&quot;copyWechat()&quot;&gt;${esc(cta.button || &#x27;复制微信号&#x27;)}&lt;/button&gt;`;
-  const downloadBtn = `&lt;button class=&quot;btn-secondary&quot; onclick=&quot;downloadCalibrationMarkdown()&quot;&gt;下载校准报告&lt;/button&gt;`;
-  return `&lt;div class=&quot;${cls}&quot;&gt;${wechatBtn}${downloadBtn}&lt;button class=&quot;btn-ghost&quot; onclick=&quot;location.reload()&quot;&gt;重新检查&lt;/button&gt;&lt;/div&gt;`;
+  return `&lt;div class=&quot;${cls}&quot;&gt;${wechatCode}${wechatBtn}${downloadBtn}${recheckBtn}&lt;/div&gt;${hint}`;
 }
 
 function diagnosticReasoningRows(){
@@ -2515,7 +2521,7 @@ function renderResult(){
 
     ${renderSuccessIndicatorsSection()}
 
-    &lt;div class=&quot;section cta-box&quot;&gt;&lt;div class=&quot;report-section-no&quot;&gt;06 / NEXT STEP&lt;/div&gt;&lt;h3&gt;${esc(cta.title)}&lt;/h3&gt;&lt;p&gt;${esc(cta.body)}&lt;/p&gt;${ctaBullets?`&lt;ul class=&quot;cta-bullets&quot;&gt;${ctaBullets}&lt;/ul&gt;`:&#x27;&#x27;}&lt;p class=&quot;small&quot;&gt;${esc(cta.note || &#x27;&#x27;)}&lt;/p&gt;${cta.showWechat===false?&#x27;&#x27;:`&lt;div class=&quot;wechat&quot;&gt;&lt;span class=&quot;wechat-code&quot;&gt;微信：${esc(WECHAT_ID)}&lt;/span&gt;&lt;/div&gt;`}${ctaActionsHtml(cta)}&lt;/div&gt;`;
+    &lt;div class=&quot;section cta-box&quot;&gt;&lt;div class=&quot;report-section-no&quot;&gt;06 / NEXT STEP&lt;/div&gt;&lt;h3&gt;${esc(cta.title)}&lt;/h3&gt;&lt;p&gt;${esc(cta.body)}&lt;/p&gt;${ctaBullets?`&lt;ul class=&quot;cta-bullets&quot;&gt;${ctaBullets}&lt;/ul&gt;`:&#x27;&#x27;}&lt;p class=&quot;small&quot;&gt;${esc(cta.note || &#x27;&#x27;)}&lt;/p&gt;${ctaActionsHtml(cta)}&lt;/div&gt;`;
   document.getElementById(&#x27;result&#x27;).innerHTML = html;
   document.getElementById(&#x27;result&#x27;).classList.remove(&#x27;hidden&#x27;);
   trackCTA(&#x27;view_cta&#x27;);
