@@ -2204,10 +2204,6 @@ ${riskCopy(c.time_waste_risk)}
 
 ${actions}
 
-### 构建下一阶段早期成功指标
-
-${eiofs.prescription.map(x=&gt;`- ${x}`).join(&#x27;\n&#x27;)}
-
 ### 这阶段先别急着做
 
 ${avoids}
@@ -2215,6 +2211,12 @@ ${avoids}
 ### 推进方式提醒
 
 ${support}
+
+### 进入下一阶段的早期信号：${m.next}
+
+接下来不是把动作做得更多，而是尽快让这些信号出现。只要这些信号开始出现，就说明你正在从当前阶段往下一阶段移动。
+
+${nextStageSignalItems().map(x=&gt;`- ${x}`).join(&#x27;\n&#x27;)}
 
 ## 05 后续进一步讨论 / 保存说明
 
@@ -2338,9 +2340,21 @@ function renderEiofsCards(){
   const miss=e.missing.map(x=&gt;`&lt;li&gt;${esc(x)}&lt;/li&gt;`).join(&#x27;&#x27;);
   return `&lt;div class=&quot;eiofs-grid&quot;&gt;&lt;div class=&quot;eiofs-card&quot;&gt;&lt;b&gt;你已经出现的正向信号&lt;/b&gt;&lt;ul&gt;${pos}&lt;/ul&gt;&lt;/div&gt;&lt;div class=&quot;eiofs-card missing&quot;&gt;&lt;b&gt;你还缺的关键证据&lt;/b&gt;&lt;ul&gt;${miss}&lt;/ul&gt;&lt;/div&gt;&lt;/div&gt;`;
 }
+function nextStageSignalItems(){
+  const n=stageNum(state.computed.calibrated_stage);
+  const map={
+    0:[&#x27;你能说清自己想离开什么，以及真正想长期经营什么问题。&#x27;,&#x27;你完成了 2-3 次低成本观察或交流，对真实代价有基本判断。&#x27;],
+    1:[&#x27;你能连续 2-4 周围绕一个小主题稳定投入，而不是每天换方向。&#x27;,&#x27;你的表达或交流开始得到至少一次外部回应。&#x27;],
+    2:[&#x27;你能把候选方向压缩到 1-2 个，并说清服务谁、解决什么问题。&#x27;,&#x27;潜在用户访谈里开始反复出现相似痛点、现有替代方案和付出成本。&#x27;],
+    3:[&#x27;你发出明确的服务邀请或报价后，拿到了真实回应、试用反馈或明确拒绝原因。&#x27;,&#x27;你开始看到首单、试服务转化，或至少 5-10 个足够具体的用户反馈。&#x27;],
+    4:[&#x27;你能复盘出客户为什么买、从哪里来、交付后得到什么结果。&#x27;,&#x27;你能把触达、沟通、报价、交付、复盘整理成一套可重复的小闭环。&#x27;],
+    5:[&#x27;你能清楚识别当前增长主瓶颈，并用指标持续追踪。&#x27;,&#x27;你开始用流程、AI、产品结构或协作减少对个人工时的依赖。&#x27;]
+  };
+  return map[n] || map[2];
+}
 function renderEiofsPrescription(){
-  const e=eiofsData();
-  return `&lt;div class=&quot;eiofs-card&quot; style=&quot;margin-top:14px;&quot;&gt;&lt;b&gt;构建下一阶段早期成功指标&lt;/b&gt;&lt;ul&gt;${e.prescription.map(x=&gt;`&lt;li&gt;${esc(x)}&lt;/li&gt;`).join(&#x27;&#x27;)}&lt;/ul&gt;&lt;/div&gt;`;
+  const e=eiofsData(), m=pathMapData();
+  return `&lt;div class=&quot;eiofs-card&quot; style=&quot;margin-top:18px;&quot;&gt;&lt;b&gt;进入下一阶段的早期信号：${esc(m.next)}&lt;/b&gt;&lt;div style=&quot;color:var(--muted);font-size:13px;line-height:1.7;margin:8px 0 10px;&quot;&gt;接下来不是把动作做得更多，而是尽快让这些信号出现。只要这些信号开始出现，就说明你正在从当前阶段往下一阶段移动。&lt;/div&gt;&lt;ul&gt;${nextStageSignalItems().map(x=&gt;`&lt;li&gt;${esc(x)}&lt;/li&gt;`).join(&#x27;&#x27;)}&lt;/ul&gt;&lt;/div&gt;`;
 }
 
 function pathMapData(){
@@ -2467,11 +2481,11 @@ function renderResult(){
       &lt;div class=&quot;report-section-no&quot;&gt;04 / ACTION PRESCRIPTION&lt;/div&gt;&lt;h3&gt;接下来 2-4 周的行动处方&lt;/h3&gt;
       &lt;div class=&quot;prescription-goal&quot;&gt;阶段性目标：${esc(c.recommended_check_point)}&lt;/div&gt;
       ${actions}
-      ${renderEiofsPrescription()}
       &lt;h3 style=&quot;margin-top:20px;&quot;&gt;这阶段先别急着做&lt;/h3&gt;
       &lt;div class=&quot;avoid-list&quot;&gt;${avoids}&lt;/div&gt;
       &lt;h3 style=&quot;margin-top:20px;&quot;&gt;推进方式提醒&lt;/h3&gt;
       &lt;div class=&quot;avoid-list&quot;&gt;${support}&lt;/div&gt;
+      ${renderEiofsPrescription()}
     &lt;/div&gt;
 
     &lt;div class=&quot;section cta-box&quot;&gt;&lt;div class=&quot;report-section-no&quot;&gt;05 / NEXT STEP&lt;/div&gt;&lt;h3&gt;${esc(cta.title)}&lt;/h3&gt;&lt;p&gt;${esc(cta.body)}&lt;/p&gt;${ctaBullets?`&lt;ul class=&quot;cta-bullets&quot;&gt;${ctaBullets}&lt;/ul&gt;`:&#x27;&#x27;}&lt;p class=&quot;small&quot;&gt;${esc(cta.note || &#x27;&#x27;)}&lt;/p&gt;${cta.showWechat===false?&#x27;&#x27;:`&lt;div class=&quot;wechat&quot;&gt;&lt;span class=&quot;wechat-code&quot;&gt;微信：${esc(WECHAT_ID)}&lt;/span&gt;&lt;/div&gt;`}${ctaActionsHtml(cta)}&lt;/div&gt;`;
