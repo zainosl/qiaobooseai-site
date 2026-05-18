@@ -3561,8 +3561,8 @@ function copyResult(){ navigator.clipboard.writeText(resultText()).then(()=&gt;a
           &lt;h1&gt;别急着做 &lt;span class=&quot;accent&quot;&gt;AI 应用&lt;/span&gt;&lt;br&gt;一人公司的入口&lt;br&gt;可能只是一页 HTML&lt;/h1&gt;
           &lt;p class=&quot;subtitle&quot;&gt;页面本身越来越不值钱。真正值钱的是：这个页面有没有承载表达、交付判断、沉淀数据，并让业务往前走一步。&lt;/p&gt;
           &lt;div class=&quot;hero-actions&quot;&gt;
-            &lt;a class=&quot;btn primary&quot; href=&quot;#s04&quot;&gt;看它如何跑通闭环 →&lt;/a&gt;
-            &lt;a class=&quot;btn&quot; href=&quot;#s09&quot;&gt;做一个 3 分钟入口&lt;/a&gt;
+            &lt;button class=&quot;btn primary&quot; type=&quot;button&quot; onclick=&quot;document.getElementById(&#x27;s04&#x27;)?.scrollIntoView({behavior:&#x27;smooth&#x27;,block:&#x27;start&#x27;})&quot;&gt;看它如何跑通闭环 →&lt;/button&gt;
+            &lt;button class=&quot;btn&quot; type=&quot;button&quot; onclick=&quot;document.getElementById(&#x27;s09&#x27;)?.scrollIntoView({behavior:&#x27;smooth&#x27;,block:&#x27;start&#x27;})&quot;&gt;做一个 3 分钟入口&lt;/button&gt;
           &lt;/div&gt;
         &lt;/div&gt;
         &lt;aside class=&quot;hero-card&quot; aria-label=&quot;产品可视化预览&quot;&gt;
@@ -3743,6 +3743,16 @@ function copyResult(){ navigator.clipboard.writeText(resultText()).then(()=&gt;a
   &lt;/div&gt;
 
   &lt;script&gt;
+    document.querySelectorAll(&#x27;a[href^=&quot;#&quot;]&#x27;).forEach(anchor =&gt; {
+      anchor.addEventListener(&#x27;click&#x27;, event =&gt; {
+        const targetId = anchor.getAttribute(&#x27;href&#x27;);
+        const target = targetId === &#x27;#top&#x27; ? document.getElementById(&#x27;top&#x27;) : document.querySelector(targetId);
+        if (!target) return;
+        event.preventDefault();
+        target.scrollIntoView({ behavior: &#x27;smooth&#x27;, block: &#x27;start&#x27; });
+      });
+    });
+
     const progress = document.getElementById(&#x27;progress&#x27;);
     const links = [...document.querySelectorAll(&#x27;.nav-links a&#x27;)];
     const sections = links.map(a =&gt; document.querySelector(a.getAttribute(&#x27;href&#x27;))).filter(Boolean);
