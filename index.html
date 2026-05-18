@@ -3181,6 +3181,8 @@ function copyResult(){ navigator.clipboard.writeText(resultText()).then(()=&gt;a
       background: rgba(255,255,255,.045);
       color: var(--text);
       transition: .2s ease;
+      cursor: pointer;
+      font-family: inherit;
     }
     .btn.primary {
       background: linear-gradient(135deg, var(--accent), var(--accent2));
@@ -3729,7 +3731,7 @@ function copyResult(){ navigator.clipboard.writeText(resultText()).then(()=&gt;a
             &lt;div class=&quot;cta-step&quot;&gt;&lt;b&gt;03 TALK&lt;/b&gt;&lt;span&gt;如果很想做但卡在方向、结构或实现上，再加微信聊。&lt;/span&gt;&lt;/div&gt;
           &lt;/div&gt;
           &lt;p&gt;不用一上来就做复杂应用。先把那个能让用户进来、获得价值、也让你看清用户是谁的入口，做出来。&lt;/p&gt;
-          &lt;div class=&quot;hero-actions&quot;&gt;&lt;a class=&quot;btn primary&quot; href=&quot;#top&quot;&gt;回到开头 ↑&lt;/a&gt;&lt;a class=&quot;btn&quot; href=&quot;https://zainosl.github.io/qiaobooseai-site/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer&quot;&gt;打开品牌官网 ↗&lt;/a&gt;&lt;/div&gt;
+          &lt;div class=&quot;hero-actions&quot;&gt;&lt;button class=&quot;btn primary&quot; type=&quot;button&quot; onclick=&quot;window.scrollTo({top:0,behavior:&#x27;smooth&#x27;})&quot;&gt;回到开头 ↑&lt;/button&gt;&lt;a class=&quot;btn&quot; href=&quot;https://zainosl.github.io/qiaobooseai-site/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer&quot;&gt;打开品牌官网 ↗&lt;/a&gt;&lt;/div&gt;
         &lt;/div&gt;
       &lt;/section&gt;
     &lt;/main&gt;
