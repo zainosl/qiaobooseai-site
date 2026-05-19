@@ -2443,12 +2443,16 @@ function calibrationMarkdown(){
   const avoids = avoidItems().map(x =&gt; `- ${mdLine(x)}`).join(&#x27;\n&#x27;);
   const cta = ctaContent(c.user_segment);
   const eiofs = eiofsData();
+  const reasoning = diagnosticReasoningRows();
+  const ready = currentStageReadyForNext();
+  const currentIndicators = stageSuccessIndicatorItems(m.n).map(x=&gt;`- ${x}`).join(&#x27;\n&#x27;);
+  const nextIndicators = stageSuccessIndicatorItems(m.nextIndex).map(x=&gt;`- ${x}`).join(&#x27;\n&#x27;);
   return `# 一人公司路径校准报告
 
 生成时间：${new Date().toLocaleString(&#x27;zh-CN&#x27;)}
 报告编号：${state.submission_id || &#x27;未生成&#x27;}
 
-## 01 路径校准诊断
+## 01 路径校准结论
 
 ${d.name}
 
@@ -2466,7 +2470,7 @@ ${m.calibrationCopy}
 
 ${eiofsMatrixMarkdown()}
 
-### 你进入下一阶段的早期迹象
+### 当前阶段信号
 
 已出现的正向信号：
 ${eiofs.positive.map(x=&gt;`- ${x}`).join(&#x27;\n&#x27;)}
@@ -2474,41 +2478,9 @@ ${eiofs.positive.map(x=&gt;`- ${x}`).join(&#x27;\n&#x27;)}
 还缺的关键证据：
 ${eiofs.missing.map(x=&gt;`- ${x}`).join(&#x27;\n&#x27;)}
 
-## 02 为什么这样判断｜你的阶段校准结果
+## 02 解决方案建议｜接下来 2-4 周怎么做
 
-这一部分先给你结果，再说明结果背后的几个关键判断：当前阶段哪些指标已经够了，哪些还没够，以及你的时间投入有没有偏离当前阶段。
-
-### 01 先给结论：你现在最适合按哪个阶段推进
-
-${diagnosticReasoningRows()[0].main}
-
-${diagnosticReasoningRows()[0].evidence}
-
-### 02 你已经满足了当前阶段的一部分指标
-
-${diagnosticReasoningRows()[1].main}
-
-${diagnosticReasoningRows()[1].evidence}
-
-### 03 但当前阶段的关键指标还没有完全达标
-
-${diagnosticReasoningRows()[2].main}
-
-${diagnosticReasoningRows()[2].evidence}
-
-### 04 你的时间投入有没有偏离当前阶段
-
-${diagnosticReasoningRows()[3].main}
-
-${diagnosticReasoningRows()[3].evidence}
-
-### Data Points｜你的填写信息如何支撑这个判断
-
-| 你填的信息 | 你的选择 | 它说明什么 |
-| --- | --- | --- |
-${evidence}
-
-## 03 你最可能浪费时间的地方
+### 先处理最可能浪费时间的地方
 
 风险等级：${c.time_waste_risk}
 
@@ -2516,7 +2488,7 @@ ${currentWasteInsight()}
 
 ${riskCopy(c.time_waste_risk)}
 
-## 04 接下来 2-4 周的行动处方
+### 行动处方
 
 阶段性目标：${c.recommended_check_point}
 
@@ -2530,19 +2502,51 @@ ${avoids}
 
 ${support}
 
-## 05 当前阶段与下一阶段的成功指标
+### 当前阶段与下一阶段的成功指标
 
 ${successIndicatorFocusCopy()}
 
-### ${currentStageReadyForNext() ? &#x27;先确认&#x27; : &#x27;重点关注&#x27;}：${m.current}
+${ready ? &#x27;先确认&#x27; : &#x27;重点关注&#x27;}：${m.current}
+${currentIndicators}
 
-${stageSuccessIndicatorItems(m.n).map(x=&gt;`- ${x}`).join(&#x27;\n&#x27;)}
+${ready ? &#x27;重点关注&#x27; : &#x27;先作为参考&#x27;}：${m.next}
+${nextIndicators}
 
-### ${currentStageReadyForNext() ? &#x27;重点关注&#x27; : &#x27;先作为参考&#x27;}：${m.next}
+## 03 为什么这样判断｜你的阶段校准逻辑
 
-${stageSuccessIndicatorItems(m.nextIndex).map(x=&gt;`- ${x}`).join(&#x27;\n&#x27;)}
+这一部分把上面的结论和建议背后的判断逻辑展开：当前阶段哪些指标已经够了，哪些还没够，以及你的时间投入有没有偏离当前阶段。
 
-## 06 后续进一步讨论 / 保存说明
+### 01 你现在最适合按哪个阶段推进
+
+${reasoning[0].main}
+
+${reasoning[0].evidence}
+
+### 02 你已经满足了当前阶段的一部分指标
+
+${reasoning[1].main}
+
+${reasoning[1].evidence}
+
+### 03 但当前阶段的关键指标还没有完全达标
+
+${reasoning[2].main}
+
+${reasoning[2].evidence}
+
+### 04 你的时间投入有没有偏离当前阶段
+
+${reasoning[3].main}
+
+${reasoning[3].evidence}
+
+### Data Points｜你的填写信息如何支撑这个判断
+
+| 你填的信息 | 你的选择 | 它说明什么 |
+| --- | --- | --- |
+${evidence}
+
+## 04 后续进一步讨论 / 保存说明
 
 ${cta.title}
 
@@ -2550,9 +2554,12 @@ ${cta.body}
 
 ${(cta.bullets || []).map(x=&gt;`- ${x}`).join(&#x27;\n&#x27;)}
 
-建议保留这份校准报告。接下来 2-4 周，你可以对照里面的阶段判断、风险点和行动处方，检查自己有没有继续把时间花在低效动作上。
+${cta.note || &#x27;&#x27;}
+
+本次校准没有在网页端保存，如有需要点击下载报告。
 `;
 }
+
 function downloadMarkdownFile(content, filename){
   const blob = new Blob([content], { type:&#x27;text/markdown;charset=utf-8&#x27; });
   const url = URL.createObjectURL(blob);
@@ -2698,7 +2705,7 @@ function renderSuccessIndicatorsSection(){
   const m=pathMapData(), ready=currentStageReadyForNext();
   const current=stageSuccessIndicatorItems(m.n).map(x=&gt;`&lt;li&gt;${esc(x)}&lt;/li&gt;`).join(&#x27;&#x27;);
   const next=stageSuccessIndicatorItems(m.nextIndex).map(x=&gt;`&lt;li&gt;${esc(x)}&lt;/li&gt;`).join(&#x27;&#x27;);
-  return `&lt;div class=&quot;section result-section&quot;&gt;&lt;div class=&quot;report-section-no&quot;&gt;05 / SUCCESS INDICATORS&lt;/div&gt;&lt;h3&gt;当前阶段与下一阶段的成功指标&lt;/h3&gt;&lt;p class=&quot;evidence-intro&quot;&gt;${esc(successIndicatorFocusCopy())}&lt;/p&gt;&lt;div class=&quot;eiofs-grid&quot;&gt;&lt;div class=&quot;eiofs-card ${ready?&#x27;&#x27;:&#x27;missing&#x27;}&quot;&gt;&lt;b&gt;${ready?&#x27;先确认：&#x27;:&#x27;重点关注：&#x27;}${esc(m.current)}&lt;/b&gt;&lt;ul&gt;${current}&lt;/ul&gt;&lt;/div&gt;&lt;div class=&quot;eiofs-card ${ready?&#x27;&#x27;:&#x27;missing&#x27;}&quot;&gt;&lt;b&gt;${ready?&#x27;重点关注：&#x27;:&#x27;先作为参考：&#x27;}${esc(m.next)}&lt;/b&gt;&lt;ul&gt;${next}&lt;/ul&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;`;
+  return `&lt;div class=&quot;section result-section&quot;&gt;&lt;div class=&quot;report-section-no&quot;&gt;02 / SUCCESS INDICATORS&lt;/div&gt;&lt;h3&gt;当前阶段与下一阶段的成功指标&lt;/h3&gt;&lt;p class=&quot;evidence-intro&quot;&gt;${esc(successIndicatorFocusCopy())}&lt;/p&gt;&lt;div class=&quot;eiofs-grid&quot;&gt;&lt;div class=&quot;eiofs-card ${ready?&#x27;&#x27;:&#x27;missing&#x27;}&quot;&gt;&lt;b&gt;${ready?&#x27;先确认：&#x27;:&#x27;重点关注：&#x27;}${esc(m.current)}&lt;/b&gt;&lt;ul&gt;${current}&lt;/ul&gt;&lt;/div&gt;&lt;div class=&quot;eiofs-card ${ready?&#x27;&#x27;:&#x27;missing&#x27;}&quot;&gt;&lt;b&gt;${ready?&#x27;重点关注：&#x27;:&#x27;先作为参考：&#x27;}${esc(m.next)}&lt;/b&gt;&lt;ul&gt;${next}&lt;/ul&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;`;
 }
 
 function riskLevelClass(level){
@@ -2837,25 +2844,10 @@ function renderResult(){
     ${renderPathMap()}
 
     &lt;div class=&quot;section result-section&quot;&gt;
-      &lt;div class=&quot;report-section-no&quot;&gt;02 / CALIBRATION RESULT&lt;/div&gt;&lt;h3&gt;为什么这样判断｜你的阶段校准结果&lt;/h3&gt;
-      &lt;p class=&quot;evidence-intro&quot;&gt;这一部分先给你结果，再说明结果背后的几个关键判断：当前阶段哪些指标已经够了，哪些还没够，以及你的时间投入有没有偏离当前阶段。&lt;/p&gt;
-      ${renderDiagnosticReasoning()}
-      &lt;div class=&quot;reasoning-conclusion&quot;&gt;所以，现在最值得确认的是：你还需要优先补上「${esc(d.task)}」这个阶段任务，而不是急着把动作铺得更大。当前更适合先按「${esc(d.name)}」推进。&lt;/div&gt;
-      &lt;details class=&quot;data-points-details&quot;&gt;
-        &lt;summary&gt;Data Points｜查看你的填写信息如何支撑这个判断&lt;/summary&gt;
-        &lt;div class=&quot;result-box&quot; style=&quot;padding:0; overflow:hidden; margin-top:10px;&quot;&gt;
-          &lt;table class=&quot;matrix-table&quot;&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;width:24%&quot;&gt;你填的信息&lt;/th&gt;&lt;th style=&quot;width:34%&quot;&gt;你的选择&lt;/th&gt;&lt;th style=&quot;width:42%&quot;&gt;它说明什么&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;${evidence}&lt;/tbody&gt;&lt;/table&gt;
-        &lt;/div&gt;
-      &lt;/details&gt;
-    &lt;/div&gt;
-
-    &lt;div class=&quot;section result-section&quot;&gt;
-      &lt;div class=&quot;report-section-no&quot;&gt;03 / TIME WASTE RISK&lt;/div&gt;&lt;h3&gt;你最可能浪费时间的地方&lt;/h3&gt;
-      &lt;div class=&quot;result-box&quot;&gt;风险等级：&lt;strong style=&quot;color:var(--accent);&quot;&gt;${esc(c.time_waste_risk)}&lt;/strong&gt;&lt;br&gt;&lt;br&gt;${esc(currentWasteInsight())}&lt;br&gt;&lt;br&gt;${esc(riskCopy(c.time_waste_risk))}&lt;/div&gt;
-    &lt;/div&gt;
-
-    &lt;div class=&quot;section result-section&quot;&gt;
-      &lt;div class=&quot;report-section-no&quot;&gt;04 / ACTION PRESCRIPTION&lt;/div&gt;&lt;h3&gt;接下来 2-4 周的行动处方&lt;/h3&gt;
+      &lt;div class=&quot;report-section-no&quot;&gt;02 / SOLUTION SUGGESTION&lt;/div&gt;&lt;h3&gt;解决方案建议｜接下来 2-4 周怎么做&lt;/h3&gt;
+      &lt;p class=&quot;evidence-intro&quot;&gt;先把结论落成行动：这一步重点不是继续增加信息量，而是把你的时间重新压回当前阶段最关键的验证动作。&lt;/p&gt;
+      &lt;div class=&quot;result-box&quot;&gt;&lt;strong style=&quot;color:var(--accent);&quot;&gt;先处理最可能浪费时间的地方｜风险等级：${esc(c.time_waste_risk)}&lt;/strong&gt;&lt;br&gt;&lt;br&gt;${esc(currentWasteInsight())}&lt;br&gt;&lt;br&gt;${esc(riskCopy(c.time_waste_risk))}&lt;/div&gt;
+      &lt;h3 style=&quot;margin-top:20px;&quot;&gt;行动处方&lt;/h3&gt;
       &lt;div class=&quot;prescription-goal&quot;&gt;阶段性目标：${esc(c.recommended_check_point)}&lt;/div&gt;
       ${actions}
       &lt;h3 style=&quot;margin-top:20px;&quot;&gt;这阶段先别急着做&lt;/h3&gt;
@@ -2866,7 +2858,20 @@ function renderResult(){
 
     ${renderSuccessIndicatorsSection()}
 
-    &lt;div class=&quot;section cta-box&quot;&gt;&lt;div class=&quot;report-section-no&quot;&gt;06 / NEXT STEP&lt;/div&gt;&lt;h3&gt;${esc(cta.title)}&lt;/h3&gt;&lt;p&gt;${esc(cta.body)}&lt;/p&gt;${ctaBullets?`&lt;ul class=&quot;cta-bullets&quot;&gt;${ctaBullets}&lt;/ul&gt;`:&#x27;&#x27;}&lt;p class=&quot;small&quot;&gt;${esc(cta.note || &#x27;&#x27;)}&lt;/p&gt;${ctaActionsHtml(cta)}&lt;/div&gt;`;
+    &lt;div class=&quot;section result-section&quot;&gt;
+      &lt;div class=&quot;report-section-no&quot;&gt;03 / CALIBRATION LOGIC&lt;/div&gt;&lt;h3&gt;为什么这样判断｜你的阶段校准逻辑&lt;/h3&gt;
+      &lt;p class=&quot;evidence-intro&quot;&gt;如果你想确认上面的结论和行动建议是否可信，可以看这一部分：它会把系统如何从你的实际行动、当前卡点和时间投入中做出阶段判断讲清楚。&lt;/p&gt;
+      ${renderDiagnosticReasoning()}
+      &lt;div class=&quot;reasoning-conclusion&quot;&gt;所以，现在最值得确认的是：你还需要优先补上「${esc(d.task)}」这个阶段任务，而不是急着把动作铺得更大。当前更适合先按「${esc(d.name)}」推进。&lt;/div&gt;
+      &lt;details class=&quot;data-points-details&quot;&gt;
+        &lt;summary&gt;Data Points｜查看你的填写信息如何支撑这个判断&lt;/summary&gt;
+        &lt;div class=&quot;result-box&quot; style=&quot;padding:0; overflow:hidden; margin-top:10px;&quot;&gt;
+          &lt;table class=&quot;matrix-table&quot;&gt;&lt;thead&gt;&lt;tr&gt;&lt;th style=&quot;width:24%&quot;&gt;你填的信息&lt;/th&gt;&lt;th style=&quot;width:34%&quot;&gt;你的选择&lt;/th&gt;&lt;th style=&quot;width:42%&quot;&gt;它说明什么&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;${evidence}&lt;/tbody&gt;&lt;/table&gt;
+        &lt;/div&gt;
+      &lt;/details&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;section cta-box&quot;&gt;&lt;div class=&quot;report-section-no&quot;&gt;04 / NEXT STEP&lt;/div&gt;&lt;h3&gt;${esc(cta.title)}&lt;/h3&gt;&lt;p&gt;${esc(cta.body)}&lt;/p&gt;${ctaBullets?`&lt;ul class=&quot;cta-bullets&quot;&gt;${ctaBullets}&lt;/ul&gt;`:&#x27;&#x27;}&lt;p class=&quot;small&quot;&gt;${esc(cta.note || &#x27;&#x27;)}&lt;/p&gt;${ctaActionsHtml(cta)}&lt;/div&gt;`;
   document.getElementById(&#x27;result&#x27;).innerHTML = html;
   document.getElementById(&#x27;result&#x27;).classList.remove(&#x27;hidden&#x27;);
   trackCTA(&#x27;view_cta&#x27;);
