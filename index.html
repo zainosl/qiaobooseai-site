@@ -3780,7 +3780,7 @@ function copyResult(){ navigator.clipboard.writeText(resultText()).then(()=&gt;a
 
 <script>
 let activeMainTab = 'home';
-function switchMainTab(tab) {
+function switchMainTab(tab, updateUrl = true) {
   activeMainTab = tab;
   const isHome = tab === 'home';
   const isTool = tab === 'tool';
@@ -3794,6 +3794,18 @@ function switchMainTab(tab) {
   document.body.classList.toggle('tool-open', !isHome);
   if (isArticles) backToArticleList(false);
   if (isHome && typeof goTo === 'function') goTo(cur || 0);
+  if (updateUrl && window.history && window.history.replaceState) {
+    const url = new URL(window.location.href);
+    if (isHome) {
+      url.searchParams.delete('tab');
+      url.searchParams.delete('page');
+      url.hash = '';
+    } else {
+      url.searchParams.set('tab', tab);
+      url.hash = '';
+    }
+    window.history.replaceState(null, '', url.toString());
+  }
 }
 
 function openArticleDetail(slug) {
@@ -3809,6 +3821,16 @@ function backToArticleList(shouldScroll = true) {
   reader.classList.add('hidden');
   if (shouldScroll) document.getElementById('articlesShell').scrollTo(0, 0);
 }
+
+function initialMainTabFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const raw = (params.get('tab') || params.get('page') || window.location.hash.replace(/^#/, '') || '').toLowerCase();
+  if (['tool', 'calibrator', 'path', '路径校准', '一人公司路径校准'].includes(raw)) return 'tool';
+  if (['articles', 'article', 'latest', '最新文章'].includes(raw)) return 'articles';
+  return 'home';
+}
+const initialMainTab = initialMainTabFromUrl();
+if (initialMainTab !== 'home') switchMainTab(initialMainTab, false);
 
 const ctaModal = document.getElementById('ctaModal');
 const ctaModalLabel = document.getElementById('ctaModalLabel');
