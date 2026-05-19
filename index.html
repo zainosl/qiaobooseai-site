@@ -1825,6 +1825,18 @@
   .path-map-title { font-size:24px; font-weight:800; letter-spacing:-.02em; color:var(--text); }
   .path-map-sub { color:var(--muted); line-height:1.8; margin-top:8px; font-size:14px; }
   .path-risk-badge { flex:0 0 auto; border:1px solid rgba(88,225,193,.32); background:rgba(11,13,15,.62); border-radius:999px; padding:9px 14px; color:var(--accent); font-weight:700; font-size:13px; }
+  .early-risk-card { margin:16px 0 18px; padding:18px; border:1px solid rgba(88,225,193,.34); border-radius:18px; background:linear-gradient(135deg, rgba(88,225,193,.14), rgba(11,13,15,.58)); box-shadow:0 16px 48px rgba(0,0,0,.20), inset 0 1px 0 rgba(255,255,255,.05); display:grid; grid-template-columns:minmax(170px,.72fr) 1fr; gap:18px; align-items:center; }
+  .early-risk-kicker { font-family:&#x27;DM Mono&#x27;,monospace; color:var(--accent); letter-spacing:.18em; font-size:10px; text-transform:uppercase; margin-bottom:8px; }
+  .early-risk-level { display:flex; align-items:baseline; gap:8px; color:var(--text); line-height:1; }
+  .early-risk-level strong { color:var(--accent); font-size:clamp(42px,7vw,68px); font-weight:950; letter-spacing:-.06em; text-shadow:0 0 28px rgba(88,225,193,.22); }
+  .early-risk-level span { color:var(--muted); font-size:16px; font-weight:800; }
+  .early-risk-copy { color:var(--text); font-size:15px; line-height:1.8; font-weight:700; }
+  .early-risk-hint { color:var(--muted); font-size:13px; line-height:1.75; margin-top:8px; }
+  .early-risk-card.risk-high { border-color:rgba(246,182,107,.42); background:linear-gradient(135deg, rgba(246,182,107,.16), rgba(11,13,15,.58)); }
+  .early-risk-card.risk-high .early-risk-kicker, .early-risk-card.risk-high .early-risk-level strong { color:#F6B66B; text-shadow:0 0 28px rgba(246,182,107,.18); }
+  .early-risk-card.risk-medium { border-color:rgba(88,225,193,.34); }
+  .early-risk-card.risk-low { border-color:rgba(169,176,186,.22); background:linear-gradient(135deg, rgba(169,176,186,.08), rgba(11,13,15,.58)); }
+  .early-risk-card.risk-low .early-risk-level strong { color:var(--muted); text-shadow:none; }
   .path-line { display:grid; grid-template-columns:repeat(6,1fr); gap:8px; position:relative; margin:18px 0 24px; }
   .path-node { position:relative; min-height:96px; padding:14px 10px; border:1px solid var(--border); background:rgba(255,255,255,.035); border-radius:16px; text-align:center; color:var(--muted); }
   .path-node.active { border-color:rgba(88,225,193,.72); background:rgba(88,225,193,.11); color:var(--text); box-shadow:0 0 0 1px rgba(88,225,193,.12) inset; }
@@ -1836,7 +1848,7 @@
   .path-map-item { padding:16px; border:1px solid var(--border); border-radius:16px; background:rgba(11,13,15,.42); }
   .path-map-label { font-size:12px; color:var(--dim); margin-bottom:8px; }
   .path-map-value { color:var(--text); font-size:14px; line-height:1.65; }
-  @media (max-width: 720px) { .path-map-head{flex-direction:column;} .path-line{grid-template-columns:repeat(2,1fr);} .path-map-grid{grid-template-columns:1fr;} }
+  @media (max-width: 720px) { .path-map-head{flex-direction:column;} .path-line{grid-template-columns:repeat(2,1fr);} .path-map-grid{grid-template-columns:1fr;} .early-risk-card{grid-template-columns:1fr; gap:12px; padding:16px;} .early-risk-level strong{font-size:48px;} }
 
 
   /* ── Dashboard / report visual upgrade ── */
@@ -2689,6 +2701,35 @@ function renderSuccessIndicatorsSection(){
   return `&lt;div class=&quot;section result-section&quot;&gt;&lt;div class=&quot;report-section-no&quot;&gt;05 / SUCCESS INDICATORS&lt;/div&gt;&lt;h3&gt;当前阶段与下一阶段的成功指标&lt;/h3&gt;&lt;p class=&quot;evidence-intro&quot;&gt;${esc(successIndicatorFocusCopy())}&lt;/p&gt;&lt;div class=&quot;eiofs-grid&quot;&gt;&lt;div class=&quot;eiofs-card ${ready?&#x27;&#x27;:&#x27;missing&#x27;}&quot;&gt;&lt;b&gt;${ready?&#x27;先确认：&#x27;:&#x27;重点关注：&#x27;}${esc(m.current)}&lt;/b&gt;&lt;ul&gt;${current}&lt;/ul&gt;&lt;/div&gt;&lt;div class=&quot;eiofs-card ${ready?&#x27;&#x27;:&#x27;missing&#x27;}&quot;&gt;&lt;b&gt;${ready?&#x27;重点关注：&#x27;:&#x27;先作为参考：&#x27;}${esc(m.next)}&lt;/b&gt;&lt;ul&gt;${next}&lt;/ul&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;`;
 }
 
+function riskLevelClass(level){
+  if(level===&#x27;高&#x27;) return &#x27;risk-high&#x27;;
+  if(level===&#x27;中&#x27;) return &#x27;risk-medium&#x27;;
+  return &#x27;risk-low&#x27;;
+}
+function earlyRiskHeadline(level){
+  if(level===&#x27;高&#x27;) return &#x27;你的当前投入里，已经出现比较明显的时间错配风险。&#x27;;
+  if(level===&#x27;中&#x27;) return &#x27;你的方向不一定错，但有一部分动作需要尽快校准。&#x27;;
+  return &#x27;你的时间投入目前相对可控，但仍建议保留一个检查点。&#x27;;
+}
+function earlyRiskHint(level){
+  if(level===&#x27;高&#x27;) return &#x27;建议先看清楚风险来自哪里，再决定接下来 2-4 周要不要继续投入同类动作。&#x27;;
+  if(level===&#x27;中&#x27;) return &#x27;建议把注意力放回当前阶段最关键的验证动作，避免过早铺开。&#x27;;
+  return &#x27;低风险不等于不用调整，可以把它作为接下来行动的边界提醒。&#x27;;
+}
+function renderEarlyRiskHighlight(){
+  const level=state.computed.time_waste_risk || &#x27;中&#x27;;
+  return `&lt;div class=&quot;early-risk-card ${riskLevelClass(level)}&quot;&gt;
+    &lt;div&gt;
+      &lt;div class=&quot;early-risk-kicker&quot;&gt;TIME WASTE RISK&lt;/div&gt;
+      &lt;div class=&quot;early-risk-level&quot;&gt;&lt;strong&gt;${esc(level)}&lt;/strong&gt;&lt;span&gt;风险等级&lt;/span&gt;&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div&gt;
+      &lt;div class=&quot;early-risk-copy&quot;&gt;${esc(earlyRiskHeadline(level))}&lt;/div&gt;
+      &lt;div class=&quot;early-risk-hint&quot;&gt;${esc(earlyRiskHint(level))} 详细解释见下面「你最可能浪费时间的地方」。&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;`;
+}
+
 function pathMapData(){
   const a=state.answers, c=state.computed, d=pathDiagnosis();
   const n=stageNum(c.calibrated_stage);
@@ -2726,6 +2767,7 @@ function renderPathMap(){
       &lt;div class=&quot;diagnosis-one&quot;&gt;${esc(d.one)}&lt;/div&gt;
       &lt;div class=&quot;diagnosis-tags&quot;&gt;&lt;span class=&quot;diagnosis-tag&quot;&gt;原自评：${esc(m.selfStage)}&lt;/span&gt;&lt;span class=&quot;diagnosis-tag&quot;&gt;系统校准：${esc(m.calibratedStage)}&lt;/span&gt;&lt;span class=&quot;diagnosis-tag&quot;&gt;下一站：${esc(m.next)}&lt;/span&gt;&lt;span class=&quot;diagnosis-tag&quot;&gt;优先任务：${esc(d.task)}&lt;/span&gt;&lt;/div&gt;
     &lt;/div&gt;
+    ${renderEarlyRiskHighlight()}
     &lt;div class=&quot;path-line&quot;&gt;${nodes}&lt;/div&gt;
     &lt;div class=&quot;path-legend&quot;&gt;&lt;span class=&quot;legend-pill&quot;&gt;&lt;i class=&quot;legend-dot self&quot;&gt;&lt;/i&gt;原自评阶段&lt;/span&gt;&lt;span class=&quot;legend-pill&quot;&gt;&lt;i class=&quot;legend-dot&quot;&gt;&lt;/i&gt;系统校准阶段&lt;/span&gt;&lt;span class=&quot;legend-pill&quot;&gt;&lt;i class=&quot;legend-dot next&quot;&gt;&lt;/i&gt;下一站&lt;/span&gt;&lt;/div&gt;
     ${renderEiofsMatrix(m)}
