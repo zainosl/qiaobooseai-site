@@ -979,17 +979,18 @@
     margin-bottom: 22px;
   }
   .articles-title {
-    font-size: clamp(34px, 5vw, 62px);
-    line-height: 0.98;
-    letter-spacing: -0.075em;
+    font-size: clamp(30px, 4.2vw, 48px);
+    line-height: 1.12;
+    letter-spacing: -0.06em;
     font-weight: 800;
     margin: 0;
-    max-width: 920px;
+    max-width: 1120px;
+    white-space: nowrap;
   }
   .articles-title em { color: var(--accent); font-style: normal; }
   .articles-desc {
-    max-width: 760px;
-    margin: 14px 0 0;
+    max-width: 840px;
+    margin: 16px 0 0;
     color: var(--muted);
     font-size: 16px;
     line-height: 1.85;
@@ -1111,11 +1112,12 @@
     font-weight: 800;
   }
   .article-card-body {
-    padding: clamp(24px, 4vw, 42px);
+    padding: clamp(24px, 3.2vw, 34px);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    gap: 28px;
+    gap: 22px;
+    min-height: 260px;
   }
   .article-date {
     font-family: 'DM Mono', monospace;
@@ -1124,17 +1126,25 @@
     letter-spacing: 0.04em;
   }
   .article-card-title {
-    margin: 12px 0 14px;
-    font-size: clamp(30px, 4.4vw, 52px);
-    line-height: 1.08;
-    letter-spacing: -0.065em;
+    margin: 10px 0 12px;
+    font-size: clamp(24px, 2.8vw, 34px);
+    line-height: 1.18;
+    letter-spacing: -0.055em;
     font-weight: 800;
+    max-width: 980px;
   }
   .article-card-subtitle {
     margin: 0;
     color: var(--muted);
-    font-size: 17px;
-    line-height: 1.82;
+    font-size: 16px;
+    line-height: 1.78;
+    max-width: 820px;
+  }
+  .article-card-footer {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 18px;
   }
   .article-card-meta {
     display: flex;
@@ -1152,8 +1162,11 @@
   }
   .article-readmore {
     color: var(--accent);
-    font-weight: 700;
+    font-weight: 800;
     font-size: 14px;
+    white-space: nowrap;
+    margin-left: auto;
+    text-align: right;
   }
   #articleReaderView {
     height: 100%;
@@ -1200,7 +1213,10 @@
   @media (max-width: 860px) {
     .article-card-link { grid-template-columns: 1fr; }
     .article-thumb { min-height: 260px; }
+    .articles-title { white-space: normal; font-size: clamp(30px, 8vw, 42px); }
     .articles-toolbar { align-items: flex-start; flex-direction: column; }
+    .article-card-footer { align-items: flex-start; flex-direction: column; }
+    .article-readmore { margin-left: 0; text-align: left; }
   }
 
 
@@ -2945,8 +2961,8 @@ function copyResult(){ navigator.clipboard.writeText(resultText()).then(()=&gt;a
     <div id="articleListView" class="articles-view">
       <div class="articles-container">
         <div class="articles-kicker">ARTICLES / 按时间倒序</div>
-        <h1 class="articles-title">看见一家 AI Native 公司从 <em>0～1</em> 的真实做法</h1>
-        <p class="articles-desc">这里记录我如何用 AI 构建一人公司：从商业判断、产品设计、技术审美到真实闭环。不是概念分享，而是可以点进去看的产品化文章。</p>
+        <h1 class="articles-title">看见一家 AI Native 公司从 <em>0→1</em> 的真实做法</h1>
+        <p class="articles-desc">这里不写空泛方法论，只记录我把 AI 用到一人公司里的真实过程：怎么判断方向、做出入口、跑通闭环，以及哪些坑值得提前避开。</p>
         <div class="articles-toolbar">
           <div class="articles-count">共 1 篇 · 最近更新 2026-05-17</div>
           <div class="articles-sort">SORT: NEWEST FIRST</div>
@@ -2957,15 +2973,15 @@ function copyResult(){ navigator.clipboard.writeText(resultText()).then(()=&gt;a
               <div>
                 <div class="article-date">2026-05-17 · AI Native 一人公司</div>
                 <h2 class="article-card-title">别急着做AI应用，一人公司的入口可能只是一页HTML</h2>
-                <p class="article-card-subtitle">页面本身越来越不值钱。真正值钱的是：这个页面有没有承载表达、交付判断、沉淀数据，并让业务往前走一步。</p>
+                <p class="article-card-subtitle">别急着做复杂 App。一个人做 AI 产品，真正的第一步可能不是写系统，而是用一页 HTML 先验证：用户会不会进来、理解你、留下反馈，并走向下一次对话。</p>
               </div>
-              <div>
+              <div class="article-card-footer">
                 <div class="article-card-meta">
                   <span class="article-pill">闭环 Demo</span>
                   <span class="article-pill">入口产品</span>
                   <span class="article-pill">技术审美</span>
                 </div>
-                <div class="article-readmore" style="margin-top:18px;">阅读可视化页面 →</div>
+                <div class="article-readmore">点击阅读 →</div>
               </div>
             </div>
           </button>
