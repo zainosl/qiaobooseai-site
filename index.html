@@ -1825,16 +1825,17 @@
   .path-map-title { font-size:24px; font-weight:800; letter-spacing:-.02em; color:var(--text); }
   .path-map-sub { color:var(--muted); line-height:1.8; margin-top:8px; font-size:14px; }
   .path-risk-badge { flex:0 0 auto; border:1px solid rgba(88,225,193,.32); background:rgba(11,13,15,.62); border-radius:999px; padding:9px 14px; color:var(--accent); font-weight:700; font-size:13px; }
-  .early-risk-card { margin:16px 0 18px; padding:18px; border:1px solid rgba(88,225,193,.34); border-radius:18px; background:linear-gradient(135deg, rgba(88,225,193,.14), rgba(11,13,15,.58)); box-shadow:0 16px 48px rgba(0,0,0,.20), inset 0 1px 0 rgba(255,255,255,.05); display:grid; grid-template-columns:minmax(170px,.72fr) 1fr; gap:18px; align-items:center; }
-  .early-risk-kicker { font-family:&#x27;DM Mono&#x27;,monospace; color:var(--accent); letter-spacing:.18em; font-size:10px; text-transform:uppercase; margin-bottom:8px; }
-  .early-risk-level { display:flex; align-items:baseline; gap:8px; color:var(--text); line-height:1; }
-  .early-risk-level strong { color:var(--accent); font-size:clamp(42px,7vw,68px); font-weight:950; letter-spacing:-.06em; text-shadow:0 0 28px rgba(88,225,193,.22); }
-  .early-risk-level span { color:var(--muted); font-size:16px; font-weight:800; }
-  .early-risk-copy { color:var(--text); font-size:15px; line-height:1.8; font-weight:700; }
-  .early-risk-hint { color:var(--muted); font-size:13px; line-height:1.75; margin-top:8px; }
-  .early-risk-card.risk-high { border-color:rgba(246,182,107,.42); background:linear-gradient(135deg, rgba(246,182,107,.16), rgba(11,13,15,.58)); }
-  .early-risk-card.risk-high .early-risk-kicker, .early-risk-card.risk-high .early-risk-level strong { color:#F6B66B; text-shadow:0 0 28px rgba(246,182,107,.18); }
-  .early-risk-card.risk-medium { border-color:rgba(88,225,193,.34); }
+  .early-risk-card { margin:16px 0 18px; padding:18px 20px; border:1px solid rgba(88,225,193,.34); border-radius:18px; background:linear-gradient(135deg, rgba(88,225,193,.14), rgba(11,13,15,.58)); box-shadow:0 16px 48px rgba(0,0,0,.20), inset 0 1px 0 rgba(255,255,255,.05); display:grid; grid-template-columns:max-content minmax(0,1fr); column-gap:18px; row-gap:8px; align-items:center; }
+  .early-risk-kicker { font-family:&#x27;DM Mono&#x27;,monospace; color:var(--accent); letter-spacing:.16em; font-size:10px; text-transform:uppercase; margin-bottom:7px; white-space:nowrap; }
+  .early-risk-level { display:flex; align-items:baseline; gap:7px; color:var(--text); line-height:1; white-space:nowrap; }
+  .early-risk-level strong { color:var(--accent); font-size:clamp(34px,5vw,48px); font-weight:950; letter-spacing:-.05em; text-shadow:0 0 28px rgba(88,225,193,.22); }
+  .early-risk-level span { color:var(--muted); font-size:15px; font-weight:800; }
+  .early-risk-copy { color:var(--text); font-size:15px; line-height:1.7; font-weight:750; max-width:none; }
+  .early-risk-hint { color:var(--muted); font-size:13px; line-height:1.65; margin-top:5px; max-width:none; }
+  .early-risk-card.risk-high { border-color:rgba(255,92,92,.50); background:linear-gradient(135deg, rgba(255,92,92,.16), rgba(11,13,15,.58)); }
+  .early-risk-card.risk-high .early-risk-kicker, .early-risk-card.risk-high .early-risk-level strong { color:#FF5C5C; text-shadow:0 0 28px rgba(255,92,92,.22); }
+  .early-risk-card.risk-medium { border-color:rgba(246,166,71,.46); background:linear-gradient(135deg, rgba(246,166,71,.14), rgba(11,13,15,.58)); }
+  .early-risk-card.risk-medium .early-risk-kicker, .early-risk-card.risk-medium .early-risk-level strong { color:#F6A647; text-shadow:0 0 28px rgba(246,166,71,.18); }
   .early-risk-card.risk-low { border-color:rgba(169,176,186,.22); background:linear-gradient(135deg, rgba(169,176,186,.08), rgba(11,13,15,.58)); }
   .early-risk-card.risk-low .early-risk-level strong { color:var(--muted); text-shadow:none; }
   .path-line { display:grid; grid-template-columns:repeat(6,1fr); gap:8px; position:relative; margin:18px 0 24px; }
@@ -1939,7 +1940,53 @@
   .cta-save-hint { font-size:12px!important; color:var(--dim)!important; margin-top:10px!important; line-height:1.6!important; }
   .cta-bullets { margin:14px 0 0; padding-left:18px; color:var(--muted); line-height:1.75; }
   .cta-bullets li { margin:4px 0; }
-  @media (max-width:720px){ .profile-grid{grid-template-columns:1fr;} .download-prompt{align-items:stretch;} .download-prompt button{width:100%;} }
+
+  .boundary-card { margin:16px 0; padding:18px; border:1px solid rgba(255,255,255,.10); border-radius:18px; background:rgba(11,13,15,.42); }
+  .boundary-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-top:12px; }
+  .boundary-col { padding:14px; border:1px solid rgba(255,255,255,.08); border-radius:14px; background:rgba(255,255,255,.025); }
+  .boundary-col.can-do { border-color:rgba(88,225,193,.30); background:rgba(88,225,193,.065); }
+  .boundary-col.cannot-do { border-color:rgba(246,166,71,.32); background:rgba(246,166,71,.065); }
+  .boundary-col b { display:block; color:var(--text); margin-bottom:8px; }
+  .boundary-col.can-do b { color:var(--accent); }
+  .boundary-col.cannot-do b { color:#F6A647; }
+  .boundary-col ul { margin:0; padding-left:18px; color:var(--muted); font-size:13px; line-height:1.75; }
+  .boundary-col.can-do li::marker { color:var(--accent); }
+  .boundary-col.cannot-do li::marker { color:#F6A647; }
+  .motive-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin:14px 0 18px; }
+  .motive-card { padding:14px; border:1px solid rgba(255,92,92,.22); border-radius:15px; background:rgba(255,92,92,.045); color:var(--muted); font-size:13px; line-height:1.65; }
+  .motive-card b { display:block; color:#FF7A7A; font-size:14px; margin-bottom:5px; }
+  .motive-card.active { border-color:rgba(255,92,92,.62); background:linear-gradient(135deg, rgba(255,92,92,.17), rgba(255,255,255,.03)); box-shadow:inset 0 0 0 1px rgba(255,92,92,.14), 0 14px 34px rgba(255,92,92,.08); }
+  .motive-card.active b { color:#FF5C5C; }
+  .motive-card.active::before { content:&#x27;当前最需要复诊&#x27;; display:inline-flex; margin-bottom:8px; padding:3px 8px; border-radius:999px; background:rgba(255,92,92,.16); color:#FF8A8A; font-size:11px; font-weight:800; letter-spacing:.04em; }
+  .cta-copy-block { margin:16px 0 12px; padding:18px; border:1px solid rgba(88,225,193,.24); border-radius:18px; background:linear-gradient(135deg, rgba(88,225,193,.075), rgba(11,13,15,.38)); }
+  .cta-copy-block h3 { margin:0 0 8px!important; }
+  .appointment-entry { margin:16px 0 0; padding:16px; border:1px solid rgba(88,225,193,.30); border-radius:16px; background:linear-gradient(135deg, rgba(88,225,193,.11), rgba(11,13,15,.46)); display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; }
+  .appointment-entry strong { display:block; color:var(--text); font-size:15px; }
+  .appointment-entry span { display:block; color:var(--muted); font-size:13px; line-height:1.6; margin-top:4px; }
+  .final-report-actions { margin-top:16px; padding-top:14px; border-top:1px solid rgba(255,255,255,.08); }
+  .appointment-panel { margin-top:16px; padding:18px; border:1px solid rgba(88,225,193,.28); border-radius:18px; background:linear-gradient(135deg, rgba(88,225,193,.09), rgba(11,13,15,.48)); }
+  .appointment-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-top:12px; }
+  .appointment-field { display:grid; gap:6px; }
+  .appointment-field.full { grid-column:1/-1; }
+  .appointment-field label { color:var(--text); font-size:13px; font-weight:750; }
+  .appointment-field input, .appointment-field select, .appointment-field textarea { width:100%; box-sizing:border-box; border:1px solid rgba(255,255,255,.13); border-radius:12px; background:rgba(11,13,15,.72); color:var(--text); padding:12px 13px; font:inherit; font-size:14px; outline:none; }
+  .appointment-field textarea { min-height:92px; resize:vertical; line-height:1.65; }
+  .appointment-field input:focus, .appointment-field select:focus, .appointment-field textarea:focus { border-color:rgba(88,225,193,.58); box-shadow:0 0 0 3px rgba(88,225,193,.10); }
+  .appointment-status { margin-top:12px; color:var(--muted); font-size:13px; line-height:1.7; }
+  .appointment-status.success { color:var(--accent); }
+  .appointment-status.error { color:#F6B66B; }
+  .modal-backdrop { position:fixed; inset:0; z-index:9999; display:flex; align-items:center; justify-content:center; padding:18px; background:rgba(0,0,0,.68); backdrop-filter:blur(12px); }
+  .modal-backdrop.hidden { display:none!important; }
+  .appointment-modal { width:min(760px, 100%); max-height:88vh; overflow:auto; border:1px solid rgba(88,225,193,.30); border-radius:22px; background:linear-gradient(180deg, rgba(22,26,33,.98), rgba(11,13,15,.98)); box-shadow:0 30px 100px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.06); padding:22px; }
+  .modal-head { display:flex; justify-content:space-between; align-items:flex-start; gap:14px; margin-bottom:12px; }
+  .modal-close { border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.04); color:var(--muted); border-radius:999px; padding:8px 11px; cursor:pointer; }
+  .modal-success { padding:22px; border:1px solid rgba(88,225,193,.26); border-radius:18px; background:rgba(88,225,193,.08); }
+  .modal-success h3 { margin:0 0 8px; color:var(--accent); }
+  .nextstep-recheck-prompt { margin:16px 0; padding:18px; border:1px solid rgba(88,225,193,.30); border-radius:18px; background:linear-gradient(135deg, rgba(88,225,193,.12), rgba(11,13,15,.46)); display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+  .nextstep-recheck-prompt strong { display:block; color:var(--text); font-size:16px; margin-bottom:6px; }
+  .nextstep-recheck-prompt span { display:block; color:var(--muted); font-size:13px; line-height:1.65; max-width:640px; }
+  .nextstep-recheck-prompt .btn-primary { font-size:15px; padding:14px 18px; }
+  @media (max-width:720px){ .profile-grid{grid-template-columns:1fr;} .download-prompt{align-items:stretch;} .download-prompt button{width:100%;} .early-risk-card{grid-template-columns:1fr;align-items:start;} .boundary-grid,.motive-grid,.appointment-grid{grid-template-columns:1fr;} }
 
   .path-node-signal { margin-top:8px; padding-top:8px; border-top:1px solid rgba(255,255,255,.07); color:var(--dim); font-size:11px; line-height:1.45; }
   .eiofs-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-top:14px; }
@@ -2046,7 +2093,7 @@ const CALIBRATOR_VERSION = &#x27;2026-05-14-restructured-no-price-signal&#x27;;
 const SITE_COMMIT = &#x27;e697edd-plus-reliability&#x27;;
 const REQUEST_TIMEOUT_MS = 15000;
 
-const state = { step: 0, answers: {}, computed: {}, submission_id: &#x27;&#x27;, debug_id: `dbg_${Date.now()}_${Math.random().toString(36).slice(2,8)}` };
+const state = { step: 0, answers: {}, computed: {}, appointment: {}, submission_id: &#x27;&#x27;, submission_record_id: &#x27;&#x27;, debug_id: `dbg_${Date.now()}_${Math.random().toString(36).slice(2,8)}` };
 
 const steps = [
   { title:&#x27;扫描职业资产&#x27;, help:&#x27;不是所有人都适合从同一种方式启动一人公司。先看你有哪些可迁移资产，是否适合从专业经验、知识服务、内容、工具或项目制服务切入。&#x27;, questions:[&#x27;occupation_type&#x27;,&#x27;years_experience&#x27;,&#x27;work_mode&#x27;,&#x27;transferable_abilities&#x27;,&#x27;asset_list&#x27;,&#x27;value_orientation&#x27;,&#x27;possible_business_forms&#x27;] },
@@ -2215,7 +2262,14 @@ function calc(){
   if([2,3,4].includes(calibrated) &amp;&amp; profileMatch===&#x27;高&#x27; &amp;&amp; [&#x27;高&#x27;,&#x27;中&#x27;].includes(ksPotential) &amp;&amp; [&#x27;高&#x27;,&#x27;中&#x27;].includes(longTermPaidPotential)) segment=&#x27;P0&#x27;;
   else if([1,2,3].includes(calibrated) &amp;&amp; profileMatch!==&#x27;低&#x27;) segment=&#x27;P1&#x27;;
   else if([4,5].includes(calibrated) || ksInterest===&#x27;低&#x27;) segment=&#x27;P2&#x27;;
-  const ctaType = segment===&#x27;P0&#x27;?&#x27;P0_CONSULTATION&#x27;:segment===&#x27;P1&#x27;?&#x27;P1_WECHAT_NURTURE&#x27;:segment===&#x27;P2&#x27;?&#x27;P2_KEEP_IN_TOUCH&#x27;:&#x27;P3_CONTENT_ONLY&#x27;;
+  const ctaType = segment===&#x27;P0&#x27;?&#x27;P0_PATH_RECHECK&#x27;:segment===&#x27;P1&#x27;?&#x27;P1_RESULT_CONFIRM&#x27;:segment===&#x27;P2&#x27;?&#x27;P2_LIGHT_RECHECK&#x27;:&#x27;P3_SAVE_REPORT&#x27;;
+  const selfMismatch = calibrated !== s0;
+  let deepDiveMotivation = &#x27;action_unclear&#x27;;
+  if(selfMismatch) deepDiveMotivation = &#x27;stage_mismatch&#x27;;
+  else if(timeRisk === &#x27;高&#x27;) deepDiveMotivation = &#x27;high_time_risk&#x27;;
+  else if(hasAny(a.primary_question, [&#x27;我怎么把想法变成具体产品/服务&#x27;,&#x27;我应该服务谁、解决什么问题&#x27;,&#x27;我的经验/能力能不能转成一个个人业务&#x27;])) deepDiveMotivation = &#x27;service_wedge&#x27;;
+  const deepDiveMotivationLabel = ({stage_mismatch:&#x27;阶段判断偏差&#x27;, high_time_risk:&#x27;时间错配高风险&#x27;, action_unclear:&#x27;具体行动模糊&#x27;, service_wedge:&#x27;方向/服务切口&#x27;})[deepDiveMotivation];
+  const consultationRecommended = [&#x27;P0&#x27;,&#x27;P1&#x27;,&#x27;P2&#x27;].includes(segment);
   const checkPoint = recommendedCheck(calibrated, a.desired_outcome_label);
   state.computed = {
     occupation_type:a.occupation_type, professional_identity:a.professional_identity,
@@ -2224,7 +2278,7 @@ function calc(){
     autonomy_need:values.includes(&#x27;我希望未来有更自主的时间安排&#x27;) || values.includes(&#x27;我希望未来能有更强的自主掌控感&#x27;), leverage_awareness:values.includes(&#x27;我希望未来更多靠认知而不是工时赚钱&#x27;) || values.includes(&#x27;我希望自己的能力能够持续复利&#x27;), anti_time_selling_tendency:values.includes(&#x27;我不想长期重复低价值工作&#x27;) || values.includes(&#x27;我希望收入不要只和上班时间绑定&#x27;), long_term_asset_awareness:values.includes(&#x27;我希望积累属于自己的长期资产&#x27;),
     stage_score_initial:s0, calibrated_stage:calibratedStage, action_score:actionScore, validation_level:actionScore&gt;=4?&#x27;高&#x27;:(actionScore&gt;=2?&#x27;中&#x27;:&#x27;低&#x27;), monetization_stage:actionScore&gt;=6?&#x27;已成交/交付&#x27;:(actionScore&gt;=5?&#x27;接近成交&#x27;:&#x27;未成交&#x27;), current_action_focus:focus, execution_focus:focus, stage_match_level:timeRisk===&#x27;低&#x27;?&#x27;匹配&#x27;:&#x27;可能错配&#x27;, blocker_type:blockerType(a.primary_question), desired_stage_result:a.desired_outcome_label, pain_intensity: urgentStrong?&#x27;强&#x27;:&#x27;中&#x27;,
     feedback_awareness:feedbackAwareness, trial_error_avoidance:problemStyle.includes(&#x27;我希望有人帮我减少试错&#x27;) || support.includes(&#x27;我希望尽量减少试错&#x27;), execution_block:problemStyle.includes(&#x27;我容易想很多，但推进较慢&#x27;), ai_adoption:growth.includes(&#x27;用过 AI / 效率工具&#x27;), external_support_usage:growth.includes(&#x27;请教过顾问/教练/前辈&#x27;) || growth.includes(&#x27;参加过社群/线下交流&#x27;), long_term_growth_tendency:growthDrive, coaching_fit:supportScore&gt;=2?&#x27;高&#x27;:(supportScore&gt;=1?&#x27;中&#x27;:&#x27;低&#x27;), feedback_need:feedbackAwareness, execution_support_need:support.includes(&#x27;我希望有人陪我一起推进&#x27;),
-    profile_match:profileMatch, time_waste_risk:timeRisk, payment_intent_signal:longTermPaidPotential, long_term_paid_potential:longTermPaidPotential, high_growth_drive:growthDrive, high_time_value_sense:timeValue, knowledge_service_potential:ksPotential, user_segment:segment, recommended_check_point:checkPoint, cta_type:ctaType
+    profile_match:profileMatch, time_waste_risk:timeRisk, payment_intent_signal:longTermPaidPotential, long_term_paid_potential:longTermPaidPotential, high_growth_drive:growthDrive, high_time_value_sense:timeValue, knowledge_service_potential:ksPotential, user_segment:segment, deep_dive_motivation:deepDiveMotivation, deep_dive_motivation_label:deepDiveMotivationLabel, consultation_recommended:consultationRecommended, appointment_priority:segment, recommended_check_point:checkPoint, cta_type:ctaType
   };
 }
 
@@ -2466,10 +2520,6 @@ ${d.one}
 
 ${m.calibrationCopy}
 
-### 路径地图中的早期成功指标矩阵
-
-${eiofsMatrixMarkdown()}
-
 ### 当前阶段信号
 
 已出现的正向信号：
@@ -2511,6 +2561,10 @@ ${currentIndicators}
 
 ${ready ? &#x27;重点关注&#x27; : &#x27;先作为参考&#x27;}：${m.next}
 ${nextIndicators}
+
+### 不同阶段的早期成功指标矩阵
+
+${eiofsMatrixMarkdown()}
 
 ## 03 为什么这样判断｜你的阶段校准逻辑
 
@@ -2705,7 +2759,7 @@ function renderSuccessIndicatorsSection(){
   const m=pathMapData(), ready=currentStageReadyForNext();
   const current=stageSuccessIndicatorItems(m.n).map(x=&gt;`&lt;li&gt;${esc(x)}&lt;/li&gt;`).join(&#x27;&#x27;);
   const next=stageSuccessIndicatorItems(m.nextIndex).map(x=&gt;`&lt;li&gt;${esc(x)}&lt;/li&gt;`).join(&#x27;&#x27;);
-  return `&lt;div class=&quot;section result-section&quot;&gt;&lt;div class=&quot;report-section-no&quot;&gt;02 / SUCCESS INDICATORS&lt;/div&gt;&lt;h3&gt;当前阶段与下一阶段的成功指标&lt;/h3&gt;&lt;p class=&quot;evidence-intro&quot;&gt;${esc(successIndicatorFocusCopy())}&lt;/p&gt;&lt;div class=&quot;eiofs-grid&quot;&gt;&lt;div class=&quot;eiofs-card ${ready?&#x27;&#x27;:&#x27;missing&#x27;}&quot;&gt;&lt;b&gt;${ready?&#x27;先确认：&#x27;:&#x27;重点关注：&#x27;}${esc(m.current)}&lt;/b&gt;&lt;ul&gt;${current}&lt;/ul&gt;&lt;/div&gt;&lt;div class=&quot;eiofs-card ${ready?&#x27;&#x27;:&#x27;missing&#x27;}&quot;&gt;&lt;b&gt;${ready?&#x27;重点关注：&#x27;:&#x27;先作为参考：&#x27;}${esc(m.next)}&lt;/b&gt;&lt;ul&gt;${next}&lt;/ul&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;`;
+  return `&lt;div class=&quot;section result-section&quot;&gt;&lt;div class=&quot;report-section-no&quot;&gt;02 / SUCCESS INDICATORS&lt;/div&gt;&lt;h3&gt;当前阶段与下一阶段的成功指标&lt;/h3&gt;&lt;p class=&quot;evidence-intro&quot;&gt;${esc(successIndicatorFocusCopy())}&lt;/p&gt;&lt;div class=&quot;eiofs-grid&quot;&gt;&lt;div class=&quot;eiofs-card ${ready?&#x27;&#x27;:&#x27;missing&#x27;}&quot;&gt;&lt;b&gt;${ready?&#x27;先确认：&#x27;:&#x27;重点关注：&#x27;}${esc(m.current)}&lt;/b&gt;&lt;ul&gt;${current}&lt;/ul&gt;&lt;/div&gt;&lt;div class=&quot;eiofs-card ${ready?&#x27;&#x27;:&#x27;missing&#x27;}&quot;&gt;&lt;b&gt;${ready?&#x27;重点关注：&#x27;:&#x27;先作为参考：&#x27;}${esc(m.next)}&lt;/b&gt;&lt;ul&gt;${next}&lt;/ul&gt;&lt;/div&gt;&lt;/div&gt;&lt;div style=&quot;margin-top:18px;&quot;&gt;${renderEiofsMatrix(m)}&lt;/div&gt;&lt;/div&gt;`;
 }
 
 function riskLevelClass(level){
@@ -2777,7 +2831,6 @@ function renderPathMap(){
     ${renderEarlyRiskHighlight()}
     &lt;div class=&quot;path-line&quot;&gt;${nodes}&lt;/div&gt;
     &lt;div class=&quot;path-legend&quot;&gt;&lt;span class=&quot;legend-pill&quot;&gt;&lt;i class=&quot;legend-dot self&quot;&gt;&lt;/i&gt;原自评阶段&lt;/span&gt;&lt;span class=&quot;legend-pill&quot;&gt;&lt;i class=&quot;legend-dot&quot;&gt;&lt;/i&gt;系统校准阶段&lt;/span&gt;&lt;span class=&quot;legend-pill&quot;&gt;&lt;i class=&quot;legend-dot next&quot;&gt;&lt;/i&gt;下一站&lt;/span&gt;&lt;/div&gt;
-    ${renderEiofsMatrix(m)}
     &lt;div class=&quot;diagnosis-note&quot;&gt;${esc(m.calibrationCopy)}&lt;/div&gt;
     ${renderEiofsCards()}
     &lt;div class=&quot;download-prompt&quot;&gt;&lt;div&gt;&lt;strong&gt;建议先下载这份校准报告&lt;/strong&gt;&lt;span&gt;接下来 2-4 周，你可以对照里面的阶段判断、风险点和行动处方，检查自己有没有继续把时间花在低效动作上。&lt;/span&gt;&lt;/div&gt;&lt;button class=&quot;btn-primary&quot; onclick=&quot;downloadCalibrationMarkdown()&quot;&gt;下载校准报告&lt;/button&gt;&lt;/div&gt;
@@ -2871,7 +2924,7 @@ function renderResult(){
       &lt;/details&gt;
     &lt;/div&gt;
 
-    &lt;div class=&quot;section cta-box&quot;&gt;&lt;div class=&quot;report-section-no&quot;&gt;04 / NEXT STEP&lt;/div&gt;&lt;h3&gt;${esc(cta.title)}&lt;/h3&gt;&lt;p&gt;${esc(cta.body)}&lt;/p&gt;${ctaBullets?`&lt;ul class=&quot;cta-bullets&quot;&gt;${ctaBullets}&lt;/ul&gt;`:&#x27;&#x27;}&lt;p class=&quot;small&quot;&gt;${esc(cta.note || &#x27;&#x27;)}&lt;/p&gt;${ctaActionsHtml(cta)}&lt;/div&gt;`;
+    &lt;div class=&quot;section cta-box&quot;&gt;&lt;div class=&quot;report-section-no&quot;&gt;04 / NEXT STEP&lt;/div&gt;${ctaActionsHtml(cta)}&lt;/div&gt;`;
   document.getElementById(&#x27;result&#x27;).innerHTML = html;
   document.getElementById(&#x27;result&#x27;).classList.remove(&#x27;hidden&#x27;);
   trackCTA(&#x27;view_cta&#x27;);
@@ -2879,44 +2932,73 @@ function renderResult(){
 
 function riskCopy(v){ return v===&#x27;低&#x27;?&#x27;你现在做的事大体符合当前阶段，时间投入大概率是在有效推进。但仍建议保持一个可验证的阶段目标，避免动作越来越散。&#x27;:v===&#x27;中&#x27;?&#x27;你的方向大体有推进价值，但部分动作可能稍微提前或滞后。中风险的意思不是“做错了”，而是需要先确认关键前提，再继续加大投入。&#x27;:&#x27;你可能正在把时间花在不属于当前阶段的事情上。高风险不是说你不努力，而是现在的努力可能没有打在阶段最关键的问题上。&#x27;; }
 
-function ctaContent(seg){
-  if(seg===&#x27;P0&#x27;) return {
-    title:&#x27;如果你想更快进入下一个阶段&#x27;,
-    body:&#x27;这份报告已经帮你定位到当前阶段和主要风险。下一步更关键的是：把诊断落到你的具体服务切口、反馈对象和 2-4 周行动里。你可以加我微信，备注「路径复诊」。&#x27;,
-    bullets:[&#x27;我们可以结合你的具体情况和更多同类案例，一起讨论哪个动作最可能让你更快拿到真实反馈。&#x27;,&#x27;一起看看哪些动作可能继续浪费时间。&#x27;,&#x27;一起把接下来 2-4 周压缩成一个更有效的验证闭环。&#x27;],
-    note:&#x27;也建议先下载校准报告，带着报告里的阶段判断、风险点和行动处方，再继续讨论下一步。&#x27;,
-    button:&#x27;复制微信号，做一次路径复诊&#x27;,
-    downloadPrimary:false,
-    copyMessage:&#x27;已复制微信号。添加时备注「路径复诊」，我们可以围绕你的阶段判断和下一步验证动作继续讨论。&#x27;
-  };
-  if(seg===&#x27;P1&#x27;) return {
-    title:&#x27;如果你想进一步确认这份结果&#x27;,
-    body:&#x27;你现在未必需要马上做很重的咨询，但如果你看完结果后，对自己的阶段、风险或下一步行动还有疑问，可以先加微信继续讨论。你可以备注「路径校准」。&#x27;,
-    bullets:[&#x27;我们可以结合你的具体情况和一些同类案例，一起确认这个阶段判断是否贴近你的真实状态。&#x27;,&#x27;一起确认当前最容易浪费时间的地方是否准确。&#x27;,&#x27;一起看看接下来有没有一个更轻、更容易启动的验证动作。&#x27;],
-    note:&#x27;如果你还不确定要不要进一步讨论，建议先下载校准报告，接下来 2-4 周对照行动，再决定是否继续确认。&#x27;,
-    button:&#x27;复制微信号，继续确认结果&#x27;,
-    downloadPrimary:true,
-    copyMessage:&#x27;已复制微信号。添加时备注「路径校准」，可以继续确认这份结果里的阶段和行动建议。&#x27;
-  };
-  if(seg===&#x27;P2&#x27;) return {
-    title:&#x27;如果你想继续核对这份结果&#x27;,
-    body:&#x27;这份结果可以作为你接下来行动的一份路径参考。如果你看完后，对阶段判断、时间风险或行动建议还有疑问，可以加微信继续交流。&#x27;,
-    bullets:[&#x27;我们可以结合你的具体情况，一起看看这份结果里哪些判断最值得参考。&#x27;,&#x27;也可以一起确认哪些行动建议需要按你的真实处境调整。&#x27;],
-    note:&#x27;建议先下载校准报告，方便之后回看阶段判断和行动处方。&#x27;,
-    button:&#x27;复制微信号，交流一下结果&#x27;,
-    downloadPrimary:true,
-    copyMessage:&#x27;已复制微信号。添加时备注「路径校准」，可以简单交流你对结果的疑问。&#x27;
-  };
-  return {
-    title:&#x27;你可以先保存这份结果&#x27;,
-    body:&#x27;这份校准报告可以先作为你接下来行动的参考。你不需要马上做进一步讨论，更适合先按照上面的行动处方，做一次低成本验证。&#x27;,
-    bullets:[&#x27;接下来 2-4 周，可以用这份报告对照自己的阶段判断、时间风险和行动处方。&#x27;,&#x27;如果之后你发现自己又卡住了，或者想重新校准阶段，可以再回来查看这份结果。&#x27;],
-    note:&#x27;建议先下载校准报告，保存这次阶段判断、风险点和行动处方。&#x27;,
-    showWechat:false,
-    downloadPrimary:true
-  };
+function deepDiveMotiveCards(){
+  const active = state.computed.deep_dive_motivation || &#x27;action_unclear&#x27;;
+  const cards = [
+    [&#x27;stage_mismatch&#x27;,&#x27;阶段判断偏差&#x27;,&#x27;自评阶段和系统校准阶段不一致，可能正在用后一阶段的方法处理前一阶段的问题。&#x27;],
+    [&#x27;high_time_risk&#x27;,&#x27;时间错配高风险&#x27;,&#x27;当前投入可能没有打在阶段最关键位置，继续加码前需要先校准动作。&#x27;],
+    [&#x27;action_unclear&#x27;,&#x27;具体行动模糊&#x27;,&#x27;方向或目标已经出现，但还没有压缩成接下来 2-4 周最小、最有效的一步。&#x27;],
+    [&#x27;service_wedge&#x27;,&#x27;方向 / 服务缺口&#x27;,&#x27;还需要进一步确认服务谁、解决什么问题、用什么切口拿到真实反馈。&#x27;]
+  ];
+  return `&lt;div class=&quot;motive-grid&quot;&gt;${cards.map(c=&gt;`&lt;div class=&quot;motive-card ${active===c[0]?&#x27;active&#x27;:&#x27;&#x27;}&quot;&gt;&lt;b&gt;${esc(c[1])}&lt;/b&gt;${esc(c[2])}&lt;/div&gt;`).join(&#x27;&#x27;)}&lt;/div&gt;`;
 }
-
+function reportBoundaryHtml(){
+  return `&lt;div class=&quot;boundary-card&quot;&gt;&lt;div class=&quot;report-section-no&quot;&gt;WHAT THIS REPORT CAN / CANNOT DO&lt;/div&gt;&lt;h3&gt;这份报告已经判断出什么，还没判断出什么&lt;/h3&gt;&lt;div class=&quot;boundary-grid&quot;&gt;&lt;div class=&quot;boundary-col can-do&quot;&gt;&lt;b&gt;已经判断出的部分&lt;/b&gt;&lt;ul&gt;&lt;li&gt;你现在更适合按哪个阶段推进&lt;/li&gt;&lt;li&gt;你最可能浪费时间的地方在哪里&lt;/li&gt;&lt;li&gt;接下来 2-4 周的基础行动方向&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;&lt;div class=&quot;boundary-col cannot-do&quot;&gt;&lt;b&gt;还没判断完、需要继续确认的部分&lt;/b&gt;&lt;ul&gt;&lt;li&gt;你的具体方向 / 服务切口是否值得继续验证&lt;/li&gt;&lt;li&gt;你应该优先找哪类人拿真实反馈&lt;/li&gt;&lt;li&gt;下一步最小、最有效的动作到底是什么&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;report-section-no&quot; style=&quot;margin-top:16px;&quot;&gt;UNRESOLVED ISSUE&lt;/div&gt;${deepDiveMotiveCards()}&lt;/div&gt;`;
+}
+function ctaContent(seg){
+  if(seg===&#x27;P0&#x27;) return { title:&#x27;如果你想把结果落到自己的具体路径里&#x27;, body:&#x27;从你的填写来看，你比较适合继续做一次「路径复诊」。这不是再看一份泛泛建议，而是把这份自动报告放回你的真实处境里，确认接下来 2-4 周最值得推进的动作。&#x27;, bullets:[&#x27;我们可以结合你的具体情况和更多同类案例，一起确认你的服务切口、反馈对象和验证动作。&#x27;,&#x27;重点不是聊很多方向，而是把下一步压缩成一个更有效的验证闭环。&#x27;], note:&#x27;建议先下载校准报告；预约时系统会一并保存你的诊断结果和补充资料。&#x27;, allowAppointment:true, button:&#x27;预约路径复诊&#x27; };
+  if(seg===&#x27;P1&#x27;) return { title:&#x27;如果你想进一步确认这份结果&#x27;, body:&#x27;如果你看完后觉得结果说中了你，但还不确定接下来具体怎么做，可以提交一次路径复诊预约。重点会放在阶段判断、时间风险和 2-4 周最小行动上。&#x27;, bullets:[&#x27;一起确认这个阶段判断是否贴近你的真实状态。&#x27;,&#x27;一起确认当前最容易浪费时间的地方是否准确。&#x27;,&#x27;一起看看有没有一个更轻、更容易启动的验证动作。&#x27;], note:&#x27;提交预约资料后，我会先看你的报告和补充信息，再决定如何联系你继续校准。&#x27;, allowAppointment:true, button:&#x27;预约路径复诊&#x27; };
+  if(seg===&#x27;P2&#x27;) return { title:&#x27;如果你想继续核对这份结果&#x27;, body:&#x27;这份结果可以先作为行动参考。如果你对阶段判断、时间风险或行动建议仍有具体疑问，也可以提交一次轻量复诊预约。&#x27;, bullets:[&#x27;适合带着一个具体问题来核对，而不是泛泛聊所有可能性。&#x27;,&#x27;我会结合你的报告和补充资料，看哪些建议需要按你的真实处境调整。&#x27;], note:&#x27;如果暂时没有明确问题，建议先下载报告并按行动处方试 2-4 周。&#x27;, allowAppointment:true, button:&#x27;预约轻量复诊&#x27; };
+  return { title:&#x27;你可以先保存这份结果&#x27;, body:&#x27;这份校准报告可以先作为你接下来行动的参考。你现在不一定需要马上预约，更适合先按照上面的行动处方做一次低成本验证。&#x27;, bullets:[&#x27;接下来 2-4 周，可以用这份报告对照自己的阶段判断、时间风险和行动处方。&#x27;,&#x27;如果之后你发现自己又卡住了，或者想重新校准阶段，可以再回来查看这份结果。&#x27;], note:&#x27;建议先下载校准报告，保存这次阶段判断、风险点和行动处方。&#x27;, allowAppointment:false, downloadPrimary:true };
+}
+function appointmentFocusOptions(){ return [[&#x27;stage_mismatch&#x27;,&#x27;确认阶段判断准不准&#x27;],[&#x27;high_time_risk&#x27;,&#x27;确认最可能浪费时间的地方&#x27;],[&#x27;action_unclear&#x27;,&#x27;把结果落成 2-4 周具体行动&#x27;],[&#x27;service_wedge&#x27;,&#x27;确认方向 / 服务切口 / 反馈对象&#x27;],[&#x27;other&#x27;,&#x27;其他，我想自己补充&#x27;]]; }
+function appointmentEntryButtons(cta){
+  if(!cta.allowAppointment) return &#x27;&#x27;;
+  const label = cta.button || &#x27;预约路径复诊&#x27;;
+  return `&lt;div class=&quot;appointment-entry&quot;&gt;&lt;div&gt;&lt;strong&gt;预约复诊入口&lt;/strong&gt;&lt;span&gt;点击后填写称呼、微信、方便联系时间和最想复诊的问题。&lt;/span&gt;&lt;/div&gt;&lt;button class=&quot;btn-primary&quot; type=&quot;button&quot; onclick=&quot;openAppointmentModal()&quot;&gt;${esc(label)}&lt;/button&gt;&lt;/div&gt;`;
+}
+function finalReportButtons(){
+  return `&lt;div class=&quot;cta-actions final-report-actions&quot;&gt;&lt;button class=&quot;btn-secondary&quot; type=&quot;button&quot; onclick=&quot;downloadCalibrationMarkdown()&quot;&gt;下载校准报告&lt;/button&gt;&lt;button class=&quot;btn-ghost&quot; type=&quot;button&quot; onclick=&quot;location.reload()&quot;&gt;重新检查&lt;/button&gt;&lt;/div&gt;`;
+}
+function ctaCopyHtml(cta){
+  const bullets = (cta.bullets || []).map(x=&gt;`&lt;li&gt;${esc(x)}&lt;/li&gt;`).join(&#x27;&#x27;);
+  return `&lt;div class=&quot;cta-copy-block&quot;&gt;&lt;h3&gt;${esc(cta.title)}&lt;/h3&gt;&lt;p&gt;${esc(cta.body)}&lt;/p&gt;${bullets?`&lt;ul class=&quot;cta-bullets&quot;&gt;${bullets}&lt;/ul&gt;`:&#x27;&#x27;}${cta.note?`&lt;p class=&quot;small&quot;&gt;${esc(cta.note)}&lt;/p&gt;`:&#x27;&#x27;}${appointmentEntryButtons(cta)}&lt;/div&gt;`;
+}
+function nextStepRecheckPrompt(cta){ return &#x27;&#x27;; }
+function ctaActionsHtml(cta){
+  const hint = &#x27;&lt;p class=&quot;cta-save-hint&quot;&gt;本次校准没有在网页端长期保存，如有需要点击下载报告。&lt;/p&gt;&#x27;;
+  return `${reportBoundaryHtml()}${ctaCopyHtml(cta)}${finalReportButtons()}${hint}`;
+}
+function appointmentTimeOptions(){ return [&#x27;工作日白天&#x27;,&#x27;工作日晚上&#x27;,&#x27;周末白天&#x27;,&#x27;周末晚上&#x27;,&#x27;都可以&#x27;]; }
+function setAppointmentField(key, value){ state.appointment[key]=value; }
+function appointmentFormFields(){
+  const ap=state.appointment || {};
+  const focus = ap.focus || state.computed.deep_dive_motivation || &#x27;action_unclear&#x27;;
+  const options = appointmentFocusOptions().map(([v,l])=&gt;`&lt;option value=&quot;${esc(v)}&quot; ${focus===v?&#x27;selected&#x27;:&#x27;&#x27;}&gt;${esc(l)}&lt;/option&gt;`).join(&#x27;&#x27;);
+  const timeOptions = appointmentTimeOptions().map(v=&gt;`&lt;option value=&quot;${esc(v)}&quot; ${(ap.available_time||&#x27;&#x27;)===v?&#x27;selected&#x27;:&#x27;&#x27;}&gt;${esc(v)}&lt;/option&gt;`).join(&#x27;&#x27;);
+  return `&lt;div class=&quot;appointment-grid&quot;&gt;&lt;div class=&quot;appointment-field&quot;&gt;&lt;label&gt;怎么称呼你&lt;/label&gt;&lt;input id=&quot;appointmentName&quot; placeholder=&quot;例如：Zain / 你的昵称&quot; value=&quot;${esc(ap.name||&#x27;&#x27;)}&quot; oninput=&quot;setAppointmentField(&#x27;name&#x27;,this.value)&quot;&gt;&lt;/div&gt;&lt;div class=&quot;appointment-field&quot;&gt;&lt;label&gt;微信号&lt;/label&gt;&lt;input id=&quot;appointmentContact&quot; placeholder=&quot;请填写微信号，方便我主动联系你&quot; value=&quot;${esc(ap.contact||&#x27;&#x27;)}&quot; oninput=&quot;setAppointmentField(&#x27;contact&#x27;,this.value)&quot;&gt;&lt;/div&gt;&lt;div class=&quot;appointment-field&quot;&gt;&lt;label&gt;你最想复诊的问题&lt;/label&gt;&lt;select id=&quot;appointmentFocus&quot; onchange=&quot;setAppointmentField(&#x27;focus&#x27;,this.value)&quot;&gt;${options}&lt;/select&gt;&lt;/div&gt;&lt;div class=&quot;appointment-field&quot;&gt;&lt;label&gt;方便联系的时间&lt;/label&gt;&lt;select id=&quot;appointmentTime&quot; onchange=&quot;setAppointmentField(&#x27;available_time&#x27;,this.value)&quot;&gt;&lt;option value=&quot;&quot;&gt;请选择&lt;/option&gt;${timeOptions}&lt;/select&gt;&lt;/div&gt;&lt;div class=&quot;appointment-field full&quot;&gt;&lt;label&gt;如果只复诊一个问题，你希望我重点看什么？&lt;/label&gt;&lt;textarea id=&quot;appointmentContext&quot; placeholder=&quot;可以简单写：你的方向、现在做过什么、最卡住的问题、希望我重点确认什么。&quot; oninput=&quot;setAppointmentField(&#x27;context&#x27;,this.value)&quot;&gt;${esc(ap.context||&#x27;&#x27;)}&lt;/textarea&gt;&lt;/div&gt;&lt;/div&gt;`;
+}
+function renderAppointmentModal(){
+  let modal = document.getElementById(&#x27;appointmentModal&#x27;);
+  if(!modal){
+    modal = document.createElement(&#x27;div&#x27;);
+    modal.id = &#x27;appointmentModal&#x27;;
+    modal.className = &#x27;modal-backdrop hidden&#x27;;
+    document.body.appendChild(modal);
+  }
+  modal.innerHTML = `&lt;div class=&quot;appointment-modal&quot; role=&quot;dialog&quot; aria-modal=&quot;true&quot; aria-labelledby=&quot;appointmentModalTitle&quot;&gt;&lt;div class=&quot;modal-head&quot;&gt;&lt;div&gt;&lt;div class=&quot;report-section-no&quot;&gt;PATH RECHECK APPOINTMENT&lt;/div&gt;&lt;h3 id=&quot;appointmentModalTitle&quot;&gt;预约一次路径复诊&lt;/h3&gt;&lt;p class=&quot;evidence-intro&quot;&gt;请留下你的微信和最想确认的问题。提交后，我会先看到你的诊断结果、后台优先级和这份预约资料，再主动联系你。&lt;/p&gt;&lt;/div&gt;&lt;button class=&quot;modal-close&quot; type=&quot;button&quot; onclick=&quot;closeAppointmentModal()&quot;&gt;关闭&lt;/button&gt;&lt;/div&gt;&lt;div id=&quot;appointmentModalBody&quot;&gt;${appointmentFormFields()}&lt;div class=&quot;cta-actions&quot;&gt;&lt;button class=&quot;btn-primary&quot; type=&quot;button&quot; onclick=&quot;submitAppointment()&quot;&gt;提交预约资料&lt;/button&gt;&lt;button class=&quot;btn-secondary&quot; type=&quot;button&quot; onclick=&quot;closeAppointmentModal()&quot;&gt;先返回结果页&lt;/button&gt;&lt;/div&gt;&lt;div id=&quot;appointmentStatus&quot; class=&quot;appointment-status&quot;&gt;提交预约会同时保存你的诊断结果、后台优先级和复诊资料。&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;`;
+}
+function openAppointmentModal(focus){
+  if(focus) state.appointment.focus = focus;
+  renderAppointmentModal();
+  const modal=document.getElementById(&#x27;appointmentModal&#x27;);
+  modal.classList.remove(&#x27;hidden&#x27;);
+  trackCTA(&#x27;open_appointment_modal&#x27;);
+}
+function closeAppointmentModal(){
+  const modal=document.getElementById(&#x27;appointmentModal&#x27;);
+  if(modal) modal.classList.add(&#x27;hidden&#x27;);
+}
 function ctaBridgeCopy(seg){ return &#x27;&#x27;; }
 
 function logClientEvent(event, data = {}){
@@ -2982,7 +3064,8 @@ async function submitPathCheck(){
   saveLastPayload(payload);
   try{
     const result = await postJsonWithRetry(&#x27;/api/submit-path-check&#x27;, payload, { label:&#x27;submit_path_check&#x27;, attempts:5 });
-    try { localStorage.setItem(&#x27;path_calibrator_last_submit_success&#x27;, JSON.stringify({ debug_id:state.debug_id, submission_id:state.submission_id, result, ts:new Date().toISOString() })); } catch(_) {}
+    state.submission_record_id = result.record_id || state.submission_record_id || &#x27;&#x27;;
+    try { localStorage.setItem(&#x27;path_calibrator_last_submit_success&#x27;, JSON.stringify({ debug_id:state.debug_id, submission_id:state.submission_id, record_id:state.submission_record_id, result, ts:new Date().toISOString() })); } catch(_) {}
     return result;
   }catch(e){
     console.warn(&#x27;submit failed&#x27;, e);
@@ -2991,8 +3074,66 @@ async function submitPathCheck(){
     throw e;
   }
 }
+function buildAppointmentPayload(){
+  const ap = state.appointment || {};
+  const focus = ap.focus || state.computed.deep_dive_motivation || &#x27;action_unclear&#x27;;
+  return { ...buildPayload(), record_id:state.submission_record_id, appointment:{ requested:true, requested_at:new Date().toISOString(), name:ap.name || &#x27;&#x27;, contact:ap.contact || &#x27;&#x27;, available_time:ap.available_time || &#x27;&#x27;, focus, focus_label:(appointmentFocusOptions().find(x=&gt;x[0]===focus)||[])[1] || focus, context:ap.context || &#x27;&#x27;, diagnosis_markdown:calibrationMarkdown() }};
+}
+async function submitAppointment(){
+  const ap = state.appointment || {};
+  const status = document.getElementById(&#x27;appointmentStatus&#x27;);
+  if(status){ status.className=&#x27;appointment-status&#x27;; status.textContent=&#x27;&#x27;; }
+  const focusEl=document.getElementById(&#x27;appointmentFocus&#x27;);
+  if(focusEl) ap.focus=focusEl.value;
+  if(!String(ap.name||&#x27;&#x27;).trim() || !String(ap.contact||&#x27;&#x27;).trim() || !String(ap.available_time||&#x27;&#x27;).trim() || !String(ap.context||&#x27;&#x27;).trim()){
+    if(status){ status.className=&#x27;appointment-status error&#x27;; status.textContent=&#x27;请至少填写称呼、微信号、方便联系的时间，以及你最想复诊的问题。&#x27;; }
+    return;
+  }
+  if(status){ status.textContent=&#x27;正在提交预约资料...&#x27;; }
+  trackCTA(&#x27;open_appointment_submit&#x27;);
+  const payload = buildAppointmentPayload();
+  async function submitAppointmentFallback(reason){
+    const appointment = payload.appointment || {};
+    const fallbackPayload = {
+      ...payload,
+      submission_id: `${payload.submission_id || &#x27;pc&#x27;}_appointment_${Date.now()}`,
+      source: payload.source || &#x27;appointment_fallback&#x27;,
+      answers: { ...(payload.answers || {}), appointment },
+      notes: `预约复诊资料（book-diagnosis fallback：${reason || &#x27;unknown&#x27;}）
+称呼：${appointment.name || &#x27;&#x27;}
+微信：${appointment.contact || &#x27;&#x27;}
+方便时间：${appointment.available_time || &#x27;&#x27;}
+复诊问题：${appointment.focus_label || appointment.focus || &#x27;&#x27;}
+补充：${appointment.context || &#x27;&#x27;}`,
+      contact_status: &#x27;待联系&#x27;,
+    };
+    return postJsonWithRetry(&#x27;/api/submit-path-check&#x27;, fallbackPayload, { label:&#x27;book_diagnosis_fallback_submit&#x27;, attempts:3 });
+  }
+  try{
+    let result;
+    try {
+      result = await postJsonWithRetry(&#x27;/api/book-diagnosis&#x27;, payload, { label:&#x27;book_diagnosis&#x27;, attempts:1 });
+    } catch(bookErr) {
+      console.warn(&#x27;book-diagnosis unavailable, fallback to submit-path-check&#x27;, bookErr);
+      result = await submitAppointmentFallback(bookErr.message || String(bookErr));
+      result.fallback = true;
+      result.fallback_reason = bookErr.message || String(bookErr);
+    }
+    state.appointment.submitted = true;
+    try { localStorage.setItem(&#x27;path_calibrator_last_appointment_success&#x27;, JSON.stringify({ debug_id:state.debug_id, submission_id:state.submission_id, record_id:state.submission_record_id, appointment:payload.appointment, result, ts:new Date().toISOString() })); } catch(_) {}
+    const body=document.getElementById(&#x27;appointmentModalBody&#x27;);
+    if(body){ body.innerHTML = `&lt;div class=&quot;modal-success&quot;&gt;&lt;h3&gt;预约资料已提交&lt;/h3&gt;&lt;p class=&quot;evidence-intro&quot;&gt;我会先看你的诊断结果和补充信息，再主动联系你。你可以先返回结果页，或下载校准报告保存。&lt;/p&gt;&lt;div class=&quot;cta-actions&quot;&gt;&lt;button class=&quot;btn-primary&quot; type=&quot;button&quot; onclick=&quot;closeAppointmentModal()&quot;&gt;返回结果页面&lt;/button&gt;&lt;button class=&quot;btn-secondary&quot; type=&quot;button&quot; onclick=&quot;downloadCalibrationMarkdown()&quot;&gt;下载校准报告&lt;/button&gt;&lt;/div&gt;&lt;/div&gt;`; }
+    else if(status){ status.className=&#x27;appointment-status success&#x27;; status.textContent=&#x27;预约资料已提交。我会先看你的诊断结果和补充信息，再主动联系你。&#x27;; }
+    trackCTA(&#x27;appointment_submitted&#x27;);
+  }catch(e){
+    console.warn(&#x27;appointment submit failed&#x27;, e);
+    try { localStorage.setItem(&#x27;path_calibrator_last_appointment_failed&#x27;, JSON.stringify({ debug_id:state.debug_id, submission_id:state.submission_id, payload, error:e.message, ts:new Date().toISOString() })); } catch(_) {}
+    if(status){ status.className=&#x27;appointment-status error&#x27;; status.textContent=`预约资料提交失败：${e.message || e}。你可以稍后重试，或先下载校准报告。`; }
+    trackCTA(&#x27;appointment_submit_failed&#x27;);
+  }
+}
 async function trackCTA(action){
-  const payload = { debug_id:state.debug_id, client_debug_id:state.debug_id, event_id:`cta_${Date.now()}_${Math.random().toString(36).slice(2,8)}`, submission_id:state.submission_id, timestamp:new Date().toISOString(), cta_type:state.computed.cta_type, cta_action:action, user_segment:state.computed.user_segment, source:getUrlParam(&#x27;source&#x27;)||getUrlParam(&#x27;utm_source&#x27;)||&#x27;direct&#x27;, utm_source:getUrlParam(&#x27;utm_source&#x27;), utm_campaign:getUrlParam(&#x27;utm_campaign&#x27;), page_url:location.href, parent_page_url:getParentPageUrl(), referrer:document.referrer, user_agent:navigator.userAgent, frontend_version:CALIBRATOR_VERSION, site_commit:SITE_COMMIT };
+  const payload = { debug_id:state.debug_id, client_debug_id:state.debug_id, event_id:`cta_${Date.now()}_${Math.random().toString(36).slice(2,8)}`, submission_id:state.submission_id, timestamp:new Date().toISOString(), cta_type:state.computed.cta_type, cta_action:action, user_segment:state.computed.user_segment, deep_dive_motivation:state.computed.deep_dive_motivation, appointment_priority:state.computed.appointment_priority, source:getUrlParam(&#x27;source&#x27;)||getUrlParam(&#x27;utm_source&#x27;)||&#x27;direct&#x27;, utm_source:getUrlParam(&#x27;utm_source&#x27;), utm_campaign:getUrlParam(&#x27;utm_campaign&#x27;), page_url:location.href, parent_page_url:getParentPageUrl(), referrer:document.referrer, user_agent:navigator.userAgent, frontend_version:CALIBRATOR_VERSION, site_commit:SITE_COMMIT };
   try{ return await postJsonWithRetry(&#x27;/api/track-cta&#x27;, payload, { label:`track_cta_${action}`, attempts:3 }); }catch(e){ console.warn(&#x27;cta failed&#x27;, e); logClientEvent(&#x27;track_cta_final_failed&#x27;, { action, error:e.message }); }
 }
 function copyWechat(){ const cta=ctaContent(state.computed.user_segment); navigator.clipboard.writeText(WECHAT_ID).then(()=&gt;alert(cta.copyMessage || &#x27;微信号已复制&#x27;)); trackCTA(&#x27;copy_wechat&#x27;); }
