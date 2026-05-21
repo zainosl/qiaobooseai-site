@@ -3028,7 +3028,7 @@ async function postJsonWithRetry(path, payload, options = {}){
   for(let baseIndex=0; baseIndex&lt;apiBaseUrls.length; baseIndex++){
     const baseUrl = apiBaseUrls[baseIndex];
     const attemptsForBase = apiBaseUrls.length &gt; 1
-      ? (baseIndex === 0 ? (options.primaryAttempts || attempts) : (options.fallbackAttempts || attempts))
+      ? (baseIndex === 0 ? (options.primaryAttempts || Math.min(2, attempts)) : (options.fallbackAttempts || attempts))
       : attempts;
     for(let attempt=1; attempt&lt;=attemptsForBase; attempt++){
       try{
@@ -3071,7 +3071,7 @@ async function submitPathCheck(){
   const payload = buildPayload();
   saveLastPayload(payload);
   try{
-    const result = await postJsonWithRetry(&#x27;/api/submit-path-check&#x27;, payload, { label:&#x27;submit_path_check&#x27;, attempts:5 });
+    const result = await postJsonWithRetry(&#x27;/api/submit-path-check&#x27;, payload, { label:&#x27;submit_path_check&#x27;, attempts:5, primaryAttempts:2, fallbackAttempts:2 });
     state.submission_record_id = result.record_id || state.submission_record_id || &#x27;&#x27;;
     try { localStorage.setItem(&#x27;path_calibrator_last_submit_success&#x27;, JSON.stringify({ debug_id:state.debug_id, submission_id:state.submission_id, record_id:state.submission_record_id, result, ts:new Date().toISOString() })); } catch(_) {}
     return result;
@@ -3110,7 +3110,7 @@ async function submitAppointment(){
   trackCTA(&#x27;open_appointment_submit&#x27;);
   const payload = buildAppointmentPayload();
   try{
-    const result = await postJsonWithRetry(&#x27;/api/book-diagnosis&#x27;, payload, { label:&#x27;book_diagnosis&#x27;, attempts:5, primaryAttempts:5, fallbackAttempts:2 });
+    const result = await postJsonWithRetry(&#x27;/api/book-diagnosis&#x27;, payload, { label:&#x27;book_diagnosis&#x27;, attempts:5, primaryAttempts:2, fallbackAttempts:2 });
     state.appointment.submitted = true;
     state.appointment.submitted_at = payload.appointment &amp;&amp; payload.appointment.requested_at;
     try { localStorage.setItem(&#x27;path_calibrator_last_appointment_success&#x27;, JSON.stringify({ debug_id:state.debug_id, submission_id:state.submission_id, record_id:state.submission_record_id, appointment:payload.appointment, result, ts:new Date().toISOString() })); } catch(_) {}
