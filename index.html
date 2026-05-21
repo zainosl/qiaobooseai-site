@@ -1963,6 +1963,9 @@
   .appointment-entry { margin:16px 0 0; padding:16px; border:1px solid rgba(88,225,193,.30); border-radius:16px; background:linear-gradient(135deg, rgba(88,225,193,.11), rgba(11,13,15,.46)); display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; }
   .appointment-entry strong { display:block; color:var(--text); font-size:15px; }
   .appointment-entry span { display:block; color:var(--muted); font-size:13px; line-height:1.6; margin-top:4px; }
+  .appointment-success-inline { margin:16px 0 0; padding:16px; border:1px solid rgba(88,225,193,.32); border-radius:16px; background:linear-gradient(135deg, rgba(88,225,193,.12), rgba(11,13,15,.46)); }
+  .appointment-success-inline strong { display:block; color:var(--accent); font-size:16px; margin-bottom:6px; }
+  .appointment-success-inline span { display:block; color:var(--muted); font-size:13px; line-height:1.7; }
   .final-report-actions { margin-top:16px; padding-top:14px; border-top:1px solid rgba(255,255,255,.08); }
   .appointment-panel { margin-top:16px; padding:18px; border:1px solid rgba(88,225,193,.28); border-radius:18px; background:linear-gradient(135deg, rgba(88,225,193,.09), rgba(11,13,15,.48)); }
   .appointment-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-top:12px; }
@@ -2952,8 +2955,11 @@ function ctaContent(seg){
   return { title:&#x27;你可以先保存这份结果&#x27;, body:&#x27;这份校准报告可以先作为你接下来行动的参考。你现在不一定需要马上预约，更适合先按照上面的行动处方做一次低成本验证。&#x27;, bullets:[&#x27;接下来 2-4 周，可以用这份报告对照自己的阶段判断、时间风险和行动处方。&#x27;,&#x27;如果之后你发现自己又卡住了，或者想重新校准阶段，可以再回来查看这份结果。&#x27;], note:&#x27;建议先下载校准报告，保存这次阶段判断、风险点和行动处方。&#x27;, allowAppointment:false, downloadPrimary:true };
 }
 function appointmentFocusOptions(){ return [[&#x27;stage_mismatch&#x27;,&#x27;确认阶段判断准不准&#x27;],[&#x27;high_time_risk&#x27;,&#x27;确认最可能浪费时间的地方&#x27;],[&#x27;action_unclear&#x27;,&#x27;把结果落成 2-4 周具体行动&#x27;],[&#x27;service_wedge&#x27;,&#x27;确认方向 / 服务切口 / 反馈对象&#x27;],[&#x27;other&#x27;,&#x27;其他，我想自己补充&#x27;]]; }
+function hasAppointmentSucceeded(){ return Boolean(state.appointment &amp;&amp; state.appointment.submitted); }
+function appointmentSuccessInline(){ return `&lt;div class=&quot;appointment-success-inline&quot;&gt;&lt;strong&gt;你已预约成功，我会在 48 小时内联系你。&lt;/strong&gt;&lt;span&gt;预约资料已经和这次校准记录关联保存。你可以先下载校准报告，后续沟通时直接对照这份结果。&lt;/span&gt;&lt;/div&gt;`; }
 function appointmentEntryButtons(cta){
   if(!cta.allowAppointment) return &#x27;&#x27;;
+  if(hasAppointmentSucceeded()) return appointmentSuccessInline();
   const label = cta.button || &#x27;预约路径复诊&#x27;;
   return `&lt;div class=&quot;appointment-entry&quot;&gt;&lt;div&gt;&lt;strong&gt;预约复诊入口&lt;/strong&gt;&lt;span&gt;点击后填写称呼、微信、方便联系时间和最想复诊的问题。&lt;/span&gt;&lt;/div&gt;&lt;button class=&quot;btn-primary&quot; type=&quot;button&quot; onclick=&quot;openAppointmentModal()&quot;&gt;${esc(label)}&lt;/button&gt;&lt;/div&gt;`;
 }
@@ -3083,47 +3089,32 @@ async function submitAppointment(){
   const ap = state.appointment || {};
   const status = document.getElementById(&#x27;appointmentStatus&#x27;);
   if(status){ status.className=&#x27;appointment-status&#x27;; status.textContent=&#x27;&#x27;; }
+  if(hasAppointmentSucceeded()){
+    const body=document.getElementById(&#x27;appointmentModalBody&#x27;);
+    if(body){ body.innerHTML = `&lt;div class=&quot;modal-success&quot;&gt;&lt;h3&gt;你已预约成功&lt;/h3&gt;&lt;p class=&quot;evidence-intro&quot;&gt;我会在 48 小时内联系你。请勿重复提交，你可以先返回结果页或下载校准报告。&lt;/p&gt;&lt;div class=&quot;cta-actions&quot;&gt;&lt;button class=&quot;btn-primary&quot; type=&quot;button&quot; onclick=&quot;closeAppointmentModal(); renderResult();&quot;&gt;返回结果页面&lt;/button&gt;&lt;button class=&quot;btn-secondary&quot; type=&quot;button&quot; onclick=&quot;downloadCalibrationMarkdown()&quot;&gt;下载校准报告&lt;/button&gt;&lt;/div&gt;&lt;/div&gt;`; }
+    return;
+  }
   const focusEl=document.getElementById(&#x27;appointmentFocus&#x27;);
   if(focusEl) ap.focus=focusEl.value;
   if(!String(ap.name||&#x27;&#x27;).trim() || !String(ap.contact||&#x27;&#x27;).trim() || !String(ap.available_time||&#x27;&#x27;).trim() || !String(ap.context||&#x27;&#x27;).trim()){
     if(status){ status.className=&#x27;appointment-status error&#x27;; status.textContent=&#x27;请至少填写称呼、微信号、方便联系的时间，以及你最想复诊的问题。&#x27;; }
     return;
   }
+  if(!state.submission_record_id){
+    if(status){ status.className=&#x27;appointment-status error&#x27;; status.textContent=&#x27;当前校准记录还没有保存成功，暂时不能提交预约。请先刷新重试，或下载校准报告后再联系。&#x27;; }
+    return;
+  }
   if(status){ status.textContent=&#x27;正在提交预约资料...&#x27;; }
   trackCTA(&#x27;open_appointment_submit&#x27;);
   const payload = buildAppointmentPayload();
-  async function submitAppointmentFallback(reason){
-    const appointment = payload.appointment || {};
-    const fallbackPayload = {
-      ...payload,
-      submission_id: `${payload.submission_id || &#x27;pc&#x27;}_appointment_${Date.now()}`,
-      source: payload.source || &#x27;appointment_fallback&#x27;,
-      answers: { ...(payload.answers || {}), appointment },
-      notes: `预约复诊资料（book-diagnosis fallback：${reason || &#x27;unknown&#x27;}）
-称呼：${appointment.name || &#x27;&#x27;}
-微信：${appointment.contact || &#x27;&#x27;}
-方便时间：${appointment.available_time || &#x27;&#x27;}
-复诊问题：${appointment.focus_label || appointment.focus || &#x27;&#x27;}
-补充：${appointment.context || &#x27;&#x27;}`,
-      contact_status: &#x27;待联系&#x27;,
-    };
-    return postJsonWithRetry(&#x27;/api/submit-path-check&#x27;, fallbackPayload, { label:&#x27;book_diagnosis_fallback_submit&#x27;, attempts:3 });
-  }
   try{
-    let result;
-    try {
-      result = await postJsonWithRetry(&#x27;/api/book-diagnosis&#x27;, payload, { label:&#x27;book_diagnosis&#x27;, attempts:1 });
-    } catch(bookErr) {
-      console.warn(&#x27;book-diagnosis unavailable, fallback to submit-path-check&#x27;, bookErr);
-      result = await submitAppointmentFallback(bookErr.message || String(bookErr));
-      result.fallback = true;
-      result.fallback_reason = bookErr.message || String(bookErr);
-    }
+    const result = await postJsonWithRetry(&#x27;/api/book-diagnosis&#x27;, payload, { label:&#x27;book_diagnosis&#x27;, attempts:3 });
     state.appointment.submitted = true;
+    state.appointment.submitted_at = payload.appointment &amp;&amp; payload.appointment.requested_at;
     try { localStorage.setItem(&#x27;path_calibrator_last_appointment_success&#x27;, JSON.stringify({ debug_id:state.debug_id, submission_id:state.submission_id, record_id:state.submission_record_id, appointment:payload.appointment, result, ts:new Date().toISOString() })); } catch(_) {}
     const body=document.getElementById(&#x27;appointmentModalBody&#x27;);
-    if(body){ body.innerHTML = `&lt;div class=&quot;modal-success&quot;&gt;&lt;h3&gt;预约资料已提交&lt;/h3&gt;&lt;p class=&quot;evidence-intro&quot;&gt;我会先看你的诊断结果和补充信息，再主动联系你。你可以先返回结果页，或下载校准报告保存。&lt;/p&gt;&lt;div class=&quot;cta-actions&quot;&gt;&lt;button class=&quot;btn-primary&quot; type=&quot;button&quot; onclick=&quot;closeAppointmentModal()&quot;&gt;返回结果页面&lt;/button&gt;&lt;button class=&quot;btn-secondary&quot; type=&quot;button&quot; onclick=&quot;downloadCalibrationMarkdown()&quot;&gt;下载校准报告&lt;/button&gt;&lt;/div&gt;&lt;/div&gt;`; }
-    else if(status){ status.className=&#x27;appointment-status success&#x27;; status.textContent=&#x27;预约资料已提交。我会先看你的诊断结果和补充信息，再主动联系你。&#x27;; }
+    if(body){ body.innerHTML = `&lt;div class=&quot;modal-success&quot;&gt;&lt;h3&gt;你已预约成功&lt;/h3&gt;&lt;p class=&quot;evidence-intro&quot;&gt;我会在 48 小时内联系你。预约资料已经和这次校准记录关联保存，请勿重复提交。&lt;/p&gt;&lt;div class=&quot;cta-actions&quot;&gt;&lt;button class=&quot;btn-primary&quot; type=&quot;button&quot; onclick=&quot;closeAppointmentModal(); renderResult();&quot;&gt;返回结果页面&lt;/button&gt;&lt;button class=&quot;btn-secondary&quot; type=&quot;button&quot; onclick=&quot;downloadCalibrationMarkdown()&quot;&gt;下载校准报告&lt;/button&gt;&lt;/div&gt;&lt;/div&gt;`; }
+    else if(status){ status.className=&#x27;appointment-status success&#x27;; status.textContent=&#x27;你已预约成功，我会在 48 小时内联系你。&#x27;; }
     trackCTA(&#x27;appointment_submitted&#x27;);
   }catch(e){
     console.warn(&#x27;appointment submit failed&#x27;, e);
