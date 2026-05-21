@@ -3027,7 +3027,9 @@ async function postJsonWithRetry(path, payload, options = {}){
   let lastError;
   for(let baseIndex=0; baseIndex&lt;apiBaseUrls.length; baseIndex++){
     const baseUrl = apiBaseUrls[baseIndex];
-    const attemptsForBase = apiBaseUrls.length &gt; 1 ? (baseIndex === 0 ? Math.min(2, attempts) : attempts) : attempts;
+    const attemptsForBase = apiBaseUrls.length &gt; 1
+      ? (baseIndex === 0 ? (options.primaryAttempts || attempts) : (options.fallbackAttempts || attempts))
+      : attempts;
     for(let attempt=1; attempt&lt;=attemptsForBase; attempt++){
       try{
         const url = `${baseUrl}${path}`;
@@ -3108,7 +3110,7 @@ async function submitAppointment(){
   trackCTA(&#x27;open_appointment_submit&#x27;);
   const payload = buildAppointmentPayload();
   try{
-    const result = await postJsonWithRetry(&#x27;/api/book-diagnosis&#x27;, payload, { label:&#x27;book_diagnosis&#x27;, attempts:3 });
+    const result = await postJsonWithRetry(&#x27;/api/book-diagnosis&#x27;, payload, { label:&#x27;book_diagnosis&#x27;, attempts:5, primaryAttempts:5, fallbackAttempts:2 });
     state.appointment.submitted = true;
     state.appointment.submitted_at = payload.appointment &amp;&amp; payload.appointment.requested_at;
     try { localStorage.setItem(&#x27;path_calibrator_last_appointment_success&#x27;, JSON.stringify({ debug_id:state.debug_id, submission_id:state.submission_id, record_id:state.submission_record_id, appointment:payload.appointment, result, ts:new Date().toISOString() })); } catch(_) {}
@@ -3119,7 +3121,7 @@ async function submitAppointment(){
   }catch(e){
     console.warn(&#x27;appointment submit failed&#x27;, e);
     try { localStorage.setItem(&#x27;path_calibrator_last_appointment_failed&#x27;, JSON.stringify({ debug_id:state.debug_id, submission_id:state.submission_id, payload, error:e.message, ts:new Date().toISOString() })); } catch(_) {}
-    if(status){ status.className=&#x27;appointment-status error&#x27;; status.textContent=`预约资料提交失败：${e.message || e}。你可以稍后重试，或先下载校准报告。`; }
+    if(status){ status.className=&#x27;appointment-status error&#x27;; status.innerHTML=`预约资料暂时没有提交成功：${esc(e.message || e)}。&lt;br&gt;你的预约内容还保留在表单里，请不要刷新页面，可以直接再点一次「提交预约资料」重试；或先下载校准报告。`; }
     trackCTA(&#x27;appointment_submit_failed&#x27;);
   }
 }
