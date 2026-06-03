@@ -907,6 +907,18 @@
     display: block;
     background: var(--bg);
   }
+  #channelsPage {
+    height: 100vh;
+    padding-top: 62px;
+    background: var(--bg);
+  }
+  #channelsFrame {
+    width: 100%;
+    height: calc(100vh - 62px);
+    border: 0;
+    display: block;
+    background: var(--bg);
+  }
   body.tool-open #nav,
   body.tool-open #progress { display: none; }
   body.tool-open { overflow: hidden; }
@@ -914,8 +926,8 @@
   @media (max-width: 768px) {
     #mainTabs { top: 12px; width: calc(100% - 24px); justify-content: center; }
     .main-tab-btn { flex: 1; padding: 9px 8px; font-size: 12px; }
-    #calibratorPage { padding-top: 58px; }
-    #calibratorFrame { height: calc(100vh - 58px); }
+    #calibratorPage, #channelsPage { padding-top: 58px; }
+    #calibratorFrame, #channelsFrame { height: calc(100vh - 58px); }
   }
 
 
@@ -1227,7 +1239,7 @@
 <div id="mainTabs" role="tablist" aria-label="主站导航">
   <button class="main-tab-btn active" id="homeTabBtn" type="button" onclick="switchMainTab('home')">首页</button>
   <button class="main-tab-btn" id="toolTabBtn" type="button" onclick="switchMainTab('tool')">一人公司路径校准</button>
-  <button class="main-tab-btn" id="articlesTabBtn" type="button" onclick="switchMainTab('articles')">最新文章</button>
+  <button class="main-tab-btn" id="channelsTabBtn" type="button" onclick="switchMainTab('channels')">潜在客户渠道库</button>
 </div>
 
 <div id="homePage" class="page-pane active">
@@ -3137,6 +3149,10 @@ function copyResult(){ navigator.clipboard.writeText(resultText()).then(()=&gt;a
 "></iframe>
 </div>
 
+<div id="channelsPage" class="page-pane hidden">
+  <iframe id="channelsFrame" title="前期找潜在客户渠道库" src="potential-customer-channels.html"></iframe>
+</div>
+
 <div id="articlesPage" class="page-pane hidden">
   <div id="articlesShell">
     <div id="articleListView" class="articles-view">
@@ -4195,13 +4211,17 @@ function switchMainTab(tab, updateUrl = true) {
   activeMainTab = tab;
   const isHome = tab === 'home';
   const isTool = tab === 'tool';
+  const isChannels = tab === 'channels';
   const isArticles = tab === 'articles';
   document.getElementById('homePage').classList.toggle('hidden', !isHome);
   document.getElementById('calibratorPage').classList.toggle('hidden', !isTool);
+  document.getElementById('channelsPage').classList.toggle('hidden', !isChannels);
   document.getElementById('articlesPage').classList.toggle('hidden', !isArticles);
   document.getElementById('homeTabBtn').classList.toggle('active', isHome);
   document.getElementById('toolTabBtn').classList.toggle('active', isTool);
-  document.getElementById('articlesTabBtn').classList.toggle('active', isArticles);
+  document.getElementById('channelsTabBtn').classList.toggle('active', isChannels);
+  const articlesTabBtn = document.getElementById('articlesTabBtn');
+  if (articlesTabBtn) articlesTabBtn.classList.toggle('active', isArticles);
   document.body.classList.toggle('tool-open', !isHome);
   if (isArticles) backToArticleList(false);
   if (isHome && typeof goTo === 'function') goTo(cur || 0);
@@ -4250,6 +4270,7 @@ function initialMainTabFromUrl() {
   const params = new URLSearchParams(window.location.search);
   const raw = (params.get('tab') || params.get('page') || window.location.hash.replace(/^#/, '') || '').toLowerCase();
   if (['tool', 'calibrator', 'path', '路径校准', '一人公司路径校准'].includes(raw)) return 'tool';
+  if (['channels', 'channel', 'customer-channels', 'potential-customer-channels', '潜在客户渠道库', '渠道库'].includes(raw)) return 'channels';
   if (['articles', 'article', 'latest', '最新文章'].includes(raw)) return 'articles';
   return 'home';
 }

@@ -1,0 +1,2009 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>前期找潜在客户渠道库 · 乔不不斯</title>
+  <style>
+    :root {
+      --bg: #0B0D0F;
+      --surface: #13161A;
+      --surface-2: #1C2026;
+      --text: #F7F8FA;
+      --muted: #A9B0BA;
+      --dim: #4A525C;
+      --accent: #58E1C1;
+      --accent-2: #3BB89A;
+      --warn: #F6B66B;
+      --line: rgba(255,255,255,.075);
+      --line-strong: rgba(255,255,255,.14);
+      --accent-soft: rgba(88,225,193,.09);
+      --accent-line: rgba(88,225,193,.28);
+      --font-sans: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --font-mono: "SFMono-Regular", "Menlo", "Consolas", ui-monospace, monospace;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background:
+        linear-gradient(rgba(88,225,193,.028) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(88,225,193,.028) 1px, transparent 1px),
+        var(--bg);
+      background-size: 56px 56px;
+      color: var(--text);
+      font-family: var(--font-sans);
+      line-height: 1.68;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(180deg, rgba(11,13,15,.2) 0%, rgba(11,13,15,.92) 68%, #0B0D0F 100%),
+        repeating-linear-gradient(90deg, rgba(255,255,255,.026) 0 1px, transparent 1px 19vw);
+      z-index: -1;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button, input, textarea { font: inherit; }
+
+    .shell {
+      display: grid;
+      grid-template-columns: 292px minmax(0, 1fr);
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      padding: 26px 18px;
+      border-right: 1px solid var(--line);
+      background: rgba(11,13,15,.82);
+      backdrop-filter: blur(18px);
+      overflow: auto;
+    }
+
+    .brand {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--accent);
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .side-title {
+      margin: 0 0 22px;
+      font-size: 23px;
+      line-height: 1.18;
+      letter-spacing: 0;
+      font-weight: 900;
+    }
+
+    .side-meta {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--line);
+      border: 1px solid var(--line);
+      margin-bottom: 20px;
+    }
+
+    .side-stat {
+      background: var(--surface);
+      padding: 12px 8px;
+      min-height: 72px;
+    }
+
+    .side-stat b {
+      display: block;
+      color: var(--accent);
+      font-size: 20px;
+      line-height: 1;
+      font-family: var(--font-mono);
+    }
+
+    .side-stat span {
+      display: block;
+      margin-top: 7px;
+      color: var(--dim);
+      font-size: 11px;
+    }
+
+    .toc {
+      display: grid;
+      gap: 5px;
+      margin-top: 14px;
+    }
+
+    .toc a {
+      color: var(--muted);
+      border: 1px solid transparent;
+      padding: 9px 10px;
+      font-size: 13px;
+      border-radius: 2px;
+    }
+
+    .toc a:hover,
+    .toc a.active {
+      color: var(--accent);
+      border-color: var(--accent-line);
+      background: var(--accent-soft);
+    }
+
+    .side-note {
+      margin-top: 22px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--dim);
+      font-size: 12px;
+    }
+
+    main {
+      width: min(100%, 1320px);
+      padding: 44px clamp(22px, 5vw, 72px) 92px;
+    }
+
+    .hero {
+      min-height: 78vh;
+      display: grid;
+      align-content: center;
+      position: relative;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .eyebrow,
+    .kicker,
+    .chip,
+    .mono {
+      font-family: var(--font-mono);
+    }
+
+    .eyebrow {
+      width: fit-content;
+      color: var(--accent);
+      border: 1px solid var(--accent-line);
+      background: rgba(88,225,193,.04);
+      padding: 6px 12px;
+      font-size: 10px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      margin-bottom: 26px;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 940px;
+      font-size: clamp(44px, 7vw, 92px);
+      line-height: 1.03;
+      letter-spacing: 0;
+      font-weight: 900;
+    }
+
+    h1 em {
+      color: var(--accent);
+      font-style: normal;
+    }
+
+    .hero-copy {
+      max-width: 820px;
+      margin: 24px 0 0;
+      color: var(--muted);
+      font-size: clamp(16px, 1.45vw, 21px);
+      font-weight: 300;
+      line-height: 1.85;
+    }
+
+    .hero-actions,
+    .control-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .hero-actions { margin-top: 30px; }
+
+    .hero-advisor-card {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 18px;
+      align-items: center;
+      margin-top: 18px;
+      padding: 18px;
+      border: 1px solid var(--accent);
+      background: linear-gradient(90deg, rgba(88,225,193,.14), rgba(19,22,26,.88));
+      box-shadow: 0 24px 80px rgba(88,225,193,.08);
+    }
+
+    .hero-advisor-card h3 {
+      margin: 0 0 6px;
+      font-size: 19px;
+    }
+
+    .hero-advisor-card p {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 44px;
+      border-radius: 2px;
+      border: 1px solid var(--line-strong);
+      background: transparent;
+      color: var(--text);
+      padding: 11px 18px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: .18s ease;
+    }
+
+    .btn.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: var(--bg);
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .btn.primary:hover {
+      background: var(--accent-2);
+      border-color: var(--accent-2);
+      color: var(--bg);
+    }
+
+    .btn:disabled {
+      cursor: not-allowed;
+      transform: none;
+      color: var(--dim);
+      border-color: var(--line);
+      background: rgba(255,255,255,.035);
+      opacity: .72;
+    }
+
+    .btn.primary:disabled {
+      color: var(--dim);
+      border-color: var(--line);
+      background: rgba(255,255,255,.05);
+    }
+
+    .btn.compact {
+      min-height: 38px;
+      padding: 8px 12px;
+      font-size: 13px;
+    }
+
+    .hero-number {
+      position: absolute;
+      right: 0;
+      bottom: 6vh;
+      color: rgba(88,225,193,.055);
+      font-family: var(--font-mono);
+      font-size: clamp(130px, 22vw, 290px);
+      line-height: .9;
+      z-index: -1;
+    }
+
+    .section {
+      padding: 72px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 24px;
+      margin-bottom: 26px;
+    }
+
+    .kicker {
+      color: var(--accent);
+      font-size: 10px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: clamp(28px, 4.4vw, 52px);
+      line-height: 1.14;
+      letter-spacing: 0;
+      font-weight: 900;
+    }
+
+    h3 {
+      margin: 0 0 10px;
+      font-size: 20px;
+      line-height: 1.25;
+    }
+
+    p { margin: 0; }
+    .desc {
+      max-width: 580px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .grid { display: grid; gap: 14px; }
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+    .card,
+    .panel {
+      position: relative;
+      border: 1px solid var(--line);
+      background: rgba(19,22,26,.92);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .card { padding: 22px; }
+    .panel { padding: 18px; }
+    .card::before,
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto;
+      height: 1px;
+      background: rgba(88,225,193,.16);
+    }
+
+    .muted { color: var(--muted); }
+    .dim { color: var(--dim); }
+    .accent { color: var(--accent); }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 26px;
+      padding: 4px 9px;
+      border: 1px solid rgba(88,225,193,.22);
+      background: rgba(88,225,193,.07);
+      color: var(--accent);
+      font-size: 11px;
+      letter-spacing: .08em;
+      border-radius: 2px;
+      white-space: nowrap;
+    }
+
+    .signal-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      border: 1px solid var(--line);
+      background: var(--line);
+      margin-top: 28px;
+    }
+
+    .signal {
+      background: var(--surface);
+      min-height: 144px;
+      padding: 20px;
+    }
+
+    .signal b {
+      display: block;
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 28px;
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+
+    .signal span {
+      display: block;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .advisor-entry {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 18px;
+      align-items: center;
+      margin-top: 18px;
+      padding: 18px;
+      border: 1px solid var(--accent-line);
+      background: rgba(88,225,193,.055);
+    }
+
+    .advisor-entry p {
+      color: var(--muted);
+      font-size: 14px;
+      margin-top: 8px;
+    }
+
+    .advisor-gate {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(280px, .62fr);
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .key-panel {
+      display: grid;
+      gap: 10px;
+      border: 1px solid var(--accent-line);
+      background: rgba(88,225,193,.06);
+      padding: 16px;
+    }
+
+    .key-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .key-input {
+      width: 100%;
+      min-height: 42px;
+      border: 1px solid var(--line-strong);
+      background: #050607;
+      color: var(--text);
+      border-radius: 2px;
+      padding: 0 12px;
+      outline: none;
+    }
+
+    .key-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(88,225,193,.07);
+    }
+
+    .key-status {
+      color: var(--dim);
+      font-size: 12px;
+    }
+
+    .key-status.unlocked {
+      color: var(--accent);
+    }
+
+    .danger-note {
+      color: #FF6B6B;
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1.6;
+    }
+
+    textarea:disabled,
+    .key-input:disabled {
+      cursor: not-allowed;
+      color: var(--dim);
+      border-color: var(--line);
+      background: rgba(255,255,255,.035);
+    }
+
+    .advisor-grid {
+      display: grid;
+      grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+      gap: 14px;
+      align-items: stretch;
+    }
+
+    .advisor-form {
+      display: grid;
+      gap: 12px;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+    }
+
+    .field label {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 74px;
+      resize: vertical;
+      border: 1px solid var(--line-strong);
+      background: #050607;
+      color: var(--text);
+      border-radius: 2px;
+      padding: 11px 12px;
+      outline: none;
+      line-height: 1.65;
+    }
+
+    textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(88,225,193,.07);
+    }
+
+    .advisor-output {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-height: 100%;
+    }
+
+    .chat-window {
+      flex: 1;
+      min-height: 430px;
+      max-height: 720px;
+      overflow: auto;
+      border: 1px solid var(--line);
+      background: #050607;
+      padding: 14px;
+      display: grid;
+      align-content: start;
+      gap: 12px;
+    }
+
+    .chat-message {
+      max-width: 92%;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      padding: 13px 14px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.72;
+      white-space: pre-wrap;
+    }
+
+    .chat-message.user {
+      justify-self: end;
+      color: var(--text);
+      border-color: var(--accent-line);
+      background: rgba(88,225,193,.08);
+    }
+
+    .chat-message.assistant {
+      justify-self: start;
+    }
+
+    .chat-message.system {
+      justify-self: stretch;
+      max-width: 100%;
+      color: var(--dim);
+      background: rgba(255,255,255,.025);
+    }
+
+    .chat-composer {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: end;
+    }
+
+    .chat-composer textarea {
+      min-height: 72px;
+    }
+
+    .model-note {
+      color: var(--dim);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .final-cta {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 18px;
+      align-items: center;
+      margin-top: 18px;
+      padding: 22px;
+      border: 1px solid var(--accent-line);
+      background: linear-gradient(90deg, rgba(88,225,193,.08), rgba(19,22,26,.92));
+    }
+
+    .framework {
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 14px;
+      align-items: stretch;
+    }
+
+    .sentence {
+      border-left: 3px solid var(--accent);
+      background: var(--surface);
+      padding: 18px;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .sentence strong { color: var(--text); }
+
+    .map {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .map-card {
+      min-height: 168px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      padding: 15px;
+      border-radius: 2px;
+      transition: .18s ease;
+      cursor: pointer;
+    }
+
+    .map-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent-line);
+      background: var(--surface-2);
+    }
+
+    .map-card.active {
+      border-color: var(--accent);
+      box-shadow: inset 3px 0 0 var(--accent);
+    }
+
+    .map-card.active h3,
+    .map-card.active p,
+    .map-card.active .fit,
+    .map-card.active .num {
+      color: var(--text);
+    }
+
+    .map-card .num {
+      color: var(--accent);
+      font-size: 12px;
+      letter-spacing: .08em;
+    }
+
+    .map-card h3 {
+      font-size: 18px;
+      margin: 12px 0 8px;
+    }
+
+    .map-card p {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .map-card .fit {
+      margin-top: 14px;
+      color: var(--dim);
+      font-size: 12px;
+    }
+
+    .priority-strip {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1px;
+      border: 1px solid var(--line);
+      background: var(--line);
+      margin: 18px 0 24px;
+    }
+
+    .priority-step {
+      background: var(--surface);
+      padding: 16px;
+      min-height: 112px;
+    }
+
+    .priority-step b {
+      display: block;
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      letter-spacing: .08em;
+      margin-bottom: 8px;
+    }
+
+    .priority-step strong {
+      display: block;
+      color: var(--text);
+      line-height: 1.3;
+      margin-bottom: 6px;
+    }
+
+    .priority-step span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .library-workbench {
+      display: grid;
+      grid-template-columns: 320px minmax(0, 1fr);
+      gap: 14px;
+      align-items: start;
+    }
+
+    .category-column {
+      position: sticky;
+      top: 12px;
+      border: 1px solid var(--line);
+      background: rgba(11,13,15,.82);
+      backdrop-filter: blur(14px);
+      padding: 12px;
+    }
+
+    .category-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 10px;
+      padding: 0 2px;
+    }
+
+    .category-head span {
+      color: var(--dim);
+      font-size: 12px;
+    }
+
+    .category-list {
+      display: grid;
+      gap: 7px;
+      max-height: calc(100vh - 134px);
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .category-tab {
+      display: grid;
+      grid-template-columns: 46px minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      width: 100%;
+      min-height: 66px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--muted);
+      border-radius: 2px;
+      cursor: pointer;
+      text-align: left;
+      transition: .18s ease;
+    }
+
+    .category-tab:hover {
+      border-color: var(--accent-line);
+      background: var(--surface-2);
+    }
+
+    .category-tab.active {
+      border-color: var(--accent);
+      background: rgba(88,225,193,.08);
+      box-shadow: inset 3px 0 0 var(--accent);
+    }
+
+    .category-tab.active strong,
+    .category-tab.active span,
+    .category-tab.active .cat-no,
+    .category-tab.active .category-count {
+      color: var(--text);
+    }
+
+    .category-tab .cat-no {
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      letter-spacing: .08em;
+    }
+
+    .cat-priority {
+      display: block;
+      color: var(--dim);
+      font-size: 10px;
+      margin-top: 5px;
+      letter-spacing: .08em;
+    }
+
+    .category-tab strong {
+      display: block;
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.25;
+      overflow-wrap: anywhere;
+    }
+
+    .category-tab span {
+      display: block;
+      color: var(--dim);
+      font-size: 11px;
+      line-height: 1.35;
+      margin-top: 3px;
+    }
+
+    .category-count {
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 12px;
+    }
+
+    .method-area {
+      min-width: 0;
+    }
+
+    .toolbar {
+      position: sticky;
+      top: 12px;
+      z-index: 3;
+      display: grid;
+      gap: 12px;
+      padding: 12px;
+      margin-bottom: 14px;
+      border: 1px solid var(--line);
+      background: rgba(11,13,15,.82);
+      backdrop-filter: blur(14px);
+    }
+
+    .selected-category {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 16px;
+      align-items: end;
+    }
+
+    .selected-category h3 {
+      margin: 8px 0 6px;
+      font-size: 24px;
+    }
+
+    .selected-category p {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .selected-stat {
+      text-align: right;
+      min-width: 86px;
+    }
+
+    .selected-stat b {
+      display: block;
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 30px;
+      line-height: 1;
+    }
+
+    .selected-stat span {
+      color: var(--dim);
+      font-size: 12px;
+    }
+
+    .search {
+      flex: 1;
+      min-width: 220px;
+      border: 1px solid var(--line-strong);
+      background: #050607;
+      color: var(--text);
+      border-radius: 2px;
+      min-height: 42px;
+      padding: 0 13px;
+      outline: none;
+    }
+
+    .search:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(88,225,193,.07);
+    }
+
+    .method-list {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .method {
+      border: 1px solid var(--line);
+      background: rgba(19,22,26,.86);
+      padding: 16px;
+      border-radius: 2px;
+      min-height: 178px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .method.hidden { display: none; }
+
+    .method-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: start;
+      margin-bottom: 10px;
+    }
+
+    .method-no {
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .method h3 {
+      font-size: 18px;
+      margin: 0;
+    }
+
+    .method p {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .method-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 14px;
+    }
+
+    .mini-tag {
+      color: var(--dim);
+      border: 1px solid var(--line);
+      padding: 2px 7px;
+      border-radius: 2px;
+      font-size: 11px;
+    }
+
+    .priority-table,
+    .type-table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      font-size: 14px;
+    }
+
+    th,
+    td {
+      border-bottom: 1px solid var(--line);
+      border-right: 1px solid var(--line);
+      padding: 14px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      color: var(--dim);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      background: #0E1114;
+    }
+
+    td { color: var(--muted); }
+    td strong { color: var(--text); }
+
+    .score-band {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--line);
+      border: 1px solid var(--line);
+      margin-top: 14px;
+    }
+
+    .score-item {
+      background: var(--surface);
+      padding: 18px;
+    }
+
+    .score-item b {
+      display: block;
+      color: var(--accent);
+      font-size: 24px;
+      font-family: var(--font-mono);
+      margin-bottom: 8px;
+    }
+
+    .week {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 1px;
+      background: var(--line);
+      border: 1px solid var(--line);
+    }
+
+    .day {
+      background: var(--surface);
+      padding: 17px;
+      min-height: 220px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .day b {
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: .08em;
+    }
+
+    .day h3 {
+      font-size: 17px;
+      margin: 0;
+    }
+
+    .day p {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .copy-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .copy-box {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      min-height: 360px;
+    }
+
+    .copy-content {
+      white-space: pre-wrap;
+      color: var(--muted);
+      border: 1px solid var(--line);
+      background: #050607;
+      padding: 16px;
+      font-size: 13px;
+      flex: 1;
+    }
+
+    .matrix {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .do-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .do-item {
+      display: flex;
+      gap: 10px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      padding: 12px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .mark {
+      width: 16px;
+      height: 16px;
+      flex: none;
+      margin-top: 4px;
+      border: 1px solid var(--accent);
+      background: rgba(88,225,193,.08);
+    }
+
+    .footer {
+      padding-top: 36px;
+      color: var(--dim);
+      font-size: 13px;
+    }
+
+    @media (max-width: 1180px) {
+      .method-list,
+      .copy-grid,
+      .grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .week { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .map { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .signal-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 860px) {
+      .shell { grid-template-columns: 1fr; }
+      .sidebar {
+        position: relative;
+        height: auto;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .toc { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      main { padding: 28px 18px 72px; }
+      .hero { min-height: 68vh; }
+      .section-head { display: block; }
+      .desc { margin-top: 12px; }
+      .grid-2,
+      .grid-3,
+      .grid-4,
+      .framework,
+      .advisor-grid,
+      .library-workbench,
+      .method-list,
+      .copy-grid,
+      .matrix,
+      .map,
+      .priority-strip,
+      .score-band,
+      .week { grid-template-columns: 1fr; }
+      .category-column,
+      .toolbar { position: relative; top: auto; }
+      .category-list { max-height: none; }
+      .selected-category { grid-template-columns: 1fr; }
+      .selected-stat { text-align: left; }
+      .advisor-entry,
+      .advisor-gate,
+      .final-cta,
+      .hero-advisor-card { grid-template-columns: 1fr; }
+      .signal-grid { grid-template-columns: 1fr; }
+      th, td { padding: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="brand">AI NATIVE / SOLO COMPANY</div>
+      <h1 class="side-title">前期找潜在客户<br>渠道武器库</h1>
+      <div class="side-meta">
+        <div class="side-stat"><b>12</b><span>渠道模块</span></div>
+        <div class="side-stat"><b>98</b><span>挖掘方法</span></div>
+        <div class="side-stat"><b>7D</b><span>行动节奏</span></div>
+      </div>
+      <nav class="toc" id="toc">
+        <a href="#start">00 使用前提</a>
+        <a href="#map">01 渠道地图</a>
+        <a href="#library">02 方法库</a>
+        <a href="#segments">03 用户类型</a>
+        <a href="#priority">04 优先级</a>
+        <a href="#week">05 一周执行</a>
+        <a href="#scripts">06 触达话术</a>
+        <a href="#boundary">07 合规边界</a>
+        <a href="#ai-advisor">AI 渠道顾问</a>
+      </nav>
+      <div class="side-note">目标不是“发广告等人来”，而是把一个线索扩成一张可持续挖掘的用户网络。</div>
+    </aside>
+
+    <main>
+      <section class="hero" id="top">
+        <div class="eyebrow">EARLY CUSTOMER DISCOVERY MAP</div>
+        <h1>早期不知道去哪找用户？<br>尝试这个<em>“渠道武器库地图”</em></h1>
+        <p class="hero-copy">适用于产品/服务还没稳定，需要先找到 5-10 个访谈样本、3-5 个共创用户、1-2 个案例用户的阶段。先从低信任成本渠道开始，再逐层扩展到问题暴露区、竞品用户池、连接者、交易现场和线下现场。</p>
+        <div class="hero-actions">
+          <a class="btn primary" href="#library">进入方法库</a>
+          <a class="btn" href="#week">查看 7 天行动法</a>
+          <a class="btn" href="#scripts">复制触达话术</a>
+        </div>
+        <div class="signal-grid">
+          <div class="signal"><b>5-10</b><span>优先找到访谈样本，验证问题是否真实。</span></div>
+          <div class="signal"><b>3-5</b><span>筛出愿意配合的小周期共创用户。</span></div>
+          <div class="signal"><b>1-2</b><span>沉淀可复盘、可授权、可展示的案例用户。</span></div>
+          <div class="signal"><b>0</b><span>产品未稳定前，不急着重投公域获客。</span></div>
+        </div>
+        <div class="hero-number">98</div>
+      </section>
+
+      <section class="section" id="start">
+        <div class="section-head">
+          <div>
+            <div class="kicker">00 / Before Search</div>
+            <h2>先定义你要找谁，<br>再决定去哪里找。</h2>
+          </div>
+          <p class="desc">不要一上来就问“有哪些渠道”。前期找用户，真正要先清楚的是身份、场景、基础、卡点、合作方式和筛选条件。</p>
+        </div>
+        <div class="framework">
+          <div class="card">
+            <div class="grid grid-2">
+              <div class="panel"><span class="chip">01 WHO</span><h3>我要找谁？</h3><p class="muted">身份、场景、已有基础、具体卡点。</p></div>
+              <div class="panel"><span class="chip">02 WHY</span><h3>我要找他做什么？</h3><p class="muted">访谈、诊断、共创、付费试点、案例共创。</p></div>
+              <div class="panel"><span class="chip">03 FIT</span><h3>他需要具备什么条件？</h3><p class="muted">真实问题、配合度、预期合理、信任成本低。</p></div>
+              <div class="panel"><span class="chip">04 GAP</span><h3>我现在最缺哪类样本？</h3><p class="muted">缺量、缺共创、缺付费、缺案例，渠道优先级完全不同。</p></div>
+            </div>
+          </div>
+          <div class="sentence">
+            <span class="chip">一句话模板</span>
+            <p style="margin-top:14px">我现在要找<strong>【某类人】</strong>，他们已经有<strong>【某种基础】</strong>，但卡在<strong>【具体问题】</strong>。我希望先通过<strong>【访谈/诊断/共创/付费试点】</strong>验证<strong>【某个局部结果】</strong>，所以优先找<strong>【信任成本低/配合度高/案例价值高/付费意愿强】</strong>的人。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="map">
+        <div class="section-head">
+          <div>
+            <div class="kicker">01 / Channel Map</div>
+            <h2>12 个模块，<br>按优先级逐层推进。</h2>
+          </div>
+          <p class="desc">点击任意模块，会自动筛选下面的方法库。排序逻辑是：越靠前越低成本、快反馈；越靠后越依赖积累、合作、线下行动或系统化自动化。</p>
+        </div>
+        <div class="priority-strip">
+          <div class="priority-step"><b>P0 / NOW</b><strong>立刻开始</strong><span>低信任成本，今天就能触达和约聊。</span></div>
+          <div class="priority-step"><b>P1 / 1-3D</b><strong>快速扩展</strong><span>从已有关系扩到社群、问题区和竞品用户池。</span></div>
+          <div class="priority-step"><b>P2 / 3-7D</b><strong>批量打开</strong><span>通过关键词、连接者、内容活动打开更多线索池。</span></div>
+          <div class="priority-step"><b>P3 / LONGER</b><strong>长期建设</strong><span>交易现场、公开数据、线下现场和 AI 自动化更适合持续做。</span></div>
+        </div>
+        <div class="map" id="moduleMap"></div>
+      </section>
+
+      <section class="section" id="library">
+        <div class="section-head">
+          <div>
+            <div class="kicker">02 / Method Library</div>
+            <h2>98 种找前期用户的方法。</h2>
+          </div>
+          <p class="desc">左侧分类已按使用优先级排序。越靠前越适合马上做，越靠后越需要更长周期、更多样本或更强组织动作。</p>
+        </div>
+        <div class="library-workbench">
+          <aside class="category-column">
+            <div class="category-head">
+              <span class="mono">CHANNEL CATEGORIES</span>
+              <button class="btn" id="resetCategory" type="button">全部</button>
+            </div>
+            <div class="category-list" id="categoryList"></div>
+          </aside>
+          <div class="method-area">
+            <div class="toolbar">
+              <div class="selected-category" id="selectedCategory"></div>
+              <input class="search" id="searchInput" placeholder="在当前分类内搜索渠道、动作、平台、用户类型..." />
+            </div>
+            <div class="method-list" id="methodList"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="segments">
+        <div class="section-head">
+          <div>
+            <div class="kicker">03 / Segment Routing</div>
+            <h2>不同用户类型，<br>优先渠道不一样。</h2>
+          </div>
+          <p class="desc">渠道库不是平均使用。你找的是 C 端、自由职业者、小老板、B 端、专业人士，入口会完全不同。</p>
+        </div>
+        <table class="type-table">
+          <thead><tr><th>目标用户</th><th>优先渠道</th></tr></thead>
+          <tbody>
+            <tr><td><strong>个人用户 / C 端用户</strong></td><td>小红书、抖音、知乎、B站、豆瓣、公众号留言、朋友圈、熟人转介绍、课程群、求助帖、免费诊断、自测工具。</td></tr>
+            <tr><td><strong>自由职业者 / 一人公司 / 知识服务者</strong></td><td>朋友圈、公众号、即刻、知识星球、创业群、副业群、AI 工具群、创作者评论区、课程学员群、同行介绍。</td></tr>
+            <tr><td><strong>小老板 / 本地商家</strong></td><td>本地朋友转介绍、商会协会、园区活动、门店拜访、地图搜索、大众点评、本地生活平台、本地社群、服务商合作。</td></tr>
+            <tr><td><strong>B 端企业客户</strong></td><td>招聘 JD、工商信息、行业活动、展会、产业园、孵化器、销售/BD/服务商转介绍、招投标采购、脉脉、行业媒体。</td></tr>
+            <tr><td><strong>专业人士</strong></td><td>专业社群、行业协会、课程/认证机构、公众号、播客、论坛、领英、脉脉、知乎、行业会议、线下沙龙。</td></tr>
+            <tr><td><strong>高付费意愿用户</strong></td><td>已买竞品/课程/咨询的人、正在求推荐服务商的人、付费社群成员、线下训练营参与者、已发出采购/招聘/外包需求的人。</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="section" id="priority">
+        <div class="section-head">
+          <div>
+            <div class="kicker">04 / Priority Score</div>
+            <h2>不要谁来都接，<br>每个渠道先打分。</h2>
+          </div>
+          <p class="desc">前期找用户的核心不是“穷尽所有渠道”，而是优先做总分更高、更容易出真实反馈的渠道。</p>
+        </div>
+        <div class="grid grid-2">
+          <table class="priority-table">
+            <thead><tr><th>维度</th><th>判断问题</th><th>分数</th></tr></thead>
+            <tbody>
+              <tr><td><strong>用户密度</strong></td><td>这个渠道里目标用户多不多？</td><td>0-5</td></tr>
+              <tr><td><strong>痛点强度</strong></td><td>这里的人是否正在暴露真实问题？</td><td>0-5</td></tr>
+              <tr><td><strong>信任成本</strong></td><td>触达到对方是否容易建立信任？</td><td>0-5</td></tr>
+              <tr><td><strong>触达难度</strong></td><td>能否低成本私聊、介绍或邀约？</td><td>0-5</td></tr>
+              <tr><td><strong>样本价值</strong></td><td>是否容易筛出共创/付费/案例用户？</td><td>0-5</td></tr>
+            </tbody>
+          </table>
+          <div class="card">
+            <span class="chip">建议排序</span>
+            <div class="score-band">
+              <div class="score-item"><b>20+</b><span class="muted">立刻行动</span></div>
+              <div class="score-item"><b>15-20</b><span class="muted">第二批渠道</span></div>
+              <div class="score-item"><b>10-15</b><span class="muted">有空尝试</span></div>
+              <div class="score-item"><b>&lt;10</b><span class="muted">暂时不做</span></div>
+            </div>
+            <p class="muted" style="margin-top:18px">优先选择低信任成本、已暴露强需求、能快速约聊的渠道。前期不要把大量时间花在“看起来覆盖面大、但没有真实反馈”的地方。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="week">
+        <div class="section-head">
+          <div>
+            <div class="kicker">05 / 7-Day Sprint</div>
+            <h2>一周爆炸式找用户执行法。</h2>
+          </div>
+          <p class="desc">这不是营销 Campaign，而是产品打磨前的线索实验。每天都要有渠道、触达人数、预期结果和复盘指标。</p>
+        </div>
+        <div class="week" id="weekPlan"></div>
+      </section>
+
+      <section class="section" id="scripts">
+        <div class="section-head">
+          <div>
+            <div class="kicker">06 / Outreach Scripts</div>
+            <h2>触达要低压力，<br>不要一上来销售。</h2>
+          </div>
+          <p class="desc">更好的顺序是：我为什么找你、我观察到什么问题、我在打磨什么、不是推销、我能先给什么价值、如果适合再继续。</p>
+        </div>
+        <div class="copy-grid">
+          <div class="card copy-box">
+            <div class="control-row"><span class="chip">通用话术</span><button class="btn copy-btn" data-copy="general">复制</button></div>
+            <div class="copy-content" id="copy-general"></div>
+          </div>
+          <div class="card copy-box">
+            <div class="control-row"><span class="chip">转介绍话术</span><button class="btn copy-btn" data-copy="intro">复制</button></div>
+            <div class="copy-content" id="copy-intro"></div>
+          </div>
+          <div class="card copy-box">
+            <div class="control-row"><span class="chip">评论区切入</span><button class="btn copy-btn" data-copy="comment">复制</button></div>
+            <div class="copy-content" id="copy-comment"></div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:14px">
+          <div class="control-row" style="justify-content:space-between"><span class="chip">AI 渠道地图提示词</span><button class="btn copy-btn" data-copy="ai">复制</button></div>
+          <div class="copy-content" id="copy-ai" style="margin-top:14px; min-height:180px"></div>
+        </div>
+      </section>
+
+      <section class="section" id="boundary">
+        <div class="section-head">
+          <div>
+            <div class="kicker">07 / Compliance Boundary</div>
+            <h2>穷尽合法合规手段，<br>不是骚扰、欺骗或侵犯隐私。</h2>
+          </div>
+        </div>
+        <div class="matrix">
+          <div class="card">
+            <span class="chip">底线</span>
+            <div class="do-list">
+              <div class="do-item"><span class="mark"></span><span>不违法，不盗取隐私数据，不假冒他人身份造成损害。</span></div>
+              <div class="do-item"><span class="mark"></span><span>不恶意挖墙脚，不破坏社群规则，不过度消耗别人时间。</span></div>
+              <div class="do-item"><span class="mark"></span><span>不承诺自己做不到的结果，不把早期共创包装成成熟交付。</span></div>
+            </div>
+          </div>
+          <div class="card">
+            <span class="chip">可以做</span>
+            <div class="do-list">
+              <div class="do-item"><span class="mark"></span><span>明牌请教，观察公开评论，通过朋友介绍，合规加入社群。</span></div>
+              <div class="do-item"><span class="mark"></span><span>体验公开产品，做公开场景访谈，用免费诊断换反馈。</span></div>
+              <div class="do-item"><span class="mark"></span><span>用低价共创换案例和复盘，让对方即使不合作也觉得有收获。</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="sentence" style="margin-top:14px"><strong>最终心法：</strong>前期用户不是靠一个渠道“找出来”的，而是靠一套渠道武器库“挖出来”的。从一个朋友、一个用户、一个社群、一个竞品、一个问题、一个关键词、一个案例、一次访谈，逐层挖出下一轮线索。</div>
+        <div class="final-cta">
+          <div>
+            <span class="chip">还不知道怎么开始？</span>
+            <h3 style="margin-top:12px">把你的当前情况填进输入模板，让 AI 按这套渠道库给你排优先级。</h3>
+            <p class="muted">它会帮你判断先做私域、转介绍、社群、问题暴露区，还是该从竞品、关键词、连接者或线下渠道切入。</p>
+          </div>
+          <a class="btn primary" href="#ai-advisor">去使用 AI 渠道顾问</a>
+        </div>
+      </section>
+
+      <section class="section" id="ai-advisor">
+        <div class="section-head">
+          <div>
+            <div class="kicker">AI / Channel Advisor</div>
+            <h2>还是不知道从哪找？<br>在这里直接问 AI。</h2>
+          </div>
+          <p class="desc">这是页面最底部的 AI 对话入口。用户必须先加微信获取密钥，输入密钥解锁后，才能调用背后的模型拿到渠道优先级和执行建议。</p>
+        </div>
+        <div class="hero-advisor-card">
+          <div>
+            <span class="chip">AI 渠道顾问</span>
+            <h3>不知道从哪个渠道开始？直接把你的情况交给 AI 分析。</h3>
+            <p>先按下面说明加微信获取密钥。解锁后，AI 会基于这套渠道库给你渠道排序、触达动作和 7 天执行建议。</p>
+          </div>
+          <a class="btn primary" href="#advisor-key">先获取密钥</a>
+        </div>
+        <div class="advisor-gate">
+          <div class="card">
+            <span class="chip">STEP 01 / 加微信</span>
+            <h3 style="margin-top:12px">先加我微信 <span class="accent">qiaoboose01</span></h3>
+            <p class="muted">添加时请备注：<strong class="accent">【潜在客户AI武器】</strong>。我会在微信上发你使用密钥。</p>
+          </div>
+          <div class="key-panel" id="advisor-key">
+            <div>
+              <span class="chip">STEP 02 / 输入密钥</span>
+              <p class="muted" style="margin-top:8px"><strong id="advisorWechatLabel" class="accent">微信：qiaoboose01｜备注：【潜在客户AI武器】</strong></p>
+              <p class="danger-note">这里输入我微信上发你的密钥，才可以使用渠道顾问。</p>
+            </div>
+            <div class="key-row">
+              <input class="key-input" id="advisorAccessKey" type="password" placeholder="输入微信上发你的密钥" autocomplete="off" />
+              <button class="btn primary compact" id="unlockAdvisorKey" type="button">解锁</button>
+            </div>
+            <div class="key-status" id="advisorKeyStatus">未解锁。请输入从微信获取的密钥。</div>
+          </div>
+        </div>
+        <div class="advisor-entry">
+          <div>
+            <span class="chip">STEP 03 / 填写情况并对话</span>
+            <p>解锁后，再填写你的目标用户、已有基础、卡点、资源和边界。AI 会按 P0-P3 的渠道优先级给出行动方案。</p>
+          </div>
+          <button class="btn primary compact advisor-locked-control" id="fillAdvisorExample" type="button">填入示例</button>
+        </div>
+        <div class="advisor-grid" style="margin-top:14px">
+          <div class="card">
+            <div class="advisor-form">
+              <div class="field">
+                <label for="advisorUser">1. 你现在要找哪类人？</label>
+                <textarea id="advisorUser" placeholder="例：我想找已经有产品/服务，但获客和转化不稳定的一人公司主理人。"></textarea>
+              </div>
+              <div class="field">
+                <label for="advisorBase">2. 他们已经有什么基础？</label>
+                <textarea id="advisorBase" placeholder="例：已经有内容账号、服务雏形、少量客户或社群，但还没有稳定成交路径。"></textarea>
+              </div>
+              <div class="field">
+                <label for="advisorPain">3. 他们现在具体卡在哪里？</label>
+                <textarea id="advisorPain" placeholder="例：不知道怎么找到第一批愿意访谈/共创的人，也不知道哪些渠道优先级最高。"></textarea>
+              </div>
+              <div class="field">
+                <label for="advisorGoal">4. 你想先验证什么结果？</label>
+                <textarea id="advisorGoal" placeholder="例：7 天内找到 5 个访谈对象，筛出 1-2 个愿意共创的用户。"></textarea>
+              </div>
+              <div class="field">
+                <label for="advisorResources">5. 你现在手上有哪些资源？</label>
+                <textarea id="advisorResources" placeholder="例：微信好友 1000 人、朋友圈有互动、参加过几个课程群、能写公众号和小红书。"></textarea>
+              </div>
+              <div class="field">
+                <label for="advisorConstraints">6. 有什么限制或边界？</label>
+                <textarea id="advisorConstraints" placeholder="例：不想群发骚扰，不想做强销售，希望先用免费诊断/访谈切入。"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="card advisor-output">
+            <div class="control-row" style="justify-content:space-between">
+              <span class="chip">渠道顾问对话</span>
+              <div class="control-row">
+                <button class="btn compact" id="clearAdvisorChat" type="button">清空</button>
+                <button class="btn primary compact" id="startAdvisorChat" type="button">开始分析</button>
+              </div>
+            </div>
+            <div class="chat-window" id="advisorChat">
+              <div class="chat-message system">我会用这套“前期找潜在客户渠道库”方法论，帮你判断先从哪些渠道开始、怎么触达、7 天内怎么执行。请先输入密钥解锁，再填写左侧模板并点击“开始分析”。</div>
+            </div>
+            <div class="chat-composer">
+              <textarea id="advisorFollowup" placeholder="继续追问：比如，我只有微信好友和两个课程群，今天应该先做哪 3 件事？"></textarea>
+              <button class="btn primary" id="sendAdvisorFollowup" type="button">发送</button>
+            </div>
+            <p class="model-note">模型接口可在页面脚本里调整：默认请求 <span class="mono">/api/channel-advisor</span>，请求体会携带 <span class="mono">accessKey</span> 供后端校验。</p>
+          </div>
+        </div>
+      </section>
+
+      <div class="footer">Based on 乔不不斯品牌设计系统 · Dark grid / cyan key path / tool-like knowledge interface.</div>
+    </main>
+  </div>
+
+  <script>
+    const modules = [
+      { id: 1, order: 1, priority: "P0", cycle: "当天开始", name: "私域关系链", question: "我身边已经能触达到谁？", fit: "低预期、低信任成本用户", reason: "信任成本最低，今天就能搜索、私聊、回访，适合先拿第一批真实反馈。" },
+      { id: 2, order: 2, priority: "P0", cycle: "当天开始", name: "二度转介绍", question: "谁认识我的目标用户？", fit: "高信任入口用户", reason: "借助已有关系放大触达，通常比陌生触达更快建立信任。" },
+      { id: 3, order: 3, priority: "P1", cycle: "1-3 天", name: "社群和圈层", question: "目标用户聚在哪里？", fit: "同类问题集中用户", reason: "需要一点观察和上下文，但用户密度高，适合快速扩展样本。" },
+      { id: 4, order: 4, priority: "P1", cycle: "1-3 天", name: "问题暴露区", question: "用户在哪里主动暴露痛点？", fit: "痛点明确用户", reason: "用户已经在求助、吐槽或追问，需求信号强，适合定向私聊。" },
+      { id: 5, order: 5, priority: "P1", cycle: "1-3 天", name: "竞品和替代方案用户池", question: "谁已经在为类似问题行动或付费？", fit: "高意愿用户", reason: "这类人已经行动或付费，意愿强，但需要注意边界和合规。" },
+      { id: 6, order: 6, priority: "P2", cycle: "3-7 天", name: "平台搜索和关键词挖掘", question: "用户用什么词表达问题？", fit: "可批量触达用户", reason: "需要先拆词、跨平台搜索和记录，适合把零散线索变成批量线索池。" },
+      { id: 7, order: 7, priority: "P2", cycle: "3-7 天", name: "行业连接者", question: "谁手里有大量目标用户？", fit: "转介绍和批量线索", reason: "连接者能打开新线索池，但通常需要预约、访谈和交换价值。" },
+      { id: 10, order: 8, priority: "P2", cycle: "3-7 天", name: "内容和活动阵地", question: "哪些内容/活动吸引目标用户？", fit: "兴趣和需求明确用户", reason: "需要准备诊断表、答疑局、文章或活动，周期比直接私聊更长。" },
+      { id: 8, order: 9, priority: "P3", cycle: "1-2 周", name: "交易现场", question: "用户在哪里花钱、询价、下单？", fit: "付费意愿强用户", reason: "付费信号强，但需要更系统地观察交易、评价、采购和咨询入口。" },
+      { id: 11, order: 10, priority: "P3", cycle: "1-2 周", name: "数据库和公开信息", question: "哪些公开信息能定位用户？", fit: "组织型、B 端、行业用户", reason: "适合 B 端和组织型客户，需要检索、筛选、建表和进一步触达。" },
+      { id: 9, order: 11, priority: "P3", cycle: "2 周以上", name: "线下现场", question: "用户真实出现在哪里？", fit: "真实场景用户", reason: "观察质量高，但涉及出行、活动、蹲点和现场沟通，使用周期更长。" },
+      { id: 12, order: 12, priority: "P3", cycle: "持续迭代", name: "AI 扩展和自动化", question: "如何把一个线索扩成一张网？", fit: "批量渠道和触达策略", reason: "更适合作为后续放大器：当你已有样本、关键词和线索后，用 AI 做扩展、评分和计划。" }
+    ];
+
+    const methods = [
+      [1,1,"微信通讯录关键词搜索","搜索身份词、行业词、问题词、场景词，把联系人分成用户、介绍人、专家。","微信 私域 关键词"],
+      [2,1,"微信聊天记录反查","搜索过去聊天记录，看谁曾经提过相关问题、问过建议或吐槽过卡点。","微信 私域 痛点"],
+      [3,1,"微信标签/备注翻找","翻标签、备注、分组，找你曾经认识但已经忘记的行业和身份相关人。","微信 私域"],
+      [4,1,"朋友圈互动名单","看 30-90 天点赞、评论、私信你的人，优先找已有弱信任的人。","朋友圈 弱关系"],
+      [5,1,"朋友圈轻招募","连续 3 天从不同角度发轻招募：找谁、为什么找、低门槛怎么聊。","朋友圈 招募"],
+      [6,1,"朋友圈评论区二次挖掘","不只看私信，也主动私聊点赞和评论的人，判断他是自己感兴趣还是身边有人。","朋友圈 私聊"],
+      [7,1,"老客户/旧合作对象回访","联系过去合作过、咨询过、成交过、没成交过的人，快速获得反馈。","回访 旧关系"],
+      [8,1,"曾经被你帮助过的人","翻过去你做过免费咨询、给过建议、帮过忙的人，找愿意回馈的样本。","信任 反馈"],
+      [9,1,"已有内容读者/关注者","从公众号、小红书、视频号、朋友圈长文的评论、私信、收藏、转发里找人。","内容 私域"],
+      [10,1,"自己所在组织的弱关系","前同事、同学、校友、项目伙伴、课程同学不一定是用户，但可能认识用户。","组织 弱关系"],
+      [11,2,"20 人转介绍名单","列出 20 个最可能帮你介绍人的朋友，优先找连接力强的人。","转介绍 朋友"],
+      [12,2,"转介绍请求私聊","不要说介绍客户，而是说找真实用户访谈、免费诊断、听真实问题。","转介绍 话术"],
+      [13,2,"让朋友帮你发朋友圈","给朋友一段可直接转发的话术，让他覆盖你触达不到的用户。","朋友圈 转发"],
+      [14,2,"让朋友帮你发群","请朋友发到行业群、课程群、老板群，话术要低压力。","社群 转介绍"],
+      [15,2,"转介绍链追问","每聊到一个人，都追问他身边还有没有 1-2 个类似情况的人。","滚雪球"],
+      [16,2,"介绍人激励","用诊断、行业观察、介绍费、资源互换等方式给介绍人轻激励。","激励"],
+      [17,2,"关键连接者访谈","访谈顾问、销售、社群主、服务商等，理解用户在哪里、谁更愿意付费。","连接者 访谈"],
+      [18,3,"课程群/训练营群","翻过去参加过的课程群，找已经为学习付费、愿意行动的人。","课程群 付费"],
+      [19,3,"行业群","通过朋友、活动、公众号社群、知识付费课程进入垂直行业群。","行业群"],
+      [20,3,"创业群/副业群/一人公司群","观察谁在提具体问题，而不是谁在喊口号。","创业 一人公司"],
+      [21,3,"城市本地群","本地创业群、商会群、妈妈群、小区群适合本地服务和门店用户。","本地 社群"],
+      [22,3,"专业身份群","律师、医生、设计师、咨询顾问、教练、老师、产品、运营、销售等。","专业人士"],
+      [23,3,"工具用户群","Notion、飞书、AI 工具、CRM、自动化工具群里有明确工作流需求。","工具群 AI"],
+      [24,3,"竞品用户群","合规加入竞品或替代方案用户群，观察问题、活跃用户和未满足需求。","竞品 社群"],
+      [25,3,"社群内定向私聊","找到发过相关问题的人，用具体上下文切入私聊。","社群 私聊"],
+      [26,3,"社群轻招募","在熟悉群里说明你在打磨什么、找什么人、对方能得到什么。","社群 招募"],
+      [27,3,"社群群主合作","给群里做免费诊断、分享或小范围答疑，把找用户变成给社群提供价值。","群主 合作"],
+      [28,4,"知乎问题和回答区","搜索怎么解决、有没有用、怎么办、为什么做不到，找提问者和评论者。","知乎 问答"],
+      [29,4,"小红书搜索和评论区","重点看求助帖、避坑帖、复盘帖、评论追问和蹲后续的人。","小红书 评论"],
+      [30,4,"抖音/视频号评论区","找问价格、问怎么做、求推荐、求带、说我也是的人。","短视频 评论"],
+      [31,4,"B 站评论区和弹幕","适合学习型、技术型、工具型、深度内容用户。","B站 学习"],
+      [32,4,"豆瓣小组","适合职场、副业、心理、生活方式、城市、本地、兴趣和消费类用户。","豆瓣 小组"],
+      [33,4,"贴吧/论坛/垂直社区","适合垂直兴趣、硬件、车、母婴、装修、疾病、考试、技术用户。","论坛 社区"],
+      [34,4,"公众号留言区","看目标用户相关公众号的留言区，找提问、共鸣和求资源的人。","公众号 留言"],
+      [35,4,"问答平台和知识社区","知乎、即刻、少数派、V2EX、掘金、雪球、脉脉等对应不同用户层次。","知识社区"],
+      [36,4,"投诉和差评区","黑猫投诉、电商差评、App Store、大众点评、小红书避坑帖暴露强需求。","差评 投诉"],
+      [37,4,"求助帖和悬赏帖","搜索求助、求推荐、求靠谱、有没有人、怎么选、避坑等关键词。","求助 悬赏"],
+      [38,5,"竞品评论区","看谁在提问、抱怨、求购买链接、说自己也遇到问题。","竞品 评论"],
+      [39,5,"竞品用户社群","理解用户为什么加入、什么没解决、哪些用户意愿更高。","竞品 社群"],
+      [40,5,"竞品课程/训练营学员","买过类似课程的人通常已有付费意愿，可从群、作业区、案例中找线索。","竞品 课程"],
+      [41,5,"替代方案用户","用 Excel、找兼职、买模板、加训练营、请顾问的人都在用替代方案。","替代方案"],
+      [42,5,"竞品差评用户","重点理解不满意原因、预期问题、产品问题和可能的更好方案。","差评 竞品"],
+      [43,5,"竞品成功案例里的同类用户","看竞品服务过谁，再反推还有哪些类似用户有同样需求。","案例 反推"],
+      [44,5,"竞品销售入口","合规体验竞品销售流程，了解承接、用户问题、强调价值和服务边界。","销售流程"],
+      [45,6,"关键词联想","拆出身份词、场景词、痛点词、行为词、结果词、失败词、求助词、付费词。","关键词"],
+      [46,6,"搜索引擎高级搜索","组合搜索目标用户 + 痛点、求助、怎么办、课程、咨询、社群、避坑。","搜索引擎"],
+      [47,6,"平台内搜索","在小红书、抖音、知乎、B站、公众号、即刻、豆瓣等搜同一组词。","平台搜索"],
+      [48,6,"搜“我也是”场景","评论区的我也是、太真实、蹲方案、求推荐、求带都是弱线索。","评论 弱线索"],
+      [49,6,"搜“失败复盘”","搜索失败了、复盘、踩坑、避坑，找到高质量用户和真实痛点。","复盘"],
+      [50,6,"搜“招募/合作/找人”","找合伙人、找顾问、招募共创、寻求合作、内测用户，说明对方主动找资源。","合作 招募"],
+      [51,7,"服务商","设计、开发、营销、咨询、财税、法务等经常听到客户真实需求。","服务商"],
+      [52,7,"销售/BD","销售最知道客户在哪里、怎么决策、为什么不买。","销售 BD"],
+      [53,7,"社群主理人/群主","群主知道谁活跃、谁有问题、谁愿意付费。","群主"],
+      [54,7,"课程老师/助教/班委","他们知道哪些学员卡住、行动力强、适合共创。","课程 助教"],
+      [55,7,"行业媒体/公众号作者","长期接触读者和案例，知道行业里哪些人有代表性。","媒体 作者"],
+      [56,7,"投资人/FA/孵化器/创业园区","适合找创业者、B 端、项目型用户。","投资 孵化器"],
+      [57,7,"本地资源中介","商会、园区负责人、招商人员、门店服务商适合本地老板。","本地 资源"],
+      [58,7,"HR/猎头","适合职业转型、组织效率、岗位工具、B 端流程、人才相关问题。","HR 猎头"],
+      [59,7,"行业专家","专家可以判断哪类人最痛、最易付费、哪些渠道有效、哪些用户不要碰。","专家"],
+      [60,7,"合作方联合招募","和连接者共创免费诊断、小活动或闭门交流，让对方帮你触达用户。","联合招募"],
+      [61,8,"电商评论和问大家","看用户为什么买、买前问什么、买后不满什么、复购原因是什么。","电商 评论"],
+      [62,8,"闲鱼/二手交易","卖掉课程、设备、工具时会暴露购买动机、弃用原因和真实使用成本。","闲鱼 二手"],
+      [63,8,"团购/本地生活平台","本地服务、门店、教育、医美、家政、餐饮可看评价和用户抱怨。","团购 本地"],
+      [64,8,"招投标/采购平台","ToB/ToG 可看谁在采购、采购什么、预算多少、服务商是谁。","招投标 采购"],
+      [65,8,"招聘平台","招聘 JD 能反向说明企业正在投入解决什么组织问题。","招聘 JD"],
+      [66,8,"众包/外包平台","看用户发布什么需求、预算多少、描述怎么写。","外包 众包"],
+      [67,8,"付费社群/课程/训练营","已经付费学习的人往往更接近种子用户。","付费社群"],
+      [68,8,"线索表单/咨询入口体验","合规体验竞品或替代方案咨询入口，反推用户画像和承接逻辑。","表单 咨询"],
+      [69,9,"用户工作现场","到门店、办公室、园区、学校、机构、工厂等观察真实流程。","线下 观察"],
+      [70,9,"行业活动/沙龙/展会","会后加人、问问题、换名片，比只听会更重要。","活动 展会"],
+      [71,9,"本地商会/协会","适合找老板、实体店、B 端、本地服务用户。","商会 协会"],
+      [72,9,"门店蹲点","看用户什么时候来、问什么、犹豫什么、为什么买或不买。","门店"],
+      [73,9,"线下课程/训练营/工作坊","用户已投入时间和钱，需求通常更强。","线下课程"],
+      [74,9,"共享办公/创业园/孵化器","适合创业者、自由职业者、小团队、B 端项目。","创业园"],
+      [75,9,"高密度生活场景","咖啡馆、健身房、亲子中心、书店、社区活动、医院、学校周边等。","生活场景"],
+      [76,10,"主题分享会","围绕用户问题做小范围分享，报名者就是潜在线索。","分享会"],
+      [77,10,"免费答疑局","设置 5-10 个名额，找问题明确、愿意表达的人。","答疑"],
+      [78,10,"诊断表/自测工具","让用户填写后获得简单反馈，批量识别阶段、痛点、付费意愿。","诊断 自测"],
+      [79,10,"公开征集案例","找 3 个真实案例做深度拆解或共创，并给诊断建议。","案例征集"],
+      [80,10,"主题文章下招募","写针对具体问题的文章，结尾用温和 CTA 招募访谈或诊断。","文章 CTA"],
+      [81,10,"直播/连麦答疑","让用户在直播间提问，提问者就是潜在用户。","直播"],
+      [82,10,"线上圆桌/闭门讨论","邀请 5-8 个相似用户聊同一个问题，一次看到差异和共性。","圆桌"],
+      [83,11,"工商信息平台","天眼查、企查查、爱企查找行业公司、新注册公司、融资公司等。","工商"],
+      [84,11,"招聘信息","一家公司在招某类岗位，说明它正在投入解决某类问题。","招聘"],
+      [85,11,"招投标和中标信息","适合政府、企业采购、B 端服务需求。","中标"],
+      [86,11,"行业榜单和协会名单","榜单、会员名单、获奖名单、参展名单本身就是线索池。","榜单 协会"],
+      [87,11,"小程序/网站/店铺目录","行业公开商家目录、机构目录、黄页、地图列表。","目录"],
+      [88,11,"地图搜索","用高德/百度地图搜索某类门店、机构、公司。","地图"],
+      [89,11,"公众号/视频号主体信息","找到目标行业账号主体、运营者、评论用户、合作方。","主体信息"],
+      [90,11,"专利/论文/标准/政策文件","定位技术、医疗、教育、产业、ToB 场景中的专家、机构和企业。","公开文件"],
+      [91,12,"AI 渠道地图生成","让 AI 按 12 个模块列出渠道、动作、话术、线索质量、信任成本和优先级。","AI 地图"],
+      [92,12,"AI 关键词爆炸","让 AI 把目标用户和问题拆成 100 个搜索关键词。","AI 关键词"],
+      [93,12,"AI 平台搜索策略","针对具体平台生成搜索词、高价值帖子特征、评论识别和私信话术。","AI 搜索"],
+      [94,12,"AI 转介绍名单生成","列出 30 类可能帮你转介绍的人，并写低压力请求话术。","AI 转介绍"],
+      [95,12,"AI 线索评分","按问题真实性、基础条件、结果可控性、配合度、信任基础、付费可能等评分。","AI 评分"],
+      [96,12,"AI 触达话术个性化","根据线索背景生成自然版、专业版、朋友介绍版微信私聊话术。","AI 话术"],
+      [97,12,"AI 从一个样本扩展相似人群","根据高价值样本反推出 20 类相似用户和他们出现的渠道。","AI 扩展"],
+      [98,12,"AI 生成一周行动计划","基于目标用户和当前资源，生成 7 天渠道、触达人数、话术和复盘指标。","AI 计划"]
+    ].map(([no,module,title,desc,tags]) => ({ no, module, title, desc, tags: tags.split(" ") }));
+
+    const weekPlan = [
+      ["DAY 1", "定义用户 + 关键词 + 渠道地图", "产出画像、50-100 个关键词、30 个渠道、20 人转介绍名单。"],
+      ["DAY 2", "私域和转介绍", "私聊 20 个熟人/潜在线索，请 10 个朋友转介绍，发朋友圈轻招募。"],
+      ["DAY 3", "社群和课程群", "找 5-10 个相关群，群内轻招募或定向私聊，记录所有回应。"],
+      ["DAY 4", "问题暴露区搜索", "在 3-5 个平台搜索关键词，找 30 个高价值帖子，私信 10 人。"],
+      ["DAY 5", "连接者和服务商", "联系 10 个行业连接者，请求介绍目标用户，约 1-2 个连接者访谈。"],
+      ["DAY 6", "访谈和诊断", "约 3-5 场访谈，做 1-2 次免费诊断，用评分表筛共创用户。"],
+      ["DAY 7", "复盘和第二轮扩展", "复盘有效渠道，从访谈对象追问转介绍，用 AI 反推相似用户。"]
+    ];
+
+    const copy = {
+      general: "我最近在打磨一个早期产品/服务，主要想帮【目标用户】解决【具体问题】。看到你可能也在这个场景里，所以想请教你一下：你现在有没有遇到类似问题？\n\n我不是上来推销，现阶段主要想找真实用户聊聊，也可以顺手帮你做一次简单诊断，给你几条具体建议。如果你觉得有价值，我们再看后续是否适合继续。",
+      intro: "我最近在找几位【目标用户】做早期访谈/共创，不是上来卖服务，而是先做诊断、听真实问题、跑一个小周期。你身边有没有这样的人？如果有，能不能帮我介绍一下？我会先免费聊聊，不会给对方压力。",
+      comment: "我看到你刚刚提到【具体问题】，这个点我最近也在研究。方便问下你现在具体卡在哪一步吗？如果你愿意，我可以帮你简单看一下，也想听听你的真实场景。",
+      ai: "我现在要找【目标用户】，他们有【具体问题】，我希望找到【访谈/共创/付费试点】样本。请按 12 个模块帮我列出可能渠道：私域关系链、二度转介绍、社群圈层、问题暴露区、竞品用户池、平台关键词、行业连接者、交易现场、线下现场、内容活动、数据库公开信息、AI 自动化。\n\n每个渠道给出：具体动作、触达话术、预期线索质量、信任成本、优先级。"
+    };
+
+    const advisorConfig = window.CHANNEL_ADVISOR_CONFIG || {
+      endpoint: "/api/channel-advisor",
+      model: "channel-advisor",
+      temperature: 0.4,
+      wechatLabel: "微信：qiaoboose01｜备注：【潜在客户AI武器】"
+    };
+
+    const advisorMessages = [];
+    let advisorAccessKey = sessionStorage.getItem("channelAdvisorAccessKey") || "";
+
+    let activeModule = "all";
+
+    function pad(n) { return String(n).padStart(2, "0"); }
+    function moduleName(id) { return modules.find(m => m.id === id)?.name || ""; }
+
+    function renderModules() {
+      const map = document.getElementById("moduleMap");
+      map.innerHTML = modules.map(m => `
+        <button class="map-card" data-module="${m.id}">
+          <div>
+            <div class="num mono">${pad(m.order)} / ${m.priority}</div>
+            <h3>${m.name}</h3>
+            <p>${m.question}</p>
+          </div>
+          <div class="fit">${m.cycle} · ${m.fit}</div>
+        </button>
+      `).join("");
+      map.querySelectorAll(".map-card").forEach(card => {
+        card.addEventListener("click", () => {
+          activeModule = Number(card.dataset.module);
+          document.getElementById("searchInput").value = "";
+          document.getElementById("library").scrollIntoView({ behavior: "smooth" });
+          renderCategories();
+          renderMethods();
+        });
+      });
+    }
+
+    function methodCount(moduleId) {
+      return methods.filter(item => item.module === moduleId).length;
+    }
+
+    function activeModuleData() {
+      if (activeModule === "all") {
+        return {
+          id: "ALL",
+          name: "全部渠道方法",
+          question: "从 12 个渠道模块里总览所有找前期用户的方法。栏目已按推荐使用优先级排序。",
+          fit: "优先级总览",
+          priority: "ALL",
+          cycle: "从当天到持续迭代",
+          reason: "建议先做 P0，再做 P1/P2，最后把 P3 当成长期线索建设和放大机制。",
+          count: methods.length
+        };
+      }
+      const module = modules.find(m => m.id === activeModule);
+      return { ...module, count: methodCount(module.id) };
+    }
+
+    function renderCategories() {
+      const list = document.getElementById("categoryList");
+      list.innerHTML = modules.map(m => `
+        <button class="category-tab ${activeModule === m.id ? "active" : ""}" data-module="${m.id}">
+          <div>
+            <div class="cat-no">${pad(m.order)}</div>
+            <span class="cat-priority">${m.priority}</span>
+          </div>
+          <div>
+            <strong>${m.name}</strong>
+            <span>${m.cycle}</span>
+          </div>
+          <div class="category-count">${methodCount(m.id)}</div>
+        </button>
+      `).join("");
+      list.querySelectorAll(".category-tab").forEach(btn => {
+        btn.addEventListener("click", () => {
+          activeModule = Number(btn.dataset.module);
+          document.getElementById("searchInput").value = "";
+          renderCategories();
+          renderMethods();
+        });
+      });
+      const selected = activeModuleData();
+      document.getElementById("selectedCategory").innerHTML = `
+        <div>
+          <span class="chip">${selected.id === "ALL" ? "ALL · 优先级总览" : `${pad(selected.order)} · ${selected.priority}`} · ${selected.cycle}</span>
+          <h3>${selected.name}</h3>
+          <p>${selected.question}</p>
+          <p style="margin-top:8px">${selected.reason}</p>
+        </div>
+        <div class="selected-stat">
+          <b>${selected.count}</b>
+          <span>种方法</span>
+        </div>
+      `;
+      document.querySelectorAll(".map-card").forEach(card => {
+        card.classList.toggle("active", activeModule !== "all" && Number(card.dataset.module) === activeModule);
+      });
+    }
+
+    function renderMethods() {
+      const term = document.getElementById("searchInput").value.trim().toLowerCase();
+      const list = document.getElementById("methodList");
+      const filtered = methods.filter(item => {
+        const matchModule = activeModule === "all" || item.module === activeModule;
+        const haystack = `${item.no} ${item.title} ${item.desc} ${item.tags.join(" ")} ${moduleName(item.module)}`.toLowerCase();
+        const matchSearch = !term || haystack.includes(term);
+        return matchModule && matchSearch;
+      });
+      list.innerHTML = filtered.map(item => `
+        <article class="method">
+          <div>
+            <div class="method-head">
+              <span class="method-no">#${pad(item.no)}</span>
+              <span class="mini-tag">${moduleName(item.module)}</span>
+            </div>
+            <h3>${item.title}</h3>
+            <p>${item.desc}</p>
+          </div>
+          <div class="method-tags">${item.tags.map(tag => `<span class="mini-tag">${tag}</span>`).join("")}</div>
+        </article>
+      `).join("") || `<div class="card"><p class="muted">没有匹配结果，换个关键词试试。</p></div>`;
+    }
+
+    function renderWeek() {
+      document.getElementById("weekPlan").innerHTML = weekPlan.map(([day, title, desc]) => `
+        <article class="day">
+          <b>${day}</b>
+          <h3>${title}</h3>
+          <p>${desc}</p>
+        </article>
+      `).join("");
+    }
+
+    function renderCopy() {
+      Object.entries(copy).forEach(([key, value]) => {
+        const el = document.getElementById(`copy-${key}`);
+        if (el) el.textContent = value;
+      });
+      document.querySelectorAll(".copy-btn").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          const text = copy[btn.dataset.copy];
+          try {
+            await navigator.clipboard.writeText(text);
+            const old = btn.textContent;
+            btn.textContent = "已复制";
+            setTimeout(() => btn.textContent = old, 1100);
+          } catch {
+            btn.textContent = "复制失败";
+          }
+        });
+      });
+    }
+
+    function advisorSystemPrompt() {
+      const priorityMap = modules.map(m => `${pad(m.order)}. ${m.name}（${m.priority}，${m.cycle}）：${m.reason}`).join("\n");
+      const methodMap = modules.map(m => {
+        const titles = methods.filter(item => item.module === m.id).map(item => `#${pad(item.no)} ${item.title}`).join("、");
+        return `${m.name}：${titles}`;
+      }).join("\n");
+      return `你是“前期找潜在客户渠道顾问”。你的任务不是泛泛建议获客，而是基于一套前期找潜在客户渠道库，帮助产品/服务尚未稳定的一人公司或早期项目找到访谈样本、共创用户、付费种子用户和案例用户。
+
+核心原则：
+1. 产品未稳定前，不建议一开始重投入公域获客。先找低信任成本、低预期、愿意反馈的人。
+2. 渠道优先级遵循：先近后远、先强需求后泛兴趣、先小入口后大成交、先筛选后服务。
+3. 优先级越靠前，越适合马上做；越靠后，越需要更长周期、更多样本、更多组织动作。
+4. 所有建议必须合规：不骚扰、不假冒、不盗取隐私、不恶意挖墙脚、不破坏社群规则。
+
+渠道优先级：
+${priorityMap}
+
+完整方法库索引：
+${methodMap}
+
+你回复用户时必须输出：
+一、当前判断：用户现在最缺的是访谈样本、共创样本、付费样本还是案例样本。
+二、优先渠道排序：给出 3-5 个最该先做的渠道类型，并解释为什么。
+三、具体执行动作：每个渠道给 2-4 个可执行动作。
+四、触达话术：至少给 2 条低压力话术，避免像销售。
+五、7 天行动计划：每天要做什么、触达多少人、预期结果是什么。
+六、筛选标准：如何判断哪些人值得继续访谈/共创/付费试点。
+七、合规边界：提醒哪些动作不要做。
+
+风格要求：直接、清醒、具体、可执行。不要鸡血，不要泛泛说“多发内容”，不要默认用户该做公域获客。`;
+    }
+
+    function advisorValue(id) {
+      return document.getElementById(id).value.trim();
+    }
+
+    function buildAdvisorUserMessage() {
+      return `请基于前期找潜在客户渠道库，帮我制定找前期用户的渠道优先级和执行建议。
+
+1. 我要找哪类人：
+${advisorValue("advisorUser") || "未填写"}
+
+2. 他们已经有什么基础：
+${advisorValue("advisorBase") || "未填写"}
+
+3. 他们现在具体卡在哪里：
+${advisorValue("advisorPain") || "未填写"}
+
+4. 我想先验证什么结果：
+${advisorValue("advisorGoal") || "未填写"}
+
+5. 我现在手上有哪些资源：
+${advisorValue("advisorResources") || "未填写"}
+
+6. 我的限制或边界：
+${advisorValue("advisorConstraints") || "未填写"}
+
+请按你的固定输出结构回复，并且明确告诉我：今天先做哪 3 件事。`;
+    }
+
+    function appendChatMessage(role, text) {
+      const chat = document.getElementById("advisorChat");
+      const node = document.createElement("div");
+      node.className = `chat-message ${role}`;
+      node.textContent = text;
+      chat.appendChild(node);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function setAdvisorLoading(isLoading) {
+      ["startAdvisorChat", "sendAdvisorFollowup", "fillAdvisorExample"].forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) btn.disabled = isLoading || !advisorAccessKey;
+      });
+    }
+
+    function setAdvisorInputLocked(isLocked) {
+      [
+        "advisorUser",
+        "advisorBase",
+        "advisorPain",
+        "advisorGoal",
+        "advisorResources",
+        "advisorConstraints",
+        "advisorFollowup"
+      ].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.disabled = isLocked;
+      });
+    }
+
+    function updateAdvisorAccessState() {
+      const status = document.getElementById("advisorKeyStatus");
+      const input = document.getElementById("advisorAccessKey");
+      const wechat = document.getElementById("advisorWechatLabel");
+      if (wechat) wechat.textContent = advisorConfig.wechatLabel;
+      if (input && advisorAccessKey) input.value = advisorAccessKey;
+      if (status) {
+        status.textContent = advisorAccessKey ? "已解锁，可以填写下面的输入模板并使用 AI 渠道顾问。" : "未解锁。请先加微信 qiaoboose01，备注【潜在客户AI武器】，再输入微信上发你的密钥。";
+        status.classList.toggle("unlocked", !!advisorAccessKey);
+      }
+      setAdvisorInputLocked(!advisorAccessKey);
+      setAdvisorLoading(false);
+    }
+
+    function extractAdvisorReply(data) {
+      return data?.reply ||
+        data?.message ||
+        data?.choices?.[0]?.message?.content ||
+        data?.choices?.[0]?.text ||
+        "";
+    }
+
+    async function callAdvisorModel(userText) {
+      if (!advisorAccessKey) {
+        appendChatMessage("system", "请先加微信获取密钥，并在上方输入密钥解锁后再使用 AI 渠道顾问。");
+        return;
+      }
+      if (!advisorMessages.length) {
+        advisorMessages.push({ role: "system", content: advisorSystemPrompt() });
+      }
+      advisorMessages.push({ role: "user", content: userText });
+      appendChatMessage("user", userText);
+      const pendingText = "正在按渠道优先级分析...";
+      appendChatMessage("assistant", pendingText);
+      const chat = document.getElementById("advisorChat");
+      const pendingNode = chat.lastElementChild;
+      setAdvisorLoading(true);
+
+      try {
+        const response = await fetch(advisorConfig.endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            model: advisorConfig.model,
+            temperature: advisorConfig.temperature,
+            accessKey: advisorAccessKey,
+            messages: advisorMessages
+          })
+        });
+        if (!response.ok) {
+          throw new Error(`接口返回 ${response.status}`);
+        }
+        const data = await response.json();
+        const reply = extractAdvisorReply(data) || "模型已返回，但没有找到可展示的回复字段。请检查接口响应格式。";
+        pendingNode.textContent = reply;
+        advisorMessages.push({ role: "assistant", content: reply });
+      } catch (error) {
+        pendingNode.textContent = `AI 接口暂时没有连上，或密钥没有通过后端校验。\n\n当前页面已经会把“用户情况 + 渠道库方法论系统上下文 + accessKey”发送到：${advisorConfig.endpoint}\n\n你可以在页面脚本里调整 window.CHANNEL_ADVISOR_CONFIG.endpoint / model / wechatLabel，并让后端校验 accessKey 后返回兼容 { reply } / OpenAI choices 格式的响应。\n\n错误信息：${error.message}`;
+      } finally {
+        setAdvisorLoading(false);
+      }
+    }
+
+    function setupAdvisorChat() {
+      updateAdvisorAccessState();
+      document.getElementById("unlockAdvisorKey").addEventListener("click", () => {
+        const key = document.getElementById("advisorAccessKey").value.trim();
+        if (!key) {
+          advisorAccessKey = "";
+          sessionStorage.removeItem("channelAdvisorAccessKey");
+          updateAdvisorAccessState();
+          appendChatMessage("system", "请输入从微信获取的密钥。");
+          return;
+        }
+        advisorAccessKey = key;
+        sessionStorage.setItem("channelAdvisorAccessKey", advisorAccessKey);
+        updateAdvisorAccessState();
+        appendChatMessage("system", "密钥已解锁。现在可以填写模板并点击“开始分析”。");
+      });
+      document.getElementById("advisorAccessKey").addEventListener("keydown", event => {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          document.getElementById("unlockAdvisorKey").click();
+        }
+      });
+      document.getElementById("fillAdvisorExample").addEventListener("click", () => {
+        document.getElementById("advisorUser").value = "我想找已经有产品/服务，但获客和转化不稳定的一人公司主理人。";
+        document.getElementById("advisorBase").value = "他们通常已经有内容账号、服务雏形、少量客户或社群，但还没有稳定成交路径。";
+        document.getElementById("advisorPain").value = "不知道怎么找到第一批愿意访谈/共创的人，也不知道哪些渠道优先级最高。";
+        document.getElementById("advisorGoal").value = "7 天内找到 5 个访谈对象，筛出 1-2 个愿意共创的用户。";
+        document.getElementById("advisorResources").value = "我有微信好友 1000 人，朋友圈偶尔有互动，参加过几个课程群，可以写公众号和小红书。";
+        document.getElementById("advisorConstraints").value = "不想群发骚扰，不想做强销售，希望先用免费诊断/访谈切入。";
+      });
+      document.getElementById("startAdvisorChat").addEventListener("click", () => {
+        callAdvisorModel(buildAdvisorUserMessage());
+      });
+      document.getElementById("sendAdvisorFollowup").addEventListener("click", () => {
+        const input = document.getElementById("advisorFollowup");
+        const text = input.value.trim();
+        if (!text) return;
+        input.value = "";
+        callAdvisorModel(text);
+      });
+      document.getElementById("clearAdvisorChat").addEventListener("click", () => {
+        advisorMessages.length = 0;
+        document.getElementById("advisorChat").innerHTML = '<div class="chat-message system">我会用这套“前期找潜在客户渠道库”方法论，帮你判断先从哪些渠道开始、怎么触达、7 天内怎么执行。请先输入密钥解锁，再填写左侧模板并点击“开始分析”。</div>';
+      });
+    }
+
+    function setupToc() {
+      const links = Array.from(document.querySelectorAll(".toc a"));
+      const sections = links.map(a => document.querySelector(a.getAttribute("href"))).filter(Boolean);
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          links.forEach(link => link.classList.toggle("active", link.getAttribute("href") === `#${entry.target.id}`));
+        });
+      }, { rootMargin: "-20% 0px -68% 0px" });
+      sections.forEach(section => observer.observe(section));
+    }
+
+    document.getElementById("searchInput").addEventListener("input", renderMethods);
+    document.getElementById("resetCategory").addEventListener("click", () => {
+      activeModule = "all";
+      document.getElementById("searchInput").value = "";
+      renderCategories();
+      renderMethods();
+    });
+    renderModules();
+    renderCategories();
+    renderMethods();
+    renderWeek();
+    renderCopy();
+    setupAdvisorChat();
+    setupToc();
+  </script>
+</body>
+</html>
