@@ -3,18 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Native 一人公司 · 乔不不斯</title>
-<meta name="description" content="乔不不斯的 AI Native 一人公司项目页面，介绍 AI Native 商业模式、项目定位、合作方式与申请入口。">
-<meta name="robots" content="index, follow">
-<link rel="canonical" href="https://zainosl.github.io/qiaobooseai-site/">
-<meta property="og:title" content="AI Native 一人公司 · 乔不不斯">
-<meta property="og:description" content="乔不不斯的 AI Native 一人公司项目页面，介绍 AI Native 商业模式、项目定位、合作方式与申请入口。">
-<meta property="og:url" content="https://zainosl.github.io/qiaobooseai-site/">
-<meta property="og:type" content="website">
+<title id="pageTitle">文章 · AI Native 一人公司 · 乔不不斯</title>
+<meta name="description" content="乔不不斯的 AI Native 一人公司文章。">
+<meta property="og:type" content="article">
 <meta property="og:locale" content="zh_CN">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="AI Native 一人公司 · 乔不不斯">
-<meta name="twitter:description" content="乔不不斯的 AI Native 一人公司项目页面，介绍 AI Native 商业模式、项目定位、合作方式与申请入口。">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap');
 
@@ -394,6 +386,87 @@
     .progress-split { gap: 40px; }
   }
 </style>
+<style>
+  /* ── 文章阅读页（参考 claude.com 文章排版，套用品牌色） ── */
+  .reader-wrap { padding-top: clamp(24px, 4vh, 44px); padding-bottom: clamp(56px, 9vh, 100px); }
+  .reader { width: min(720px, calc(100% - 48px)); margin: 0 auto; }
+
+  /* 侧边悬停目录（claude.com 风格：从正文位置开始，随滚动吸附在顶栏下方） */
+  .toc { position: fixed; top: calc(var(--nav-h) + 40px); left: max(24px, calc((100% - 720px) / 2 - 250px)); width: 220px; z-index: 90; display: none; }
+  .toc.show { display: block; }
+  .toc-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.2em; color: var(--dim); text-transform: uppercase; margin-bottom: 14px; padding-left: 13px; }
+  .toc-list { list-style: none; display: flex; flex-direction: column; gap: 2px; max-height: calc(100vh - var(--nav-h) - 120px); overflow-y: auto; }
+  .toc-item { font-size: 12.5px; line-height: 1.45; color: var(--dim); text-decoration: none; padding: 7px 13px; border-left: 2px solid var(--border); transition: all .2s; display: flex; gap: 9px; }
+  .toc-item:hover { color: var(--muted); border-color: var(--border2); }
+  .toc-item.active { color: var(--accent); border-color: var(--accent); }
+  .toc-item .toc-n { font-family: var(--font-mono); font-size: 11px; opacity: .8; flex-shrink: 0; }
+  /* 锚点偏移，避免被 sticky 顶栏遮挡 */
+  .art-section { scroll-margin-top: calc(var(--nav-h) + 24px); }
+  /* 目录只在足够宽的视口显示（有空间容纳） */
+  @media (max-width: 1240px) { .toc { display: none !important; } }
+
+  /* 面包屑 */
+  .crumb { display: flex; align-items: center; gap: 9px; font-size: 12.5px; color: var(--dim); margin-bottom: 30px; flex-wrap: wrap; }
+  .crumb a { color: var(--muted); text-decoration: none; transition: color .2s; }
+  .crumb a:hover { color: var(--accent); }
+  .crumb .sep { color: var(--dim); }
+  .crumb .cur { color: var(--dim); }
+
+  /* 文章头 */
+  .art-head { margin-bottom: 40px; padding-bottom: 34px; border-bottom: 1px solid var(--border); }
+  .art-cat { display: inline-block; font-size: 11px; font-family: var(--font-mono); color: var(--accent); background: rgba(88,225,193,0.08); border: 1px solid rgba(88,225,193,0.22); padding: 4px 11px; border-radius: 2px; letter-spacing: 0.06em; margin-bottom: 22px; }
+  .art-title { font-size: clamp(30px, 4.4vw, 48px); font-weight: 850; line-height: 1.16; letter-spacing: -0.035em; margin-bottom: 20px; }
+  .art-dek { font-size: clamp(16px, 1.7vw, 19px); color: var(--muted); font-weight: 300; line-height: 1.8; }
+  .art-meta { display: flex; gap: 18px; flex-wrap: wrap; margin-top: 24px; font-family: var(--font-mono); font-size: 12px; color: var(--dim); letter-spacing: 0.04em; }
+  .art-meta span { display: inline-flex; align-items: center; gap: 7px; }
+  .art-meta span::before { content: ''; width: 4px; height: 4px; border-radius: 50%; background: var(--accent); opacity: .7; }
+
+  /* 正文排版 */
+  .art-body { font-size: 17px; line-height: 1.92; color: var(--muted); }
+  .art-body > p { margin: 18px 0; }
+  .art-body strong { color: var(--text); font-weight: 700; }
+  .art-body em { color: var(--accent); font-style: normal; }
+
+  /* 小节标题（带编号） */
+  .art-section { display: flex; align-items: center; gap: 16px; margin: 52px 0 8px; }
+  .art-section .num { flex-shrink: 0; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(88,225,193,0.3); border-radius: 50%; background: rgba(88,225,193,0.07); font-family: var(--font-mono); font-size: 13px; color: var(--accent); }
+  .art-section h2 { font-size: clamp(20px, 2.6vw, 28px); font-weight: 800; line-height: 1.3; letter-spacing: -0.02em; color: var(--text); }
+  .art-body h3 { font-size: 19px; font-weight: 700; color: var(--text); margin: 32px 0 10px; line-height: 1.4; }
+
+  /* 重点引用块 */
+  .art-key { font-size: 19px; line-height: 1.7; color: var(--text); padding: 18px 20px; margin: 26px 0; border-left: 3px solid var(--accent); background: rgba(88,225,193,0.06); border-radius: 0 10px 10px 0; }
+  .art-key strong { color: var(--text); }
+
+  /* 列表 */
+  .art-body ul, .art-body ol { margin: 18px 0; padding-left: 24px; }
+  .art-body li { margin: 9px 0; padding-left: 4px; }
+  .art-body li::marker { color: var(--accent); }
+
+  /* 文末统一 CTA */
+  .art-cta { margin-top: 64px; border: 1px solid rgba(88,225,193,0.24); border-radius: 16px; padding: 34px; background: linear-gradient(135deg, rgba(88,225,193,0.12), rgba(19,22,26,0.85)); box-shadow: 0 26px 90px rgba(0,0,0,0.3); }
+  .art-cta .lab { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.2em; color: var(--accent); text-transform: uppercase; margin-bottom: 14px; }
+  .art-cta h2 { font-size: clamp(22px, 3vw, 30px); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 12px; line-height: 1.3; }
+  .art-cta p { font-size: 14.5px; color: var(--muted); line-height: 1.8; margin-bottom: 22px; }
+  .art-cta-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+  /* 底部返回 */
+  .reader-foot { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-top: 40px; padding-top: 28px; border-top: 1px solid var(--border); }
+  .reader-back { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; color: var(--muted); text-decoration: none; padding: 9px 16px; border: 1px solid var(--border2); border-radius: 8px; transition: all .2s; }
+  .reader-back:hover { color: var(--accent); border-color: var(--accent); }
+
+  /* 未找到 */
+  .reader-notfound { padding: 70px 0; text-align: center; }
+  .reader-notfound h1 { font-size: 26px; font-weight: 800; margin-bottom: 14px; }
+  .reader-notfound p { color: var(--muted); margin-bottom: 24px; }
+
+  @media (max-width: 768px) {
+    .reader { width: calc(100% - 36px); }
+    .art-body { font-size: 16px; }
+    .art-section .num { width: 34px; height: 34px; }
+    .art-cta { padding: 26px; }
+  }
+</style>
+
 </head>
 <body>
 
@@ -405,11 +478,11 @@
       <span class="brand-name">AI Native 一人公司 · <span class="accent">乔不不斯</span></span>
     </a>
     <nav class="nav-links" id="navLinks">
-      <a class="nav-item active" href="index.html">首页</a>
+      <a class="nav-item" href="index.html">首页</a>
       <div class="nav-dd">
         <a class="nav-item nav-dd-trigger" href="products.html">产品服务 <span class="caret">▾</span></a>
         <div class="nav-dd-menu">
-          <a class="dd-link" href="calibrator.html" target="_blank" rel="noopener">
+          <a class="dd-link" href="index.html">
             <span class="dd-ico">◎</span>
             <span class="dd-text"><b>一人公司路径校准器</b><i>检查你现在做的事是否在浪费时间</i></span>
           </a>
@@ -419,338 +492,23 @@
           </a>
         </div>
       </div>
-      <a class="nav-item" href="articles.html">最新文章</a>
-      <a class="nav-cta" href="javascript:void(0)" onclick="openWechatModal('种子用户')">申请种子用户</a>
+      <a class="nav-item active" href="articles.html">最新文章</a>
+      <a class="nav-cta" href="#join" onclick="openWechatModal('种子用户')">申请种子用户</a>
     </nav>
     <button class="nav-toggle" id="navToggle" aria-label="菜单" onclick="toggleNav()">≡</button>
   </div>
 </header>
 
+<aside class="toc" id="toc" aria-label="文章目录"></aside>
+
 <main id="top">
-
-  <!-- ═══════════ HERO ═══════════ -->
-  <section class="hero">
-    <div class="hero-deco">3</div>
-    <div class="wrap hero-inner">
-      <span class="hero-tag">乔不不斯 · AI Native · 一人公司</span>
-      <h1 class="hero-title">
-        用 <em>3 个月时间</em>，<br>
-        从 <em>0 到 1</em> 跑通<br>
-        AI Native<br>一人公司商业模式
-      </h1>
-      <p class="hero-sub">帮助本来能创造更大价值的职场人，构建自己的 AI 一人公司，实现自己的个人商业路径。</p>
-      <div class="hero-actions">
-        <a class="btn btn-primary" href="javascript:void(0)" onclick="openWechatModal('种子用户')">申请种子用户 →</a>
-        <a class="btn btn-secondary" href="#about-project">了解项目</a>
-      </div>
-      <div class="tags">
-        <span class="tag-pill">实现人生使命</span>
-        <span class="tag-pill">享受认知进化</span>
-        <span class="tag-pill">享受自由生活</span>
-      </div>
+  <section class="block reader-wrap">
+    <div class="wrap" id="readerRoot">
+      <!-- JS 填充 -->
     </div>
   </section>
-
-  <!-- ═══════════ 机会 ═══════════ -->
-  <section class="block" id="opportunity">
-    <div class="wrap reveal">
-      <span class="eyebrow">THE OPPORTUNITY</span>
-      <h2 class="block-title">AI 正在重构个体能力，<br>也正在重构组织边界。</h2>
-      <div class="opp-grid">
-        <div class="opp-col">
-          <div class="col-label">危机</div>
-          <p class="col-text">裁员正在各行各业发生，传统职场路径的上限越来越清晰。大量精英人才正在被迫重新思考自己的未来。</p>
-        </div>
-        <div class="opp-col right">
-          <div class="col-label">机会</div>
-          <p class="col-text">AI 正在让个体拥有前所未有的商业杠杆。</p>
-          <div class="emphasis">一个人，也有机会做出一家百万到千万级的公司。</div>
-        </div>
-      </div>
-      <div class="big-stat">
-        <span class="big-num">12</span>
-        <span class="big-num-label"><strong>窗口期：12 个月</strong>重构个人职业路径</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════ 项目定义 ═══════════ -->
-  <section class="block" id="about-project">
-    <div class="wrap reveal">
-      <span class="eyebrow">PROJECT DEFINITION</span>
-      <h2 class="block-title">我在做一个什么项目？</h2>
-      <p class="lead" style="margin-top:20px;">帮助那些本来能创造更大价值的职场人，在<em class="accent">不盲目裸辞</em>的前提下，找到一条合适自己的、<em class="accent">不会轻易被 AI 吃掉</em>的<em class="accent">一人公司商业模式</em>，并正式启动验证。</p>
-      <div class="two-col">
-        <div class="panel">
-          <div class="panel-label">我想帮助的是这样一群人</div>
-          <ul class="people">
-            <li>工作 5 到 15 年，在公司里做出过结果</li>
-            <li>有自己的核心所长：专业能力、判断能力、表达能力、项目协同能力</li>
-            <li>不想继续把精力消耗在职场和草台班子工作里</li>
-            <li>开始意识到职场路径有上限，想做属于自己的事，但不想盲目裸辞</li>
-            <li>隐约知道自己想做什么，却不知道怎么真正开始</li>
-          </ul>
-        </div>
-        <div class="panel">
-          <div class="panel-label">他们真正卡住的，通常是这些问题</div>
-          <div class="pain-list">
-            <div class="pain">有几个方向，但不知道先做哪个</div>
-            <div class="pain">反复怀疑「我到底能不能做」</div>
-            <div class="pain">担心太多人在做，自己没有竞争力</div>
-            <div class="pain">担心做出来的东西很快被 AI 替代</div>
-            <div class="pain">有方向，但不知道第一步怎么启动和验证</div>
-            <div class="pain">已经开始做一点，但没有反馈，开始怀疑方向不对</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════ 边界 ═══════════ -->
-  <section class="block" id="scope">
-    <div class="wrap reveal">
-      <span class="eyebrow">SCOPE</span>
-      <h2 class="block-title">这个项目是什么，不是什么？</h2>
-      <div class="compare-list">
-        <div class="compare-row">
-          <div class="compare-left"><b>这不是</b>成熟创业者教人快速搞钱的项目</div>
-          <div class="compare-mid">vs</div>
-          <div class="compare-right"><b>这是</b>一个普通职场人真正从 0 到 1 推进的一人公司项目，从需求验证开始，走到产品、服务与收入闭环</div>
-        </div>
-        <div class="compare-row">
-          <div class="compare-left"><b>这不是</b>市面常见的个人 IP / 超级个体项目</div>
-          <div class="compare-mid">vs</div>
-          <div class="compare-right"><b>这是</b>一条从垂类场景切入、结合 AI、适合职场人启动验证的路线</div>
-        </div>
-        <div class="compare-row">
-          <div class="compare-left"><b>这不是</b>纯靠 AI、只讲 AI 工具的项目</div>
-          <div class="compare-mid">vs</div>
-          <div class="compare-right"><b>这是</b>一次对 AI Native 一人公司真实运作方式的探索</div>
-        </div>
-        <div class="compare-row">
-          <div class="compare-left"><b>这不是</b>停留在纸面上的想法</div>
-          <div class="compare-mid">vs</div>
-          <div class="compare-right"><b>这是</b>一个已经完成前期推演、正在进入验证阶段的项目</div>
-        </div>
-        <div class="compare-row">
-          <div class="compare-left"><b>这不是</b>闭门完成、对外包装的项目</div>
-          <div class="compare-mid">vs</div>
-          <div class="compare-right"><b>这是</b>一个欢迎合作伙伴与种子用户一起共创的开源项目</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════ 目标 ═══════════ -->
-  <section class="block" id="goals">
-    <div class="wrap reveal">
-      <span class="eyebrow">GOALS</span>
-      <h2 class="block-title">这个项目要达成什么目标？</h2>
-      <div class="goal-cards">
-        <div class="goal-card">
-          <div class="goal-num">01</div>
-          <div class="goal-title">让你从迷茫到启动，到验证商业模式跑通</div>
-          <p class="goal-desc">完成从人生愿景确立、商业模式选择、用户场景、个人定位、产品方案到付费与交付闭环的验证。</p>
-        </div>
-        <div class="goal-card">
-          <div class="goal-num">02</div>
-          <div class="goal-title">让你做一个真正 <em>AI Native</em> 的一人公司</div>
-          <p class="goal-desc">把 AI 用到市场调研、用户分析、内容生产、产品设计、交付与效率优化中，形成一套可复用的方法论。</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════ 关于我 ═══════════ -->
-  <section class="block" id="about-me">
-    <div class="wrap reveal">
-      <span class="eyebrow">WHY ME</span>
-      <h2 class="block-title">为什么是我</h2>
-      <div class="about-split">
-        <div class="about-left">
-          <div class="sub-label">我是谁？</div>
-          <div class="stat-lines">
-            <div class="stat-line">8 年实操 AI 产品经验</div>
-            <div class="stat-line">普通大学，从小公司做到 AI 大厂产品 1 号位</div>
-            <div class="stat-line">负责业务 AI 软硬件产品线规划，营收超千万</div>
-            <div class="stat-line">擅长产品落地、商业闭环、深度认知体系、AI 理解运用</div>
-          </div>
-          <div class="about-core">懂产品 <span class="x">×</span> 懂 AI <span class="x">×</span> 懂商业</div>
-        </div>
-        <div class="about-divider"></div>
-        <div class="about-right">
-          <div class="sub-label">我为什么做这件事？</div>
-          <p class="about-why">
-            我不想 10 年后，依然在公司体系里，为别人的目标奋斗。<br><br>
-            我想尽可能帮助和影响更多人，<strong>提升人类的思维水平</strong>。<br><br>
-            我想做的，是帮助更多像我一样的人，找到真正属于自己的商业路径，并把这件事长期做下去。
-          </p>
-          <div class="emphasis" style="margin-top:18px;">这是我会长期亲自下场的人生选择。</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════ 邀请 ═══════════ -->
-  <section class="block" id="invite">
-    <div class="wrap reveal">
-      <span class="eyebrow">JOIN US</span>
-      <h2 class="block-title">邀请你作为种子用户，<br>把这套商业模式从想法推到验证跑通</h2>
-      <div class="invite-cols">
-        <div class="invite-col">
-          <div class="invite-role"><em>种子用户可获得</em></div>
-          <div class="invite-items">
-            <div class="invite-item">看到一个 AI 一人公司是怎么从 0 到 1 启动跑通的</div>
-            <div class="invite-item">获得围绕转型 AI 一人公司的早期优惠服务</div>
-            <div class="invite-item">获得 AI 一人公司构建中的产品、商业与认知体系框架</div>
-            <div class="invite-item">学会用 AI 参与真实业务流程，获得成熟的 AI 工具</div>
-            <div class="invite-item">帮助你在 3 个月之内构建属于自己的 AI 一人公司</div>
-          </div>
-        </div>
-        <div class="invite-divider"></div>
-        <div class="invite-col">
-          <div class="invite-role"><em>成为种子用户的条件</em></div>
-          <div class="invite-items">
-            <div class="invite-item">你符合「想启动一人公司却不知道从哪里开始」的画像</div>
-            <div class="invite-item">对一人公司、个人商业路径、AI 构建业务有真实兴趣</div>
-            <div class="invite-item">不是纯围观，愿意投入时间参与反馈、交流与验证过程</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════ 进展 ═══════════ -->
-  <section class="block" id="progress">
-    <div class="wrap reveal">
-      <span class="eyebrow">PROGRESS</span>
-      <h2 class="block-title">项目进展与计划</h2>
-      <div class="progress-split">
-        <div>
-          <div class="sub-label" style="margin-bottom:14px;">当前进展</div>
-          <p class="progress-intro">这件事不是从零开始，而是已经进入真实验证阶段。</p>
-          <div class="progress-items">
-            <div class="progress-item"><span class="pcheck"></span>已经完成多轮商业模式加减法</div>
-            <div class="progress-item"><span class="pcheck"></span>已经做过类似模式调研、商业预判和市场分析</div>
-            <div class="progress-item"><span class="pcheck"></span>已经开始验证用户需求假设</div>
-            <div class="progress-item"><span class="pcheck"></span>已经有初步的种子客户</div>
-          </div>
-          <div class="stats-row">
-            <div class="stat-card"><div class="stat-num">700</div><div class="stat-label">公众号 2 个月增长</div></div>
-            <div class="stat-card"><div class="stat-num">15K</div><div class="stat-label">单篇最高阅读量</div></div>
-            <div class="stat-card"><div class="stat-num">100</div><div class="stat-label">优化 CTA 后加微信</div></div>
-            <div class="stat-card"><div class="stat-num">~100</div><div class="stat-label">日常篇均阅读量</div></div>
-          </div>
-        </div>
-        <div>
-          <div class="sub-label" style="margin-bottom:14px;">接下来怎么推进</div>
-          <div class="tl-items">
-            <div class="tl-item">
-              <div class="tl-month">4 月</div>
-              <div class="tl-line-wrap"><div class="tl-dot"></div><div class="tl-line"></div></div>
-              <div class="tl-content">完成用户调研与分析，明确问题和人群</div>
-            </div>
-            <div class="tl-item">
-              <div class="tl-month">5 月</div>
-              <div class="tl-line-wrap"><div class="tl-dot"></div><div class="tl-line"></div></div>
-              <div class="tl-content">验证解决方案假设，打磨产品与交付</div>
-            </div>
-            <div class="tl-item">
-              <div class="tl-month">6 月</div>
-              <div class="tl-line-wrap"><div class="tl-dot"></div><div class="tl-line"></div></div>
-              <div class="tl-content">验证单元模型是否成立</div>
-            </div>
-            <div class="tl-item">
-              <div class="tl-month">7 月</div>
-              <div class="tl-line-wrap"><div class="tl-dot"></div></div>
-              <div class="tl-content">完整跑通商业模式闭环</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════ 筛选 ═══════════ -->
-  <section class="block" id="fit">
-    <div class="wrap reveal">
-      <span class="eyebrow">FIT CHECK</span>
-      <h2 class="block-title">这条路，不适合所有人。</h2>
-      <div class="fit-cols">
-        <div>
-          <div class="fit-head">适合加入的人 <span class="fit-badge yes">YES</span></div>
-          <div class="fit-items">
-            <div class="fit-item yes">从职场出来，找到第二增长曲线</div>
-            <div class="fit-item yes">把一人公司商业模式从 0 到 1 跑通</div>
-            <div class="fit-item yes">让 AI 真正融入自己的工作体系</div>
-            <div class="fit-item yes">成为更懂产品、商业与教练的人</div>
-            <div class="fit-item yes">搭建属于自己的知识体系</div>
-            <div class="fit-item yes">链接懂一人公司、懂产品商业的人脉与工作资源</div>
-          </div>
-        </div>
-        <div>
-          <div class="fit-head">不适合加入的人 <span class="fit-badge no">NO</span></div>
-          <div class="fit-items">
-            <div class="fit-item no">只想旁观，不想真正投入</div>
-            <div class="fit-item no">只想快速搞钱，不想认真验证</div>
-            <div class="fit-item no">等别人给标准答案，不愿自己思考</div>
-            <div class="fit-item no">时间太少，无法参与</div>
-            <div class="fit-item no">ego 太重，无法接受反馈</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════ CTA / 加入 ═══════════ -->
-  <section class="cta-block" id="join">
-    <div class="wrap reveal">
-      <div class="cta-layout">
-        <div>
-          <span class="eyebrow">FINAL CALL</span>
-          <h2 class="cta-title">如果你认真看到这里，<br>欢迎加入。</h2>
-          <p class="cta-desc">
-            我想验证一件事：<br>
-            一个普通但足够清醒、愿意持续进化的人，<br>
-            能不能借助 AI 和商业思维，走出一条真正属于自己的路？<br><br>
-            这不是一个已经准备好所有答案的项目。<br>
-            这是一个值得和对的人一起，把答案做出来的项目。
-          </p>
-          <div class="hero-actions" style="margin-bottom:0;">
-            <button class="btn btn-primary" onclick="openWechatModal('种子用户')">申请种子用户</button>
-          </div>
-          <div class="cta-hint">申请后我会尽快与你沟通</div>
-          <div class="cta-closer">别只停留在「我也想过」。<em>这次，我们真的开始。</em></div>
-        </div>
-        <div>
-          <div class="tool-card">
-            <div class="tool-label">PATH CALIBRATOR</div>
-            <div class="tool-title">一人公司路径校准器</div>
-            <p class="tool-desc">你是否需要校准你的一人公司路径，避免少走弯路？试试「一人公司路径校准器」。</p>
-            <a class="btn btn-primary" href="calibrator.html" target="_blank" rel="noopener">进入路径校准器 →</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════ 最新文章（精选 3 篇 + 跳转） ═══════════ -->
-  <section class="block" id="articles">
-    <div class="wrap reveal">
-      <div class="articles-head">
-        <div>
-          <span class="eyebrow">LATEST ARTICLES</span>
-          <h2 class="block-title">看见一家 AI Native 公司<br>从 0～1 的真实做法</h2>
-        </div>
-        <a class="btn btn-secondary" href="articles.html">查看全部文章 →</a>
-      </div>
-      <div class="article-grid" id="articleGrid"></div>
-    </div>
-  </section>
-
 </main>
 
-<!-- ═══════════ FOOTER ═══════════ -->
 <footer class="site-foot">
   <div class="wrap foot-inner">
     <div class="foot-brand">AI Native 一人公司 · <span class="accent">乔不不斯</span></div>
@@ -758,13 +516,13 @@
   </div>
 </footer>
 
-<!-- ═══════════ MODAL ═══════════ -->
+<!-- 微信弹窗 -->
 <div class="modal" id="wechatModal" aria-hidden="true">
   <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <button class="modal-close" type="button" onclick="closeWechatModal()" aria-label="关闭弹窗">×</button>
-    <div class="modal-label" id="modalLabel">JOIN</div>
+    <div class="modal-label">JOIN</div>
     <div class="modal-title" id="modalTitle">添加微信进一步沟通</div>
-    <div class="modal-desc" id="modalDesc">如果你想加入，现在可以直接添加下面这个微信号。</div>
+    <div class="modal-desc">如果你想加入，现在可以直接添加下面这个微信号。</div>
     <div class="wechat-box">
       <div class="wechat-label">WeChat ID</div>
       <div class="wechat-value">qiaoboose01</div>
@@ -774,43 +532,154 @@
 
 <script src="articles/data.js"></script>
 <script>
-  const ARTICLES = window.ARTICLES || [];
-  /* 首页只展示精选 3 篇，全部文章在 articles.html */
+  /* 文章元数据由单一数据源 articles/data.js 派生 */
+  const ARTICLE_META = (window.ARTICLES || []).reduce((m, a) => { m[a.id] = a; return m; }, {});
 
-  function renderGrid() {
-    const grid = document.getElementById('articleGrid');
-    grid.innerHTML = ARTICLES.slice(0, 3).map(a => `
-      <a class="acard" href="article.html?id=${encodeURIComponent(a.id)}" aria-label="${a.title}">
-        <div class="acard-thumb"><span class="acard-thumb-glyph">${a.glyph}</span></div>
-        <div class="acard-body">
-          <div class="acard-date">${a.date}</div>
-          <h3 class="acard-title">${a.title}</h3>
-          <div class="acard-foot">
-            <span class="acard-cat">${a.cat}</span>
-            <span class="acard-more">阅读全文 →</span>
-          </div>
-        </div>
-      </a>
-    `).join('');
+  function getId() {
+    const p = new URLSearchParams(location.search).get('id') || '';
+    return ARTICLE_META[p] ? p : '';
+  }
+  function esc(s){ return (s||'').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+  /* 行内 **加粗** / *青绿强调* → HTML（先转义再替换标记） */
+  function inlineMd(s){
+    let t = esc(s);
+    t = t.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    t = t.replace(/(^|[^*])\*([^*]+)\*(?!\*)/g, '$1<em>$2</em>');
+    return t;
   }
 
-  /* ── 微信弹窗 ── */
-  function openWechatModal() { document.getElementById('wechatModal').classList.add('open'); }
-  function closeWechatModal() { document.getElementById('wechatModal').classList.remove('open'); }
+  function secId(n){ return 'sec-' + String(n).replace(/[^\w-]/g, ''); }
+  function secTitle(h){ return (h || '').replace(/^\d+[｜|]\s*/, ''); }
+
+  function renderBlocks(blocks){
+    return (blocks || []).map(b => {
+      if (b.t === 'section') return `<div class="art-section" id="${secId(b.n)}"><span class="num">${esc(b.n)}</span><h2>${esc(secTitle(b.h))}</h2></div>`;
+      if (b.t === 'key')     return `<div class="art-key">${inlineMd(b.text)}</div>`;
+      if (b.t === 'h3')      return `<h3>${inlineMd(b.text)}</h3>`;
+      if (b.t === 'p')       return `<p>${inlineMd(b.text)}</p>`;
+      if (b.t === 'ul')      return `<ul>${b.items.map(i => `<li>${inlineMd(i)}</li>`).join('')}</ul>`;
+      if (b.t === 'ol')      return `<ol${b.start ? ` start="${b.start}"` : ''}>${b.items.map(i => `<li>${inlineMd(i)}</li>`).join('')}</ol>`;
+      return '';
+    }).join('\n');
+  }
+
+  function notFound(root){
+    root.innerHTML = `
+      <div class="reader reader-notfound">
+        <h1>没有找到这篇文章</h1>
+        <p>链接可能已失效，或文章已调整。</p>
+        <a class="btn btn-primary" href="articles.html">← 返回文章列表</a>
+      </div>`;
+  }
+
+  function paint(root, meta, content){
+    document.getElementById('pageTitle').textContent = meta.title + ' · 乔不不斯';
+    const dek = content.dek || '';
+    root.innerHTML = `
+      <article class="reader">
+        <nav class="crumb">
+          <a href="index.html">首页</a><span class="sep">/</span>
+          <a href="articles.html">最新文章</a><span class="sep">/</span>
+          <span class="cur">${esc(meta.title)}</span>
+        </nav>
+        <header class="art-head">
+          <span class="art-cat">${esc(meta.cat)}</span>
+          <h1 class="art-title">${esc(meta.title)}</h1>
+          ${dek ? `<p class="art-dek">${inlineMd(dek)}</p>` : ''}
+          <div class="art-meta"><span>${esc(meta.date)}</span><span>乔不不斯</span></div>
+        </header>
+        <div class="art-body">
+          ${renderBlocks(content.blocks)}
+        </div>
+        <section class="art-cta">
+          <div class="lab">PATH CALIBRATOR</div>
+          <h2>先识别阶段，再决定投入</h2>
+          <p>如果你也在做一人公司，可以先做一次轻量自检：你现在处在哪个阶段，最容易浪费时间的地方在哪里，下一步应该先验证什么。</p>
+          <div class="art-cta-actions">
+            <a class="btn btn-primary" href="calibrator.html" target="_blank" rel="noopener">体验路径校准器 →</a>
+            <a class="btn btn-secondary" href="javascript:void(0)" onclick="openWechatModal('种子用户')">申请种子用户</a>
+          </div>
+        </section>
+        <div class="reader-foot">
+          <a class="reader-back" href="articles.html">← 返回文章列表</a>
+          <a class="reader-back" href="index.html">回到首页</a>
+        </div>
+      </article>`;
+
+    buildToc(content.blocks);
+  }
+
+  /* 侧边目录 + 滚动高亮 */
+  function buildToc(blocks){
+    const secs = (blocks || []).filter(b => b.t === 'section');
+    const toc = document.getElementById('toc');
+    if (!toc || secs.length < 2) { if (toc) toc.classList.remove('show'); return; }
+    toc.innerHTML = `
+      <div class="toc-label">目录</div>
+      <nav class="toc-list">
+        ${secs.map(s => `<a class="toc-item" href="#${secId(s.n)}" data-target="${secId(s.n)}"><span class="toc-n">${esc(s.n)}</span><span>${esc(secTitle(s.h))}</span></a>`).join('')}
+      </nav>`;
+    toc.classList.add('show');
+
+    const links = [...toc.querySelectorAll('.toc-item')];
+    // 平滑滚动
+    links.forEach(a => a.addEventListener('click', e => {
+      e.preventDefault();
+      const el = document.getElementById(a.dataset.target);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }));
+    // 滚动高亮当前小节
+    const targets = secs.map(s => document.getElementById(secId(s.n))).filter(Boolean);
+    const spy = new IntersectionObserver((entries) => {
+      entries.forEach(en => {
+        if (en.isIntersecting) {
+          links.forEach(l => l.classList.toggle('active', l.dataset.target === en.target.id));
+        }
+      });
+    }, { rootMargin: `-${64 + 30}px 0px -70% 0px`, threshold: 0 });
+    targets.forEach(t => spy.observe(t));
+
+    // 目录“从正文位置开始”：初始与正文头部对齐，滚动后吸附在顶栏下方
+    const navH = 64;          // 顶栏高度
+    const stickGap = 24;      // 吸附时与顶栏的间距
+    const bodyEl = document.querySelector('.art-body') || document.querySelector('.reader');
+    function positionToc(){
+      if (!bodyEl) return;
+      const bodyTop = bodyEl.getBoundingClientRect().top + window.scrollY; // 正文在文档中的绝对位置
+      const desired = Math.max(navH + stickGap, bodyTop - window.scrollY);
+      toc.style.top = desired + 'px';
+    }
+    positionToc();
+    window.addEventListener('scroll', positionToc, { passive: true });
+    window.addEventListener('resize', positionToc);
+  }
+
+  function render(){
+    const root = document.getElementById('readerRoot');
+    const id = getId();
+    if (!id) { notFound(root); return; }
+    const meta = ARTICLE_META[id];
+    // 动态加载该文章的结构化正文（articles/content/<id>.js → window.__ARTICLES_CONTENT__[id]）
+    const s = document.createElement('script');
+    s.src = 'articles/content/' + encodeURIComponent(id) + '.js';
+    s.onload = () => {
+      const content = (window.__ARTICLES_CONTENT__ || {})[id];
+      if (!content) { notFound(root); return; }
+      paint(root, meta, content);
+    };
+    s.onerror = () => notFound(root);
+    document.head.appendChild(s);
+  }
+
+  /* 微信弹窗 */
+  function openWechatModal(){ document.getElementById('wechatModal').classList.add('open'); }
+  function closeWechatModal(){ document.getElementById('wechatModal').classList.remove('open'); }
   document.getElementById('wechatModal').addEventListener('click', e => { if (e.target.id === 'wechatModal') closeWechatModal(); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeWechatModal(); });
 
-  /* ── 移动端菜单 ── */
-  function toggleNav() { document.getElementById('navLinks').classList.toggle('open'); }
+  function toggleNav(){ document.getElementById('navLinks').classList.toggle('open'); }
   document.querySelectorAll('#navLinks a').forEach(a => a.addEventListener('click', () => document.getElementById('navLinks').classList.remove('open')));
-
-  /* ── 滚动渐入 ── */
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
-  }, { threshold: 0.12 });
-  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
-
-  renderGrid();
+  render();
 </script>
 
 </body>

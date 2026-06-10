@@ -1,0 +1,1496 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>一人公司探索路径校准器</title>
+  <style>
+  :root {
+    --bg:      #080A0C;
+    --bg2:     #0F1216;
+    --bg3:     #1A1F27;
+    --text:    #F7F8FA;
+    --muted:   #A9B0BA;
+    --dim:     #5A6370;
+    --accent:  #58E1C1;
+    --accent2: #3BB89A;
+    --border:  rgba(255,255,255,0.11);
+    --border2: rgba(255,255,255,0.18);
+    --surface: #0F1216;
+    --card:    #1A1F27;
+    --card2:   #131720;
+    --card-elevated: #252B35;
+    --accent3: #7AF2D8;
+    --accent-dim: rgba(88,225,193,0.12);
+    --accent-glow: rgba(88,225,193,0.35);
+    --success: var(--accent);
+    --danger:  #F6B66B;
+  }  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { min-height: 100%; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans SC", sans-serif;
+    background:
+      linear-gradient(rgba(88,225,193,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(88,225,193,0.03) 1px, transparent 1px),
+      radial-gradient(ellipse at 50% -5%, rgba(88,225,193,0.12), transparent 42%),
+      radial-gradient(ellipse at 85% 8%, rgba(168,85,247,0.07), transparent 32%),
+      radial-gradient(ellipse at 15% 60%, rgba(88,225,193,0.04), transparent 35%),
+      var(--bg);
+    background-size: 60px 60px, 60px 60px, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+    font-size: 14px;
+  }
+  .wrap { max-width: 840px; margin: 0 auto; padding: 32px 20px 60px; }
+  .hidden { display: none !important; }
+
+  .hero { min-height: 100vh; display: flex; align-items: center; padding: 32px 0 56px; }
+  .hero-inner { width: 100%; }
+  .hero-header { text-align: center; margin-bottom: 32px; }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    color: var(--accent); background: var(--accent-dim); border: 1px solid rgba(88,225,193,0.28);
+    padding: 7px 14px; border-radius: 999px; font-size: 12px; font-weight: 700; letter-spacing: .1em;
+    margin-bottom: 20px;
+  }
+  .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 14px var(--accent-glow); }
+  h1 {
+    max-width: 760px; margin: 0 auto 16px;
+    font-size: clamp(32px, 5.3vw, 52px); line-height: 1.15; letter-spacing: -1.2px; font-weight: 850;
+    background: linear-gradient(135deg, #58E1C1, #3BB89A, #7AF2D8);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 24px rgba(88,225,193,.18));
+  }
+  h1 em, .subtitle em { font-style: normal; }
+  .subtitle { max-width: 620px; margin: 0 auto; color: var(--dim); font-size: 15px; line-height: 1.7; }
+  .hero-card, .card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 32px;
+    position: relative; overflow: hidden; box-shadow: 0 24px 80px rgba(0,0,0,.30);
+    animation: cardIn .45s cubic-bezier(.4,0,.2,1);
+  }
+  .hero-card::before, .card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(88,225,193,0.45), transparent);
+  }
+  @keyframes cardIn { from { opacity: 0; transform: translateY(16px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+  .hero-note {
+    color: var(--muted); background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 12px;
+    padding: 16px 20px; font-size: 14px; line-height: 1.7; margin-bottom: 20px;
+  }
+  .hero-features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 20px 0 24px; }
+  .feature {
+    background: rgba(255,255,255,.02); border: 1px solid rgba(255,255,255,.06); border-radius: 12px; padding: 16px 14px;
+  }
+  .feature b { display: block; color: var(--muted); font-size: 13px; margin-bottom: 4px; font-weight: 700; }
+  .feature span { display: block; color: var(--dim); font-size: 12px; line-height: 1.5; }
+  .hero-actions { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 8px; }
+  .privacy { color: var(--dim); font-size: 12px; text-align: center; }
+
+  .progress { display: flex; justify-content: space-between; margin-bottom: 34px; position: relative; padding: 0 12px; height: auto; background: transparent; gap: 0; }
+  .progress::before { content: ''; position: absolute; top: 14px; left: 30px; right: 30px; height: 2px; background: var(--border); z-index: 0; }
+  .pitem { position: relative; z-index: 1; width: 30px; height: 30px; border-radius: 50%; background: var(--surface); border: 2px solid var(--border); }
+  .pitem.active { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 16px var(--accent-glow); }
+  .pitem.done { background: var(--success); border-color: var(--success); }
+  .step-meta { color: var(--accent); font-size: 12px; font-weight: 700; letter-spacing: .1em; text-align: center; margin-bottom: 8px; }
+  .q-title { text-align: center; font-size: clamp(24px, 4vw, 32px); line-height: 1.25; letter-spacing: -.5px; margin: 0 0 8px; font-weight: 800; color: var(--text); }
+  .q-help { max-width: 560px; color: var(--muted); margin: 0 auto 24px; text-align: center; font-size: 14px; line-height: 1.6; }
+  .question { margin: 16px 0; padding: 24px; background: rgba(255,255,255,0.025); border: 1px solid var(--border); border-radius: 16px; }
+  .question h3 { margin: 0 0 12px; font-size: 16px; line-height: 1.5; font-weight: 700; color: var(--text); }
+  .question .hint { color: var(--accent); background: var(--accent-dim); border: 1px solid rgba(88,225,193,.20); display:inline-block; padding: 4px 8px; border-radius: 8px; font-size: 12px; margin-bottom: 12px; }
+  .options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .option { background: var(--surface); border: 1.5px solid var(--border); border-radius: 12px; padding: 14px 16px; cursor: pointer; transition: all .2s ease; display: flex; align-items: flex-start; gap: 12px; color: var(--text); min-height: 54px; }
+  .option:hover { border-color: rgba(88,225,193,.42); background: rgba(88,225,193,.05); transform: translateY(-1px); }
+  .option.selected { border-color: var(--accent); background: rgba(88,225,193,.14); box-shadow: 0 0 0 1px rgba(88,225,193,.35); }
+  .check { width: 20px; height: 20px; border: 2px solid var(--border); border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; font-size: 12px; color: transparent; transition: all .22s cubic-bezier(.4,0,.2,1); }
+  .radio .check { border-radius: 50%; }
+  .option.selected .check { background: var(--accent); border-color: var(--accent); color: var(--bg); transform: scale(1.1); box-shadow: 0 0 8px rgba(88,225,193,.3); }
+  .option-title { font-size: 14px; line-height: 1.5; font-weight: 500; }
+  .option-desc { color: var(--dim); font-size: 12px; margin-top: 2px; line-height: 1.5; }
+  input[type="text"], textarea { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1.5px solid var(--border); background: var(--surface); color: var(--text); font: inherit; outline: none; transition: border-color .2s, box-shadow .2s, background .2s; }
+  input[type="text"]:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(88,225,193,.12), 0 4px 16px rgba(0,0,0,.15); background: rgba(15,18,22,.8); }
+  .nav { display: grid; grid-template-columns: auto 1fr; gap: 12px; margin-top: 24px; }
+  button { border: 0; border-radius: 12px; padding: 14px 24px; font-weight: 750; font-size: 14px; cursor: pointer; transition: all .22s cubic-bezier(.4,0,.2,1); font-family: inherit; }
+  .btn-primary { color: #fff; background: linear-gradient(135deg, var(--accent), var(--accent2)); box-shadow: 0 8px 24px rgba(88,225,193,.24); font-size: 15px; padding: 16px 28px; }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 36px rgba(88,225,193,.38); }
+  .btn-primary:active { transform: translateY(0) scale(.97); box-shadow: 0 4px 12px rgba(88,225,193,.20); transition-duration:.1s; }
+  .btn-secondary, .btn-ghost { background: var(--surface); color: var(--text); border: 1.5px solid var(--border); }
+  .btn-secondary:hover, .btn-ghost:hover { border-color: rgba(88,225,193,.45); color: var(--accent); transform: translateY(-1px); }
+  .btn-secondary:active, .btn-ghost:active { transform: translateY(0) scale(.97); transition-duration:.1s; }
+  button:disabled { opacity: .45; cursor: not-allowed; transform: none !important; }
+  .warn { padding: 12px 14px; border-radius: 12px; background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(88,225,193,.26); margin-top: 14px; }
+  .result-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 24px 0; }
+  .metric { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 20px; }
+  .metric .label { color: var(--dim); font-size: 12px; margin-bottom: 6px; letter-spacing: .02em; }
+  .metric .value { font-size: 24px; font-weight: 850; color: var(--accent); }
+  .section { background: var(--card2); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin: 16px 0; }
+  .section h3 { margin: 0 0 8px; font-size: 16px; font-weight: 750; }
+  .section p { color: var(--muted); font-size: 14px; margin: 0 0 6px; line-height: 1.6; }
+  .tag { display: inline-block; padding: 4px 9px; border-radius: 999px; font-size: 12px; font-weight: 700; margin: 2px 4px 2px 0; background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(88,225,193,.24); }
+  .tag.green, .tag.blue, .tag.orange { background: var(--accent-dim); color: var(--accent); border-color: rgba(88,225,193,.24); }
+  .cta-box { background: linear-gradient(180deg, rgba(26,30,42,.98), rgba(17,22,32,.98)); border-color: rgba(88,225,193,.35); }
+  .wechat { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 18px; }
+  .wechat-code { background: var(--accent-dim); border: 1px solid rgba(88,225,193,.28); padding: 12px 16px; border-radius: 12px; color: var(--accent); font-weight: 750; }
+  .small { font-size: 12px !important; color: var(--dim) !important; margin-top: 12px !important; }
+
+  .archetype-card { background: linear-gradient(180deg, rgba(88,225,193,.13), rgba(26,30,42,.98)); border: 1px solid rgba(88,225,193,.36); border-radius: 18px; padding: 28px; margin-bottom: 18px; }
+  .archetype-label { color: var(--dim); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+  .archetype-name { color: var(--accent); font-size: clamp(28px, 5vw, 42px); line-height: 1.18; font-weight: 850; letter-spacing: -.8px; margin-bottom: 14px; }
+  .archetype-sub { color: var(--muted); font-size: 15px; line-height: 1.85; }
+  .result-section { margin-bottom: 18px; }
+  .result-box { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 18px; font-size: 14px; line-height: 1.75; color: var(--muted); }
+  .positioning-box { background: var(--accent-dim); border: 1px solid rgba(88,225,193,.26); border-radius: 12px; padding: 18px; color: var(--text); font-size: 18px; line-height: 1.6; font-weight: 750; }
+  .matrix-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .matrix-table th, .matrix-table td { padding: 12px 10px; text-align: left; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .matrix-table th { color: var(--dim); font-weight: 650; font-size: 12px; }
+  .matrix-table tr:last-child td { border-bottom: none; }
+  .action-item { display: grid; grid-template-columns: 52px 1fr; gap: 14px; padding: 15px 0; border-bottom: 1px solid var(--border); }
+  .action-item:last-child { border-bottom: none; }
+  .action-week { width: 42px; height: 42px; border-radius: 12px; background: var(--accent-dim); color: var(--accent); display: flex; align-items: center; justify-content: center; font-weight: 850; }
+  .action-text { color: var(--muted); font-size: 14px; line-height: 1.75; }
+  .action-text strong { color: var(--text); }
+  .avoid-list { display: grid; gap: 10px; }
+  .avoid-item { padding: 13px 14px; background: rgba(88,225,193,.07); border: 1px solid rgba(88,225,193,.18); border-radius: 12px; color: var(--muted); font-size: 14px; line-height: 1.7; }
+  .loading-card { min-height: 420px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 18px; }
+  .loader-ring { width: 76px; height: 76px; border-radius: 50%; border: 4px solid rgba(255,255,255,0.08); border-top-color: var(--accent); border-right-color: rgba(88,225,193,.62); animation: spin .86s linear infinite; box-shadow: 0 0 34px rgba(88,225,193,.18), inset 0 0 18px rgba(88,225,193,.08); }
+  .loading-title { font-size: 26px; line-height: 1.3; font-weight: 850; color: var(--text); }
+  .loading-sub { max-width: 520px; color: var(--muted); font-size: 14.5px; line-height: 1.8; }
+  .loading-steps { display: grid; gap: 8px; margin-top: 10px; color: var(--dim); font-size: 13px; }
+  .loading-steps span { color: var(--accent); }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @media (max-width: 768px) {
+    .wrap { padding: 24px 16px 48px; }
+    .hero { min-height: auto; padding: 34px 0 46px; }
+    .hero-card, .card { padding: 20px; border-radius: 14px; }
+    .hero-features, .options, .result-grid { grid-template-columns: 1fr; }
+    .nav { grid-template-columns: 1fr; }
+    h1 { font-size: clamp(31px, 9vw, 42px); }
+  }
+
+  .path-map { padding: 28px; background: linear-gradient(135deg, rgba(88,225,193,.10), rgba(59,184,154,.03)); border:1px solid rgba(88,225,193,.24); border-radius:22px; box-shadow:0 22px 70px rgba(0,0,0,.28); }
+  .path-map-head { display:flex; justify-content:space-between; gap:18px; align-items:flex-start; margin-bottom:24px; }
+  .path-map-kicker { font-family:'DM Mono',monospace; font-size:11px; letter-spacing:.18em; color:var(--accent); text-transform:uppercase; margin-bottom:8px; }
+  .path-map-title { font-size:24px; font-weight:800; letter-spacing:-.02em; color:var(--text); }
+  .path-map-sub { color:var(--muted); line-height:1.8; margin-top:8px; font-size:14px; }
+  .path-risk-badge { flex:0 0 auto; border:1px solid rgba(88,225,193,.32); background:rgba(11,13,15,.62); border-radius:999px; padding:9px 14px; color:var(--accent); font-weight:700; font-size:13px; }
+  .early-risk-card { margin:16px 0 18px; padding:18px 20px; border:1px solid rgba(88,225,193,.34); border-radius:18px; background:linear-gradient(135deg, rgba(88,225,193,.14), rgba(11,13,15,.58)); box-shadow:0 16px 48px rgba(0,0,0,.20), inset 0 1px 0 rgba(255,255,255,.05); display:grid; grid-template-columns:max-content minmax(0,1fr); column-gap:18px; row-gap:8px; align-items:center; }
+  .early-risk-kicker { font-family:'DM Mono',monospace; color:var(--accent); letter-spacing:.16em; font-size:10px; text-transform:uppercase; margin-bottom:7px; white-space:nowrap; }
+  .early-risk-level { display:flex; align-items:baseline; gap:7px; color:var(--text); line-height:1; white-space:nowrap; }
+  .early-risk-level strong { color:var(--accent); font-size:clamp(34px,5vw,48px); font-weight:950; letter-spacing:-.05em; text-shadow:0 0 28px rgba(88,225,193,.22); }
+  .early-risk-level span { color:var(--muted); font-size:15px; font-weight:800; }
+  .early-risk-copy { color:var(--text); font-size:15px; line-height:1.7; font-weight:750; max-width:none; }
+  .early-risk-hint { color:var(--muted); font-size:13px; line-height:1.65; margin-top:5px; max-width:none; }
+  .early-risk-card.risk-high { border-color:rgba(255,92,92,.50); background:linear-gradient(135deg, rgba(255,92,92,.16), rgba(11,13,15,.58)); }
+  .early-risk-card.risk-high .early-risk-kicker, .early-risk-card.risk-high .early-risk-level strong { color:#FF5C5C; text-shadow:0 0 28px rgba(255,92,92,.22); }
+  .early-risk-card.risk-medium { border-color:rgba(246,166,71,.46); background:linear-gradient(135deg, rgba(246,166,71,.14), rgba(11,13,15,.58)); }
+  .early-risk-card.risk-medium .early-risk-kicker, .early-risk-card.risk-medium .early-risk-level strong { color:#F6A647; text-shadow:0 0 28px rgba(246,166,71,.18); }
+  .early-risk-card.risk-low { border-color:rgba(169,176,186,.22); background:linear-gradient(135deg, rgba(169,176,186,.08), rgba(11,13,15,.58)); }
+  .early-risk-card.risk-low .early-risk-level strong { color:var(--muted); text-shadow:none; }
+  .path-line { display:grid; grid-template-columns:repeat(6,1fr); gap:8px; position:relative; margin:18px 0 24px; }
+  .path-node { position:relative; min-height:96px; padding:14px 10px; border:1px solid var(--border); background:rgba(255,255,255,.035); border-radius:16px; text-align:center; color:var(--muted); }
+  .path-node.active { border-color:rgba(88,225,193,.72); background:rgba(88,225,193,.11); color:var(--text); box-shadow:0 0 0 1px rgba(88,225,193,.12) inset; }
+  .path-node.next { border-color:rgba(255,255,255,.20); background:rgba(255,255,255,.06); }
+  .path-node-num { font-family:'DM Mono',monospace; font-size:13px; color:var(--accent); margin-bottom:8px; }
+  .path-node-name { font-size:13px; font-weight:700; line-height:1.35; }
+  .path-node-note { margin-top:8px; font-size:11px; color:var(--dim); line-height:1.4; }
+  .path-map-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-top:18px; }
+  .path-map-item { padding:16px; border:1px solid var(--border); border-radius:16px; background:rgba(11,13,15,.42); }
+  .path-map-label { font-size:12px; color:var(--dim); margin-bottom:8px; }
+  .path-map-value { color:var(--text); font-size:14px; line-height:1.65; }
+  @media (max-width: 720px) { .path-map-head{flex-direction:column;} .path-line{grid-template-columns:repeat(2,1fr);} .path-map-grid{grid-template-columns:1fr;} .early-risk-card{grid-template-columns:1fr; gap:12px; padding:16px;} .early-risk-level strong{font-size:48px;} }
+
+
+  /* ── Dashboard / report visual upgrade ── */
+  .wrap { max-width: 1180px; }
+  .hero { overflow:hidden; }
+  .hero::after { content:''; position:absolute; inset:-40% -20% auto auto; width:560px; height:560px; background:radial-gradient(circle, rgba(88,225,193,.18), transparent 62%); filter:blur(6px); pointer-events:none; animation: pulse-glow 6s ease-in-out infinite alternate; }
+  @keyframes pulse-glow { 0% { opacity:.7; } 100% { opacity:1; } }
+  .eyebrow { width:max-content; }
+  .hero-header { position:relative; z-index:1; }
+  .hero-card { display:grid; grid-template-columns: 1.05fr .95fr; gap:18px; align-items:stretch; }
+  .hero-note { margin:0; display:flex; align-items:center; }
+  .hero-actions { grid-column:1/-1; display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+  .hero-actions .small { margin:0; }
+  .btn-primary { box-shadow:0 12px 34px rgba(88,225,193,.14), 0 0 0 1px rgba(88,225,193,.12); animation: btn-breathe 3s ease-in-out infinite; }
+  .btn-primary:hover { transform:translateY(-1px); box-shadow:0 16px 42px rgba(88,225,193,.24); animation:none; }
+  @keyframes btn-breathe { 0%,100% { box-shadow:0 12px 34px rgba(88,225,193,.14), 0 0 0 1px rgba(88,225,193,.12); } 50% { box-shadow:0 12px 34px rgba(88,225,193,.22), 0 0 0 1px rgba(88,225,193,.18); } }
+  .calibration-shell { display:grid; grid-template-columns: 280px minmax(0,1fr); gap:18px; align-items:start; background:transparent; border:0; box-shadow:none; padding:0; overflow:visible; }
+  .calibration-shell::before { display:none; }
+  .calibration-rail { position:sticky; top:20px; border:1px solid rgba(255,255,255,.10); border-radius:22px; background:rgba(10,12,15,.78); backdrop-filter:blur(24px) saturate(1.3); padding:18px; box-shadow:0 12px 40px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.05); }
+  .rail-kicker { font-family:'DM Mono',monospace; color:var(--accent); letter-spacing:.18em; font-size:10px; text-transform:uppercase; margin-bottom:8px; opacity:.8; }
+  .rail-title { font-weight:800; font-size:16px; color:var(--muted); margin-bottom:8px; }
+  .rail-sub { color:var(--dim); font-size:12px; line-height:1.7; margin-bottom:18px; }
+  .rail-step { display:grid; grid-template-columns:26px 1fr; gap:10px; align-items:start; padding:11px 0; border-top:1px solid rgba(255,255,255,.06); color:var(--muted); transition: color .2s, opacity .2s; }
+  .rail-step:first-of-type { border-top:0; }
+  .rail-dot { width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; border:1px solid var(--border2); font-family:'DM Mono',monospace; font-size:10px; color:var(--dim); transition: all .25s cubic-bezier(.4,0,.2,1); }
+  .rail-step.active .rail-dot { background:var(--accent); color:var(--bg); border-color:var(--accent); box-shadow:0 0 20px var(--accent-glow); transform:scale(1.12); }
+  .rail-step.done .rail-dot { border-color:rgba(88,225,193,.5); color:var(--accent); }
+  .rail-step-name { font-size:13px; font-weight:700; color:inherit; line-height:1.35; }
+  .rail-step.active .rail-step-name { color:var(--text); }
+  .rail-step-help { color:var(--dim); font-size:11px; line-height:1.45; margin-top:4px; }
+  .calibration-main { border:1px solid rgba(255,255,255,.12); border-radius:24px; background:linear-gradient(180deg, rgba(22,26,33,.92), rgba(12,15,19,.88)); box-shadow:0 22px 70px rgba(0,0,0,.40), inset 0 1px 0 rgba(255,255,255,.06); padding:30px; position:relative; overflow:hidden; }
+  .calibration-main::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg, transparent, rgba(88,225,193,.50), transparent); }
+  .calibration-main::after { content:''; position:absolute; top:-60%; left:50%; transform:translateX(-50%); width:80%; height:60%; background:radial-gradient(ellipse, rgba(88,225,193,.08), transparent 70%); pointer-events:none; }
+  .progress { margin-bottom:24px; }
+  .pitem { width:9px; height:9px; border-width:0; opacity:.55; transition: width .3s cubic-bezier(.4,0,.2,1), opacity .3s, background .3s; }
+  .pitem.active { width:34px; border-radius:999px; opacity:1; }
+  .pitem.done { opacity:.8; }
+  .progress::before { top:4px; left:12px; right:12px; height:1px; }
+  .step-meta { text-align:left; font-family:'DM Mono',monospace; letter-spacing:.16em; text-transform:uppercase; opacity:.7; }
+  .q-title { text-align:left; max-width:760px; font-size:clamp(22px, 3.5vw, 28px); }
+  .q-help { text-align:left; margin-left:0; max-width:760px; border-left:2px solid rgba(88,225,193,.45); padding-left:14px; color:var(--dim); }
+  .question { border-radius:18px; background:rgba(15,18,22,.65); border-color:rgba(255,255,255,.12); box-shadow: 0 4px 24px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.04); position:relative; }
+  .question::after { content:''; position:absolute; top:0; left:20%; right:20%; height:1px; background:linear-gradient(90deg, transparent, rgba(255,255,255,.12), transparent); pointer-events:none; }
+  .question h3 { font-size:17px; }
+  .option { border-radius:14px; background:rgba(255,255,255,.045); border-color:rgba(255,255,255,.12); position:relative; transition: all .22s cubic-bezier(.4,0,.2,1); }
+  .option:hover { background:rgba(88,225,193,.06); border-color:rgba(88,225,193,.35); transform:translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,.18); }
+  .option:active { transform:translateY(0) scale(.985); transition-duration:.1s; }
+  .option.selected { box-shadow: 0 0 0 2px rgba(88,225,193,.45), 0 4px 16px rgba(88,225,193,.12), inset 0 0 20px rgba(88,225,193,.04); background:rgba(88,225,193,.16); border-color:var(--accent); transform:translateY(0); }
+  .option.selected::before { content:''; position:absolute; left:0; top:10px; bottom:10px; width:4px; border-radius:999px; background:var(--accent); box-shadow: 0 0 8px rgba(88,225,193,.5); }
+  #result.card { max-width:1060px; padding:0; background:transparent; border:0; box-shadow:none; }
+  #result.card::before { display:none; }
+  #result .section, #result .archetype-card, #result .path-map { margin-bottom:18px; }
+  .report-section-no { font-family:'DM Mono',monospace; color:var(--accent); letter-spacing:.18em; font-size:10px; text-transform:uppercase; margin-bottom:8px; }
+  .report-cover { padding:28px; border:1px solid var(--border); border-radius:24px; background:linear-gradient(180deg, rgba(28,32,38,.88), rgba(11,13,15,.78)); box-shadow:0 24px 80px rgba(0,0,0,.30), inset 0 1px 0 rgba(255,255,255,.05); margin-bottom:18px; position:relative; overflow:hidden; }
+  .report-cover::before { content:''; position:absolute; top:-40%; left:30%; width:40%; height:80%; background:radial-gradient(ellipse, rgba(88,225,193,.06), transparent 70%); pointer-events:none; }
+  .report-cover-title { font-size:30px; font-weight:900; letter-spacing:-.03em; margin-bottom:10px; }
+  .report-cover-meta { display:flex; gap:10px; flex-wrap:wrap; color:var(--muted); font-size:12px; }
+  @media (max-width: 860px) { .hero-card{grid-template-columns:1fr;} .calibration-shell{grid-template-columns:1fr;} .calibration-rail{position:relative; top:0;} .rail-sub{display:none;} }
+
+  .diagnosis-summary { margin:18px 0 0; padding:18px; border:1px solid rgba(88,225,193,.22); border-radius:18px; background:rgba(11,13,15,.46); }
+  .diagnosis-title { font-size:clamp(26px,4vw,40px); line-height:1.18; font-weight:900; color:var(--accent); letter-spacing:-.03em; margin:6px 0 12px; }
+  .diagnosis-one { color:var(--text); font-size:16px; line-height:1.8; font-weight:700; margin-top:10px; }
+  .diagnosis-tags { display:flex; flex-wrap:wrap; gap:8px; margin:14px 0 0; }
+  .diagnosis-tag { padding:8px 11px; border-radius:999px; background:rgba(88,225,193,.11); border:1px solid rgba(88,225,193,.25); color:var(--accent); font-size:12px; font-weight:750; }
+  .diagnosis-note { margin-top:16px; padding:14px 16px; border-left:3px solid var(--accent); background:rgba(88,225,193,.08); border-radius:12px; color:var(--muted); line-height:1.75; }
+  .path-node.self { border-style:dashed; border-color:rgba(169,176,186,.55); background:rgba(169,176,186,.06); }
+  .path-node.self .path-node-num { color:var(--muted); }
+  .path-node.active.self { border-style:solid; border-color:rgba(88,225,193,.72); }
+  .path-node.next { border-color:rgba(88,225,193,.42); background:rgba(88,225,193,.055); }
+  .path-legend { display:flex; flex-wrap:wrap; gap:8px; margin:12px 0 2px; color:var(--dim); font-size:12px; }
+  .legend-pill { display:inline-flex; align-items:center; gap:6px; padding:6px 9px; border:1px solid var(--border); border-radius:999px; background:rgba(255,255,255,.03); }
+  .legend-dot { width:8px; height:8px; border-radius:50%; background:var(--accent); }
+  .legend-dot.self { background:transparent; border:1px dashed var(--muted); }
+  .legend-dot.next { background:transparent; border:1px solid var(--accent); }
+  .download-prompt { margin-top:18px; padding:18px; border:1px solid rgba(88,225,193,.26); border-radius:18px; background:linear-gradient(135deg, rgba(88,225,193,.11), rgba(88,225,193,.035)); display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+  .download-prompt strong { color:var(--text); display:block; margin-bottom:4px; }
+  .download-prompt span { color:var(--muted); font-size:13px; line-height:1.7; }
+  .evidence-intro { color:var(--muted); line-height:1.75; margin-bottom:16px; }
+  .profile-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin:16px 0; }
+  .profile-mini { padding:14px; border:1px solid var(--border); border-radius:14px; background:rgba(255,255,255,.03); }
+  .profile-mini b { display:block; color:var(--text); margin-bottom:6px; }
+  .profile-mini span { color:var(--muted); font-size:13px; line-height:1.65; }
+  .prescription-goal { padding:18px; border-radius:16px; border:1px solid rgba(88,225,193,.28); background:rgba(88,225,193,.09); color:var(--text); font-size:16px; line-height:1.7; font-weight:750; margin-bottom:14px; }
+  .cta-actions { display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-top:18px; }
+  .cta-actions .wechat-code { margin-right:2px; }
+  .cta-actions.download-first .btn-secondary { order:2; }
+  .cta-actions.download-first .btn-ghost { order:3; }
+  .cta-save-hint { font-size:12px!important; color:var(--dim)!important; margin-top:10px!important; line-height:1.6!important; }
+  .cta-bullets { margin:14px 0 0; padding-left:18px; color:var(--muted); line-height:1.75; }
+  .cta-bullets li { margin:4px 0; }
+
+  .boundary-card { margin:16px 0; padding:18px; border:1px solid rgba(255,255,255,.10); border-radius:18px; background:rgba(11,13,15,.42); }
+  .boundary-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-top:12px; }
+  .boundary-col { padding:14px; border:1px solid rgba(255,255,255,.08); border-radius:14px; background:rgba(255,255,255,.025); }
+  .boundary-col.can-do { border-color:rgba(88,225,193,.30); background:rgba(88,225,193,.065); }
+  .boundary-col.cannot-do { border-color:rgba(246,166,71,.32); background:rgba(246,166,71,.065); }
+  .boundary-col b { display:block; color:var(--text); margin-bottom:8px; }
+  .boundary-col.can-do b { color:var(--accent); }
+  .boundary-col.cannot-do b { color:#F6A647; }
+  .boundary-col ul { margin:0; padding-left:18px; color:var(--muted); font-size:13px; line-height:1.75; }
+  .boundary-col.can-do li::marker { color:var(--accent); }
+  .boundary-col.cannot-do li::marker { color:#F6A647; }
+  .motive-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin:14px 0 18px; }
+  .motive-card { padding:14px; border:1px solid rgba(255,92,92,.22); border-radius:15px; background:rgba(255,92,92,.045); color:var(--muted); font-size:13px; line-height:1.65; }
+  .motive-card b { display:block; color:#FF7A7A; font-size:14px; margin-bottom:5px; }
+  .motive-card.active { border-color:rgba(255,92,92,.62); background:linear-gradient(135deg, rgba(255,92,92,.17), rgba(255,255,255,.03)); box-shadow:inset 0 0 0 1px rgba(255,92,92,.14), 0 14px 34px rgba(255,92,92,.08); }
+  .motive-card.active b { color:#FF5C5C; }
+  .motive-card.active::before { content:'当前最需要复诊'; display:inline-flex; margin-bottom:8px; padding:3px 8px; border-radius:999px; background:rgba(255,92,92,.16); color:#FF8A8A; font-size:11px; font-weight:800; letter-spacing:.04em; }
+  .cta-copy-block { margin:16px 0 12px; padding:18px; border:1px solid rgba(88,225,193,.24); border-radius:18px; background:linear-gradient(135deg, rgba(88,225,193,.075), rgba(11,13,15,.38)); }
+  .cta-copy-block h3 { margin:0 0 8px!important; }
+  .appointment-entry { margin:16px 0 0; padding:16px; border:1px solid rgba(88,225,193,.30); border-radius:16px; background:linear-gradient(135deg, rgba(88,225,193,.11), rgba(11,13,15,.46)); display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; }
+  .appointment-entry strong { display:block; color:var(--text); font-size:15px; }
+  .appointment-entry span { display:block; color:var(--muted); font-size:13px; line-height:1.6; margin-top:4px; }
+  .appointment-success-inline { margin:16px 0 0; padding:16px; border:1px solid rgba(88,225,193,.32); border-radius:16px; background:linear-gradient(135deg, rgba(88,225,193,.12), rgba(11,13,15,.46)); }
+  .appointment-success-inline strong { display:block; color:var(--accent); font-size:16px; margin-bottom:6px; }
+  .appointment-success-inline span { display:block; color:var(--muted); font-size:13px; line-height:1.7; }
+  .final-report-actions { margin-top:16px; padding-top:14px; border-top:1px solid rgba(255,255,255,.08); }
+  .appointment-panel { margin-top:16px; padding:18px; border:1px solid rgba(88,225,193,.28); border-radius:18px; background:linear-gradient(135deg, rgba(88,225,193,.09), rgba(11,13,15,.48)); }
+  .appointment-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-top:12px; }
+  .appointment-field { display:grid; gap:6px; }
+  .appointment-field.full { grid-column:1/-1; }
+  .appointment-field label { color:var(--text); font-size:13px; font-weight:750; }
+  .appointment-field input, .appointment-field select, .appointment-field textarea { width:100%; box-sizing:border-box; border:1px solid rgba(255,255,255,.13); border-radius:12px; background:rgba(11,13,15,.72); color:var(--text); padding:12px 13px; font:inherit; font-size:14px; outline:none; }
+  .appointment-field textarea { min-height:92px; resize:vertical; line-height:1.65; }
+  .appointment-field input:focus, .appointment-field select:focus, .appointment-field textarea:focus { border-color:rgba(88,225,193,.58); box-shadow:0 0 0 3px rgba(88,225,193,.10); }
+  .appointment-status { margin-top:12px; color:var(--muted); font-size:13px; line-height:1.7; }
+  .appointment-status.success { color:var(--accent); }
+  .appointment-status.error { color:#F6B66B; }
+  .modal-backdrop { position:fixed; inset:0; z-index:9999; display:flex; align-items:center; justify-content:center; padding:18px; background:rgba(0,0,0,.68); backdrop-filter:blur(12px); }
+  .modal-backdrop.hidden { display:none!important; }
+  .appointment-modal { width:min(760px, 100%); max-height:88vh; overflow:auto; border:1px solid rgba(88,225,193,.30); border-radius:22px; background:linear-gradient(180deg, rgba(22,26,33,.98), rgba(11,13,15,.98)); box-shadow:0 30px 100px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.06); padding:22px; }
+  .modal-head { display:flex; justify-content:space-between; align-items:flex-start; gap:14px; margin-bottom:12px; }
+  .modal-close { border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.04); color:var(--muted); border-radius:999px; padding:8px 11px; cursor:pointer; }
+  .modal-success { padding:22px; border:1px solid rgba(88,225,193,.26); border-radius:18px; background:rgba(88,225,193,.08); }
+  .modal-success h3 { margin:0 0 8px; color:var(--accent); }
+  .nextstep-recheck-prompt { margin:16px 0; padding:18px; border:1px solid rgba(88,225,193,.30); border-radius:18px; background:linear-gradient(135deg, rgba(88,225,193,.12), rgba(11,13,15,.46)); display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+  .nextstep-recheck-prompt strong { display:block; color:var(--text); font-size:16px; margin-bottom:6px; }
+  .nextstep-recheck-prompt span { display:block; color:var(--muted); font-size:13px; line-height:1.65; max-width:640px; }
+  .nextstep-recheck-prompt .btn-primary { font-size:15px; padding:14px 18px; }
+  @media (max-width:720px){ .profile-grid{grid-template-columns:1fr;} .download-prompt{align-items:stretch;} .download-prompt button{width:100%;} .early-risk-card{grid-template-columns:1fr;align-items:start;} .boundary-grid,.motive-grid,.appointment-grid{grid-template-columns:1fr;} }
+
+  .path-node-signal { margin-top:8px; padding-top:8px; border-top:1px solid rgba(255,255,255,.07); color:var(--dim); font-size:11px; line-height:1.45; }
+  .eiofs-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-top:14px; }
+  .eiofs-card { padding:16px; border:1px solid rgba(88,225,193,.20); border-radius:16px; background:rgba(88,225,193,.055); }
+  .eiofs-card b { display:block; color:var(--text); margin-bottom:8px; font-size:14px; }
+  .eiofs-card ul { margin:0; padding-left:18px; color:var(--muted); font-size:13px; line-height:1.75; }
+  .eiofs-card li { margin:3px 0; }
+  .eiofs-card.missing { border-color:rgba(246,182,107,.24); background:rgba(246,182,107,.055); }
+  .eiofs-card.missing b { color:#F6B66B; }
+  .eiofs-logic { margin-top:14px; padding:16px; border:1px solid rgba(88,225,193,.22); border-radius:16px; background:rgba(11,13,15,.42); color:var(--muted); line-height:1.75; }
+  .eiofs-logic strong { color:var(--text); }
+  .eiofs-matrix { margin-top:18px; padding:18px; border:1px solid rgba(255,255,255,.10); border-radius:18px; background:rgba(11,13,15,.42); overflow:hidden; }
+  .eiofs-matrix-head { display:flex; justify-content:space-between; gap:12px; align-items:flex-start; margin-bottom:12px; }
+  .eiofs-matrix-title { color:var(--text); font-size:15px; font-weight:800; }
+  .eiofs-matrix-sub { color:var(--dim); font-size:12px; line-height:1.6; margin-top:4px; }
+  .eiofs-matrix-scroll { overflow-x:auto; padding-bottom:4px; }
+  .eiofs-matrix-table { width:100%; min-width:980px; border-collapse:separate; border-spacing:0; font-size:12px; }
+  .eiofs-matrix-table th, .eiofs-matrix-table td { padding:10px 9px; border-right:1px solid rgba(255,255,255,.07); border-bottom:1px solid rgba(255,255,255,.07); vertical-align:top; line-height:1.55; }
+  .eiofs-matrix-table th { color:var(--accent); background:rgba(88,225,193,.07); font-weight:800; position:sticky; top:0; z-index:1; }
+  .eiofs-matrix-table th:first-child, .eiofs-matrix-table td:first-child { position:sticky; left:0; z-index:2; background:rgba(15,18,22,.96); color:var(--text); font-weight:800; min-width:92px; }
+  .eiofs-matrix-table th:first-child { z-index:3; background:rgba(20,28,31,.98); }
+  .eiofs-matrix-table td.active-stage, .eiofs-matrix-table th.active-stage { background:rgba(88,225,193,.12); color:var(--text); box-shadow:inset 2px 0 0 rgba(88,225,193,.55); }
+  .eiofs-matrix-table td.next-stage, .eiofs-matrix-table th.next-stage { background:rgba(88,225,193,.055); }
+  .eiofs-matrix-table td.self-stage { background:rgba(169,176,186,.055); }
+  @media (max-width:720px){ .eiofs-grid{grid-template-columns:1fr;} .eiofs-matrix{padding:14px;} }
+
+  .reasoning-map { margin-top:16px; display:grid; gap:12px; }
+  .reasoning-step { display:grid; grid-template-columns:56px 1fr; gap:14px; padding:16px; border:1px solid rgba(255,255,255,.10); border-radius:16px; background:rgba(11,13,15,.44); }
+  .reasoning-step.result-focus { border-color:rgba(88,225,193,.22); background:linear-gradient(135deg, rgba(88,225,193,.08), rgba(11,13,15,.44)); }
+  .reasoning-step-num { width:42px; height:42px; border-radius:13px; display:flex; align-items:center; justify-content:center; background:rgba(88,225,193,.12); border:1px solid rgba(88,225,193,.28); color:var(--accent); font-weight:900; font-family:var(--mono); }
+  .reasoning-step-title { color:var(--text); font-size:15px; font-weight:800; margin-bottom:6px; }
+  .reasoning-step-main { color:var(--text); line-height:1.75; font-size:15px; font-weight:650; }
+  .reasoning-step-evidence { margin-top:8px; color:var(--muted); font-size:13px; line-height:1.7; }
+  .reasoning-conclusion { margin-top:14px; padding:18px; border-radius:16px; border:1px solid rgba(88,225,193,.28); background:linear-gradient(135deg, rgba(88,225,193,.11), rgba(88,225,193,.035)); color:var(--text); line-height:1.75; font-weight:750; }
+  .data-points-details { margin-top:16px; border:1px solid rgba(255,255,255,.08); border-radius:16px; background:rgba(11,13,15,.28); overflow:hidden; }
+  .data-points-details summary { cursor:pointer; list-style:none; padding:14px 16px; color:var(--text); font-size:15px; font-weight:800; display:flex; justify-content:space-between; gap:12px; align-items:center; }
+  .data-points-details summary::-webkit-details-marker { display:none; }
+  .data-points-details summary::after { content:'展开明细'; color:var(--accent); font-size:12px; font-family:var(--mono); font-weight:800; }
+  .data-points-details[open] summary::after { content:'收起明细'; }
+  .data-points-details .result-box { border-left:0; border-right:0; border-bottom:0; border-radius:0; margin-top:0!important; }
+  @media (max-width:720px){ .reasoning-step{grid-template-columns:1fr;} .reasoning-step-num{width:36px;height:36px;} .data-points-details summary{align-items:flex-start; flex-direction:column;} }
+
+  /* 返回首页按钮 */
+  .back-home {
+    position: fixed; top: 18px; right: 18px; z-index: 9999;
+    display: inline-flex; align-items: center; gap: 7px;
+    font-family: 'Noto Sans SC', sans-serif; font-size: 13px; font-weight: 700;
+    color: #06120E; background: var(--accent);
+    padding: 9px 16px; border-radius: 8px; text-decoration: none;
+    box-shadow: 0 8px 24px rgba(0,0,0,.3); transition: all .2s;
+  }
+  .back-home:hover { background: var(--accent2); transform: translateY(-2px); }
+  @media (max-width: 768px){ .back-home { top: 12px; right: 12px; font-size: 12px; padding: 8px 13px; } }
+</style>
+</head>
+<body>
+  <a class="back-home" href="index.html">← 返回首页</a>
+  <div class="wrap">
+    <section id="intro" class="hero">
+      <div class="hero-inner">
+        <header class="hero-header">
+          <div class="eyebrow"><span class="status-dot"></span> 一人公司探索路径校准器</div>
+          <h1>你在探索的一人公司，<br>有没有在浪费你的宝贵时间？</h1>
+          <p class="subtitle">很多人做一人公司花了巨大的时间精力，但最后却发现走了弯路，拿不到自己想要的结果。<br>这个工具不会假设你一定错了，而是帮你做一次路径检查：看你现在处在哪个阶段、正在做什么、最困惑什么，以及有没有可能把珍贵时间花在不属于当前阶段的事情上。</p>
+        </header>
+
+        <div class="hero-card">
+          <div class="hero-note">
+            3 分钟检查你当前的一人公司所处阶段、行动路线和真实困惑，帮你判断现在做的事是否和阶段匹配，避免把时间花在不属于当前阶段的问题上。
+          </div>
+          <div class="hero-features" aria-hidden="true">
+            <div class="feature"><b>01 阶段识别</b><span>判断你处在 0-5 阶段的哪一步。</span></div>
+            <div class="feature"><b>02 行动匹配</b><span>检查最近投入是否符合当前阶段。</span></div>
+            <div class="feature"><b>03 下一步校准</b><span>给出最需要优先检查的关键点。</span></div>
+          </div>
+          <div class="hero-actions">
+            <button class="btn-primary" onclick="start()">生成我的路径地图 →</button>
+            <div class="privacy">本工具只用于生成你的路径检查结果。除非你主动添加微信，否则不会联系你。</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="app" class="card calibration-shell hidden">
+      <aside class="calibration-rail">
+        <div class="rail-kicker">PATH CALIBRATION</div>
+        <div class="rail-title">路径校准流程</div>
+        <div class="rail-sub">每一步都不是为了收集信息，而是为了判断：你现在的时间有没有花在当前阶段最关键的问题上。</div>
+        <div id="stepRail"></div>
+      </aside>
+      <main class="calibration-main">
+        <div class="progress" id="progress"></div>
+        <div class="step-meta" id="stepMeta"></div>
+        <h2 class="q-title" id="stepTitle"></h2>
+        <p class="q-help" id="stepHelp"></p>
+        <div id="questions"></div>
+        <div id="warning" class="warn hidden"></div>
+        <div class="nav">
+          <button class="btn-secondary" id="prevBtn" onclick="prevStep()">上一步</button>
+          <button class="btn-primary" id="nextBtn" onclick="nextStep()">继续校准</button>
+        </div>
+      </main>
+    </section>
+
+    <section id="result" class="card hidden"></section>
+  </div>
+
+<script>
+const API_BASE_URLS = [
+  'https://feishu-webhook-dojmuojwfc.cn-hangzhou.fcapp.run',
+  'https://feishu-api-woad.vercel.app'
+];
+const API_BASE_URL = API_BASE_URLS[0];
+const WECHAT_ID = 'qiaoboose01';
+const CALIBRATOR_VERSION = '2026-05-14-restructured-no-price-signal';
+const SITE_COMMIT = 'e697edd-plus-reliability';
+const REQUEST_TIMEOUT_MS = 15000;
+
+const state = { step: 0, answers: {}, computed: {}, appointment: {}, submission_id: '', submission_record_id: '', debug_id: `dbg_${Date.now()}_${Math.random().toString(36).slice(2,8)}` };
+
+const steps = [
+  { title:'扫描职业资产', help:'不是所有人都适合从同一种方式启动一人公司。先看你有哪些可迁移资产，是否适合从专业经验、知识服务、内容、工具或项目制服务切入。', questions:['occupation_type','years_experience','work_mode','transferable_abilities','asset_list','value_orientation','possible_business_forms'] },
+  { title:'定位当前阶段', help:'很多时间浪费，不是因为你不努力，而是因为你用了后一个阶段的方法，去解决前一个阶段的问题。', questions:['stage_self_select'] },
+  { title:'核对真实行动', help:'系统不会只看你怎么描述自己，而会结合你过去 3 个月做过什么真实动作，校准你实际处在哪个阶段。', questions:['action_list','current_time_focus'] },
+  { title:'识别关键卡点', help:'你现在最想解决的问题，决定了接下来 2-4 周最值得投入的事情。', questions:['primary_question','desired_outcome_label','outcome_urgency'] },
+  { title:'匹配推进方式', help:'同一个阶段，不同人的推进方式不同。有人适合自己摸索，有人更需要路径、反馈或外部校准。', questions:['problem_solving_style','growth_investment_behavior','support_preference'] }
+];
+
+const q = {
+  occupation_type: { type:'single', title:'你目前的职业/身份更接近哪一种？', options:['企业职场人/专业岗位从业者','管理者/团队负责人','自由职业者/独立服务者','咨询师/培训师/教练/顾问','内容创作者/自媒体从业者','创业者/小企业主','技术/产品/运营/设计/市场/销售等专业角色','教育、心理、法律、财务、医疗、HR 等专业服务角色','暂时没有稳定职业身份','其他'], extra:'如果选择其他，可以补充你的职业/身份', extraKey:'professional_identity' },
+  years_experience: { type:'single', title:'你的工作/专业积累大概有多久？', options:['0-3 年','3-5 年','5-10 年','10-15 年','15 年以上','不适用/暂时没有明确专业积累'] },
+  work_mode: { type:'multi', max:4, title:'你的工作状态，更接近下面哪种情况？', hint:'最多选 4 项。', options:['主要按流程执行','需要稳定输出专业能力','需要持续学习新东西','需要解决复杂问题','需要对结果负责','收入和个人能力强相关','更依赖个人品牌/信任','时间自由度低，但收入相对稳定','我正在尝试建立自己的业务闭环','暂时说不清楚','其他'], extra:'如果选择其他，可以补充你的工作状态', extraKey:'work_mode_other' },
+  transferable_abilities: { type:'multi', max:3, title:'你觉得自己目前最核心、最能迁移出来的能力是什么？', hint:'最多选 3 项。', options:['专业技能/行业经验','解决复杂问题的能力','管理、组织、项目推进能力','咨询、诊断、陪伴、反馈能力','内容表达、写作、演讲、课程能力','销售、成交、客户沟通能力','产品、运营、增长、商业化能力','AI 工具应用/流程自动化能力','资源连接、社群运营、人脉整合能力','暂时说不清楚','其他'], extra:'如果选择其他，可以补充你的可迁移能力', extraKey:'transferable_abilities_other' },
+  asset_list: { type:'multi', title:'你目前有哪些可以被转化为个人业务的基础？', options:['某个行业/岗位的专业经验','帮别人解决过具体问题','有可复用的方法、流程、SOP 或经验总结','有成功案例或可展示成果','有内容表达经验，如写作、视频、直播、分享','有咨询、培训、陪跑、社群、顾问经验','有客户、用户、学员或行业资源','有 AI 应用或提效经验','有产品、运营、销售、管理等可迁移能力','暂时说不清楚','其他'], extra:'如果选择其他，可以补充你的个人业务基础', extraKey:'asset_list_other' },
+  value_orientation: { type:'multi', max:3, title:'你对下面哪种状态感受最强？', hint:'最多选 3 项。', options:['我不想长期重复低价值工作','我希望未来更多靠认知而不是工时赚钱','我希望未来有更自主的时间安排','我希望积累属于自己的长期资产','我不想长期依赖单一平台/公司','我希望自己的能力能够持续复利','我希望收入不要只和上班时间绑定','我希望未来能有更强的自主掌控感','暂时说不清楚','其他'], extra:'如果选择其他，可以补充你的真实感受', extraKey:'value_orientation_other' },
+  possible_business_forms: { type:'multi', max:3, title:'如果未来真的做自己的事，你觉得它更可能接近哪种形态？', hint:'最多选 3 项。', options:['咨询/顾问服务','课程/训练营','陪跑/社群','内容 IP / 自媒体','自由职业服务','企业服务/项目制服务','AI 工具/软件/自动化产品','电商/卖货/实体/本地服务','投资/交易/副业项目','还不确定','其他'], extra:'如果选择其他，可以补充你想到的业务形态', extraKey:'possible_business_forms_other' },
+  stage_self_select: { type:'single', title:'你现在更接近哪种状态？', options:[
+    {label:'阶段 0：只是对现在的工作/状态不太满意，但还没有认真想过做自己的事', value:'阶段 0'},
+    {label:'阶段 1：开始有想做自己的事的念头，但还没下定决心，也不知道适合做什么', value:'阶段 1'},
+    {label:'阶段 2：比较确定想做自己的事，但方向还不清楚，或者有几个方向没定下来', value:'阶段 2'},
+    {label:'阶段 3：方向很清楚，但不知道怎么启动、怎么做产品、怎么找用户/客户，怎么用 AI 提效', value:'阶段 3'},
+    {label:'阶段 4：已经有初步产品/服务/客户，但还不稳定，不知道怎么持续获客或稳定交付', value:'阶段 4'},
+    {label:'阶段 5：已经有相对稳定的业务模式，想继续放大', value:'阶段 5'}
+  ] },
+  action_list: { type:'multi', title:'过去 3 个月，你为这件事做过哪些真实动作？', options:['只是想过，还没有实际行动','梳理过自己的方向/定位','发过相关内容或表达观点','找潜在用户/客户聊过','做过用户访谈或需求调研','做过试服务、体验版或 MVP','发起过报价或合作邀请','有过真实付费客户/用户','有过复购、转介绍或持续合作','正在稳定交付','其他'], extra:'如果选择其他，可以补充你的真实业务动作', extraKey:'action_list_other' },
+  current_time_focus: { type:'multi', max:3, title:'你现在主要把时间投入在哪些事情上？', hint:'最多选 3 项。', options:['思考方向和路径','做内容/表达观点','找用户/客户交流','设计产品/服务','获客/成交','客户交付','优化已有业务','AI/系统提效','信息输入和学习','暂时比较混乱','其他'], extra:'如果选择其他，可以补充你当前的时间投入', extraKey:'current_time_focus_other' },
+  primary_question: { type:'multi', max:3, title:'你现在最想解决什么问题？',  hint:'最多选 3 项。', options:['我到底要不要做自己的事','我适合做什么方向','我的经验/能力能不能转成一个个人业务','我应该服务谁、解决什么问题','我怎么把想法变成具体产品/服务','我怎么找到第一批用户/客户','我怎么表达价值、让别人愿意了解我','我怎么定价、沟通、成交','我怎么稳定获客、稳定交付或稳定收入','我怎么把已有业务继续放大','我现在不是不知道，而是缺执行节奏和外部反馈','其他'], extra:'如果选择其他，可以补充你现在最想解决的问题', extraKey:'primary_question_other' },
+  desired_outcome_label: { type:'single', title:'如果接下来 4-8 周只能帮你拿到一个阶段性结果，你最希望是哪一个？', options:['判断我到底适不适合做自己的事','明确一个更适合自己的方向','判断我的经验/能力是否适合转成知识服务或个人业务','明确我应该服务谁、解决什么问题','把想法变成第一个具体产品/服务','找到第一批潜在用户/客户','设计内容表达、获客路径或信任建立方式','设计定价、沟通路径或成交方式','推动一次真实报价/成交验证','建立稳定执行节奏和外部反馈','完成业务的稳定变现','其他'], extra:'如果选择其他，可以补充你最想拿到的阶段性结果', extraKey:'desired_outcome_label_other' },
+  outcome_urgency: { type:'single', title:'上面这个结果，对你现在有多重要？', options:['只是有点想弄清楚，不急','有影响，但暂时可以自己慢慢摸索','比较重要，会明显影响我接下来怎么投入时间','很重要，不解决就容易继续浪费时间','非常重要，我已经被这个问题卡住了'] },
+  problem_solving_style: { type:'multi', max:3, title:'当你遇到重要卡点时，你通常更接近哪种状态？', hint:'最多选 3 项。', options:['我会先自己研究和尝试','我会大量搜索案例和信息','我会找同行/朋友交流','我会主动请教有经验的人','我愿意借助工具提高效率','我希望有人帮我减少试错','我更希望有人给我反馈和校准','我容易想很多，但推进较慢','暂时说不清楚','其他'], extra:'如果选择其他，可以补充你遇到卡点时的状态', extraKey:'problem_solving_style_other' },
+  growth_investment_behavior: { type:'multi', title:'过去一年，你在哪些事情上有过主动成长投入？', options:['买过课程/训练营','用过 AI / 效率工具','参加过社群/线下交流','请教过顾问/教练/前辈','系统学习过某个主题','做过副业/个人项目尝试','长期输出内容','做过长期复盘或记录','暂时主要靠自己摸索','其他'], extra:'如果选择其他，可以补充你的成长投入', extraKey:'growth_investment_behavior_other' },
+  support_preference: { type:'multi', max:2, title:'如果接下来推进你最想解决的问题，你更希望哪种方式？', hint:'最多选 2 项。', options:['我想先自己慢慢探索','我希望有人给我一个清晰路径','我希望得到具体反馈和校准','我希望有人陪我一起推进','我希望尽量减少试错','我更适合边做边调整','我现在还不确定','其他'], extra:'如果选择其他，可以补充你更希望的推进方式', extraKey:'support_preference_other' }
+};
+
+function start(){ document.getElementById('intro').classList.add('hidden'); document.getElementById('app').classList.remove('hidden'); render(); }
+function getUrlParam(k){ return new URLSearchParams(location.search).get(k) || ''; }
+function optVal(o){ return typeof o === 'string' ? o : o.value; }
+function optLabel(o){ return typeof o === 'string' ? o : o.label; }
+function questionTitle(item){
+  if(!item.dynamicTitle) return item.title;
+  const outcome = state.answers.desired_outcome_label || '你刚才选择的结果';
+  return item.title.replace('{outcome}', outcome);
+}
+
+function render(){
+  document.getElementById('progress').innerHTML = steps.map((_,i)=>`<div class="pitem ${i<state.step?'done':''} ${i===state.step?'active':''}"></div>`).join('');
+  const rail = document.getElementById('stepRail');
+  if(rail) rail.innerHTML = steps.map((s,i)=>`<div class="rail-step ${i<state.step?'done':''} ${i===state.step?'active':''}"><div class="rail-dot">${String(i+1).padStart(2,'0')}</div><div><div class="rail-step-name">${s.title}</div><div class="rail-step-help">${i===0?'职业资产':i===1?'阶段定位':i===2?'行动证据':i===3?'卡点目标':'推进方式'}</div></div></div>`).join('');
+  document.getElementById('stepMeta').textContent = `路径校准 ${String(state.step+1).padStart(2,'0')} / ${String(steps.length).padStart(2,'0')}`;
+  document.getElementById('stepTitle').textContent = steps[state.step].title;
+  document.getElementById('stepHelp').textContent = steps[state.step].help;
+  document.getElementById('prevBtn').style.visibility = state.step===0 ? 'hidden' : 'visible';
+  document.getElementById('nextBtn').textContent = state.step===steps.length-1 ? '生成我的路径地图' : '继续校准 →';
+  document.getElementById('warning').classList.add('hidden');
+  document.getElementById('questions').innerHTML = steps[state.step].questions.map(renderQuestion).join('');
+}
+
+function renderQuestion(key){
+  const item = q[key];
+  const selected = state.answers[key] || (item.type==='multi' ? [] : '');
+  const cls = item.type==='single' ? 'radio' : '';
+  const opts = item.options.map(o=>{
+    const value = optVal(o), label = optLabel(o);
+    const isSel = item.type==='multi' ? selected.includes(value) : selected === value;
+    return `<div class="option ${cls} ${isSel?'selected':''}" onclick="selectOption('${key}', ${JSON.stringify(value).replace(/"/g,'&quot;')})">
+      <div class="check">✓</div><div><div class="option-title">${label}</div></div>
+    </div>`;
+  }).join('');
+  const extraKey = item.extraKey || `${key}_other`;
+  const extra = item.extra ? `<div style="margin-top:12px"><input type="text" placeholder="${item.extra}" value="${state.answers[extraKey] || ''}" oninput="state.answers['${extraKey}']=this.value"></div>` : '';
+  return `<div class="question"><h3>${questionTitle(item)}</h3>${item.hint?`<div class="hint">${item.hint}</div>`:''}<div class="options">${opts}</div>${extra}</div>`;
+}
+
+function selectOption(key, value){
+  const item = q[key];
+  if(item.type === 'multi'){
+    const arr = state.answers[key] || [];
+    const idx = arr.indexOf(value);
+    if(idx >= 0) arr.splice(idx,1);
+    else {
+      if(item.max && arr.length >= item.max){ showWarn(`这题最多选择 ${item.max} 项。`); return; }
+      arr.push(value);
+    }
+    state.answers[key] = arr;
+  } else state.answers[key] = value;
+  render();
+}
+function showWarn(msg){ const el=document.getElementById('warning'); el.textContent=msg; el.classList.remove('hidden'); }
+function stepValid(){
+  for(const key of steps[state.step].questions){
+    const item=q[key], val=state.answers[key];
+    if(item.type==='multi' && (!val || !val.length)) return false;
+    if(item.type==='single' && !val) return false;
+  }
+  return true;
+}
+function nextStep(){
+  if(!stepValid()){ showWarn('请先完成当前步骤的所有问题。'); return; }
+  if(state.step < steps.length-1){ state.step++; render(); window.scrollTo({top:0,behavior:'smooth'}); }
+  else generateResult();
+}
+function prevStep(){ if(state.step>0){ state.step--; render(); window.scrollTo({top:0,behavior:'smooth'}); } }
+
+const stageNum = s => Number(String(s||'').match(/\d/)?.[0] || 0);
+const arr = v => Array.isArray(v) ? v : (v ? [v] : []);
+const hasAny = (v, xs) => arr(v).some(x => xs.includes(x));
+const fmtList = v => arr(v).filter(Boolean).join('、') || '未填写';
+const esc = s => String(s ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+
+function scoreActions(actions){
+  let score=0; const a=actions||[];
+  if(a.includes('梳理过自己的方向/定位')) score=Math.max(score,1);
+  if(a.includes('发过相关内容或表达观点')) score=Math.max(score,2);
+  if(a.includes('找潜在用户/客户聊过')) score=Math.max(score,3);
+  if(a.includes('做过用户访谈或需求调研')) score=Math.max(score,3);
+  if(a.includes('做过试服务、体验版或 MVP')) score=Math.max(score,4);
+  if(a.includes('发起过报价或合作邀请')) score=Math.max(score,5);
+  if(a.includes('有过真实付费客户/用户')) score=Math.max(score,6);
+  if(a.includes('有过复购、转介绍或持续合作')) score=Math.max(score,7);
+  if(a.includes('正在稳定交付')) score=Math.max(score,8);
+  return score;
+}
+
+function calc(){
+  const a = state.answers;
+  const s0 = stageNum(a.stage_self_select);
+  const actionScore = scoreActions(a.action_list);
+  const assetScore = (a.asset_list||[]).filter(x=>!['暂时说不清楚','其他'].includes(x)).length;
+  const transferScore = (a.transferable_abilities||[]).filter(x=>!['暂时说不清楚','其他'].includes(x)).length;
+  const forms = a.possible_business_forms || [];
+  const ksForms = ['咨询/顾问服务','课程/训练营','陪跑/社群','内容 IP / 自媒体','企业服务/项目制服务','自由职业服务'];
+  const ksInterest = forms.some(x=>ksForms.includes(x)) ? '高' : (forms.includes('还不确定') ? '不明确' : '低');
+  let calibrated = s0;
+  if(s0>=3 && actionScore<=1 && hasAny(a.primary_question, ['我适合做什么方向','我的经验/能力能不能转成一个个人业务'])) calibrated = 2;
+  if(s0<=2 && actionScore>=4) calibrated = 3;
+  if(s0<=3 && (a.action_list||[]).includes('有过真实付费客户/用户')) calibrated = 4;
+  if(s0<=4 && ((a.action_list||[]).includes('有过复购、转介绍或持续合作') || (a.action_list||[]).includes('正在稳定交付'))) calibrated = Math.max(calibrated,4);
+  const calibratedStage = `阶段 ${calibrated}`;
+
+  const work = a.work_mode || [];
+  const values = a.value_orientation || [];
+  const problemStyle = a.problem_solving_style || [];
+  const growth = a.growth_investment_behavior || [];
+  const support = a.support_preference || [];
+  const focus = a.current_time_focus || [];
+
+  const complexityScore = ['需要稳定输出专业能力','需要持续学习新东西','需要解决复杂问题','需要对结果负责','收入和个人能力强相关','更依赖个人品牌/信任','我正在尝试建立自己的业务闭环'].filter(x=>work.includes(x)).length;
+  const timeValueScore = ['我不想长期重复低价值工作','我希望未来更多靠认知而不是工时赚钱','我希望未来有更自主的时间安排','我希望积累属于自己的长期资产','我不想长期依赖单一平台/公司','我希望自己的能力能够持续复利','我希望收入不要只和上班时间绑定','我希望未来能有更强的自主掌控感'].filter(x=>values.includes(x)).length + ['我希望有人帮我减少试错','我更希望有人给我反馈和校准'].filter(x=>problemStyle.includes(x)).length;
+  const feedbackScore = ['我会找同行/朋友交流','我会主动请教有经验的人','我更希望有人给我反馈和校准'].filter(x=>problemStyle.includes(x)).length + ['我希望得到具体反馈和校准','我希望有人陪我一起推进','我更适合边做边调整'].filter(x=>support.includes(x)).length;
+  const growthScore = ['需要持续学习新东西','需要解决复杂问题','我正在尝试建立自己的业务闭环'].filter(x=>work.includes(x)).length + ['用过 AI / 效率工具','请教过顾问/教练/前辈','系统学习过某个主题','做过副业/个人项目尝试','长期输出内容','做过长期复盘或记录'].filter(x=>growth.includes(x)).length;
+  const supportScore = ['我希望有人给我一个清晰路径','我希望得到具体反馈和校准','我希望有人陪我一起推进','我希望尽量减少试错','我更适合边做边调整'].filter(x=>support.includes(x)).length + ['我希望有人帮我减少试错','我更希望有人给我反馈和校准'].filter(x=>problemStyle.includes(x)).length;
+
+  const profileScore = (['3-5 年','5-10 年','10-15 年','15 年以上'].includes(a.years_experience)?1:0) + (assetScore>=3?1:0) + (ksInterest==='高'?1:0) + ([2,3,4].includes(calibrated)?1:0) + (complexityScore>=3?1:0) + (actionScore>=2?1:0);
+  const profileMatch = profileScore>=5?'高':(profileScore>=3?'中':'低');
+  const highRisk = (calibrated<=2 && ['做内容/表达观点','设计产品/服务','获客/成交'].some(x=>focus.includes(x))) || (calibrated===3 && ['信息输入和学习','思考方向和路径','暂时比较混乱'].some(x=>focus.includes(x)));
+  const timeRisk = highRisk ? '高' : ((actionScore<=1 && calibrated>=2) || (calibrated!==s0) ? '中' : '低');
+  const urgentStrong = ['很重要，不解决就容易继续浪费时间','非常重要，我已经被这个问题卡住了'].includes(a.outcome_urgency);
+  const growthDrive = growthScore>=5?'高':(growthScore>=3?'中':'低');
+  const timeValue = timeValueScore>=4?'高':(timeValueScore>=2?'中':'低');
+  const feedbackAwareness = feedbackScore>=3?'高':(feedbackScore>=1?'中':'低');
+  const longTermPotentialScore = (urgentStrong?1:0) + (timeValue==='高'?1:0) + (feedbackAwareness==='高'?1:0) + (supportScore>=2?1:0) + (growthDrive!=='低'?1:0) + (actionScore>=2?1:0);
+  const longTermPaidPotential = longTermPotentialScore>=5?'高':(longTermPotentialScore>=3?'中':'低');
+  const ksPotential = (assetScore>=4 && ksInterest==='高' && [2,3,4].includes(calibrated)) ? '高' : (assetScore>=2 || ksInterest==='高' ? '中' : '暂不明确');
+  let segment = 'P3';
+  if([2,3,4].includes(calibrated) && profileMatch==='高' && ['高','中'].includes(ksPotential) && ['高','中'].includes(longTermPaidPotential)) segment='P0';
+  else if([1,2,3].includes(calibrated) && profileMatch!=='低') segment='P1';
+  else if([4,5].includes(calibrated) || ksInterest==='低') segment='P2';
+  const ctaType = segment==='P0'?'P0_PATH_RECHECK':segment==='P1'?'P1_RESULT_CONFIRM':segment==='P2'?'P2_LIGHT_RECHECK':'P3_SAVE_REPORT';
+  const selfMismatch = calibrated !== s0;
+  let deepDiveMotivation = 'action_unclear';
+  if(selfMismatch) deepDiveMotivation = 'stage_mismatch';
+  else if(timeRisk === '高') deepDiveMotivation = 'high_time_risk';
+  else if(hasAny(a.primary_question, ['我怎么把想法变成具体产品/服务','我应该服务谁、解决什么问题','我的经验/能力能不能转成一个个人业务'])) deepDiveMotivation = 'service_wedge';
+  const deepDiveMotivationLabel = ({stage_mismatch:'阶段判断偏差', high_time_risk:'时间错配高风险', action_unclear:'具体行动模糊', service_wedge:'方向/服务切口'})[deepDiveMotivation];
+  const consultationRecommended = ['P0','P1','P2'].includes(segment);
+  const checkPoint = recommendedCheck(calibrated, a.desired_outcome_label);
+  state.computed = {
+    occupation_type:a.occupation_type, professional_identity:a.professional_identity,
+    learning_pressure:work.includes('需要持续学习新东西'), result_responsibility:work.includes('需要对结果负责'), complexity_level:complexityScore, income_skill_dependency:work.includes('收入和个人能力强相关'), personal_brand_dependency:work.includes('更依赖个人品牌/信任'), business_building_tendency:work.includes('我正在尝试建立自己的业务闭环'),
+    transferable_ability_score:transferScore, asset_score:assetScore, knowledge_service_interest:ksInterest, non_knowledge_service_path:ksInterest==='低',
+    autonomy_need:values.includes('我希望未来有更自主的时间安排') || values.includes('我希望未来能有更强的自主掌控感'), leverage_awareness:values.includes('我希望未来更多靠认知而不是工时赚钱') || values.includes('我希望自己的能力能够持续复利'), anti_time_selling_tendency:values.includes('我不想长期重复低价值工作') || values.includes('我希望收入不要只和上班时间绑定'), long_term_asset_awareness:values.includes('我希望积累属于自己的长期资产'),
+    stage_score_initial:s0, calibrated_stage:calibratedStage, action_score:actionScore, validation_level:actionScore>=4?'高':(actionScore>=2?'中':'低'), monetization_stage:actionScore>=6?'已成交/交付':(actionScore>=5?'接近成交':'未成交'), current_action_focus:focus, execution_focus:focus, stage_match_level:timeRisk==='低'?'匹配':'可能错配', blocker_type:blockerType(a.primary_question), desired_stage_result:a.desired_outcome_label, pain_intensity: urgentStrong?'强':'中',
+    feedback_awareness:feedbackAwareness, trial_error_avoidance:problemStyle.includes('我希望有人帮我减少试错') || support.includes('我希望尽量减少试错'), execution_block:problemStyle.includes('我容易想很多，但推进较慢'), ai_adoption:growth.includes('用过 AI / 效率工具'), external_support_usage:growth.includes('请教过顾问/教练/前辈') || growth.includes('参加过社群/线下交流'), long_term_growth_tendency:growthDrive, coaching_fit:supportScore>=2?'高':(supportScore>=1?'中':'低'), feedback_need:feedbackAwareness, execution_support_need:support.includes('我希望有人陪我一起推进'),
+    profile_match:profileMatch, time_waste_risk:timeRisk, payment_intent_signal:longTermPaidPotential, long_term_paid_potential:longTermPaidPotential, high_growth_drive:growthDrive, high_time_value_sense:timeValue, knowledge_service_potential:ksPotential, user_segment:segment, deep_dive_motivation:deepDiveMotivation, deep_dive_motivation_label:deepDiveMotivationLabel, consultation_recommended:consultationRecommended, appointment_priority:segment, recommended_check_point:checkPoint, cta_type:ctaType
+  };
+}
+
+function blockerType(x){
+  const m={'我到底要不要做自己的事':'动机判断','我适合做什么方向':'方向判断','我的经验/能力能不能转成一个个人业务':'能力转化','我应该服务谁、解决什么问题':'目标用户/问题定义','我怎么把想法变成具体产品/服务':'产品化','我怎么找到第一批用户/客户':'用户获取','我怎么表达价值、让别人愿意了解我':'表达/信任','我怎么定价、沟通、成交':'成交','我怎么稳定获客、稳定交付或稳定收入':'稳定化','我怎么把已有业务继续放大':'放大','我现在不是不知道，而是缺执行节奏和外部反馈':'执行/反馈'};
+  return arr(x).map(v=>m[v]||v||'其他').join('、') || '其他';
+}
+
+function recommendedCheck(stage, outcome){
+  const o = outcome || '你最想拿到的阶段性结果';
+  if(stage===0) return `先检查：你是真的想做自己的事，还是只是想离开当前工作状态。现在不急着设计产品，先把“我想逃离什么”和“我愿意长期投入什么”分开。`;
+  if(stage===1) return `先检查：你是否愿意为“做自己的事”投入稳定时间，而不只是被现状推着走。围绕「${o}」，先做一个低成本探索，不急着承诺长期方向。`;
+  if(stage===2) return `先检查：哪个方向最值得验证，而不是哪个方向看起来最吸引人。围绕「${o}」，你接下来要拿到真实反馈，而不是继续在脑内比较。`;
+  if(stage===3) return `先检查：你的方向是否已经进入真实用户反馈。围绕「${o}」，重点不是把方案打磨完，而是尽快找到愿意回应、愿意试用、愿意付费的人。`;
+  if(stage===4) return `先检查：已有客户为什么会买，以及这个过程能不能重复。围绕「${o}」，先复盘成交和交付闭环，再考虑扩大投入。`;
+  return `先检查：你想放大的到底是获客、交付、产品，还是系统效率。围绕「${o}」，不要所有地方同时优化，先找到最限制增长的一个瓶颈。`;
+}
+
+function pathDiagnosis(){
+  const a=state.answers, c=state.computed, n=stageNum(c.calibrated_stage), self=stageNum(a.stage_self_select);
+  const outcome = a.desired_outcome_label || '下一阶段结果';
+  const mismatch = self!==n ? `你自选的是阶段 ${self}，但从过去 3 个月的实际动作和当前卡点看，更适合先按阶段 ${n} 来推进。这个校准不是否定你，而是避免你用后一个阶段的方法解决前一个阶段的问题。` : `你自选的阶段和你的行动证据基本一致，可以直接围绕阶段 ${n} 的核心任务推进。`;
+  const base = {
+    0:{name:'阶段 0｜职场不满与动机辨认期', one:'你现在最重要的不是马上做一人公司，而是确认：你想要的是“离开当前状态”，还是“长期经营自己的事”。', detail:'如果把对职场/现状的不满直接翻译成创业动作，很容易买课、做账号、研究商业模式，但真正的问题还没被定义。这个阶段最值钱的动作，是把不满拆成具体原因，并观察自己是否愿意持续投入一个可验证的小方向。', task:'动机澄清'},
+    1:{name:'阶段 1｜有念头但未形成承诺期', one:'你已经开始想做自己的事，但现在最容易浪费时间的地方，是用大量信息输入代替真实选择。', detail:'这个阶段不适合急着做产品或变现，也不适合一次性寻找完美方向。更有效的做法是：选一个你愿意连续 2-4 周探索的小方向，用内容、对话或小实验看自己是否持续有能量。', task:'方向试探'},
+    2:{name:'阶段 2｜方向未收敛的验证期', one:'你现在的核心任务不是继续想更多方向，而是把候选方向放进真实场景里验证。', detail:'如果方向还没收敛，却开始做账号、课程、产品或成交设计，会很容易把时间花在错误对象身上。你需要把自己的经验、能力和目标用户问题连接起来，找到一个最小可验证方向。', task:'方向验证'},
+    3:{name:'阶段 3｜方向清楚但缺少0-1闭环期', one:'你已经不只是想想了，真正的卡点在于：如何把方向变成可被别人理解、回应、尝试甚至付费的具体服务。', detail:'这个阶段最怕一直打磨定位、内容和产品形态，却没有进入真实用户反馈。你需要用一个足够小的服务/问题切口，尽快完成“表达价值—找到用户—发起邀请—获得反馈”的闭环。', task:'0-1验证'},
+    4:{name:'阶段 4｜已有初步客户但路径不稳定期', one:'你已经有过真实反馈或客户，现在最重要的是复盘为什么有人买，并把偶然成交变成可重复路径。', detail:'这个阶段继续盲目增加内容、产品或渠道，可能会制造更多复杂度。更有效的是拆解已有客户的来源、购买原因、交付结果和复购/转介绍可能性，先稳定一个小闭环。', task:'稳定闭环'},
+    5:{name:'阶段 5｜稳定业务的放大与系统化期', one:'你现在的问题不再是从 0 到 1，而是找到最限制放大的瓶颈，并用系统提高确定性。', detail:'这个阶段如果继续靠个人硬扛，会被交付、获客或运营细节拖住。你需要判断最该放大的不是“更多动作”，而是更稳定的获客机制、交付标准、产品结构或 AI/系统杠杆。', task:'系统放大'}
+  }[n];
+  return {...base, mismatch, outcome};
+}
+
+function evidenceRows(){
+  const a=state.answers, c=state.computed;
+  return [
+    ['你自选的当前阶段', a.stage_self_select, `系统校准为 ${c.calibrated_stage}，会结合行动证据而不是只看自我判断。`],
+    ['过去 3 个月实际动作', fmtList(a.action_list), `行动成熟度约为 ${c.action_score}/6，用来判断你是否已经进入真实反馈或成交验证。`],
+    ['当前主要时间投入', fmtList(a.current_time_focus), `这是判断时间浪费风险的关键。如果投入动作早于/晚于阶段，就容易空转。`],
+    ['当前最想解决的问题', fmtList(a.primary_question), `你的真实卡点更接近「${c.blocker_type}」，行动建议会围绕这个卡点生成。`],
+    ['最想拿到的阶段性结果', a.desired_outcome_label, `这决定接下来 4-8 周应该追求的不是宏大目标，而是一个可推进的阶段结果。`],
+    ['已有资产与能力', `${fmtList(a.transferable_abilities)}；${fmtList(a.asset_list)}`, `资产分 ${c.asset_score}，能力分 ${c.transferable_ability_score}。它们决定你能从哪里开始验证，而不是决定你“适不适合”。`]
+  ];
+}
+
+function actionPlan(){
+  const a=state.answers, c=state.computed, n=stageNum(c.calibrated_stage), outcome=a.desired_outcome_label || '阶段性结果';
+  const blocker = c.blocker_type;
+  const plans = {
+    0:[['1','写清楚不满来源：是工作环境、收入结构、成长停滞，还是自主感不足。先不要把它直接等同于“我要创业”。'],['2','列出 3 个你愿意长期投入的问题域，每个只用 1 小时做资料/案例观察。'],['3','找 2 个已经在做自己事情的人聊一聊，重点问真实代价，而不是只问成功路径。'],['4','做一次决策：继续观察、进入阶段 1 探索，或暂时不投入一人公司路径。']],
+    1:[['1','从你的能力和兴趣里选 1 个最小探索主题，不要同时开多个方向。'],['2','连续 7 天记录：你愿意主动研究什么、表达什么、和谁聊什么。看能量是否稳定。'],['3','发布或私聊 1 个小观点/小问题，观察是否有人回应，而不是先做完整产品。'],['4',`用反馈决定是否进入「${outcome}」的下一步，不要只靠想象判断。`]],
+    2:[['1','把候选方向缩到 2 个，每个写清楚：服务谁、解决什么痛点、你凭什么能帮。'],['2','各找 3 个潜在用户聊天，验证他们是否真的有这个问题，以及现在怎么解决。'],['3','不要急着做账号/课程/产品，先收集真实语言：他们如何描述痛苦、成本和理想结果。'],['4',`选择一个更有反馈的方向，围绕「${outcome}」设计一个最小验证动作。`]],
+    3:[['1','把你的方向压缩成一个最小服务切口：一个人群、一个问题、一个可交付结果。'],['2','写一版 100 字服务邀请，不追求完美，只说明你能帮谁解决什么。'],['3','找 5-10 个潜在用户发起对话/试服务邀请，记录真实回应和拒绝原因。'],['4',`围绕「${outcome}」完成一次真实反馈闭环：有人回应、有人试用，最好有人愿意付费。`]],
+    4:[['1','复盘已有客户：他们从哪里来、为什么信你、为什么买、交付后得到什么。'],['2','把成交路径拆成可重复步骤：触达、信任、沟通、报价、交付、复盘。'],['3','先优化最弱的一环，不要同时开新产品、新渠道、新内容矩阵。'],['4',`围绕「${outcome}」形成一个可重复的小闭环，再考虑扩大。`]],
+    5:[['1','列出当前业务的三个瓶颈：获客、成交、交付、复购、系统效率，选最限制增长的一个。'],['2','把你亲自做的工作分成：必须你做、AI可辅助、可流程化、可外包。'],['3','建立一个可追踪指标：线索数、成交率、交付周期、复购率或内容转化。'],['4',`围绕「${outcome}」做一次系统优化，而不是增加更多随机动作。`]]
+  };
+  return plans[n] || plans[2];
+}
+
+function avoidItems(){
+  const n=stageNum(state.computed.calibrated_stage);
+  const map={
+    0:['暂时不要急着买大量创业/副业课程，先确认你想解决的不是单纯的职场情绪。','不要马上设计产品或商业模式，因为动机没确认时，所有设计都容易变形。'],
+    1:['不要同时研究太多方向，信息越多越容易拖延选择。','不要把“看了很多案例”误认为自己已经开始行动。'],
+    2:['不要过早做账号矩阵、课程大纲或复杂产品。方向没验证前，这些都可能变成沉没成本。','不要只问朋友觉得好不好，要找真正可能有需求的人。'],
+    3:['不要继续无限打磨定位和产品包装，先让真实用户看见并回应。','不要用低价课/内容更新替代一次明确的服务邀请。'],
+    4:['不要因为有过一两个客户就立刻放大投流或扩品类。','不要只看收入，要复盘购买原因和交付结果是否可重复。'],
+    5:['不要所有瓶颈一起优化，系统化的第一步是找唯一主瓶颈。','不要继续靠个人工时硬扛，应该开始把流程、AI 和协作纳入系统。']
+  };
+  return map[n] || map[2];
+}
+
+
+function explorationProfileRows(){
+  const a=state.answers, c=state.computed;
+  const rows=[];
+  const assets=[];
+  if((a.years_experience||'').match(/5-10|10-15|15/)) assets.push(`你有 ${a.years_experience} 的专业积累`);
+  if((c.asset_score||0)>=3) assets.push('已经有一些可转化为个人业务的资产');
+  if(c.knowledge_service_potential==='高' || c.knowledge_service_potential==='中') assets.push(`知识服务潜力目前判断为${c.knowledge_service_potential}`);
+  rows.push(['可迁移资产', assets.length?assets.join('；'):'你的资产基础还需要通过真实问题和案例继续澄清。']);
+
+  const value=[];
+  if(c.high_time_value_sense==='高') value.push('你对时间浪费和长期复利比较敏感');
+  else if(c.high_time_value_sense==='中') value.push('你已经开始在意时间投入是否有效');
+  if(c.high_growth_drive==='高' || c.high_growth_drive==='中') value.push(`成长驱动为${c.high_growth_drive}`);
+  rows.push(['时间价值感', value.length?value.join('；'):'你现在对“少浪费时间”的感受还不算强，适合先低成本观察。']);
+
+  const feedback=[];
+  if(c.feedback_awareness==='高') feedback.push('你比较适合通过外部反馈快速校准');
+  else if(c.feedback_awareness==='中') feedback.push('你有一定外部反馈意识，但还需要把反馈变成固定节奏');
+  else feedback.push('你更习惯先自己摸索，但要小心信息输入替代真实反馈');
+  if(arr(a.support_preference).includes('我希望有人给我一个清晰路径')) feedback.push('你需要的是清晰路径，而不是更多零散信息');
+  if(arr(a.support_preference).includes('我希望得到具体反馈和校准')) feedback.push('你对具体反馈和校准有明确需求');
+  rows.push(['外部反馈意识', feedback.join('；')]);
+
+  const mode=[];
+  if(arr(a.problem_solving_style).includes('我容易想很多，但推进较慢')) mode.push('你的推进风险是想得多、动作颗粒度太大');
+  if(arr(a.support_preference).includes('我希望尽量减少试错')) mode.push('你在意减少试错，适合用短周期验证来替代长期闭门打磨');
+  if(arr(a.growth_investment_behavior).includes('做过长期复盘或记录')) mode.push('你有复盘基础，可以把它转成验证节奏');
+  rows.push(['更适合的推进方式', mode.length?mode.join('；'):'你适合先用一个很小的行动闭环，看自己是否真的愿意持续推进。']);
+  return rows;
+}
+
+function currentWasteInsight(){
+  const a=state.answers, c=state.computed, n=stageNum(c.calibrated_stage), focus=arr(a.current_time_focus);
+  const f=fmtList(focus);
+  if(n<=2 && focus.some(x=>['做内容/表达观点','设计产品/服务','获客/成交'].includes(x))){
+    return `你现在的时间投入里有「${f}」。这些动作本身不一定错，但对阶段 ${n} 来说，最大的风险是动作已经提前到了内容、产品或获客，而方向、人群和真实问题还没有被验证清楚。这样继续投入，后面越努力，越可能是在放大一个还没被确认的前提。接下来更适合先把候选方向压缩到 1-2 个，用真实对话确认：谁真的有这个问题、现在怎么解决、愿不愿意为结果付出成本。`;
+  }
+  if(n===3 && focus.some(x=>['信息输入和学习','思考方向和路径','暂时比较混乱'].includes(x))){
+    return `你现在的时间投入里有「${f}」。对阶段 3 来说，最大的风险不是方向不够完美，而是没有足够进入真实用户反馈。继续学习、继续思考会让你感觉自己在推进，但它不一定会增加验证密度。接下来要检查的是：你有没有把方向变成一个具体服务邀请，有没有发给真实潜在用户，有没有拿到回应、试用反馈、报价反馈或明确拒绝原因。`;
+  }
+  if(n>=4 && focus.some(x=>['思考方向和路径','信息输入和学习','暂时比较混乱'].includes(x))){
+    return `你已经进入阶段 ${n}，但当前投入里仍有「${f}」。这个阶段最大的风险，是明明已经有客户或交付线索，却又回到大量输入和方向思考，导致没有复盘出可重复路径。接下来更值得展开的是：最近的客户从哪里来、为什么信任你、为什么愿意买、交付后得到了什么、这条路径能不能被复制。`;
+  }
+  return `你当前主要投入在「${f}」。从阶段 ${n} 看，这些动作大体没有明显错位，说明你不是明显跑偏。真正需要警惕的是：动作本身看起来正确，但没有绑定可验证结果。接下来建议给每个动作补上一个检查点，例如一次真实对话、一次明确邀请、一次报价反馈、一次客户复盘或一个可追踪指标，否则动作会越来越多，真正能帮助你进入下一步的证据却不一定增加。`;
+}
+function timeFitBriefInsight(){
+  const a=state.answers, c=state.computed, n=stageNum(c.calibrated_stage), focus=arr(a.current_time_focus);
+  if(n<=2 && focus.some(x=>['做内容/表达观点','设计产品/服务','获客/成交'].includes(x))){
+    return `你的时间投入有一部分已经提前到内容、产品或获客；当前更需要先确认方向、人群和真实问题。`;
+  }
+  if(n===3 && focus.some(x=>['信息输入和学习','思考方向和路径','暂时比较混乱'].includes(x))){
+    return `你的时间投入仍偏向输入和思考；阶段 3 更需要把注意力转向真实反馈密度。`;
+  }
+  if(n>=4 && focus.some(x=>['思考方向和路径','信息输入和学习','暂时比较混乱'].includes(x))){
+    return `你的时间投入有回到方向思考的倾向；阶段 ${n} 更需要复盘已有客户、成交和交付路径。`;
+  }
+  return `你的时间投入和阶段任务大体匹配；接下来要确保每个动作都对应一个可验证结果。`;
+}
+
+function notXButY(){
+  const n=stageNum(state.computed.calibrated_stage), a=state.answers;
+  const outcome=a.desired_outcome_label || '下一阶段结果';
+  const map={
+    0:['马上做产品或账号','确认你是真的想长期经营自己的事，还是只是想离开当前状态'],
+    1:['继续看更多案例、找一个完美方向','选择一个很小的探索主题，验证自己是否愿意持续投入'],
+    2:['同时比较更多方向','把 1-2 个候选方向放进真实用户对话里'],
+    3:['继续打磨定位和包装','拿到足够多的真实回应、试用反馈和拒绝原因'],
+    4:['立刻增加新产品、新渠道','复盘已有客户为什么愿意买，以及这个路径能不能重复'],
+    5:['继续靠个人硬扛更多事情','找到最限制放大的瓶颈，并把它流程化、系统化']
+  }[n] || ['继续增加动作','找到当前阶段最关键的验证点'];
+  return `你现在最需要的不是${map[0]}，而是${map[1]}。围绕「${outcome}」，先把下一步压缩成一个能在 2-4 周内拿到反馈的小闭环。`;
+}
+
+function supportModeAdvice(){
+  const a=state.answers, c=state.computed, lines=[];
+  if(c.feedback_awareness==='高') lines.push('你适合用“短周期反馈”推进：不要闭门做 30 天，而是每 3-5 天拿一次真实反馈。');
+  else if(c.feedback_awareness==='中') lines.push('你已经有一定反馈意识，接下来要把反馈变成固定节奏，而不是偶尔问一次朋友。');
+  else lines.push('你可能更习惯自己研究，但这个路径越往后，越需要把想法放到真实用户面前。');
+  if(arr(a.support_preference).includes('我希望有人给我一个清晰路径')) lines.push('你需要的不是更多信息，而是一条优先级清楚的推进路线。');
+  if(arr(a.support_preference).includes('我希望得到具体反馈和校准')) lines.push('你适合先做小动作，再尽快找人校准，而不是等方案完整后再出手。');
+  if(arr(a.support_preference).includes('我希望有人陪我一起推进')) lines.push('如果你总是卡在执行节奏上，陪伴式推进会比单次信息输入更有帮助。');
+  if(arr(a.problem_solving_style).includes('我容易想很多，但推进较慢')) lines.push('你接下来最重要的是降低动作颗粒度，不要再把“想清楚”作为启动前提。');
+  return lines;
+}
+
+function sleep(ms){ return new Promise(resolve => setTimeout(resolve, ms)); }
+function renderLoading(){
+  document.getElementById('result').innerHTML = `
+    <div class="loading-card">
+      <div class="loader-ring" aria-hidden="true"></div>
+      <div class="loading-title">正在生成你的一人公司路径地图</div>
+      <div class="loading-sub">系统正在结合你的当前阶段、最近行动、时间投入、真实卡点和目标结果，生成一张更贴近你当前状态的路径地图。</div>
+      <div class="loading-steps">
+        <div><span>01</span> 校准当前阶段</div>
+        <div><span>02</span> 识别时间浪费风险</div>
+        <div><span>03</span> 绘制下一站与校准行动</div>
+      </div>
+    </div>`;
+  document.getElementById('result').classList.remove('hidden');
+}
+async function generateResult(){
+  calc();
+  state.submission_id = `pc_${Date.now()}_${Math.random().toString(36).slice(2,8)}`;
+  document.getElementById('app').classList.add('hidden');
+  renderLoading();
+  window.scrollTo({top:0,behavior:'smooth'});
+  const delay = 2000 + Math.floor(Math.random() * 3001);
+  await sleep(delay);
+  try{
+    await submitPathCheck();
+    renderResult();
+  }catch(e){
+    renderSubmitError(e);
+  }
+}
+
+function renderSubmitError(err){
+  logClientEvent('submit_before_result_blocked', { error:err && err.message ? err.message : String(err) });
+  document.getElementById('result').innerHTML = `
+    <div class="loading-card">
+      <div class="loading-title">校准结果生成失败</div>
+      <div class="loading-sub">校准结果生成时出现了问题，请重试</div>
+      <div class="nav" style="justify-content:center;margin-top:18px;gap:12px;flex-wrap:wrap;">
+        <button class="btn-primary" onclick="generateResult()">重新保存并生成结果</button>
+        <button class="btn-secondary" onclick="downloadCalibrationMarkdown()">下载校准报告</button>
+      </div>
+    </div>`;
+  document.getElementById('result').classList.remove('hidden');
+}
+
+function resultText(){
+  const d=pathDiagnosis(), c=state.computed, a=state.answers;
+  return `一人公司路径校准报告\n\n${d.name}\n${d.one}\n\n校准说明：${d.mismatch}\n\n你的关键证据：\n- 实际动作：${fmtList(a.action_list)}\n- 时间投入：${fmtList(a.current_time_focus)}\n- 当前卡点：${fmtList(a.primary_question)}\n- 最想拿到的结果：${a.desired_outcome_label}\n\n时间浪费风险：${c.time_waste_risk}\n${currentWasteInsight()}\n\n行动处方：\n${actionPlan().map(x=>`${x[0]}. ${x[1]}`).join('\n')}`;
+}
+
+function mdValue(v){ return arr(v).filter(Boolean).join('、') || '未填写'; }
+function mdLine(s){ return String(s ?? '').replace(/\r?\n/g, ' ').trim(); }
+function calibrationMarkdown(){
+  const d=pathDiagnosis(), c=state.computed, a=state.answers, m=pathMapData();
+  const evidence = evidenceRows().map(r => `| ${mdLine(r[0])} | ${mdLine(r[1])} | ${mdLine(r[2])} |`).join('\n');
+  const actions = actionPlan().map(x => `${x[0]}. ${mdLine(x[1])}`).join('\n');
+  const support = supportModeAdvice().map(x => `- ${mdLine(x)}`).join('\n');
+  const avoids = avoidItems().map(x => `- ${mdLine(x)}`).join('\n');
+  const cta = ctaContent(c.user_segment);
+  const eiofs = eiofsData();
+  const reasoning = diagnosticReasoningRows();
+  const ready = currentStageReadyForNext();
+  const currentIndicators = stageSuccessIndicatorItems(m.n).map(x=>`- ${x}`).join('\n');
+  const nextIndicators = stageSuccessIndicatorItems(m.nextIndex).map(x=>`- ${x}`).join('\n');
+  return `# 一人公司路径校准报告
+
+生成时间：${new Date().toLocaleString('zh-CN')}
+报告编号：${state.submission_id || '未生成'}
+
+## 01 路径校准结论
+
+${d.name}
+
+${d.one}
+
+- 原自评阶段：${m.selfStage}
+- 系统校准阶段：阶段 ${m.n}｜${m.names[m.n] || d.task}
+- 下一站：${m.next}
+- 时间浪费风险：${c.time_waste_risk}
+- 优先任务：${d.task}
+
+${m.calibrationCopy}
+
+### 当前阶段信号
+
+已出现的正向信号：
+${eiofs.positive.map(x=>`- ${x}`).join('\n')}
+
+还缺的关键证据：
+${eiofs.missing.map(x=>`- ${x}`).join('\n')}
+
+## 02 解决方案建议｜接下来 2-4 周怎么做
+
+### 先处理最可能浪费时间的地方
+
+风险等级：${c.time_waste_risk}
+
+${currentWasteInsight()}
+
+${riskCopy(c.time_waste_risk)}
+
+### 行动处方
+
+阶段性目标：${c.recommended_check_point}
+
+${actions}
+
+### 这阶段先别急着做
+
+${avoids}
+
+### 推进方式提醒
+
+${support}
+
+### 当前阶段与下一阶段的成功指标
+
+${successIndicatorFocusCopy()}
+
+${ready ? '先确认' : '重点关注'}：${m.current}
+${currentIndicators}
+
+${ready ? '重点关注' : '先作为参考'}：${m.next}
+${nextIndicators}
+
+### 不同阶段的早期成功指标矩阵
+
+${eiofsMatrixMarkdown()}
+
+## 03 为什么这样判断｜你的阶段校准逻辑
+
+这一部分把上面的结论和建议背后的判断逻辑展开：当前阶段哪些指标已经够了，哪些还没够，以及你的时间投入有没有偏离当前阶段。
+
+### 01 你现在最适合按哪个阶段推进
+
+${reasoning[0].main}
+
+${reasoning[0].evidence}
+
+### 02 你已经满足了当前阶段的一部分指标
+
+${reasoning[1].main}
+
+${reasoning[1].evidence}
+
+### 03 但当前阶段的关键指标还没有完全达标
+
+${reasoning[2].main}
+
+${reasoning[2].evidence}
+
+### 04 你的时间投入有没有偏离当前阶段
+
+${reasoning[3].main}
+
+${reasoning[3].evidence}
+
+### Data Points｜你的填写信息如何支撑这个判断
+
+| 你填的信息 | 你的选择 | 它说明什么 |
+| --- | --- | --- |
+${evidence}
+
+## 04 后续进一步讨论 / 保存说明
+
+${cta.title}
+
+${cta.body}
+
+${(cta.bullets || []).map(x=>`- ${x}`).join('\n')}
+
+${cta.note || ''}
+
+本次校准没有在网页端保存，如有需要点击下载报告。
+`;
+}
+
+function downloadMarkdownFile(content, filename){
+  const blob = new Blob([content], { type:'text/markdown;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+function downloadCalibrationMarkdown(){
+  const filename = `一人公司路径校准报告-${state.submission_id || Date.now()}.md`;
+  downloadMarkdownFile(calibrationMarkdown(), filename);
+  trackCTA('download_report');
+}
+
+
+function eiofsStageBriefs(){
+  return ['动机清楚','连续探索','痛点重复','真实反馈','复购转介绍','系统杠杆'];
+}
+function eiofsMatrixData(){
+  return [
+    {dim:'承诺强度', values:['愿意认真辨认不满来源，而不是只逃离职场','愿意连续 2-4 周投入一个小主题','愿意砍掉方向，聚焦 1-2 个候选方向','愿意发起真实邀请 / 报价，面对拒绝','愿意复盘成交与交付，不乱开新方向','愿意用系统替代个人硬扛']},
+    {dim:'问题清晰度', values:['能区分“讨厌现状”和“想经营自己的事”','能说出 1-3 个想探索的问题域','能描述目标用户、问题、现有替代方案','能说清一个人群、一个问题、一个结果','能说清客户为什么买、为什么满意','能识别增长主瓶颈']},
+    {dim:'用户 / 市场反馈', values:['与真实做过的人交流，理解代价','小范围表达后有人回应','潜在用户访谈出现重复痛点','有试用、真实回应、拒绝原因','有付费客户反馈、复购 / 转介绍苗头','有稳定数据反馈和增长实验']},
+    {dim:'价值表达', values:['能表达自己长期想解决的问题','能输出小观点、小观察','能用用户语言描述痛点','能写出 100 字服务邀请','能沉淀稳定销售表达 / 案例','能形成品牌叙事和可复制内容系统']},
+    {dim:'产品 / 服务成形度', values:['暂不要求产品，只要求问题域','有最小探索主题','有最小验证假设','有最小服务切口 / MVP','有可重复交付包','有产品矩阵 / 标准化交付']},
+    {dim:'获客 / 触达', values:['开始观察目标人群在哪里','能找到少量同频对象','能约到潜在用户访谈','能主动触达 5-10 个潜在客户','有稳定线索来源','有可放大的渠道 / 转介绍系统']},
+    {dim:'变现 / 交易信号', values:['不看收入，看是否愿意付出时间','不看收入，看是否有人愿意继续聊','有人承认问题重要，愿意试用 / 等待','有报价、试单、首单或强购买意向','有复购、转介绍、稳定成交','有单位经济模型和现金流稳定性']},
+    {dim:'迭代系统', values:['有记录和反思，不冲动投入','有每周复盘探索主题','访谈后能调整方向假设','每次反馈后改服务表达','用客户数据改交付 / 获客','用指标、流程、AI、协作优化系统']}
+  ];
+}
+function renderEiofsMatrix(m){
+  const stages=['0 动机辨认','1 念头形成','2 方向验证','3 0-1闭环','4 稳定闭环','5 系统放大'];
+  const head=stages.map((s,i)=>`<th class="${i===m.n?'active-stage':''} ${i===m.nextIndex&&i!==m.n?'next-stage':''}">${esc(s)}</th>`).join('');
+  const rows=eiofsMatrixData().map(row=>`<tr><td>${esc(row.dim)}</td>${row.values.map((v,i)=>`<td class="${i===m.n?'active-stage':''} ${i===m.nextIndex&&i!==m.n?'next-stage':''} ${i===m.self?'self-stage':''}">${esc(v)}</td>`).join('')}</tr>`).join('');
+  return `<div class="eiofs-matrix"><div class="eiofs-matrix-head"><div><div class="eiofs-matrix-title">不同阶段的早期成功指标</div><div class="eiofs-matrix-sub">横向看阶段，纵向看维度；高亮列是你当前更适合优先构建的指标。</div></div></div><div class="eiofs-matrix-scroll"><table class="eiofs-matrix-table"><thead><tr><th>维度</th>${head}</tr></thead><tbody>${rows}</tbody></table></div></div>`;
+}
+function eiofsMatrixMarkdown(){
+  const stages=['阶段 0：动机辨认','阶段 1：念头形成','阶段 2：方向验证','阶段 3：0-1 闭环','阶段 4：稳定闭环','阶段 5：系统放大'];
+  const header=`| 维度 | ${stages.join(' | ')} |`;
+  const sep=`|---|${stages.map(()=> '---').join('|')}|`;
+  const rows=eiofsMatrixData().map(row=>`| ${row.dim} | ${row.values.join(' | ')} |`).join('\n');
+  return `${header}\n${sep}\n${rows}`;
+}
+function eiofsStageName(n){
+  const names=['动机清楚','连续探索','方向证据','真实反馈','可重复闭环','系统杠杆'];
+  return names[n] || '阶段信号';
+}
+function eiofsData(){
+  const a=state.answers, c=state.computed, n=stageNum(c.calibrated_stage);
+  const actions=arr(a.action_list), focus=arr(a.current_time_focus), support=arr(a.support_preference), growth=arr(a.growth_investment_behavior);
+  const hasUserTalk=actions.some(x=>['找潜在用户/客户聊过','做过用户访谈或需求调研'].includes(x));
+  const hasMvp=actions.some(x=>['做过试服务、体验版或 MVP'].includes(x));
+  const hasOffer=actions.some(x=>['发起过报价或合作邀请'].includes(x));
+  const hasPaid=actions.some(x=>['有过真实付费客户/用户','有过复购、转介绍或持续合作','正在稳定交付'].includes(x));
+  const hasRepeat=actions.some(x=>['有过复购、转介绍或持续合作','正在稳定交付'].includes(x));
+  const feedbackNeed=support.some(x=>['我希望得到具体反馈和校准','我希望尽量减少试错','我更适合边做边调整'].includes(x));
+  const hasReflection=growth.includes('做过长期复盘或记录') || growth.includes('长期输出内容');
+  const map={
+    0:{
+      positive:['你已经开始认真辨认当前状态，而不是直接把不满等同于“马上创业”。', focus.includes('思考方向和路径')?'你已经把注意力放到路径判断上，这是动机辨认期的重要信号。':'你已经开始通过这次校准观察自己是否适合继续投入。'],
+      missing:['还需要把“不满来源”和“长期想经营的问题”分开写清楚。','还需要做 2-3 次低成本观察，了解真实做自己事情的人付出了什么代价。'],
+      prescription:['列出 3 个具体不满来源，标注它们是环境问题、收入问题、成长问题还是自主感问题。','找 2 个已经在做自己事情的人聊真实代价，而不是只看成功案例。'],
+      logic:'阶段 0 的早期成功指标不是产品或收入，而是能否从情绪逃离进入理性观察。'
+    },
+    1:{
+      positive:['你已经有探索念头，并开始围绕方向和路径投入注意力。', hasReflection?'你有输出或复盘基础，说明有机会形成稳定探索节奏。':'你正在尝试把想法转成更明确的探索主题。'],
+      missing:['还需要连续 2-4 周围绕一个小主题投入，而不是不断切换方向。','还需要拿到至少一次外部回应，验证这个主题不只停留在自己脑内。'],
+      prescription:['选一个最小探索主题，连续 7 天记录自己愿意主动研究、表达和讨论什么。','围绕这个主题发出 1 个小观点或找 2 个人聊，看是否有人愿意继续回应。'],
+      logic:'阶段 1 的早期成功指标是持续探索和初步回应，而不是马上确定产品。'
+    },
+    2:{
+      positive:['你已经进入方向验证期，关键是把候选方向放到真实用户场景里。', hasUserTalk?'你已经出现用户对话信号，这是方向验证的重要正向证据。':'你已经开始意识到方向需要通过真实问题来验证。'],
+      missing:['还需要每个候选方向至少 3-5 次潜在用户对话。','还需要确认用户是否已经为这个问题付出过时间、金钱或机会成本。'],
+      prescription:['把候选方向压缩到 1-2 个，并分别写清服务谁、解决什么问题、为什么是你。','每个方向找 3 个潜在用户访谈，记录重复痛点和现有替代方案。'],
+      logic:'阶段 2 的早期成功指标是“用户真实痛点 × 自身能力 × 可验证切口”是否开始出现交集。'
+    },
+    3:{
+      positive:['你已经有较清楚方向，开始接近 0-1 闭环。', hasUserTalk?'你已经有潜在用户交流，这是进入真实反馈闭环的正向信号。':'你已经具备把方向拿出去验证的条件。', hasMvp?'你已经做过试服务或 MVP，说明服务成形度开始出现。':'你的下一步重点是把方向压缩成可发出的服务邀请。'],
+      missing:[hasOffer?'还需要提高真实回应密度，而不是只停留在一次报价。':'还缺一次明确的服务邀请或报价动作。', hasPaid?'还需要复盘首批客户为什么愿意买。':'还缺 5-10 个真实回应、试用反馈或明确拒绝原因。'],
+      prescription:['把服务切口压缩成一个人群、一个问题、一个可交付结果。','写一版 100 字服务邀请，主动发给 5-10 个潜在用户，记录回应、试用、报价和拒绝原因。'],
+      logic:'阶段 3 的早期成功指标不是继续打磨定位，而是能否通过最小服务邀请拿到真实回应、试用反馈、拒绝原因或首单。'
+    },
+    4:{
+      positive:[hasPaid?'你已经出现真实付费或交付信号，这是从 0-1 走向稳定闭环的关键证据。':'你已经有初步客户/服务基础，下一步要验证它是否可重复。', hasRepeat?'你已经出现复购、转介绍或持续合作信号。':'你正在接近可重复成交与稳定交付的验证点。'],
+      missing:['还需要复盘客户为什么买、从哪里来、交付后得到了什么。','还需要把成交路径和交付流程拆成可重复步骤。'],
+      prescription:['复盘最近 1-3 个客户：来源、信任触点、购买原因、交付结果和下一步可能性。','把触达、沟通、报价、交付、复盘整理成一张可重复流程图。'],
+      logic:'阶段 4 的早期成功指标不是“有过客户”本身，而是首批客户能否被解释、复盘和复制。'
+    },
+    5:{
+      positive:[hasRepeat?'你已经有持续交付或复购信号，具备系统化基础。':'你已经进入稳定业务阶段，重点转向主瓶颈和杠杆。', c.high_growth_drive==='高'?'你的成长驱动较强，适合把经验沉淀成系统。':'你需要从个人经验转向流程、指标和资产。'],
+      missing:['还需要明确当前增长主瓶颈：获客、成交、交付、复购、产品结构还是系统效率。','还需要用指标、流程、AI 或协作减少对个人工时的依赖。'],
+      prescription:['列出当前业务 3 个瓶颈，只选最限制增长的一个做 2-4 周优化。','把重复工作拆成必须你做、AI 可辅助、可流程化、可外包四类。'],
+      logic:'阶段 5 的早期成功指标是业务能否从个人工时驱动，进入流程、产品、渠道、AI 和案例资产驱动。'
+    }
+  };
+  const data=map[n] || map[2];
+  data.positive=data.positive.filter(Boolean).slice(0,3);
+  data.missing=data.missing.filter(Boolean).slice(0,3);
+  data.prescription=data.prescription.filter(Boolean).slice(0,3);
+  data.stageLabel=`阶段 ${n}｜${eiofsStageName(n)}`;
+  return data;
+}
+function renderEiofsCards(){
+  const e=eiofsData();
+  const pos=e.positive.map(x=>`<li>${esc(x)}</li>`).join('');
+  const miss=e.missing.map(x=>`<li>${esc(x)}</li>`).join('');
+  return `<div class="eiofs-grid"><div class="eiofs-card"><b>你已经出现的正向信号</b><ul>${pos}</ul></div><div class="eiofs-card missing"><b>你还缺的关键证据</b><ul>${miss}</ul></div></div>`;
+}
+function stageSuccessIndicatorItems(stageIndex){
+  const map={
+    0:['能区分“讨厌当前状态”和“想长期经营自己的事”，不再只靠情绪逃离。','能说出 1-2 个值得继续观察的问题域，并完成几次低成本观察或交流。'],
+    1:['能连续 2-4 周围绕一个小主题稳定投入，而不是每天切换方向。','围绕这个主题的表达或交流，开始得到至少一次外部回应。'],
+    2:['能把候选方向压缩到 1-2 个，并说清服务谁、解决什么问题、为什么是你。','潜在用户对话里开始反复出现相似痛点、现有替代方案和真实付出成本。'],
+    3:['能发出明确的服务邀请或报价，并拿到真实回应、试用反馈或明确拒绝原因。','开始看到首单、试服务转化，或至少 5-10 个足够具体的用户反馈。'],
+    4:['能复盘出客户为什么买、从哪里来、交付后得到了什么结果。','能把触达、沟通、报价、交付、复盘整理成一套可重复的小闭环。'],
+    5:['能清楚识别当前增长主瓶颈，并用指标持续追踪。','开始用流程、AI、产品结构或协作减少对个人工时的依赖。']
+  };
+  return map[Math.max(0, Math.min(5, stageIndex))] || map[2];
+}
+function currentStageReadyForNext(){
+  const a=state.answers, c=state.computed, n=stageNum(c.calibrated_stage), actions=arr(a.action_list), growth=arr(a.growth_investment_behavior);
+  const hasUserTalk=actions.some(x=>['找潜在用户/客户聊过','做过用户访谈或需求调研'].includes(x));
+  const hasOffer=actions.includes('发起过报价或合作邀请');
+  const hasPaid=actions.some(x=>['有过真实付费客户/用户','有过复购、转介绍或持续合作','正在稳定交付'].includes(x));
+  const hasRepeat=actions.some(x=>['有过复购、转介绍或持续合作','正在稳定交付'].includes(x));
+  if(n<=0) return arr(a.current_time_focus).includes('思考方向和路径') || (c.action_score||0)>=1;
+  if(n===1) return growth.includes('长期输出内容') || growth.includes('做过长期复盘或记录') || (c.action_score||0)>=2;
+  if(n===2) return hasUserTalk || (c.action_score||0)>=3;
+  if(n===3) return hasOffer || hasPaid || (c.action_score||0)>=4;
+  if(n===4) return hasRepeat || (hasPaid && (c.action_score||0)>=5);
+  return c.high_growth_drive==='高' || (c.action_score||0)>=5;
+}
+function successIndicatorFocusCopy(){
+  const ready=currentStageReadyForNext(), m=pathMapData();
+  return ready
+    ? `你在「${m.current}」已经出现了一些关键证据，可以开始把注意力放到「${m.next}」的早期信号上。下面仍然保留当前阶段指标，方便你确认基础没有松动。`
+    : `你现在更应该先盯住「${m.current}」的早期成功指标。下一阶段指标可以先作为方向感参考，不需要立刻追求。`;
+}
+function renderSuccessIndicatorsSection(){
+  const m=pathMapData(), ready=currentStageReadyForNext();
+  const current=stageSuccessIndicatorItems(m.n).map(x=>`<li>${esc(x)}</li>`).join('');
+  const next=stageSuccessIndicatorItems(m.nextIndex).map(x=>`<li>${esc(x)}</li>`).join('');
+  return `<div class="section result-section"><div class="report-section-no">02 / SUCCESS INDICATORS</div><h3>当前阶段与下一阶段的成功指标</h3><p class="evidence-intro">${esc(successIndicatorFocusCopy())}</p><div class="eiofs-grid"><div class="eiofs-card ${ready?'':'missing'}"><b>${ready?'先确认：':'重点关注：'}${esc(m.current)}</b><ul>${current}</ul></div><div class="eiofs-card ${ready?'':'missing'}"><b>${ready?'重点关注：':'先作为参考：'}${esc(m.next)}</b><ul>${next}</ul></div></div><div style="margin-top:18px;">${renderEiofsMatrix(m)}</div></div>`;
+}
+
+function riskLevelClass(level){
+  if(level==='高') return 'risk-high';
+  if(level==='中') return 'risk-medium';
+  return 'risk-low';
+}
+function earlyRiskHeadline(level){
+  if(level==='高') return '你的当前投入里，已经出现比较明显的时间错配风险。';
+  if(level==='中') return '你的方向不一定错，但有一部分动作需要尽快校准。';
+  return '你的时间投入目前相对可控，但仍建议保留一个检查点。';
+}
+function earlyRiskHint(level){
+  if(level==='高') return '建议先看清楚风险来自哪里，再决定接下来 2-4 周要不要继续投入同类动作。';
+  if(level==='中') return '建议把注意力放回当前阶段最关键的验证动作，避免过早铺开。';
+  return '低风险不等于不用调整，可以把它作为接下来行动的边界提醒。';
+}
+function renderEarlyRiskHighlight(){
+  const level=state.computed.time_waste_risk || '中';
+  return `<div class="early-risk-card ${riskLevelClass(level)}">
+    <div>
+      <div class="early-risk-kicker">TIME WASTE RISK</div>
+      <div class="early-risk-level"><strong>${esc(level)}</strong><span>风险等级</span></div>
+    </div>
+    <div>
+      <div class="early-risk-copy">${esc(earlyRiskHeadline(level))}</div>
+      <div class="early-risk-hint">${esc(earlyRiskHint(level))} 详细解释见下面「你最可能浪费时间的地方」。</div>
+    </div>
+  </div>`;
+}
+
+function pathMapData(){
+  const a=state.answers, c=state.computed, d=pathDiagnosis();
+  const n=stageNum(c.calibrated_stage);
+  const self=stageNum(a.stage_self_select);
+  const names=['动机澄清','方向试探','方向验证','0-1闭环','稳定闭环','系统放大'];
+  const nextNames=['进入低成本探索','选择一个小方向','真实用户验证','完成反馈闭环','形成可重复路径','找到主瓶颈并系统化'];
+  const nextIndex = Math.min(5, n+1);
+  const selfStage = Number.isFinite(self) ? `阶段 ${self}｜${names[self] || ''}` : (a.stage_self_select || '未填写');
+  const calibratedStage = `阶段 ${n}｜${names[n] || d.task}`;
+  const next = `阶段 ${nextIndex}｜${nextNames[n] || names[nextIndex]}`;
+  const isCalibrated = self !== n;
+  const calibrationCopy = isCalibrated
+    ? `你原本判断自己在${selfStage}，但从你过去 3 个月的实际行动、当前卡点和目标结果看，系统更建议你先按${calibratedStage}推进。这不是否定你的判断，而是说明：在进入下一站之前，你可能还需要先补上当前阶段最关键的反馈闭环。`
+    : `你的自我判断和系统校准基本一致。接下来关键不是重新找方向，而是围绕当前阶段的核心任务，提高真实反馈密度，推动自己进入下一站。`;
+  return {n,self,names,nextNames,nextIndex,d,selfStage,calibratedStage,next,isCalibrated,calibrationCopy,
+    current:`阶段 ${n}｜${names[n] || d.task}`,
+    risk:`时间浪费风险：${c.time_waste_risk}`,
+    priority:d.task
+  };
+}
+function renderPathMap(){
+  const m=pathMapData(), c=state.computed, d=m.d;
+  const nodes=m.names.map((name,i)=>{
+    const notes=[];
+    if(i===m.self) notes.push(m.isCalibrated?'原自评':'自评一致');
+    if(i===m.n) notes.push('系统校准');
+    if(i===m.nextIndex&&i!==m.n) notes.push('下一站');
+    return `<div class="path-node ${i===m.n?'active':''} ${i===m.self?'self':''} ${i===m.nextIndex&&i!==m.n?'next':''}"><div class="path-node-num">${i}</div><div class="path-node-name">${esc(name)}</div><div class="path-node-note">${notes.join(' / ')}</div><div class="path-node-signal">早期指标：${esc(eiofsStageBriefs()[i])}</div></div>`;
+  }).join('');
+  return `<div class="path-map">
+    <div class="path-map-head"><div><div class="path-map-kicker">CALIBRATION DIAGNOSIS</div><div class="path-map-title">你的路径校准诊断</div><div class="path-map-sub">先看清楚：你原本判断自己在哪，系统校准后建议按哪个阶段推进，以及下一站是什么。</div></div><div class="path-risk-badge">${esc(m.risk)}</div></div>
+    <div class="diagnosis-summary">
+      <div class="report-section-no">SYSTEM CALIBRATED STAGE</div>
+      <div class="diagnosis-title">${esc(d.name)}</div>
+      <div class="diagnosis-one">${esc(d.one)}</div>
+      <div class="diagnosis-tags"><span class="diagnosis-tag">原自评：${esc(m.selfStage)}</span><span class="diagnosis-tag">系统校准：${esc(m.calibratedStage)}</span><span class="diagnosis-tag">下一站：${esc(m.next)}</span><span class="diagnosis-tag">优先任务：${esc(d.task)}</span></div>
+    </div>
+    ${renderEarlyRiskHighlight()}
+    <div class="path-line">${nodes}</div>
+    <div class="path-legend"><span class="legend-pill"><i class="legend-dot self"></i>原自评阶段</span><span class="legend-pill"><i class="legend-dot"></i>系统校准阶段</span><span class="legend-pill"><i class="legend-dot next"></i>下一站</span></div>
+    <div class="diagnosis-note">${esc(m.calibrationCopy)}</div>
+    ${renderEiofsCards()}
+    <div class="download-prompt"><div><strong>建议先下载这份校准报告</strong><span>接下来 2-4 周，你可以对照里面的阶段判断、风险点和行动处方，检查自己有没有继续把时间花在低效动作上。</span></div><button class="btn-primary" onclick="downloadCalibrationMarkdown()">下载校准报告</button></div>
+  </div>`;
+}
+
+function ctaActionsHtml(cta){
+  const hint = '<p class="cta-save-hint">本次校准没有在网页端保存，如有需要点击下载报告。</p>';
+  const downloadBtn = `<button class="btn-secondary" onclick="downloadCalibrationMarkdown()">下载校准报告</button>`;
+  const recheckBtn = `<button class="btn-ghost" onclick="location.reload()">重新检查</button>`;
+  if(cta.showWechat === false){
+    return `<div class="cta-actions"><button class="btn-primary" onclick="downloadCalibrationMarkdown()">下载校准报告</button>${recheckBtn}</div>${hint}`;
+  }
+  const cls = cta.downloadPrimary ? 'cta-actions download-first' : 'cta-actions';
+  const wechatCode = `<span class="wechat-code">微信：${esc(WECHAT_ID)}</span>`;
+  const wechatBtn = `<button class="btn-primary" onclick="copyWechat()">${esc(cta.button || '复制微信号')}</button>`;
+  return `<div class="${cls}">${wechatCode}${wechatBtn}${downloadBtn}${recheckBtn}</div>${hint}`;
+}
+
+function diagnosticReasoningRows(){
+  const a=state.answers, c=state.computed, d=pathDiagnosis(), m=pathMapData(), e=eiofsData();
+  const n=stageNum(c.calibrated_stage);
+  const positive=e.positive.map(x=>String(x).replace(/[。；;]+$/,'')).join('；');
+  const missing=e.missing.map(x=>String(x).replace(/[。；;]+$/,'')).join('；');
+  return [
+    {
+      title:'先给结论：你现在最适合按哪个阶段推进',
+      main:`当前结果是：先按「${d.name}」推进。`,
+      evidence:m.isCalibrated ? `你原本判断自己在${m.selfStage}，但系统没有直接采纳自评，而是把实际行动、当前卡点、时间投入和阶段指标放在一起校准。` : `你的自我判断和系统校准基本一致，都指向${m.calibratedStage}。这说明你对当前位置的感知比较准确。`,
+      focus:true
+    },
+    {
+      title:'你已经满足了当前阶段的一部分指标',
+      main:positive ? `已经出现的有效信号：${positive}。` : '你已经完成了这次路径校准，说明你开始把模糊状态转成可判断的信息。',
+      evidence:`这些不是“下一阶段要求”，而是用来判断你为什么会被放在阶段 ${n} 的当前证据。`
+    },
+    {
+      title:'但当前阶段的关键指标还没有完全达标',
+      main:missing ? `还没补上的关键证据：${missing}。` : '当前阶段最需要继续补足的是更密集、更具体的真实反馈。',
+      evidence:'所以这里不是在要求你提前完成下一阶段，而是在提醒：如果这些当前阶段证据不足，直接跳到更后面的动作会更容易空转。'
+    },
+    {
+      title:'最后看你的时间投入有没有偏离当前阶段',
+      main:`你当前的主要时间投入是「${fmtList(a.current_time_focus)}」。`,
+      evidence:timeFitBriefInsight()
+    }
+  ];
+}
+function renderDiagnosticReasoning(){
+  const rows=diagnosticReasoningRows();
+  return `<div class="reasoning-map">${rows.map((r,i)=>`<div class="reasoning-step ${r.focus?'result-focus':''}"><div class="reasoning-step-num">${String(i+1).padStart(2,'0')}</div><div><div class="reasoning-step-title">${esc(r.title)}</div><div class="reasoning-step-main">${esc(r.main)}</div><div class="reasoning-step-evidence">${esc(r.evidence)}</div></div></div>`).join('')}</div>`;
+}
+
+function renderResult(){
+  const a=state.answers,c=state.computed,d=pathDiagnosis();
+  const cta = ctaContent(c.user_segment);
+  const profile = explorationProfileRows().map(r=>`<div class="profile-mini"><b>${esc(r[0])}</b><span>${esc(r[1])}</span></div>`).join('');
+  const evidence = evidenceRows().map(r=>`<tr><td><strong>${esc(r[0])}</strong></td><td>${esc(r[1])}</td><td style="color:var(--muted);">${esc(r[2])}</td></tr>`).join('');
+  const actions = actionPlan().map(x=>`<div class="action-item"><div class="action-week">${esc(x[0])}</div><div class="action-text">${esc(x[1])}</div></div>`).join('');
+  const avoids = avoidItems().map(x=>`<div class="avoid-item">${esc(x)}</div>`).join('');
+  const support = supportModeAdvice().map(x=>`<div class="avoid-item">${esc(x)}</div>`).join('');
+  const ctaBullets = (cta.bullets || []).map(x=>`<li>${esc(x)}</li>`).join('');
+  const html = `
+    ${renderPathMap()}
+
+    <div class="section result-section">
+      <div class="report-section-no">02 / SOLUTION SUGGESTION</div><h3>解决方案建议｜接下来 2-4 周怎么做</h3>
+      <p class="evidence-intro">先把结论落成行动：这一步重点不是继续增加信息量，而是把你的时间重新压回当前阶段最关键的验证动作。</p>
+      <div class="result-box"><strong style="color:var(--accent);">先处理最可能浪费时间的地方｜风险等级：${esc(c.time_waste_risk)}</strong><br><br>${esc(currentWasteInsight())}<br><br>${esc(riskCopy(c.time_waste_risk))}</div>
+      <h3 style="margin-top:20px;">行动处方</h3>
+      <div class="prescription-goal">阶段性目标：${esc(c.recommended_check_point)}</div>
+      ${actions}
+      <h3 style="margin-top:20px;">这阶段先别急着做</h3>
+      <div class="avoid-list">${avoids}</div>
+      <h3 style="margin-top:20px;">推进方式提醒</h3>
+      <div class="avoid-list">${support}</div>
+    </div>
+
+    ${renderSuccessIndicatorsSection()}
+
+    <div class="section result-section">
+      <div class="report-section-no">03 / CALIBRATION LOGIC</div><h3>为什么这样判断｜你的阶段校准逻辑</h3>
+      <p class="evidence-intro">如果你想确认上面的结论和行动建议是否可信，可以看这一部分：它会把系统如何从你的实际行动、当前卡点和时间投入中做出阶段判断讲清楚。</p>
+      ${renderDiagnosticReasoning()}
+      <div class="reasoning-conclusion">所以，现在最值得确认的是：你还需要优先补上「${esc(d.task)}」这个阶段任务，而不是急着把动作铺得更大。当前更适合先按「${esc(d.name)}」推进。</div>
+      <details class="data-points-details">
+        <summary>Data Points｜查看你的填写信息如何支撑这个判断</summary>
+        <div class="result-box" style="padding:0; overflow:hidden; margin-top:10px;">
+          <table class="matrix-table"><thead><tr><th style="width:24%">你填的信息</th><th style="width:34%">你的选择</th><th style="width:42%">它说明什么</th></tr></thead><tbody>${evidence}</tbody></table>
+        </div>
+      </details>
+    </div>
+
+    <div class="section cta-box"><div class="report-section-no">04 / NEXT STEP</div>${ctaActionsHtml(cta)}</div>`;
+  document.getElementById('result').innerHTML = html;
+  document.getElementById('result').classList.remove('hidden');
+  trackCTA('view_cta');
+}
+
+function riskCopy(v){ return v==='低'?'你现在做的事大体符合当前阶段，时间投入大概率是在有效推进。但仍建议保持一个可验证的阶段目标，避免动作越来越散。':v==='中'?'你的方向大体有推进价值，但部分动作可能稍微提前或滞后。中风险的意思不是“做错了”，而是需要先确认关键前提，再继续加大投入。':'你可能正在把时间花在不属于当前阶段的事情上。高风险不是说你不努力，而是现在的努力可能没有打在阶段最关键的问题上。'; }
+
+function deepDiveMotiveCards(){
+  const active = state.computed.deep_dive_motivation || 'action_unclear';
+  const cards = [
+    ['stage_mismatch','阶段判断偏差','自评阶段和系统校准阶段不一致，可能正在用后一阶段的方法处理前一阶段的问题。'],
+    ['high_time_risk','时间错配高风险','当前投入可能没有打在阶段最关键位置，继续加码前需要先校准动作。'],
+    ['action_unclear','具体行动模糊','方向或目标已经出现，但还没有压缩成接下来 2-4 周最小、最有效的一步。'],
+    ['service_wedge','方向 / 服务缺口','还需要进一步确认服务谁、解决什么问题、用什么切口拿到真实反馈。']
+  ];
+  return `<div class="motive-grid">${cards.map(c=>`<div class="motive-card ${active===c[0]?'active':''}"><b>${esc(c[1])}</b>${esc(c[2])}</div>`).join('')}</div>`;
+}
+function reportBoundaryHtml(){
+  return `<div class="boundary-card"><div class="report-section-no">WHAT THIS REPORT CAN / CANNOT DO</div><h3>这份报告已经判断出什么，还没判断出什么</h3><div class="boundary-grid"><div class="boundary-col can-do"><b>已经判断出的部分</b><ul><li>你现在更适合按哪个阶段推进</li><li>你最可能浪费时间的地方在哪里</li><li>接下来 2-4 周的基础行动方向</li></ul></div><div class="boundary-col cannot-do"><b>还没判断完、需要继续确认的部分</b><ul><li>你的具体方向 / 服务切口是否值得继续验证</li><li>你应该优先找哪类人拿真实反馈</li><li>下一步最小、最有效的动作到底是什么</li></ul></div></div><div class="report-section-no" style="margin-top:16px;">UNRESOLVED ISSUE</div>${deepDiveMotiveCards()}</div>`;
+}
+function ctaContent(seg){
+  if(seg==='P0') return { title:'如果你想把结果落到自己的具体路径里', body:'从你的填写来看，你比较适合继续做一次「路径复诊」。这不是再看一份泛泛建议，而是把这份自动报告放回你的真实处境里，确认接下来 2-4 周最值得推进的动作。', bullets:['我们可以结合你的具体情况和更多同类案例，一起确认你的服务切口、反馈对象和验证动作。','重点不是聊很多方向，而是把下一步压缩成一个更有效的验证闭环。'], note:'建议先下载校准报告；预约时系统会一并保存你的诊断结果和补充资料。', allowAppointment:true, button:'预约路径复诊' };
+  if(seg==='P1') return { title:'如果你想进一步确认这份结果', body:'如果你看完后觉得结果说中了你，但还不确定接下来具体怎么做，可以提交一次路径复诊预约。重点会放在阶段判断、时间风险和 2-4 周最小行动上。', bullets:['一起确认这个阶段判断是否贴近你的真实状态。','一起确认当前最容易浪费时间的地方是否准确。','一起看看有没有一个更轻、更容易启动的验证动作。'], note:'提交预约资料后，我会先看你的报告和补充信息，再决定如何联系你继续校准。', allowAppointment:true, button:'预约路径复诊' };
+  if(seg==='P2') return { title:'如果你想继续核对这份结果', body:'这份结果可以先作为行动参考。如果你对阶段判断、时间风险或行动建议仍有具体疑问，也可以提交一次轻量复诊预约。', bullets:['适合带着一个具体问题来核对，而不是泛泛聊所有可能性。','我会结合你的报告和补充资料，看哪些建议需要按你的真实处境调整。'], note:'如果暂时没有明确问题，建议先下载报告并按行动处方试 2-4 周。', allowAppointment:true, button:'预约轻量复诊' };
+  return { title:'你可以先保存这份结果', body:'这份校准报告可以先作为你接下来行动的参考。你现在不一定需要马上预约，更适合先按照上面的行动处方做一次低成本验证。', bullets:['接下来 2-4 周，可以用这份报告对照自己的阶段判断、时间风险和行动处方。','如果之后你发现自己又卡住了，或者想重新校准阶段，可以再回来查看这份结果。'], note:'建议先下载校准报告，保存这次阶段判断、风险点和行动处方。', allowAppointment:false, downloadPrimary:true };
+}
+function appointmentFocusOptions(){ return [['stage_mismatch','确认阶段判断准不准'],['high_time_risk','确认最可能浪费时间的地方'],['action_unclear','把结果落成 2-4 周具体行动'],['service_wedge','确认方向 / 服务切口 / 反馈对象'],['other','其他，我想自己补充']]; }
+function hasAppointmentSucceeded(){ return Boolean(state.appointment && state.appointment.submitted); }
+function appointmentSuccessInline(){ return `<div class="appointment-success-inline"><strong>你已预约成功，我会在 48 小时内联系你。</strong><span>预约资料已经和这次校准记录关联保存。你可以先下载校准报告，后续沟通时直接对照这份结果。</span></div>`; }
+function appointmentEntryButtons(cta){
+  if(!cta.allowAppointment) return '';
+  if(hasAppointmentSucceeded()) return appointmentSuccessInline();
+  const label = cta.button || '预约路径复诊';
+  return `<div class="appointment-entry"><div><strong>预约复诊入口</strong><span>点击后填写称呼、微信、方便联系时间和最想复诊的问题。</span></div><button class="btn-primary" type="button" onclick="openAppointmentModal()">${esc(label)}</button></div>`;
+}
+function finalReportButtons(){
+  return `<div class="cta-actions final-report-actions"><button class="btn-secondary" type="button" onclick="downloadCalibrationMarkdown()">下载校准报告</button><button class="btn-ghost" type="button" onclick="location.reload()">重新检查</button></div>`;
+}
+function ctaCopyHtml(cta){
+  const bullets = (cta.bullets || []).map(x=>`<li>${esc(x)}</li>`).join('');
+  return `<div class="cta-copy-block"><h3>${esc(cta.title)}</h3><p>${esc(cta.body)}</p>${bullets?`<ul class="cta-bullets">${bullets}</ul>`:''}${cta.note?`<p class="small">${esc(cta.note)}</p>`:''}${appointmentEntryButtons(cta)}</div>`;
+}
+function nextStepRecheckPrompt(cta){ return ''; }
+function ctaActionsHtml(cta){
+  const hint = '<p class="cta-save-hint">本次校准没有在网页端长期保存，如有需要点击下载报告。</p>';
+  return `${reportBoundaryHtml()}${ctaCopyHtml(cta)}${finalReportButtons()}${hint}`;
+}
+function appointmentTimeOptions(){ return ['工作日白天','工作日晚上','周末白天','周末晚上','都可以']; }
+function setAppointmentField(key, value){ state.appointment[key]=value; }
+function appointmentFormFields(){
+  const ap=state.appointment || {};
+  const focus = ap.focus || state.computed.deep_dive_motivation || 'action_unclear';
+  const options = appointmentFocusOptions().map(([v,l])=>`<option value="${esc(v)}" ${focus===v?'selected':''}>${esc(l)}</option>`).join('');
+  const timeOptions = appointmentTimeOptions().map(v=>`<option value="${esc(v)}" ${(ap.available_time||'')===v?'selected':''}>${esc(v)}</option>`).join('');
+  return `<div class="appointment-grid"><div class="appointment-field"><label>怎么称呼你</label><input id="appointmentName" placeholder="例如：Zain / 你的昵称" value="${esc(ap.name||'')}" oninput="setAppointmentField('name',this.value)"></div><div class="appointment-field"><label>微信号</label><input id="appointmentContact" placeholder="请填写微信号，方便我主动联系你" value="${esc(ap.contact||'')}" oninput="setAppointmentField('contact',this.value)"></div><div class="appointment-field"><label>你最想复诊的问题</label><select id="appointmentFocus" onchange="setAppointmentField('focus',this.value)">${options}</select></div><div class="appointment-field"><label>方便联系的时间</label><select id="appointmentTime" onchange="setAppointmentField('available_time',this.value)"><option value="">请选择</option>${timeOptions}</select></div><div class="appointment-field full"><label>如果只复诊一个问题，你希望我重点看什么？</label><textarea id="appointmentContext" placeholder="可以简单写：你的方向、现在做过什么、最卡住的问题、希望我重点确认什么。" oninput="setAppointmentField('context',this.value)">${esc(ap.context||'')}</textarea></div></div>`;
+}
+function renderAppointmentModal(){
+  let modal = document.getElementById('appointmentModal');
+  if(!modal){
+    modal = document.createElement('div');
+    modal.id = 'appointmentModal';
+    modal.className = 'modal-backdrop hidden';
+    document.body.appendChild(modal);
+  }
+  modal.innerHTML = `<div class="appointment-modal" role="dialog" aria-modal="true" aria-labelledby="appointmentModalTitle"><div class="modal-head"><div><div class="report-section-no">PATH RECHECK APPOINTMENT</div><h3 id="appointmentModalTitle">预约一次路径复诊</h3><p class="evidence-intro">请留下你的微信和最想确认的问题。提交后，我会先看到你的诊断结果、后台优先级和这份预约资料，再主动联系你。</p></div><button class="modal-close" type="button" onclick="closeAppointmentModal()">关闭</button></div><div id="appointmentModalBody">${appointmentFormFields()}<div class="cta-actions"><button class="btn-primary" type="button" onclick="submitAppointment()">提交预约资料</button><button class="btn-secondary" type="button" onclick="closeAppointmentModal()">先返回结果页</button></div><div id="appointmentStatus" class="appointment-status">提交预约会同时保存你的诊断结果、后台优先级和复诊资料。</div></div></div>`;
+}
+function openAppointmentModal(focus){
+  if(focus) state.appointment.focus = focus;
+  renderAppointmentModal();
+  const modal=document.getElementById('appointmentModal');
+  modal.classList.remove('hidden');
+  trackCTA('open_appointment_modal');
+}
+function closeAppointmentModal(){
+  const modal=document.getElementById('appointmentModal');
+  if(modal) modal.classList.add('hidden');
+}
+function ctaBridgeCopy(seg){ return ''; }
+
+function logClientEvent(event, data = {}){
+  const entry = { ts:new Date().toISOString(), event, debug_id:state.debug_id, submission_id:state.submission_id, ...data };
+  console.log('[path-calibrator]', entry);
+  try {
+    const key = 'path_calibrator_debug_logs';
+    const logs = JSON.parse(localStorage.getItem(key) || '[]');
+    logs.push(entry);
+    localStorage.setItem(key, JSON.stringify(logs.slice(-30)));
+  } catch(_) {}
+}
+function getApiBaseUrls(){
+  return API_BASE_URLS.filter(Boolean).map(x => String(x).replace(/\/$/, ''));
+}
+async function postJsonWithRetry(path, payload, options = {}){
+  const attempts = options.attempts || 5;
+  const label = options.label || path;
+  const apiBaseUrls = getApiBaseUrls();
+  let lastError;
+  for(let baseIndex=0; baseIndex<apiBaseUrls.length; baseIndex++){
+    const baseUrl = apiBaseUrls[baseIndex];
+    const attemptsForBase = apiBaseUrls.length > 1
+      ? (baseIndex === 0 ? (options.primaryAttempts || Math.min(2, attempts)) : (options.fallbackAttempts || attempts))
+      : attempts;
+    for(let attempt=1; attempt<=attemptsForBase; attempt++){
+      try{
+        const url = `${baseUrl}${path}`;
+        logClientEvent(`${label}_attempt`, { attempt, attempts_for_base:attemptsForBase, api_base_url:baseUrl, url });
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+        let resp, text;
+        try {
+          resp = await fetch(url, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload), signal:controller.signal });
+          text = await resp.text();
+        } finally {
+          clearTimeout(timeoutId);
+        }
+        let data = {};
+        try { data = text ? JSON.parse(text) : {}; } catch(_) { data = { raw:text }; }
+        logClientEvent(`${label}_response`, { attempt, api_base_url:baseUrl, status:resp.status, ok:resp.ok, response:data });
+        if(!resp.ok || data.ok !== true) throw new Error(data.error || `HTTP ${resp.status}: invalid API response`);
+        return data;
+      }catch(e){
+        lastError = e;
+        logClientEvent(`${label}_failed_attempt`, { attempt, api_base_url:baseUrl, error:e.message });
+        if(attempt < attemptsForBase) await sleep(Math.min(8000, 1000 * Math.pow(2, attempt - 1)));
+      }
+    }
+    logClientEvent(`${label}_api_base_exhausted`, { api_base_url:baseUrl, error:lastError && lastError.message });
+  }
+  throw lastError;
+}
+function getParentPageUrl(){
+  try { return window.parent && window.parent.location ? window.parent.location.href : ''; } catch(_) { return ''; }
+}
+function buildPayload(){
+  return { debug_id: state.debug_id, client_debug_id: state.debug_id, submission_id: state.submission_id, timestamp:new Date().toISOString(), source:getUrlParam('source')||getUrlParam('utm_source')||'direct', utm_source:getUrlParam('utm_source'), utm_campaign:getUrlParam('utm_campaign'), page_url:location.href, parent_page_url:getParentPageUrl(), referrer:document.referrer, user_agent:navigator.userAgent, frontend_version:CALIBRATOR_VERSION, site_commit:SITE_COMMIT, browser_language:navigator.language, screen_size:`${window.screen?.width || ''}x${window.screen?.height || ''}`, timezone:Intl.DateTimeFormat().resolvedOptions().timeZone, answers:{...state.answers, desired_outcome:state.answers.desired_outcome_label}, computed:state.computed };
+}
+function saveLastPayload(payload){
+  try { localStorage.setItem('path_calibrator_last_payload', JSON.stringify({ ...payload, saved_at:new Date().toISOString() })); } catch(_) {}
+}
+async function submitPathCheck(){
+  const payload = buildPayload();
+  saveLastPayload(payload);
+  try{
+    const result = await postJsonWithRetry('/api/submit-path-check', payload, { label:'submit_path_check', attempts:5, primaryAttempts:2, fallbackAttempts:2 });
+    state.submission_record_id = result.record_id || state.submission_record_id || '';
+    try { localStorage.setItem('path_calibrator_last_submit_success', JSON.stringify({ debug_id:state.debug_id, submission_id:state.submission_id, record_id:state.submission_record_id, result, ts:new Date().toISOString() })); } catch(_) {}
+    return result;
+  }catch(e){
+    console.warn('submit failed', e);
+    logClientEvent('submit_path_check_final_failed', { error:e.message });
+    try { localStorage.setItem('path_calibrator_last_submit_failed', JSON.stringify({ debug_id:state.debug_id, submission_id:state.submission_id, payload, error:e.message, ts:new Date().toISOString() })); } catch(_) {}
+    throw e;
+  }
+}
+function buildAppointmentPayload(){
+  const ap = state.appointment || {};
+  const focus = ap.focus || state.computed.deep_dive_motivation || 'action_unclear';
+  return { ...buildPayload(), record_id:state.submission_record_id, appointment:{ requested:true, requested_at:new Date().toISOString(), name:ap.name || '', contact:ap.contact || '', available_time:ap.available_time || '', focus, focus_label:(appointmentFocusOptions().find(x=>x[0]===focus)||[])[1] || focus, context:ap.context || '', diagnosis_markdown:calibrationMarkdown() }};
+}
+async function submitAppointment(){
+  const ap = state.appointment || {};
+  const status = document.getElementById('appointmentStatus');
+  if(status){ status.className='appointment-status'; status.textContent=''; }
+  if(hasAppointmentSucceeded()){
+    const body=document.getElementById('appointmentModalBody');
+    if(body){ body.innerHTML = `<div class="modal-success"><h3>你已预约成功</h3><p class="evidence-intro">我会在 48 小时内联系你。请勿重复提交，你可以先返回结果页或下载校准报告。</p><div class="cta-actions"><button class="btn-primary" type="button" onclick="closeAppointmentModal(); renderResult();">返回结果页面</button><button class="btn-secondary" type="button" onclick="downloadCalibrationMarkdown()">下载校准报告</button></div></div>`; }
+    return;
+  }
+  const focusEl=document.getElementById('appointmentFocus');
+  if(focusEl) ap.focus=focusEl.value;
+  if(!String(ap.name||'').trim() || !String(ap.contact||'').trim() || !String(ap.available_time||'').trim() || !String(ap.context||'').trim()){
+    if(status){ status.className='appointment-status error'; status.textContent='请至少填写称呼、微信号、方便联系的时间，以及你最想复诊的问题。'; }
+    return;
+  }
+  if(!state.submission_record_id){
+    if(status){ status.className='appointment-status error'; status.textContent='当前校准记录还没有保存成功，暂时不能提交预约。请先刷新重试，或下载校准报告后再联系。'; }
+    return;
+  }
+  if(status){ status.textContent='正在提交预约资料...'; }
+  trackCTA('open_appointment_submit');
+  const payload = buildAppointmentPayload();
+  try{
+    const result = await postJsonWithRetry('/api/book-diagnosis', payload, { label:'book_diagnosis', attempts:5, primaryAttempts:2, fallbackAttempts:2 });
+    state.appointment.submitted = true;
+    state.appointment.submitted_at = payload.appointment && payload.appointment.requested_at;
+    try { localStorage.setItem('path_calibrator_last_appointment_success', JSON.stringify({ debug_id:state.debug_id, submission_id:state.submission_id, record_id:state.submission_record_id, appointment:payload.appointment, result, ts:new Date().toISOString() })); } catch(_) {}
+    const body=document.getElementById('appointmentModalBody');
+    if(body){ body.innerHTML = `<div class="modal-success"><h3>你已预约成功</h3><p class="evidence-intro">我会在 48 小时内联系你。预约资料已经和这次校准记录关联保存，请勿重复提交。</p><div class="cta-actions"><button class="btn-primary" type="button" onclick="closeAppointmentModal(); renderResult();">返回结果页面</button><button class="btn-secondary" type="button" onclick="downloadCalibrationMarkdown()">下载校准报告</button></div></div>`; }
+    else if(status){ status.className='appointment-status success'; status.textContent='你已预约成功，我会在 48 小时内联系你。'; }
+    trackCTA('appointment_submitted');
+  }catch(e){
+    console.warn('appointment submit failed', e);
+    try { localStorage.setItem('path_calibrator_last_appointment_failed', JSON.stringify({ debug_id:state.debug_id, submission_id:state.submission_id, payload, error:e.message, ts:new Date().toISOString() })); } catch(_) {}
+    if(status){ status.className='appointment-status error'; status.innerHTML=`预约资料暂时没有提交成功：${esc(e.message || e)}。<br>你的预约内容还保留在表单里，请不要刷新页面，可以直接再点一次「提交预约资料」重试；或先下载校准报告。`; }
+    trackCTA('appointment_submit_failed');
+  }
+}
+async function trackCTA(action){
+  const payload = { debug_id:state.debug_id, client_debug_id:state.debug_id, event_id:`cta_${Date.now()}_${Math.random().toString(36).slice(2,8)}`, submission_id:state.submission_id, timestamp:new Date().toISOString(), cta_type:state.computed.cta_type, cta_action:action, user_segment:state.computed.user_segment, deep_dive_motivation:state.computed.deep_dive_motivation, appointment_priority:state.computed.appointment_priority, source:getUrlParam('source')||getUrlParam('utm_source')||'direct', utm_source:getUrlParam('utm_source'), utm_campaign:getUrlParam('utm_campaign'), page_url:location.href, parent_page_url:getParentPageUrl(), referrer:document.referrer, user_agent:navigator.userAgent, frontend_version:CALIBRATOR_VERSION, site_commit:SITE_COMMIT };
+  try{ return await postJsonWithRetry('/api/track-cta', payload, { label:`track_cta_${action}`, attempts:3 }); }catch(e){ console.warn('cta failed', e); logClientEvent('track_cta_final_failed', { action, error:e.message }); }
+}
+function copyWechat(){ const cta=ctaContent(state.computed.user_segment); navigator.clipboard.writeText(WECHAT_ID).then(()=>alert(cta.copyMessage || '微信号已复制')); trackCTA('copy_wechat'); }
+function copyResult(){ navigator.clipboard.writeText(resultText()).then(()=>alert('结果已复制')); }
+</script>
+</body>
+</html>
