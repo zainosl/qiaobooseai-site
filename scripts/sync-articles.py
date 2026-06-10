@@ -76,6 +76,48 @@ CAT_RULES = [
     ('第一单前10个里程碑', '获客增长'),
 ]
 
+# ── 卡片缩略图短标：根据标题关键词生成（每篇不同、贴合内容）──
+GLYPH_RULES = [
+    (r'审美', 'AESTHETIC'),
+    (r'割韭菜', 'NO SCAM'),
+    (r'复利', 'COMPOUND'),
+    (r'阅读量|阅读', 'READS'),
+    (r'第一单', 'FIRST DEAL'),
+    (r'公域', 'PUBLIC DOMAIN'),
+    (r'获客|客户|流量|渠道', 'GROWTH'),
+    (r'成交|付费|变现|赚钱|收入', 'REVENUE'),
+    (r'验证|商业模式', 'VALIDATION'),
+    (r'幻觉', 'ILLUSION'),
+    (r'误判|风险|陷阱|毁掉', 'PITFALL'),
+    (r'亏损|浪费', 'LEAK'),
+    (r'阶段|路径|里程碑|成功指标', 'PATH'),
+    (r'标准答案|答案|结果', 'RESULTS'),
+    (r'使命|价值|意义|愿景', 'PURPOSE'),
+    (r'组织|协作|社群|单打独斗', 'ORG'),
+    (r'离开|裸辞|离职|职场', 'CAREER'),
+    (r'产品', 'PRODUCT'),
+    (r'认知|进化|成长|思维', 'MINDSET'),
+    (r'AI', 'AI'),
+    (r'一人公司|超级个体|个体', 'SOLO CO.'),
+]
+
+
+def make_glyph(title):
+    """根据标题生成 2-3 词的英文短标，作为卡片缩略图文字（尽量唯一、相关）。"""
+    tokens = []
+    for pat, word in GLYPH_RULES:
+        if re.search(pat, title) and word not in tokens:
+            tokens.append(word)
+        if len(tokens) >= 2:
+            break
+    nums = re.findall(r'\d+', title)
+    if nums and len(tokens) < 3:
+        tokens.append(nums[0] + '×' if '倍' in title else '#' + nums[0])
+    if not tokens:
+        tokens = ['NOTE']
+    return ' · '.join(tokens[:3])
+
+
 # 正文起点标记
 BODY_MARKERS = ['正文：', '正文:', '## 公众号文章', '# 公众号文章', '## 正文', '# 正文']
 # 标题来源标记
@@ -296,7 +338,7 @@ def build(since=None):
             continue  # 内容太少，跳过
         sid = 'pub-' + hashlib.md5(topic.encode('utf-8')).hexdigest()[:8]
         arts.append({'id': sid, 'date': date, 'cat': cat_of(path),
-                     'glyph': 'ARTICLE', 'title': title, 'dek': dek, 'blocks': blocks, '_src': path})
+                     'glyph': make_glyph(title), 'title': title, 'dek': dek, 'blocks': blocks, '_src': path})
     arts.sort(key=lambda r: r['date'], reverse=True)
     return arts
 
