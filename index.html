@@ -437,7 +437,7 @@
         </div>
       </div>
       <a class="nav-item" href="articles.html">最新文章</a>
-      <a class="nav-cta" href="javascript:void(0)" onclick="openWechatModal('种子用户')">申请种子用户</a>
+      <a class="nav-cta" href="#services">查看服务</a>
     </nav>
     <button class="nav-toggle" id="navToggle" aria-label="菜单" onclick="toggleNav()">≡</button>
   </div>
@@ -455,9 +455,9 @@
         从 <em>0 到 1</em> 跑通<br>
         AI Native<br>一人公司商业模式
       </h1>
-      <p class="hero-sub">帮助本来能创造更大价值的职场人，构建自己的 AI 一人公司，实现自己的个人商业路径。</p>
+      <p class="hero-sub">我自己刚走通这条路，也把它做成了两项服务：帮本来能创造更大价值的职场人，先拆清能力、找准方向，再把方向做成产品、冲到第一单。</p>
       <div class="hero-actions">
-        <a class="btn btn-primary" href="javascript:void(0)" onclick="openWechatModal('种子用户')">申请种子用户 →</a>
+        <a class="btn btn-primary" href="#services">查看我的服务 →</a>
         <a class="btn btn-secondary" href="#about-project">了解项目</a>
       </div>
       <div class="tags">
@@ -518,6 +518,75 @@
             <div class="pain">有方向，但不知道第一步怎么启动和验证</div>
             <div class="pain">已经开始做一点，但没有反馈，开始怀疑方向不对</div>
           </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ 核心服务 ═══════════ -->
+  <section class="block" id="services">
+    <style>
+      .home-svc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 36px; }
+      .home-svc { display: flex; flex-direction: column; padding: 32px 30px; background: linear-gradient(180deg, rgba(88,225,193,0.06), var(--bg2)); border: 1px solid rgba(88,225,193,0.3); border-radius: 2px; transition: all .35s cubic-bezier(.22,1,.36,1); position: relative; overflow: hidden; }
+      .home-svc:hover { border-color: rgba(88,225,193,0.5); transform: translateY(-4px); box-shadow: 0 20px 56px rgba(0,0,0,.3); }
+      .home-svc::after { content: attr(data-glyph); position: absolute; right: -10px; bottom: -26px; font-family: var(--font-mono); font-size: 66px; color: rgba(88,225,193,0.05); line-height: 1; pointer-events: none; }
+      .home-svc-top { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+      .home-svc-ico { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 10px; background: rgba(88,225,193,0.1); border: 1px solid rgba(88,225,193,0.24); color: var(--accent); font-size: 21px; }
+      .home-svc-step { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; color: var(--accent); background: rgba(88,225,193,0.12); padding: 5px 12px; border-radius: 2px; }
+      .home-svc-title { font-size: 21px; font-weight: 800; color: var(--text); letter-spacing: -0.02em; margin-bottom: 12px; line-height: 1.3; }
+      .home-svc-desc { font-size: 13.5px; color: var(--muted); line-height: 1.8; margin-bottom: 20px; flex: 1; }
+      .home-svc-price { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 22px; padding: 14px 16px; background: rgba(88,225,193,0.06); border: 1px solid rgba(88,225,193,0.2); border-radius: 2px; }
+      .home-svc-now { display: flex; align-items: baseline; gap: 6px; }
+      .home-svc-now .num { font-family: var(--font-mono); font-size: 26px; font-weight: 500; color: var(--accent); line-height: 1; }
+      .home-svc-now .unit { font-size: 12.5px; color: var(--muted); }
+      .home-svc-old { font-size: 12.5px; color: var(--dim); }
+      .home-svc-old s { color: var(--dim); }
+      .home-svc .btn { align-self: flex-start; }
+      .home-free { display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap; margin-top: 20px; padding: 18px 22px; background: var(--bg2); border: 1px solid var(--border); border-radius: 2px; }
+      .home-free-text { font-size: 13.5px; color: var(--muted); line-height: 1.6; }
+      .home-free-text b { color: var(--text); font-weight: 700; }
+      .home-free-links { display: flex; gap: 10px; flex-wrap: wrap; }
+      .home-free-link { font-size: 12.5px; color: var(--muted); border: 1px solid var(--border2); padding: 7px 14px; border-radius: 2px; text-decoration: none; transition: all .25s; white-space: nowrap; }
+      .home-free-link:hover { border-color: var(--accent); color: var(--accent); }
+      @media (max-width: 768px) { .home-svc-grid { grid-template-columns: 1fr; } }
+    </style>
+    <div class="wrap reveal">
+      <span class="eyebrow">SERVICES</span>
+      <h2 class="block-title">我现在能<br>怎么帮你？</h2>
+      <p class="lead" style="margin-top:20px;">两项核心付费服务，按「先找方向、再冲首单」的顺序，陪你从迷茫走到第一笔真实收入。</p>
+      <div class="home-svc-grid">
+        <div class="home-svc" data-glyph="DIAG">
+          <div class="home-svc-top">
+            <div class="home-svc-ico">◇</div>
+            <span class="home-svc-step">第一步 · 找方向</span>
+          </div>
+          <div class="home-svc-title">能力资产与商业切入口诊断</div>
+          <p class="home-svc-desc">用 2-3 小时，帮你拆清哪些能力真正属于你、哪些能离开公司继续变现、最适合先切入哪个个人业务方向。交付能力资产地图、优先切入口与可复用 AI 判断流程。</p>
+          <div class="home-svc-price">
+            <div class="home-svc-now"><span class="num">¥199</span><span class="unit">/ 次 · 限时早期价</span></div>
+            <div class="home-svc-old">公开售价 <s>¥399</s></div>
+          </div>
+          <a class="btn btn-primary" href="diagnosis.html">了解服务详情 →</a>
+        </div>
+        <div class="home-svc" data-glyph="SPRINT">
+          <div class="home-svc-top">
+            <div class="home-svc-ico">◆</div>
+            <span class="home-svc-step">第二步 · 冲首单</span>
+          </div>
+          <div class="home-svc-title">一人公司 0-1 首单变现冲刺</div>
+          <p class="home-svc-desc">方向已定后，30 天把它做成能卖的产品服务，找到第一批真实客户，完成沟通报价，冲第一笔收入或清楚的购买信号。我 + AI 陪你跑完一轮 0-1 变现闭环。</p>
+          <div class="home-svc-price">
+            <div class="home-svc-now"><span class="num">¥1999</span><span class="unit">/ 30 天 · 限时早期价</span></div>
+            <div class="home-svc-old">公开售价 <s>¥5999</s></div>
+          </div>
+          <a class="btn btn-primary" href="first-order-sprint.html">了解服务详情 →</a>
+        </div>
+      </div>
+      <div class="home-free">
+        <div class="home-free-text">还没想好？先用<b>免费前置工具</b>自测，判断自己适不适合再决定。</div>
+        <div class="home-free-links">
+          <a class="home-free-link" href="calibrator.html" target="_blank" rel="noopener">路径校准器 · 免费 →</a>
+          <a class="home-free-link" href="potential-customer-channels.html" target="_blank" rel="noopener">潜在客户渠道库 · 免费 →</a>
         </div>
       </div>
     </div>
@@ -611,8 +680,8 @@
   <!-- ═══════════ 邀请 ═══════════ -->
   <section class="block" id="invite">
     <div class="wrap reveal">
-      <span class="eyebrow">JOIN US</span>
-      <h2 class="block-title">邀请你作为种子用户，<br>把这套商业模式从想法推到验证跑通</h2>
+      <span class="eyebrow">EARLY USERS</span>
+      <h2 class="block-title">早期用户，<br>用更低价格走完这条路</h2>
       <div class="invite-cols">
         <div class="invite-col">
           <div class="invite-role"><em>种子用户可获得</em></div>
@@ -725,26 +794,25 @@
       <div class="cta-layout">
         <div>
           <span class="eyebrow">FINAL CALL</span>
-          <h2 class="cta-title">如果你认真看到这里，<br>欢迎加入。</h2>
+          <h2 class="cta-title">如果你认真看到这里，<br>我们可以开始了。</h2>
           <p class="cta-desc">
-            我想验证一件事：<br>
-            一个普通但足够清醒、愿意持续进化的人，<br>
-            能不能借助 AI 和商业思维，走出一条真正属于自己的路？<br><br>
-            这不是一个已经准备好所有答案的项目。<br>
-            这是一个值得和对的人一起，把答案做出来的项目。
+            我自己刚走通「职场能力 → 个人业务 → 第一单」这条路，<br>
+            现在把它做成两项服务，帮你少走弯路。<br><br>
+            如果你不确定从哪一步开始，<br>
+            可以先加微信，我帮你判断更适合先做诊断、还是直接冲首单。
           </p>
           <div class="hero-actions" style="margin-bottom:0;">
-            <button class="btn btn-primary" onclick="openWechatModal('种子用户')">申请种子用户</button>
+            <button class="btn btn-primary" onclick="openWechatModal('一人公司服务咨询')">加微信，聊聊我适合哪一步</button>
           </div>
-          <div class="cta-hint">申请后我会尽快与你沟通</div>
+          <div class="cta-hint">加微信后我会尽快与你沟通</div>
           <div class="cta-closer">别只停留在「我也想过」。<em>这次，我们真的开始。</em></div>
         </div>
         <div>
           <div class="tool-card">
-            <div class="tool-label">PATH CALIBRATOR</div>
-            <div class="tool-title">一人公司路径校准器</div>
-            <p class="tool-desc">你是否需要校准你的一人公司路径，避免少走弯路？试试「一人公司路径校准器」。</p>
-            <a class="btn btn-primary" href="calibrator.html" target="_blank" rel="noopener">进入路径校准器 →</a>
+            <div class="tool-label">START HERE · 第一步</div>
+            <div class="tool-title">能力资产与商业切入口诊断</div>
+            <p class="tool-desc">不确定自己的能力离开公司还能不能变现？用 2-3 小时拆清你的能力资产和优先切入口。限时早期价 ¥199。</p>
+            <a class="btn btn-primary" href="diagnosis.html">了解诊断详情 →</a>
           </div>
         </div>
       </div>
@@ -785,6 +853,7 @@
     <div class="wechat-box">
       <div class="wechat-label">WeChat ID</div>
       <div class="wechat-value">qiaoboose01</div>
+      <div class="wechat-remark" id="modalRemark" style="font-size:12.5px;color:var(--muted);margin-top:6px;">备注：一人公司服务咨询</div>
     </div>
   </div>
 </div>
@@ -812,7 +881,7 @@
   }
 
   /* ── 微信弹窗 ── */
-  function openWechatModal() { document.getElementById('wechatModal').classList.add('open'); }
+  function openWechatModal(remark) { if (remark) { document.getElementById('modalRemark').textContent = '备注：' + remark; } document.getElementById('wechatModal').classList.add('open'); }
   function closeWechatModal() { document.getElementById('wechatModal').classList.remove('open'); }
   document.getElementById('wechatModal').addEventListener('click', e => { if (e.target.id === 'wechatModal') closeWechatModal(); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeWechatModal(); });
