@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>一人公司 0-1 首单变现冲刺 · 乔不不斯</title>
+<meta name="description" content="30 天内，把一个一人公司方向做成能卖的产品服务，找到第一批真实客户，完成沟通报价，冲第一笔收入或清楚的购买信号。我 + AI 陪你跑完一轮 0-1 变现闭环。">
+<link rel="canonical" href="https://zainosl.github.io/qiaobooseai-site/first-order-sprint.html">
+<meta property="og:title" content="一人公司 0-1 首单变现冲刺 · 乔不不斯">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="zh_CN">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:      #0B0D0F;
+    --bg2:     #13161A;
+    --bg3:     #1C2026;
+    --text:    #F7F8FA;
+    --muted:   #A9B0BA;
+    --dim:     #4A525C;
+    --accent:  #58E1C1;
+    --accent2: #3BB89A;
+    --accent3: #7AF2D8;
+    --border:  rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.12);
+    --accent-dim: rgba(88,225,193,0.10);
+    --accent-soft: rgba(88,225,193,0.05);
+    --font-sans: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --font-mono: 'DM Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    --wrap: 1120px;
+    --wrap-narrow: 860px;
+    --nav-h: 64px;
+  }
+
+  html { scroll-behavior: smooth; scroll-padding-top: var(--nav-h); }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    line-height: 1.72;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: -2; pointer-events: none;
+    background-image:
+      linear-gradient(rgba(88,225,193,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(88,225,193,0.025) 1px, transparent 1px);
+    background-size: 64px 64px;
+  }
+  body::after {
+    content: '';
+    position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    background:
+      radial-gradient(circle at 82% -4%, rgba(88,225,193,0.10), transparent 38%),
+      radial-gradient(circle at 4% 96%, rgba(88,225,193,0.05), transparent 36%);
+  }
+
+  .wrap { width: min(var(--wrap), calc(100% - 48px)); margin: 0 auto; }
+  .wrap-narrow { width: min(var(--wrap-narrow), calc(100% - 48px)); margin: 0 auto; }
+
+  /* ───────── TOP NAV ───────── */
+  header.site-nav {
+    position: sticky; top: 0; z-index: 200;
+    height: var(--nav-h);
+    display: flex; align-items: center;
+    background: rgba(11,13,15,0.72);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; width: 100%; }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; flex-shrink: 0; }
+  .brand-mark {
+    width: 26px; height: 26px; border-radius: 6px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-mono); font-weight: 700; font-size: 13px; color: #06120E;
+  }
+  .brand-name { font-size: 15px; font-weight: 700; color: var(--text); letter-spacing: -0.01em; white-space: nowrap; }
+  .brand-name .accent { color: var(--accent); }
+  .nav-links { display: flex; align-items: center; gap: 4px; }
+  .nav-links a {
+    font-size: 13.5px; color: var(--muted); text-decoration: none;
+    padding: 8px 14px; border-radius: 7px; transition: all .2s; white-space: nowrap;
+  }
+  .nav-links a:hover { color: var(--text); background: rgba(255,255,255,0.04); }
+  .nav-cta {
+    font-size: 13.5px; font-weight: 700;
+    color: #06120E !important; background: var(--accent);
+    padding: 9px 18px !important; border-radius: 7px;
+  }
+  .nav-cta:hover { background: var(--accent2) !important; }
+  .nav-toggle { display: none; background: none; border: 1px solid var(--border2); border-radius: 7px; color: var(--text); width: 38px; height: 38px; cursor: pointer; font-size: 18px; }
+
+  .nav-item { font-size: 13.5px; color: var(--muted); text-decoration: none; padding: 8px 14px; border-radius: 7px; transition: all .2s; white-space: nowrap; }
+  .nav-item:hover { color: var(--text); background: rgba(255,255,255,0.04); }
+  .nav-item.active { color: var(--text); }
+  .nav-dd { position: relative; }
+  .nav-dd-trigger .caret { font-size: 9px; opacity: .7; transition: transform .2s; display: inline-block; }
+  .nav-dd:hover .nav-dd-trigger .caret { transform: rotate(180deg); }
+  .nav-dd-menu {
+    position: absolute; top: calc(100% + 10px); left: 50%; transform: translateX(-50%) translateY(8px);
+    min-width: 320px; padding: 8px; background: rgba(17,20,24,0.98);
+    border: 1px solid var(--border2); border-radius: 12px;
+    box-shadow: 0 24px 70px rgba(0,0,0,0.45);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    opacity: 0; visibility: hidden; transition: all .22s cubic-bezier(.22,1,.36,1); z-index: 250;
+  }
+  .nav-dd::before { content: ''; position: absolute; top: 100%; left: 0; right: 0; height: 14px; }
+  .nav-dd:hover .nav-dd-menu, .nav-dd:focus-within .nav-dd-menu { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
+  .dd-link { display: flex; align-items: flex-start; gap: 13px; padding: 13px 14px; border-radius: 9px; text-decoration: none; transition: background .18s; }
+  .dd-link:hover { background: rgba(88,225,193,0.07); }
+  .dd-ico { width: 34px; height: 34px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-radius: 8px; background: rgba(88,225,193,0.1); border: 1px solid rgba(88,225,193,0.22); color: var(--accent); font-size: 16px; }
+  .dd-text { display: flex; flex-direction: column; gap: 3px; }
+  .dd-text b { font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.3; }
+  .dd-text i { font-size: 12px; font-style: normal; color: var(--muted); line-height: 1.4; }
+  .dd-group { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.18em; color: var(--dim); text-transform: uppercase; padding: 10px 14px 6px; }
+  .dd-divider { height: 1px; background: var(--border); margin: 6px 8px; }
+  .dd-tag { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.06em; padding: 2px 7px; border-radius: 2px; margin-left: 8px; vertical-align: 1px; }
+  .dd-tag.paid { background: rgba(88,225,193,0.12); color: var(--accent); }
+  .dd-tag.free { background: rgba(169,176,186,0.10); color: var(--muted); border: 1px solid var(--border2); }
+  .dd-link.free .dd-ico { background: rgba(169,176,186,0.08); border-color: var(--border2); color: var(--muted); }
+
+  /* ───────── SECTION SHELL ───────── */
+  section.block { padding: clamp(64px, 9vh, 104px) 0; position: relative; }
+  section.block + section.block { border-top: 1px solid var(--border); }
+  .eyebrow {
+    display: inline-block; font-family: var(--font-mono);
+    font-size: 10px; letter-spacing: 0.24em; color: var(--accent);
+    text-transform: uppercase; margin-bottom: 18px;
+  }
+  .block-title {
+    font-size: clamp(24px, 3.1vw, 40px); font-weight: 700;
+    line-height: 1.22; letter-spacing: -0.02em;
+  }
+  .block-title em, .accent { color: var(--accent); font-style: normal; }
+  .lead { font-size: clamp(15px, 1.4vw, 18px); color: var(--muted); font-weight: 300; line-height: 1.85; max-width: 680px; }
+
+  .reveal { opacity: 0; transform: translateY(22px); transition: opacity .7s cubic-bezier(.22,1,.36,1), transform .7s cubic-bezier(.22,1,.36,1); }
+  .reveal.in { opacity: 1; transform: none; }
+
+  /* ───────── BUTTONS ───────── */
+  .btn { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; border-radius: 2px; padding: 13px 26px; font-size: 14px; font-weight: 700; font-family: var(--font-sans); letter-spacing: .04em; transition: all .22s; text-decoration: none; border: 1px solid transparent; }
+  .btn-primary { background: var(--accent); color: #06120E; border-color: var(--accent); }
+  .btn-primary:hover { background: var(--accent2); border-color: var(--accent2); transform: translateY(-2px); }
+  .btn-secondary { background: transparent; color: var(--text); border-color: var(--border2); }
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+  .btn:active { transform: translateY(0) scale(.98); }
+
+  /* ───────── HERO ───────── */
+  .hero { padding: clamp(64px, 11vh, 130px) 0 clamp(52px, 8vh, 96px); position: relative; overflow: hidden; }
+  .hero-deco {
+    position: absolute; right: -2%; top: 50%; transform: translateY(-50%);
+    font-family: var(--font-mono); font-size: clamp(160px, 30vw, 400px);
+    font-weight: 500; color: rgba(88,225,193,0.035); line-height: 1; user-select: none; pointer-events: none; z-index: 0;
+  }
+  .hero-inner { position: relative; z-index: 1; max-width: 880px; }
+  .hero-tag {
+    display: inline-block; font-family: var(--font-mono);
+    font-size: 11px; letter-spacing: 0.2em; color: var(--accent);
+    border: 1px solid rgba(88,225,193,0.3); background: rgba(88,225,193,0.03);
+    padding: 6px 15px; border-radius: 2px; margin-bottom: 30px;
+  }
+  .hero-title {
+    font-size: clamp(32px, 4.6vw, 60px); font-weight: 900;
+    line-height: 1.12; letter-spacing: -0.03em; margin-bottom: 28px;
+  }
+  .hero-title em { color: var(--accent); font-style: normal; }
+  .hero-sub { font-size: clamp(15px, 1.5vw, 19px); font-weight: 300; color: var(--muted); line-height: 1.8; max-width: 640px; margin-bottom: 30px; }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 14px; }
+
+  .q-block { border-left: 3px solid var(--accent); background: rgba(88,225,193,0.05); padding: 18px 22px; margin: 26px 0; display: flex; flex-direction: column; gap: 7px; max-width: 640px; }
+  .q-block p { font-size: clamp(14px,1.4vw,16px); color: var(--text); font-weight: 500; line-height: 1.7; }
+
+  .deliver { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 30px; }
+  .deliver-item { display: flex; align-items: flex-start; gap: 12px; font-size: 13.5px; color: var(--muted); line-height: 1.55; padding: 14px 16px; background: var(--bg2); border: 1px solid var(--border); border-radius: 2px; transition: all .3s; }
+  .deliver-item:hover { border-color: rgba(88,225,193,0.35); color: var(--text); transform: translateY(-2px); }
+  .deliver-item .dnum { font-family: var(--font-mono); font-size: 11px; color: var(--accent); flex-shrink: 0; margin-top: 2px; }
+
+  /* scenario cards */
+  .scene-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 36px; }
+  .scene { padding: 28px 26px; background: var(--bg2); border: 1px solid var(--border); border-radius: 2px; transition: all .35s cubic-bezier(.22,1,.36,1); position: relative; overflow: hidden; }
+  .scene:hover { border-color: rgba(88,225,193,0.4); transform: translateY(-4px); box-shadow: 0 16px 48px rgba(0,0,0,.25); }
+  .scene-num { font-family: var(--font-mono); font-size: 40px; font-weight: 500; color: rgba(88,225,193,0.14); line-height: 1; margin-bottom: 16px; }
+  .scene-title { font-size: 16px; font-weight: 700; color: var(--text); line-height: 1.4; margin-bottom: 14px; }
+  .scene-title em { color: var(--accent); font-style: normal; }
+  .scene-body { font-size: 13.5px; color: var(--muted); line-height: 1.8; }
+  .scene-q { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); font-size: 13px; color: var(--dim); line-height: 1.75; }
+  .scene-q span { display: block; }
+  .scene-note { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); font-size: 13px; color: var(--accent); line-height: 1.65; }
+
+  /* big three (做三件事) */
+  .three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 36px; }
+  .three-card { padding: 30px 28px; background: var(--bg2); border: 1px solid var(--border); border-top: 2px solid var(--accent); border-radius: 2px; transition: all .35s cubic-bezier(.22,1,.36,1); }
+  .three-card:hover { border-color: rgba(88,225,193,0.4); border-top-color: var(--accent); transform: translateY(-4px); box-shadow: 0 16px 48px rgba(0,0,0,.25); }
+  .three-num { font-family: var(--font-mono); font-size: 14px; color: var(--accent); margin-bottom: 14px; letter-spacing: 0.1em; }
+  .three-title { font-size: 19px; font-weight: 800; color: var(--text); margin-bottom: 10px; letter-spacing: -0.01em; }
+  .three-title em { color: var(--accent); font-style: normal; }
+  .three-desc { font-size: 13.5px; color: var(--muted); line-height: 1.75; }
+
+  /* step flow */
+  .steps { display: flex; flex-direction: column; gap: 0; margin-top: 36px; }
+  .step { display: grid; grid-template-columns: 56px 1px 1fr; min-height: 72px; transition: all .25s; }
+  .step-num { font-family: var(--font-mono); font-size: 15px; color: var(--accent); padding: 20px 16px 20px 0; display: flex; align-items: flex-start; font-weight: 500; }
+  .step-line-wrap { display: flex; flex-direction: column; align-items: center; }
+  .step-dot { width: 9px; height: 9px; border: 1px solid var(--accent); border-radius: 50%; background: var(--bg); margin-top: 22px; flex-shrink: 0; transition: all .25s; }
+  .step-line { flex: 1; width: 1px; background: var(--border2); }
+  .step-content { padding: 18px 0 18px 22px; }
+  .step:hover .step-dot { background: var(--accent); box-shadow: 0 0 8px rgba(88,225,193,.4); }
+  .step-h { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 8px; line-height: 1.4; }
+  .step-h em { color: var(--accent); font-style: normal; }
+  .step-p { font-size: 13.5px; color: var(--muted); line-height: 1.8; }
+  .step-ai { font-size: 12.5px; color: var(--dim); line-height: 1.7; margin-top: 10px; padding-left: 14px; border-left: 2px solid var(--border2); }
+  .step-ai b { color: var(--accent); font-weight: 500; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em; display: block; margin-bottom: 3px; }
+  .step-tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
+  .step-tag { font-size: 12px; color: var(--muted); border: 1px solid var(--border2); padding: 5px 12px; border-radius: 2px; line-height: 1.4; transition: all .25s; }
+  .step-tag:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* compare */
+  .compare-list { display: flex; flex-direction: column; gap: 12px; margin-top: 36px; }
+  .compare-row { display: grid; grid-template-columns: 1fr 24px 1fr; border: 1px solid var(--border); transition: all .3s; }
+  .compare-row:hover { border-color: var(--border2); box-shadow: 0 4px 16px rgba(0,0,0,.15); }
+  .compare-left, .compare-right { padding: 16px 22px; font-size: 13.5px; line-height: 1.7; }
+  .compare-left { background: var(--bg2); color: var(--dim); }
+  .compare-left b, .compare-right b { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.15em; display: block; margin-bottom: 5px; font-weight: 500; }
+  .compare-left b { color: #3A3F45; }
+  .compare-right { background: var(--bg3); color: var(--text); border-left: 2px solid var(--accent); }
+  .compare-right b { color: var(--accent); }
+  .compare-mid { display: flex; align-items: center; justify-content: center; background: var(--border); font-size: 10px; color: var(--dim); writing-mode: vertical-rl; letter-spacing: 0.1em; }
+
+  /* two reasons (为什么更接近第一单) */
+  .reasons { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 36px; }
+  .reason { padding: 30px 28px; background: var(--bg2); border: 1px solid var(--border); border-radius: 2px; transition: all .35s; }
+  .reason:hover { border-color: rgba(88,225,193,0.35); transform: translateY(-3px); box-shadow: 0 14px 40px rgba(0,0,0,.22); }
+  .reason-num { font-family: var(--font-mono); font-size: 34px; font-weight: 500; color: rgba(88,225,193,0.16); line-height: 1; margin-bottom: 16px; }
+  .reason-title { font-size: 18px; font-weight: 700; color: var(--text); line-height: 1.4; margin-bottom: 12px; }
+  .reason-title em { color: var(--accent); font-style: normal; }
+  .reason-desc { font-size: 13.5px; color: var(--muted); line-height: 1.85; }
+
+  /* flow arrow line */
+  .flow { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 26px; padding: 20px 22px; background: var(--bg3); border: 1px solid var(--border); border-radius: 2px; }
+  .flow span { font-size: 13.5px; color: var(--text); font-weight: 500; }
+  .flow .arr { color: var(--accent); font-family: var(--font-mono); }
+
+  /* about me stats */
+  .stat-strip { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 32px; }
+  .stat-box { flex: 1 1 auto; min-width: 150px; padding: 13px 16px; background: var(--bg2); border: 1px solid var(--border); border-left: 2px solid var(--accent); border-radius: 2px; transition: all .25s; }
+  .stat-box:first-child { flex-basis: 100%; }
+  .stat-box:hover { border-color: var(--border2); border-left-color: var(--accent); }
+  .stat-box-num { font-family: var(--font-mono); font-size: 16px; font-weight: 500; color: var(--accent); line-height: 1.2; letter-spacing: -0.01em; margin-bottom: 3px; }
+  .stat-box-label { font-size: 12.5px; color: var(--muted); line-height: 1.45; }
+  .about-narrative { margin-top: 30px; max-width: 760px; }
+  .about-why { font-size: clamp(14px, 1.5vw, 16px); color: var(--muted); line-height: 2; }
+  .about-why strong { color: var(--text); font-weight: 700; }
+  .about-why em { color: var(--accent); font-style: normal; font-weight: 700; }
+  .about-why + .about-why { margin-top: 16px; }
+
+  /* fit / not fit */
+  .fit-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; margin-top: 36px; }
+  .fit-head { font-size: 14px; font-weight: 700; margin-bottom: 18px; display: flex; align-items: center; gap: 10px; }
+  .fit-badge { font-size: 11px; font-family: var(--font-mono); padding: 3px 10px; border-radius: 2px; letter-spacing: 0.1em; }
+  .fit-badge.yes { background: rgba(88,225,193,0.1); color: var(--accent); }
+  .fit-badge.no { background: rgba(90,90,90,0.2); color: var(--dim); }
+  .fit-items { display: flex; flex-direction: column; gap: 9px; }
+  .fit-item { font-size: 13px; line-height: 1.6; padding: 11px 14px; border-left: 2px solid; transition: all .3s cubic-bezier(.22,1,.36,1); }
+  .fit-item:hover { transform: translateX(4px); }
+  .fit-item.yes { border-color: var(--accent); color: var(--text); background: rgba(88,225,193,0.04); }
+  .fit-item.no { border-color: var(--dim); color: var(--dim); background: var(--bg2); }
+
+  /* price */
+  .price-wrap { display: grid; grid-template-columns: 360px 1fr; gap: 40px; margin-top: 36px; align-items: start; }
+  .price-card { padding: 34px 32px; background: linear-gradient(180deg, rgba(88,225,193,0.09), rgba(19,22,26,0.92)); border: 1px solid rgba(88,225,193,0.26); border-radius: 2px; box-shadow: 0 30px 100px rgba(0,0,0,.28); position: relative; overflow: hidden; }
+  .price-card::before { content: '30D'; position: absolute; right: -10px; bottom: -26px; font-family: var(--font-mono); font-size: 64px; color: rgba(88,225,193,0.05); line-height: 1; pointer-events: none; }
+  .price-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.2em; color: var(--accent); text-transform: uppercase; margin-bottom: 18px; }
+  .price-old { font-size: 15px; color: var(--dim); text-decoration: line-through; margin-bottom: 6px; }
+  .price-now { display: flex; align-items: baseline; gap: 10px; margin-bottom: 22px; }
+  .price-now .num { font-family: var(--font-mono); font-size: 52px; font-weight: 500; color: var(--accent); line-height: 1; letter-spacing: -0.03em; }
+  .price-now .unit { font-size: 14px; color: var(--muted); }
+  .price-points { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+  .price-points li { font-size: 13px; color: var(--muted); padding-left: 18px; position: relative; line-height: 1.6; }
+  .price-points li::before { content: ''; position: absolute; left: 0; top: 9px; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
+  .price-note { font-size: 13.5px; color: var(--muted); line-height: 1.95; }
+  .price-note strong { color: var(--text); }
+  .price-note + .price-note { margin-top: 14px; }
+
+  /* final CTA */
+  .cta-block { padding: clamp(64px, 9vh, 110px) 0; border-top: 1px solid var(--border); }
+  .cta-title { font-size: clamp(26px, 3.6vw, 46px); font-weight: 900; line-height: 1.14; letter-spacing: -0.03em; margin-bottom: 20px; max-width: 760px; }
+  .cta-title em { color: var(--accent); font-style: normal; }
+  .cta-desc { font-size: 14.5px; color: var(--muted); line-height: 1.95; max-width: 600px; margin-bottom: 30px; }
+  .cta-actions { display: flex; flex-wrap: wrap; gap: 14px; }
+
+  /* ───────── FOOTER ───────── */
+  footer.site-foot { border-top: 1px solid var(--border); padding: 44px 0 56px; }
+  .foot-inner { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+  .foot-brand { font-size: 14px; color: var(--muted); }
+  .foot-brand .accent { color: var(--accent); }
+  .foot-meta { font-family: var(--font-mono); font-size: 11px; color: var(--dim); letter-spacing: 0.08em; }
+
+  /* ───────── MODAL ───────── */
+  .modal { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; padding: 24px; background: rgba(11,13,15,0.78); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 1000; }
+  .modal.open { display: flex; }
+  .modal-card { position: relative; width: min(460px, 100%); padding: 30px; background: linear-gradient(180deg, rgba(19,22,26,0.98), rgba(11,13,15,0.98)); border: 1px solid var(--border2); border-radius: 12px; box-shadow: 0 24px 80px rgba(0,0,0,.38); animation: pop .35s cubic-bezier(.22,1,.36,1) both; }
+  @keyframes pop { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+  .modal-close { position: absolute; top: 14px; right: 14px; width: 34px; height: 34px; border: 1px solid var(--border2); border-radius: 50%; background: transparent; color: var(--muted); cursor: pointer; transition: all .3s; font-size: 16px; }
+  .modal-close:hover { color: var(--accent); border-color: var(--accent); }
+  .modal-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.18em; color: var(--accent); text-transform: uppercase; margin-bottom: 12px; }
+  .modal-title { font-size: clamp(22px, 3vw, 30px); font-weight: 700; line-height: 1.2; margin-bottom: 14px; }
+  .modal-desc { font-size: 14px; color: var(--muted); line-height: 1.8; margin-bottom: 20px; }
+  .wechat-box { border: 1px solid rgba(88,225,193,0.25); background: rgba(88,225,193,0.07); border-radius: 10px; padding: 18px; }
+  .wechat-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.18em; color: var(--dim); text-transform: uppercase; margin-bottom: 10px; }
+  .wechat-value { font-family: var(--font-mono); font-size: clamp(20px, 4vw, 28px); color: var(--accent); word-break: break-all; margin-bottom: 6px; }
+  .wechat-remark { font-size: 12.5px; color: var(--muted); }
+
+  /* ───────── RESPONSIVE ───────── */
+  @media (max-width: 900px) {
+    .scene-grid, .three, .reasons { grid-template-columns: 1fr; }
+    .price-wrap { grid-template-columns: 1fr; }
+    .deliver { grid-template-columns: 1fr; }
+    .stat-box { min-width: 120px; }
+  }
+  @media (max-width: 768px) {
+    .nav-links { position: fixed; top: var(--nav-h); left: 0; right: 0; flex-direction: column; align-items: stretch; gap: 0; background: rgba(11,13,15,0.98); backdrop-filter: blur(14px); border-bottom: 1px solid var(--border); padding: 8px; transform: translateY(-130%); transition: transform .3s; max-height: calc(100vh - var(--nav-h)); overflow-y: auto; }
+    .nav-links.open { transform: none; }
+    .nav-links a, .nav-item { padding: 13px 16px; border-radius: 8px; }
+    .nav-toggle { display: flex; align-items: center; justify-content: center; }
+    .nav-dd { position: static; }
+    .nav-dd-trigger .caret { display: none; }
+    .nav-dd-menu { position: static; opacity: 1; visibility: visible; transform: none; min-width: 0; box-shadow: none; background: transparent; border: none; padding: 0 0 0 12px; backdrop-filter: none; }
+    .dd-link { padding: 11px 14px; }
+    .dd-text i { display: none; }
+    .fit-cols { grid-template-columns: 1fr; }
+    .compare-row { grid-template-columns: 1fr; }
+    .compare-mid { writing-mode: horizontal-tb; padding: 6px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════ TOP NAV ═══════════ -->
+<header class="site-nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="index.html" aria-label="乔不不斯首页">
+      <span class="brand-mark">乔</span>
+      <span class="brand-name">AI Native 一人公司 · <span class="accent">乔不不斯</span></span>
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a class="nav-item" href="index.html">首页</a>
+      <div class="nav-dd">
+        <a class="nav-item nav-dd-trigger active" href="products.html">产品服务 <span class="caret">▾</span></a>
+        <div class="nav-dd-menu">
+          <div class="dd-group">核心服务</div>
+          <a class="dd-link" href="diagnosis.html">
+            <span class="dd-ico">◇</span>
+            <span class="dd-text"><b>能力资产与商业切入口诊断<span class="dd-tag paid">付费</span></b><i>拆清你能离开公司变现的能力与切入口</i></span>
+          </a>
+          <a class="dd-link" href="first-order-sprint.html">
+            <span class="dd-ico">◆</span>
+            <span class="dd-text"><b>0-1 首单变现冲刺<span class="dd-tag paid">付费</span></b><i>30 天把方向做成产品，冲第一笔收入</i></span>
+          </a>
+          <div class="dd-divider"></div>
+          <div class="dd-group">免费前置工具</div>
+          <a class="dd-link free" href="calibrator.html" target="_blank" rel="noopener">
+            <span class="dd-ico">◎</span>
+            <span class="dd-text"><b>一人公司路径校准器<span class="dd-tag free">免费</span></b><i>先自测，检查现在做的事是否在浪费时间</i></span>
+          </a>
+          <a class="dd-link free" href="potential-customer-channels.html" target="_blank" rel="noopener">
+            <span class="dd-ico">⊞</span>
+            <span class="dd-text"><b>潜在客户渠道库<span class="dd-tag free">免费</span></b><i>前期找种子用户的渠道清单</i></span>
+          </a>
+        </div>
+      </div>
+      <a class="nav-item" href="articles.html">最新文章</a>
+      <a class="nav-cta" href="javascript:void(0)" onclick="openWechatModal('首单冲刺 + 报名')">立即报名</a>
+    </nav>
+    <button class="nav-toggle" id="navToggle" aria-label="菜单" onclick="toggleNav()">≡</button>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ═══════════ HERO ═══════════ -->
+  <section class="hero">
+    <div class="hero-deco">◆</div>
+    <div class="wrap hero-inner reveal">
+      <span class="hero-tag">0 → 1 FIRST-ORDER SPRINT · 30 DAYS</span>
+      <h1 class="hero-title">一人公司<br><em>0-1 首单变现冲刺</em></h1>
+      <p class="hero-sub">30 天内，帮你把一个一人公司方向做成能卖的产品服务，并拿到真实客户面前冲第一单。你可能已经有方向、有经验、有内容，甚至和潜在用户聊过——但一到真正变现，还是会卡住。</p>
+      <div class="q-block">
+        <p>我到底卖什么？卖给谁？</p>
+        <p>怎么说对方才愿意听？怎么开口报价？</p>
+        <p>如果对方没买，我到底该改哪里？</p>
+      </div>
+      <p class="hero-sub" style="margin-bottom:0;">这轮要解决的就是这个问题：<span class="accent">做出一个能卖的小产品、找到第一批真实客户、完成沟通报价和成交尝试</span>，目标是在 30 天内拿到 0-1 变现结果。理想是拿到第一笔收入；即使暂时没成交，也至少拿到一轮清楚的市场反馈，知道下一轮该怎么改。</p>
+      <div class="hero-actions" style="margin-top:34px;">
+        <a class="btn btn-primary" href="javascript:void(0)" onclick="openWechatModal('首单冲刺 + 报名')">报名限时早期价 1999 元 →</a>
+        <a class="btn btn-secondary" href="javascript:void(0)" onclick="openWechatModal('首单冲刺')">不确定？先做初步判断</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ 场景 ═══════════ -->
+  <section class="block">
+    <div class="wrap reveal">
+      <span class="eyebrow">YOU MIGHT BE HERE</span>
+      <h2 class="block-title">你可能就在<br>这些<em>场景</em>里</h2>
+      <p class="lead" style="margin-top:20px;">下面这些场景，来自我之前做一人公司用户访谈、问卷和需求拆解时反复看到的真实卡点。</p>
+      <div class="scene-grid">
+        <div class="scene">
+          <div class="scene-num">01</div>
+          <div class="scene-title">有方向，但不知道<br>怎么做成<em>能卖的产品</em></div>
+          <div class="scene-body">已经做过访谈、免费咨询、demo、小应用或内容探索。真正卡住的是：知道大概方向，但不知道怎么独立做、该做产品还是咨询课程、没有具体产品就不知道怎么收费。</div>
+          <div class="scene-note">不缺想法，缺的是把想法变成一个客户听得懂、你也能交付的小产品。</div>
+        </div>
+        <div class="scene">
+          <div class="scene-num">02</div>
+          <div class="scene-title">有人感兴趣，<br>但还没变成<em>付费</em></div>
+          <div class="scene-body">已经写内容、加私域、聊过潜在用户，甚至有人说过"愿意付费"。但还是不知道：对方是真想买还是客气？该找谁聊？怎么从聊天进入报价？报价后对方不买怎么办？</div>
+          <div class="scene-note">不缺反馈，缺的是把"有人感兴趣"推进到真实报价和付费动作。</div>
+        </div>
+        <div class="scene">
+          <div class="scene-num">03</div>
+          <div class="scene-title">做过试服务，<br>不知道能不能<em>继续卖</em></div>
+          <div class="scene-body">已经办过活动、拉过用户群、做过真实服务尝试。但下一步仍不清楚：这个活动能不能变成长期产品？用户口头说可以，真的会付费吗？下一次怎么包装、定价和交付？</div>
+          <div class="scene-note">不缺行动，缺的是把一次尝试变成更清楚的产品和下一单路径。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ 三件事 ═══════════ -->
+  <section class="block">
+    <div class="wrap reveal">
+      <span class="eyebrow">30 DAYS · 3 THINGS</span>
+      <h2 class="block-title">30 天内，<br>只围绕第一单做<em>三件事</em></h2>
+      <p class="lead" style="margin-top:20px;">你不需要一个人把所有事情想清楚、做完。你只需要带着一个已有方向进来，我们一起把它变成可以拿出去卖的版本。</p>
+      <div class="three">
+        <div class="three-card">
+          <div class="three-num">01</div>
+          <div class="three-title">做清楚</div>
+          <div class="three-desc">你这次到底<em style="color:var(--accent);font-style:normal">卖什么</em>——把方向压成一个小而清楚、能报价能交付的产品。</div>
+        </div>
+        <div class="three-card">
+          <div class="three-num">02</div>
+          <div class="three-title">找清楚</div>
+          <div class="three-desc">谁最可能为它<em style="color:var(--accent);font-style:normal">付钱</em>——先找一小批最可能买、和你有信任的人。</div>
+        </div>
+        <div class="three-card">
+          <div class="three-num">03</div>
+          <div class="three-title">卖一次</div>
+          <div class="three-desc">完成真实<em style="color:var(--accent);font-style:normal">沟通、报价和成交尝试</em>——把方向推到真实付费动作里。</div>
+        </div>
+      </div>
+      <p class="lead" style="margin-top:30px;max-width:780px;">整个过程中，<span class="accent">AI 会深度参与</span>：整理材料、生成产品版本、拆用户画像、写沟通草稿、记录反馈、复盘卡点。<span class="accent">我负责判断和校准</span>：哪个产品版本最适合先卖、先找哪类人、什么时候该报价、反馈回来下一步怎么改。</p>
+    </div>
+  </section>
+
+  <!-- ═══════════ 四步流程 ═══════════ -->
+  <section class="block">
+    <div class="wrap reveal">
+      <span class="eyebrow">HOW IT WORKS</span>
+      <h2 class="block-title">我们怎么一步步<br>把方向推到<em>第一单</em></h2>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">01</div>
+          <div class="step-line-wrap"><div class="step-dot"></div><div class="step-line"></div></div>
+          <div class="step-content">
+            <div class="step-h">把方向做成一个<em>能卖的小产品</em></div>
+            <div class="step-p">很多人卡住不是没能力，而是用户听不懂你到底卖什么。所以先把方向压成小而清楚的产品服务：卖给谁、解决什么具体问题、买完能得到什么结果、第一次交付到什么程度、哪些先不做、怎么定价、怎么对外说清楚。这里不是写一段好看的介绍，而是做出一个能拿去沟通、报价、成交的小产品。</div>
+            <div class="step-ai"><b>AI 参与</b>整理你的经验、案例、用户问题和产品表达，快速生成几个产品版本，我和你一起选出最适合先卖的版本。</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <div class="step-line-wrap"><div class="step-dot"></div><div class="step-line"></div></div>
+          <div class="step-content">
+            <div class="step-h">找到第一批<em>最可能买的人</em></div>
+            <div class="step-p">首单不需要一开始就大规模获客，更重要的是先找到一小批最可能买的人：谁已经有这个问题、谁和你有信任、谁能听懂你的价值、谁可能为结果付钱。公众号读者、私域、朋友介绍、老同事、同行、陌生潜客，不能套同一套话术——我会帮你根据不同关系，设计更自然的开口方式。</div>
+            <div class="step-ai"><b>AI 参与</b>整理潜在客户画像、触达名单、不同关系下的开口方式和沟通草稿，让你不用从空白页开始。</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <div class="step-line-wrap"><div class="step-dot"></div><div class="step-line"></div></div>
+          <div class="step-content">
+            <div class="step-h">真实沟通和报价，<em>冲第一笔收入</em></div>
+            <div class="step-p">很多人一直停在"问问意见"，迟迟不敢进入购买动作。但要知道这件事能不能变成收入，就必须进入真实购买动作：对方愿不愿意继续聊、关不关心结果、会不会问价格、愿不愿意排时间、愿不愿意付定金或试单。目标是拿到第一笔收入；如果暂时没成交，也要知道卡在哪——人不对、问题不够痛、产品没说清、价格不合适、信任不够，还是第一次交付太重。这样下一轮不是靠猜。</div>
+            <div class="step-ai"><b>AI 参与</b>记录和整理每一次沟通反馈，我和你一起判断哪些反馈值得继续推进，哪些只是礼貌回应。</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">04</div>
+          <div class="step-line-wrap"><div class="step-dot"></div></div>
+          <div class="step-content">
+            <div class="step-h">把这轮变成<em>下一轮能用的资产</em></div>
+            <div class="step-p">这轮结束你不会只得到一次聊天记录。我会帮你把它沉淀成后面还能继续用的东西：产品版本、目标用户画像、用户原话、对方为什么感兴趣、为什么没买、报价和沟通记录、下一轮要调整的方向。关键判断不会交给 AI——我会和你一起判断：下一步应该继续、调整，还是暂时换一个切口。</div>
+            <div class="step-tags"><span class="step-tag">产品打磨工作流</span><span class="step-tag">潜在客户筛选工作流</span><span class="step-tag">沟通和报价工作流</span><span class="step-tag">用户反馈整理工作流</span><span class="step-tag">首单复盘工作流</span><span class="step-tag">下一轮调整工作流</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ 交付结果 ═══════════ -->
+  <section class="block">
+    <div class="wrap reveal">
+      <span class="eyebrow">WHAT YOU GET</span>
+      <h2 class="block-title">30 天结束，<br>你会拿到这些<em>可继续用的结果</em></h2>
+      <p class="lead" style="margin-top:20px;">你不会只得到一堆聊天建议。这轮会交付出这些可以继续使用的结果：</p>
+      <div class="deliver">
+        <div class="deliver-item"><span class="dnum">01</span>一个能拿出去卖的小产品版本：卖给谁、解决什么、交付什么、怎么定价、第一次怎么做</div>
+        <div class="deliver-item"><span class="dnum">02</span>一批真实潜在客户名单和沟通路径：明确先找哪类人、从哪找、怎么开口</div>
+        <div class="deliver-item"><span class="dnum">03</span>一轮真实沟通和报价记录：用户怎么反馈、哪里感兴趣、哪里犹豫、有没有进入试单</div>
+        <div class="deliver-item"><span class="dnum">04</span>一次第一次交付设计：成交了知道怎么交付，没成交也有模拟交付版本</div>
+        <div class="deliver-item"><span class="dnum">05</span>一份首单复盘和下一轮调整建议：该改产品、用户、价格、表达，还是换切口</div>
+        <div class="deliver-item"><span class="dnum">06</span>一套 AI 协作工作流：产品打磨、用户筛选、沟通报价、反馈整理、复盘、下一轮调整</div>
+        <div class="deliver-item" style="grid-column:1 / -1;"><span class="dnum">07</span>一套个人商业知识体系：把能力、产品、用户、沟通、报价、交付、反馈和判断沉淀成长期可用的个人商业资产</div>
+      </div>
+      <div class="q-block" style="margin-top:30px;max-width:720px;">
+        <p>即使这一轮没有马上成交，</p>
+        <p>你也<span class="accent">不是从零开始下一轮</span>——后面用 AI 打磨产品、写触达、分析反馈时，是基于你自己的真实业务上下文，而不是空问 AI。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ 这和课程/模板/IP 不同 ═══════════ -->
+  <section class="block">
+    <div class="wrap reveal">
+      <span class="eyebrow">WHY NOT THE OTHERS</span>
+      <h2 class="block-title">这和课程、模板、<br>IP 陪跑有什么<em>不同</em></h2>
+      <div class="compare-list">
+        <div class="compare-row">
+          <div class="compare-left"><b>课程解决</b>我学到一套方法。</div>
+          <div class="compare-mid">VS</div>
+          <div class="compare-right"><b>这轮只围绕</b>把你的方向推到真实客户面前，冲第一笔收入。</div>
+        </div>
+        <div class="compare-row">
+          <div class="compare-left"><b>模板解决</b>我有一个可以照着填的框架。</div>
+          <div class="compare-mid">VS</div>
+          <div class="compare-right"><b>这轮只围绕</b>做出一个能卖、能交付的真实小产品。</div>
+        </div>
+        <div class="compare-row">
+          <div class="compare-left"><b>IP / 自媒体陪跑关注</b>我怎么定位、怎么持续表达、怎么让更多人认识我。</div>
+          <div class="compare-mid">VS</div>
+          <div class="compare-right"><b>这轮只围绕</b>先证明有人愿意为你这个产品服务付钱。</div>
+        </div>
+      </div>
+      <div class="q-block" style="margin-top:32px;max-width:720px;">
+        <p>如果你现在还没有第一单，最重要的不是把自己包装得更完整，</p>
+        <p>而是先证明：<span class="accent">有人愿意为你这个产品服务付钱</span>。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ 为什么更接近第一单 ═══════════ -->
+  <section class="block">
+    <div class="wrap reveal">
+      <span class="eyebrow">WHY IT WORKS</span>
+      <h2 class="block-title">为什么这轮<br>更有机会接近<em>第一单</em></h2>
+      <p class="lead" style="margin-top:20px;">这轮不是从"怎么做个人品牌"开始，而是从第一单倒推：谁最可能买、他为什么会买、你到底卖什么、怎么开口报价、第一次怎么交付、不买下一轮改哪里。核心原因只有两个：</p>
+      <div class="reasons">
+        <div class="reason">
+          <div class="reason-num">01</div>
+          <div class="reason-title">这个产品<em>只为第一单服务</em></div>
+          <div class="reason-desc">不散开做 IP、内容、增长、社群、自动化和长期规划。只专注一件事：验证你的需求和产品，并把它推到真实付费动作里。首单之前最关键的不是人设够不够完整、内容体系够不够大，而是用户是不是真有这个问题、产品是不是足够清楚、对方愿不愿意付钱、你能不能完成第一次交付。这几个问题跑通，才有后面的放大空间。</div>
+        </div>
+        <div class="reason">
+          <div class="reason-num">02</div>
+          <div class="reason-title">我已经走通过<em>这条路</em></div>
+          <div class="reason-desc">不是只讲方法。我自己已经走过：先在职场拿到商业化结果，再把能力拆出来，转成一人公司的方向，做成公开市场能理解的内容和产品，最后拿到用户付费订单和第一笔收入。所以我陪你做的不是抽象陪跑，而是把我自己已经走过的一段路，压缩成你的 30 天首单冲刺。</div>
+        </div>
+      </div>
+      <div class="flow">
+        <span>能力和方向</span><span class="arr">→</span>
+        <span>小产品</span><span class="arr">→</span>
+        <span>真实用户</span><span class="arr">→</span>
+        <span>报价沟通</span><span class="arr">→</span>
+        <span class="accent">第一笔收入 / 清楚的购买信号</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ 为什么是我 ═══════════ -->
+  <section class="block">
+    <div class="wrap reveal">
+      <span class="eyebrow">WHY ME</span>
+      <h2 class="block-title">为什么我能<br>陪你做这件事</h2>
+      <div class="stat-strip">
+        <div class="stat-box"><div class="stat-box-num">一线大厂 · 亿级营收</div><div class="stat-box-label">AI 软硬件产品负责人，职场拿过亿级营收商业化结果</div></div>
+        <div class="stat-box"><div class="stat-box-num">50+ 篇</div><div class="stat-box-label">内容 · 最高 3 万+ 阅读</div></div>
+        <div class="stat-box"><div class="stat-box-num">200+</div><div class="stat-box-label">微信私域用户</div></div>
+        <div class="stat-box"><div class="stat-box-num">已拿到</div><div class="stat-box-label">能力资产产品订单与收入</div></div>
+      </div>
+      <div class="about-narrative">
+        <p class="about-why">过去 8 年我做 AI 产品和商业化，从普通 AI 产品经理做到一线大厂 AI 软硬件产品负责人，也做过亿级营收相关结果——<strong>这说明我在职场里拿过真实商业化结果</strong>。</p>
+        <p class="about-why">最近 3 个月，我持续输出 50+ 篇公众号文章，其中 2 篇过万阅读、1 篇 3 万+ 阅读，沉淀了 200-300 个微信私域用户，并<em>通过能力资产产品拿到了订单和收入</em>。我陪你做的不是抽象陪跑，而是把我自己已经走过的一段路压缩成你的 30 天。</p>
+        <p class="about-why">它不是让你再学一套东西，而是帮你把最关键的<em>变现动作做完一轮</em>。最后留下的不只是一次咨询结果，而是你自己的产品资料、用户资料、沟通资料、复盘资料、AI 工作流和个人商业知识体系。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ 适合 / 不适合 ═══════════ -->
+  <section class="block">
+    <div class="wrap reveal">
+      <span class="eyebrow">FIT / NOT FIT</span>
+      <h2 class="block-title">谁适合，<br>谁<em>不适合</em></h2>
+      <div class="fit-cols">
+        <div>
+          <div class="fit-head"><span class="fit-badge yes">适合</span></div>
+          <div class="fit-items">
+            <div class="fit-item yes">已经比较确定要探索一人公司，有一个大致商业方向</div>
+            <div class="fit-item yes">有专业经验、方法论、案例、内容或试服务基础</div>
+            <div class="fit-item yes">想做知识服务、咨询、陪跑、训练营、内容 IP 转服务等轻量个人业务</div>
+            <div class="fit-item yes">愿意在 30 天内真实沟通、报价和复盘</div>
+            <div class="fit-item yes">想尽可能跑到第一笔收入或清楚的购买信号</div>
+          </div>
+        </div>
+        <div>
+          <div class="fit-head"><span class="fit-badge no">不适合</span></div>
+          <div class="fit-items">
+            <div class="fit-item no">还没想清楚要不要做一人公司</div>
+            <div class="fit-item no">只想听课，不愿意真实沟通和报价</div>
+            <div class="fit-item no">希望我代运营、代获客、代成交</div>
+            <div class="fit-item no">主要想做完整品牌 IP 或长期内容增长</div>
+            <div class="fit-item no">想做 AI 工具、软件产品或重研发创业</div>
+            <div class="fit-item no">期待我保证第一单，或不愿面对真实市场反馈</div>
+          </div>
+        </div>
+      </div>
+      <p class="lead" style="margin-top:26px;max-width:780px;">如果你还不知道自己的职场能力里哪些能在公开市场获得收入，那你更适合先做前置的 <a href="diagnosis.html" style="color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(88,225,193,0.3);">一人公司能力资产与商业切入口诊断</a>。如果你已经有稳定成交，只是想放大获客或搭 SOP，这个产品也不是最适合你的阶段。</p>
+    </div>
+  </section>
+
+  <!-- ═══════════ 怎么一起动起来 ═══════════ -->
+  <section class="block">
+    <div class="wrap reveal">
+      <span class="eyebrow">THE PROCESS</span>
+      <h2 class="block-title">加微信后，<br>我们怎么一起<em>动起来</em></h2>
+      <p class="lead" style="margin-top:20px;">这轮不是你一个人埋头执行，也不是我单向给建议，更像三方协作——<span class="accent">你</span>提供真实方向、经验、用户线索和行动；<span class="accent">我</span>帮你判断、压缩、校准、推进；<span class="accent">AI</span> 帮我们快速整理、生成、复盘和沉淀。</p>
+      <div class="steps">
+        <div class="step"><div class="step-num">01</div><div class="step-line-wrap"><div class="step-dot"></div><div class="step-line"></div></div><div class="step-content"><div class="step-h">确认方向和首单目标</div><div class="step-p">看你现在想做什么、有什么基础、这 30 天最应该冲哪一类首单。</div></div></div>
+        <div class="step"><div class="step-num">02</div><div class="step-line-wrap"><div class="step-dot"></div><div class="step-line"></div></div><div class="step-content"><div class="step-h">做出能卖的小产品</div><div class="step-p">把方向压成一个能报价、能沟通、能第一次交付的产品版本。</div></div></div>
+        <div class="step"><div class="step-num">03</div><div class="step-line-wrap"><div class="step-dot"></div><div class="step-line"></div></div><div class="step-content"><div class="step-h">找到第一批真实客户</div><div class="step-p">一起确定先找谁、怎么开口、怎么从聊天进入报价。</div></div></div>
+        <div class="step"><div class="step-num">04</div><div class="step-line-wrap"><div class="step-dot"></div><div class="step-line"></div></div><div class="step-content"><div class="step-h">真实沟通和报价</div><div class="step-p">你去触达，我帮你看反馈、改表达、判断什么时候推进。</div></div></div>
+        <div class="step"><div class="step-num">05</div><div class="step-line-wrap"><div class="step-dot"></div><div class="step-line"></div></div><div class="step-content"><div class="step-h">交付设计和复盘</div><div class="step-p">成交了就设计第一单怎么交付；没成交就判断下一轮该改哪里。</div></div></div>
+        <div class="step"><div class="step-num">06</div><div class="step-line-wrap"><div class="step-dot"></div></div><div class="step-content"><div class="step-h">沉淀 AI 工作流和个人商业知识体系</div><div class="step-p">把这一轮的产品、用户、反馈、沟通和复盘整理成你后面能继续用的资料。</div></div></div>
+      </div>
+      <p class="lead" style="margin-top:26px;max-width:780px;">你不用提前准备完美方案，但需要愿意拿<span class="accent">真实方向、真实用户和真实反馈</span>进来，我们一起把它往第一单推。</p>
+    </div>
+  </section>
+
+  <!-- ═══════════ 价格 ═══════════ -->
+  <section class="block">
+    <div class="wrap reveal">
+      <span class="eyebrow">PRICE &amp; EARLY SEATS</span>
+      <h2 class="block-title">价格与<br>早期名额</h2>
+      <div class="price-wrap">
+        <div class="price-card">
+          <div class="price-label">限时早期体验价</div>
+          <div class="price-old">公开售价 5999 元 / 30 天</div>
+          <div class="price-now"><span class="num">1999</span><span class="unit">元 / 30 天</span></div>
+          <ul class="price-points">
+            <li>做出能卖的小产品</li>
+            <li>找到第一批真实客户</li>
+            <li>真实沟通和报价</li>
+            <li>冲第一笔收入或清楚的购买信号</li>
+            <li>没成交也明确下一轮怎么改</li>
+            <li>AI 工作流 + 个人商业知识体系</li>
+          </ul>
+        </div>
+        <div>
+          <p class="price-note"><strong>1999 元不是买一次泛泛咨询，也不是买一套模板</strong>，你买的是一轮 30 天首单冲刺。</p>
+          <p class="price-note">这段时间我会开放<strong>少量早期名额</strong>，用更低价格服务第一批愿意认真跑完 0-1 首单尝试的人。一方面降低你第一次尝试的门槛；另一方面我也会通过这些真实案例，继续丰富这套首单冲刺的样板和判断库。</p>
+          <p class="price-note">报名前我会先确认：你是否已经有明确方向、是否适合用 30 天冲首单、是否愿意真实沟通和报价、这轮最应该先改产品、用户还是表达。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ FINAL CTA ═══════════ -->
+  <section class="cta-block">
+    <div class="wrap reveal">
+      <span class="eyebrow">FINAL CALL</span>
+      <h2 class="cta-title">如果你看到这里已经觉得<br>"<em>这就是我现在卡住的问题</em>"</h2>
+      <p class="cta-desc">加微信报名或先做初步判断。备注「首单冲刺」即可，我会先确认你是否已经有明确方向、是否适合用 30 天冲首单，再决定是否进入。</p>
+      <div class="cta-actions">
+        <a class="btn btn-primary" href="javascript:void(0)" onclick="openWechatModal('首单冲刺')">加微信报名限时早期价 1999 元 →</a>
+      </div>
+      <p style="font-size:13px;color:var(--dim);margin-top:22px;max-width:600px;">如果你还卡在"我到底有什么能力能在公开市场获得收入、最适合先从哪个方向切入"，更适合先做 <a href="diagnosis.html" style="color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(88,225,193,0.3);">能力资产与商业切入口诊断</a>。</p>
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══════════ WECHAT MODAL ═══════════ -->
+<div class="modal" id="wechatModal" aria-hidden="true">
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <button class="modal-close" type="button" onclick="closeWechatModal()" aria-label="关闭弹窗">×</button>
+    <div class="modal-label">JOIN</div>
+    <div class="modal-title" id="modalTitle">添加微信进一步沟通</div>
+    <div class="modal-desc">添加下面这个微信号，并按提示备注，我会先帮你判断这轮首单冲刺是否适合你。</div>
+    <div class="wechat-box">
+      <div class="wechat-label">WeChat ID</div>
+      <div class="wechat-value">qiaoboose01</div>
+      <div class="wechat-remark" id="modalRemark">备注：首单冲刺</div>
+    </div>
+  </div>
+</div>
+
+<footer class="site-foot">
+  <div class="wrap foot-inner">
+    <div class="foot-brand">AI Native 一人公司 · <span class="accent">乔不不斯</span></div>
+    <div class="foot-meta">QIAOBOOSE · SOLO COMPANY · 0 → 1</div>
+  </div>
+</footer>
+
+<script>
+  function openWechatModal(remark) {
+    if (remark) { document.getElementById('modalRemark').textContent = '备注：' + remark; }
+    document.getElementById('wechatModal').classList.add('open');
+  }
+  function closeWechatModal() { document.getElementById('wechatModal').classList.remove('open'); }
+  document.getElementById('wechatModal').addEventListener('click', e => { if (e.target.id === 'wechatModal') closeWechatModal(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeWechatModal(); });
+
+  function toggleNav() { document.getElementById('navLinks').classList.toggle('open'); }
+  document.querySelectorAll('#navLinks a').forEach(a => a.addEventListener('click', () => document.getElementById('navLinks').classList.remove('open')));
+  const io = new IntersectionObserver((es) => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>

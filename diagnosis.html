@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>一人公司能力资产与商业切入口诊断 · 乔不不斯</title>
+<meta name="description" content="用 2-3 小时，拆清你哪些能力真正属于自己、哪些能离开公司继续变现、你最适合先切入哪个个人业务方向。交付能力资产地图、可独立变现判断、优先切入口与可复用 AI 判断流程。">
+<link rel="canonical" href="https://zainosl.github.io/qiaobooseai-site/diagnosis.html">
+<meta property="og:title" content="一人公司能力资产与商业切入口诊断 · 乔不不斯">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="zh_CN">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:      #0B0D0F;
+    --bg2:     #13161A;
+    --bg3:     #1C2026;
+    --text:    #F7F8FA;
+    --muted:   #A9B0BA;
+    --dim:     #4A525C;
+    --accent:  #58E1C1;
+    --accent2: #3BB89A;
+    --accent3: #7AF2D8;
+    --border:  rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.12);
+    --accent-dim: rgba(88,225,193,0.10);
+    --accent-soft: rgba(88,225,193,0.05);
+    --font-sans: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --font-mono: 'DM Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    --wrap: 1120px;
+    --wrap-narrow: 860px;
+    --nav-h: 64px;
+  }
+
+  html { scroll-behavior: smooth; scroll-padding-top: var(--nav-h); }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    line-height: 1.72;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: -2; pointer-events: none;
+    background-image:
+      linear-gradient(rgba(88,225,193,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(88,225,193,0.025) 1px, transparent 1px);
+    background-size: 64px 64px;
+  }
+  body::after {
+    content: '';
+    position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    background:
+      radial-gradient(circle at 82% -4%, rgba(88,225,193,0.10), transparent 38%),
+      radial-gradient(circle at 4% 96%, rgba(88,225,193,0.05), transparent 36%);
+  }
+
+  .wrap { width: min(var(--wrap), calc(100% - 48px)); margin: 0 auto; }
+  .wrap-narrow { width: min(var(--wrap-narrow), calc(100% - 48px)); margin: 0 auto; }
+
+  /* ───────── TOP NAV ───────── */
+  header.site-nav {
+    position: sticky; top: 0; z-index: 200;
+    height: var(--nav-h);
+    display: flex; align-items: center;
+    background: rgba(11,13,15,0.72);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; width: 100%; }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; flex-shrink: 0; }
+  .brand-mark {
+    width: 26px; height: 26px; border-radius: 6px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-mono); font-weight: 700; font-size: 13px; color: #06120E;
+  }
+  .brand-name { font-size: 15px; font-weight: 700; color: var(--text); letter-spacing: -0.01em; white-space: nowrap; }
+  .brand-name .accent { color: var(--accent); }
+  .nav-links { display: flex; align-items: center; gap: 4px; }
+  .nav-links a {
+    font-size: 13.5px; color: var(--muted); text-decoration: none;
+    padding: 8px 14px; border-radius: 7px; transition: all .2s; white-space: nowrap;
+  }
+  .nav-links a:hover { color: var(--text); background: rgba(255,255,255,0.04); }
+  .nav-cta {
+    font-size: 13.5px; font-weight: 700;
+    color: #06120E !important; background: var(--accent);
+    padding: 9px 18px !important; border-radius: 7px;
+  }
+  .nav-cta:hover { background: var(--accent2) !important; }
+  .nav-toggle { display: none; background: none; border: 1px solid var(--border2); border-radius: 7px; color: var(--text); width: 38px; height: 38px; cursor: pointer; font-size: 18px; }
+
+  .nav-item { font-size: 13.5px; color: var(--muted); text-decoration: none; padding: 8px 14px; border-radius: 7px; transition: all .2s; white-space: nowrap; }
+  .nav-item:hover { color: var(--text); background: rgba(255,255,255,0.04); }
+  .nav-item.active { color: var(--text); }
+  .nav-dd { position: relative; }
+  .nav-dd-trigger .caret { font-size: 9px; opacity: .7; transition: transform .2s; display: inline-block; }
+  .nav-dd:hover .nav-dd-trigger .caret { transform: rotate(180deg); }
+  .nav-dd-menu {
+    position: absolute; top: calc(100% + 10px); left: 50%; transform: translateX(-50%) translateY(8px);
+    min-width: 320px; padding: 8px; background: rgba(17,20,24,0.98);
+    border: 1px solid var(--border2); border-radius: 12px;
+    box-shadow: 0 24px 70px rgba(0,0,0,0.45);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    opacity: 0; visibility: hidden; transition: all .22s cubic-bezier(.22,1,.36,1); z-index: 250;
+  }
+  .nav-dd::before { content: ''; position: absolute; top: 100%; left: 0; right: 0; height: 14px; }
+  .nav-dd:hover .nav-dd-menu, .nav-dd:focus-within .nav-dd-menu { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
+  .dd-link { display: flex; align-items: flex-start; gap: 13px; padding: 13px 14px; border-radius: 9px; text-decoration: none; transition: background .18s; }
+  .dd-link:hover { background: rgba(88,225,193,0.07); }
+  .dd-ico { width: 34px; height: 34px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-radius: 8px; background: rgba(88,225,193,0.1); border: 1px solid rgba(88,225,193,0.22); color: var(--accent); font-size: 16px; }
+  .dd-text { display: flex; flex-direction: column; gap: 3px; }
+  .dd-text b { font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.3; }
+  .dd-text i { font-size: 12px; font-style: normal; color: var(--muted); line-height: 1.4; }
+  .dd-group { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.18em; color: var(--dim); text-transform: uppercase; padding: 10px 14px 6px; }
+  .dd-divider { height: 1px; background: var(--border); margin: 6px 8px; }
+  .dd-tag { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.06em; padding: 2px 7px; border-radius: 2px; margin-left: 8px; vertical-align: 1px; }
+  .dd-tag.paid { background: rgba(88,225,193,0.12); color: var(--accent); }
+  .dd-tag.free { background: rgba(169,176,186,0.10); color: var(--muted); border: 1px solid var(--border2); }
+  .dd-link.free .dd-ico { background: rgba(169,176,186,0.08); border-color: var(--border2); color: var(--muted); }
+
+  /* ───────── SECTION SHELL ───────── */
+  section.block { padding: clamp(64px, 9vh, 104px) 0; position: relative; }
+  section.block + section.block { border-top: 1px solid var(--border); }
+  .eyebrow {
+    display: inline-block; font-family: var(--font-mono);
+    font-size: 10px; letter-spacing: 0.24em; color: var(--accent);
+    text-transform: uppercase; margin-bottom: 18px;
+  }
+  .block-title {
+    font-size: clamp(24px, 3.1vw, 40px); font-weight: 700;
+    line-height: 1.22; letter-spacing: -0.02em;
+  }
+  .block-title em, .accent { color: var(--accent); font-style: normal; }
+  .lead { font-size: clamp(15px, 1.4vw, 18px); color: var(--muted); font-weight: 300; line-height: 1.85; max-width: 680px; }
+
+  .reveal { opacity: 0; transform: translateY(22px); transition: opacity .7s cubic-bezier(.22,1,.36,1), transform .7s cubic-bezier(.22,1,.36,1); }
+  .reveal.in { opacity: 1; transform: none; }
+
+  /* ───────── BUTTONS ───────── */
+  .btn { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; border-radius: 2px; padding: 13px 26px; font-size: 14px; font-weight: 700; font-family: var(--font-sans); letter-spacing: .04em; transition: all .22s; text-decoration: none; border: 1px solid transparent; }
+  .btn-primary { background: var(--accent); color: #06120E; border-color: var(--accent); }
+  .btn-primary:hover { background: var(--accent2); border-color: var(--accent2); transform: translateY(-2px); }
+  .btn-secondary { background: transparent; color: var(--text); border-color: var(--border2); }
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+  .btn:active { transform: translateY(0) scale(.98); }
+
+  /* ───────── HERO ───────── */
+  .hero { padding: clamp(64px, 11vh, 130px) 0 clamp(52px, 8vh, 96px); position: relative; overflow: hidden; }
+  .hero-deco {
+    position: absolute; right: -2%; top: 50%; transform: translateY(-50%);
+    font-family: var(--font-mono); font-size: clamp(160px, 30vw, 400px);
+    font-weight: 500; color: rgba(88,225,193,0.035); line-height: 1; user-select: none; pointer-events: none; z-index: 0;
+  }
+  .hero-inner { position: relative; z-index: 1; max-width: 880px; }
+  .hero-tag {
+    display: inline-block; font-family: var(--font-mono);
+    font-size: 11px; letter-spacing: 0.2em; color: var(--accent);
+    border: 1px solid rgba(88,225,193,0.3); background: rgba(88,225,193,0.03);
+    padding: 6px 15px; border-radius: 2px; margin-bottom: 30px;
+  }
+  .hero-title {
+    font-size: clamp(32px, 4.6vw, 60px); font-weight: 900;
+    line-height: 1.12; letter-spacing: -0.03em; margin-bottom: 28px;
+  }
+  .hero-title em { color: var(--accent); font-style: normal; }
+  .hero-sub { font-size: clamp(15px, 1.5vw, 19px); font-weight: 300; color: var(--muted); line-height: 1.8; max-width: 640px; margin-bottom: 30px; }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 14px; }
+
+  /* shared question block (用户内心问题) */
+  .q-block { border-left: 3px solid var(--accent); background: rgba(88,225,193,0.05); padding: 18px 22px; margin: 26px 0; display: flex; flex-direction: column; gap: 7px; max-width: 640px; }
+  .q-block p { font-size: clamp(14px,1.4vw,16px); color: var(--text); font-weight: 500; line-height: 1.7; }
+
+  /* deliverable list (你会拿到) */
+  .deliver { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 30px; }
+  .deliver-item { display: flex; align-items: flex-start; gap: 12px; font-size: 13.5px; color: var(--muted); line-height: 1.55; padding: 14px 16px; background: var(--bg2); border: 1px solid var(--border); border-radius: 2px; transition: all .3s; }
+  .deliver-item:hover { border-color: rgba(88,225,193,0.35); color: var(--text); transform: translateY(-2px); }
+  .deliver-item .dnum { font-family: var(--font-mono); font-size: 11px; color: var(--accent); flex-shrink: 0; margin-top: 2px; }
+
+  /* voices (用户原话) */
+  .voices { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 36px; }
+  .voice { padding: 22px 24px; background: var(--bg2); border: 1px solid var(--border); border-left: 2px solid var(--accent); border-radius: 2px; font-size: 14px; color: var(--text); line-height: 1.75; transition: all .3s; }
+  .voice:hover { border-color: rgba(88,225,193,0.3); border-left-color: var(--accent); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,.2); }
+  .voice::before { content: '“'; font-family: var(--font-mono); color: var(--accent); font-size: 26px; line-height: 0; vertical-align: -8px; margin-right: 4px; }
+
+  /* scenario cards (场景) */
+  .scene-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 36px; }
+  .scene { padding: 28px 26px; background: var(--bg2); border: 1px solid var(--border); border-radius: 2px; transition: all .35s cubic-bezier(.22,1,.36,1); position: relative; overflow: hidden; }
+  .scene:hover { border-color: rgba(88,225,193,0.4); transform: translateY(-4px); box-shadow: 0 16px 48px rgba(0,0,0,.25); }
+  .scene-num { font-family: var(--font-mono); font-size: 40px; font-weight: 500; color: rgba(88,225,193,0.14); line-height: 1; margin-bottom: 16px; }
+  .scene-title { font-size: 16px; font-weight: 700; color: var(--text); line-height: 1.4; margin-bottom: 14px; }
+  .scene-title em { color: var(--accent); font-style: normal; }
+  .scene-body { font-size: 13.5px; color: var(--muted); line-height: 1.8; }
+  .scene-q { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); font-size: 13px; color: var(--dim); line-height: 1.75; }
+  .scene-q span { display: block; }
+
+  /* step flow (诊断四步 / 报名流程) */
+  .steps { display: flex; flex-direction: column; gap: 0; margin-top: 36px; }
+  .step { display: grid; grid-template-columns: 56px 1px 1fr; min-height: 72px; transition: all .25s; }
+  .step-num { font-family: var(--font-mono); font-size: 15px; color: var(--accent); padding: 20px 16px 20px 0; display: flex; align-items: flex-start; font-weight: 500; }
+  .step-line-wrap { display: flex; flex-direction: column; align-items: center; }
+  .step-dot { width: 9px; height: 9px; border: 1px solid var(--accent); border-radius: 50%; background: var(--bg); margin-top: 22px; flex-shrink: 0; transition: all .25s; }
+  .step-line { flex: 1; width: 1px; background: var(--border2); }
+  .step-content { padding: 18px 0 18px 22px; }
+  .step:hover .step-dot { background: var(--accent); box-shadow: 0 0 8px rgba(88,225,193,.4); }
+  .step-h { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 8px; line-height: 1.4; }
+  .step-h em { color: var(--accent); font-style: normal; }
+  .step-p { font-size: 13.5px; color: var(--muted); line-height: 1.8; }
+  .step-tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
+  .step-tag { font-size: 12px; color: var(--muted); border: 1px solid var(--border2); padding: 5px 12px; border-radius: 2px; line-height: 1.4; transition: all .25s; }
+  .step-tag:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* condition checklist (满足3条) */
+  .cond-list { display: flex; flex-direction: column; gap: 10px; margin-top: 32px; max-width: 760px; }
+  .cond { display: flex; align-items: flex-start; gap: 14px; font-size: 14.5px; color: var(--muted); line-height: 1.6; padding: 14px 18px; background: var(--bg2); border: 1px solid var(--border); border-radius: 2px; transition: all .3s; }
+  .cond:hover { border-color: rgba(88,225,193,0.3); color: var(--text); }
+  .cond-check { width: 18px; height: 18px; border: 1px solid var(--accent); border-radius: 4px; flex-shrink: 0; margin-top: 3px; display: flex; align-items: center; justify-content: center; color: var(--accent); font-size: 11px; }
+
+  /* example panel (脱敏示例) */
+  .example { margin-top: 28px; border: 1px solid rgba(88,225,193,0.22); border-radius: 4px; overflow: hidden; }
+  .example-head { padding: 16px 22px; background: rgba(88,225,193,0.06); border-bottom: 1px solid var(--border); font-size: 13px; color: var(--accent); font-family: var(--font-mono); letter-spacing: 0.05em; }
+  .example-body { padding: 24px 26px; background: var(--bg2); }
+  .example-cands { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 24px; }
+  .cand { padding: 14px 16px; background: var(--bg3); border: 1px solid var(--border); border-radius: 2px; }
+  .cand-tag { font-family: var(--font-mono); font-size: 11px; color: var(--accent); margin-bottom: 6px; }
+  .cand-name { font-size: 13.5px; color: var(--text); font-weight: 500; line-height: 1.4; }
+  .ex-sub { font-size: 12px; font-family: var(--font-mono); color: var(--dim); letter-spacing: 0.12em; text-transform: uppercase; margin: 20px 0 12px; }
+  .ex-rows { display: flex; flex-direction: column; gap: 8px; }
+  .ex-row { display: grid; grid-template-columns: 1fr auto; gap: 14px; align-items: center; font-size: 13px; color: var(--muted); padding: 10px 14px; background: var(--bg3); border-left: 2px solid var(--border2); line-height: 1.5; }
+  .ex-row b { color: var(--text); font-weight: 500; }
+  .ex-lvl { font-family: var(--font-mono); font-size: 11px; padding: 3px 10px; border-radius: 2px; white-space: nowrap; }
+  .lvl-strong { background: rgba(88,225,193,0.12); color: var(--accent); }
+  .lvl-mid { background: rgba(169,176,186,0.12); color: var(--muted); }
+  .lvl-weak { background: rgba(90,90,90,0.18); color: var(--dim); }
+  .ex-verdict { margin-top: 20px; padding: 16px 18px; background: rgba(88,225,193,0.05); border-left: 3px solid var(--accent); font-size: 13.5px; color: var(--text); line-height: 1.8; }
+  .ex-verdict b { color: var(--accent); }
+  .ex-other { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+  .ex-other-card { padding: 14px 16px; background: var(--bg3); border: 1px solid var(--border); border-radius: 2px; font-size: 12.5px; color: var(--muted); line-height: 1.7; }
+  .ex-other-card b { display: block; color: var(--text); font-weight: 500; margin-bottom: 5px; }
+
+  /* compare 这不是 / 这是 */
+  .compare-list { display: flex; flex-direction: column; gap: 12px; margin-top: 36px; }
+  .compare-row { display: grid; grid-template-columns: 1fr 24px 1fr; border: 1px solid var(--border); transition: all .3s; }
+  .compare-row:hover { border-color: var(--border2); box-shadow: 0 4px 16px rgba(0,0,0,.15); }
+  .compare-left, .compare-right { padding: 16px 22px; font-size: 13.5px; line-height: 1.7; }
+  .compare-left { background: var(--bg2); color: var(--dim); }
+  .compare-left b, .compare-right b { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.15em; display: block; margin-bottom: 5px; font-weight: 500; }
+  .compare-left b { color: #3A3F45; }
+  .compare-right { background: var(--bg3); color: var(--text); border-left: 2px solid var(--accent); }
+  .compare-right b { color: var(--accent); }
+  .compare-mid { display: flex; align-items: center; justify-content: center; background: var(--border); font-size: 10px; color: var(--dim); writing-mode: vertical-rl; letter-spacing: 0.1em; }
+
+  /* about me stats */
+  .about-split { display: grid; grid-template-columns: 1fr 1px 1fr; margin-top: 36px; }
+  .about-divider { background: var(--border); }
+  .about-left, .about-right { padding: 0 44px; }
+  .about-left { padding-left: 0; }
+  .sub-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.2em; color: var(--dim); text-transform: uppercase; margin-bottom: 20px; }
+  .stat-lines { display: flex; flex-direction: column; gap: 11px; margin-bottom: 0; }
+  .stat-line { font-size: 14px; color: var(--muted); display: flex; align-items: flex-start; gap: 12px; line-height: 1.5; }
+  .stat-line::before { content: ''; width: 5px; height: 5px; background: var(--accent); border-radius: 50%; flex-shrink: 0; margin-top: 9px; }
+  .stat-line strong { color: var(--text); font-weight: 700; }
+  .stat-strip { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 32px; }
+  .stat-box { flex: 1 1 auto; min-width: 150px; padding: 13px 16px; background: var(--bg2); border: 1px solid var(--border); border-left: 2px solid var(--accent); border-radius: 2px; transition: all .25s; }
+  .stat-box:first-child { flex-basis: 100%; }
+  .stat-box:hover { border-color: var(--border2); border-left-color: var(--accent); }
+  .stat-box-num { font-family: var(--font-mono); font-size: 16px; font-weight: 500; color: var(--accent); line-height: 1.2; letter-spacing: -0.01em; margin-bottom: 3px; }
+  .stat-box-label { font-size: 12.5px; color: var(--muted); line-height: 1.45; }
+  .about-narrative { margin-top: 30px; max-width: 760px; }
+  .about-why { font-size: clamp(14px, 1.5vw, 16px); color: var(--muted); line-height: 2; }
+  .about-why strong { color: var(--text); font-weight: 700; }
+  .about-why em { color: var(--accent); font-style: normal; font-weight: 700; }
+  .about-why + .about-why { margin-top: 16px; }
+
+  /* fit / not fit */
+  .fit-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; margin-top: 36px; }
+  .fit-head { font-size: 14px; font-weight: 700; margin-bottom: 18px; display: flex; align-items: center; gap: 10px; }
+  .fit-badge { font-size: 11px; font-family: var(--font-mono); padding: 3px 10px; border-radius: 2px; letter-spacing: 0.1em; }
+  .fit-badge.yes { background: rgba(88,225,193,0.1); color: var(--accent); }
+  .fit-badge.no { background: rgba(90,90,90,0.2); color: var(--dim); }
+  .fit-items { display: flex; flex-direction: column; gap: 9px; }
+  .fit-item { font-size: 13px; line-height: 1.6; padding: 11px 14px; border-left: 2px solid; transition: all .3s cubic-bezier(.22,1,.36,1); }
+  .fit-item:hover { transform: translateX(4px); }
+  .fit-item.yes { border-color: var(--accent); color: var(--text); background: rgba(88,225,193,0.04); }
+  .fit-item.no { border-color: var(--dim); color: var(--dim); background: var(--bg2); }
+
+  /* price */
+  .price-wrap { display: grid; grid-template-columns: 360px 1fr; gap: 40px; margin-top: 36px; align-items: start; }
+  .price-card { padding: 34px 32px; background: linear-gradient(180deg, rgba(88,225,193,0.09), rgba(19,22,26,0.92)); border: 1px solid rgba(88,225,193,0.26); border-radius: 2px; box-shadow: 0 30px 100px rgba(0,0,0,.28); position: relative; overflow: hidden; }
+  .price-card::before { content: 'EARLY'; position: absolute; right: -10px; bottom: -26px; font-family: var(--font-mono); font-size: 64px; color: rgba(88,225,193,0.05); line-height: 1; pointer-events: none; }
+  .price-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.2em; color: var(--accent); text-transform: uppercase; margin-bottom: 18px; }
+  .price-old { font-size: 15px; color: var(--dim); text-decoration: line-through; margin-bottom: 6px; }
+  .price-now { display: flex; align-items: baseline; gap: 10px; margin-bottom: 22px; }
+  .price-now .num { font-family: var(--font-mono); font-size: 56px; font-weight: 500; color: var(--accent); line-height: 1; letter-spacing: -0.03em; }
+  .price-now .unit { font-size: 14px; color: var(--muted); }
+  .price-points { list-style: none; display: flex; flex-direction: column; gap: 9px; margin-bottom: 26px; }
+  .price-points li { font-size: 13px; color: var(--muted); padding-left: 18px; position: relative; line-height: 1.6; }
+  .price-points li::before { content: ''; position: absolute; left: 0; top: 9px; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
+  .price-card .btn { width: 100%; justify-content: center; }
+  .price-note { font-size: 13.5px; color: var(--muted); line-height: 1.95; }
+  .price-note strong { color: var(--text); }
+  .price-note + .price-note { margin-top: 14px; }
+
+  /* path choices (你可以这样继续) */
+  .paths { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 36px; }
+  .path-card { display: flex; flex-direction: column; padding: 28px 26px; background: var(--bg2); border: 1px solid var(--border); border-radius: 2px; transition: all .35s cubic-bezier(.22,1,.36,1); }
+  .path-card:hover { border-color: rgba(88,225,193,0.4); transform: translateY(-4px); box-shadow: 0 16px 48px rgba(0,0,0,.25); }
+  .path-tag { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.2em; color: var(--accent); text-transform: uppercase; margin-bottom: 14px; }
+  .path-title { font-size: 17px; font-weight: 700; color: var(--text); line-height: 1.4; margin-bottom: 12px; }
+  .path-desc { font-size: 13px; color: var(--muted); line-height: 1.8; margin-bottom: 22px; flex: 1; }
+  .path-card .btn { align-self: flex-start; }
+
+  /* wechat inline box */
+  .wechat-inline { display: inline-flex; flex-direction: column; gap: 6px; padding: 16px 20px; border: 1px solid rgba(88,225,193,0.25); background: rgba(88,225,193,0.07); border-radius: 6px; margin-top: 24px; }
+  .wechat-inline .wl { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.18em; color: var(--dim); text-transform: uppercase; }
+  .wechat-inline .wv { font-family: var(--font-mono); font-size: 20px; color: var(--accent); }
+  .wechat-inline .wn { font-size: 12px; color: var(--muted); }
+
+  /* final CTA */
+  .cta-block { padding: clamp(64px, 9vh, 110px) 0; border-top: 1px solid var(--border); }
+  .cta-title { font-size: clamp(26px, 3.6vw, 46px); font-weight: 900; line-height: 1.14; letter-spacing: -0.03em; margin-bottom: 20px; max-width: 760px; }
+  .cta-title em { color: var(--accent); font-style: normal; }
+  .cta-desc { font-size: 14.5px; color: var(--muted); line-height: 1.95; max-width: 600px; margin-bottom: 30px; }
+  .cta-actions { display: flex; flex-wrap: wrap; gap: 14px; }
+
+  /* ───────── FOOTER ───────── */
+  footer.site-foot { border-top: 1px solid var(--border); padding: 44px 0 56px; }
+  .foot-inner { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+  .foot-brand { font-size: 14px; color: var(--muted); }
+  .foot-brand .accent { color: var(--accent); }
+  .foot-meta { font-family: var(--font-mono); font-size: 11px; color: var(--dim); letter-spacing: 0.08em; }
+
+  /* ───────── MODAL ───────── */
+  .modal { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; padding: 24px; background: rgba(11,13,15,0.78); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 1000; }
+  .modal.open { display: flex; }
+  .modal-card { position: relative; width: min(460px, 100%); padding: 30px; background: linear-gradient(180deg, rgba(19,22,26,0.98), rgba(11,13,15,0.98)); border: 1px solid var(--border2); border-radius: 12px; box-shadow: 0 24px 80px rgba(0,0,0,.38); animation: pop .35s cubic-bezier(.22,1,.36,1) both; }
+  @keyframes pop { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+  .modal-close { position: absolute; top: 14px; right: 14px; width: 34px; height: 34px; border: 1px solid var(--border2); border-radius: 50%; background: transparent; color: var(--muted); cursor: pointer; transition: all .3s; font-size: 16px; }
+  .modal-close:hover { color: var(--accent); border-color: var(--accent); }
+  .modal-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.18em; color: var(--accent); text-transform: uppercase; margin-bottom: 12px; }
+  .modal-title { font-size: clamp(22px, 3vw, 30px); font-weight: 700; line-height: 1.2; margin-bottom: 14px; }
+  .modal-desc { font-size: 14px; color: var(--muted); line-height: 1.8; margin-bottom: 20px; }
+  .wechat-box { border: 1px solid rgba(88,225,193,0.25); background: rgba(88,225,193,0.07); border-radius: 10px; padding: 18px; }
+  .wechat-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.18em; color: var(--dim); text-transform: uppercase; margin-bottom: 10px; }
+  .wechat-value { font-family: var(--font-mono); font-size: clamp(20px, 4vw, 28px); color: var(--accent); word-break: break-all; margin-bottom: 6px; }
+  .wechat-remark { font-size: 12.5px; color: var(--muted); }
+
+  /* ───────── RESPONSIVE ───────── */
+  @media (max-width: 900px) {
+    .scene-grid, .paths, .example-cands, .ex-other { grid-template-columns: 1fr; }
+    .price-wrap { grid-template-columns: 1fr; }
+    .deliver { grid-template-columns: 1fr; }
+    .stat-box { min-width: 120px; }
+  }
+  @media (max-width: 768px) {
+    .nav-links { position: fixed; top: var(--nav-h); left: 0; right: 0; flex-direction: column; align-items: stretch; gap: 0; background: rgba(11,13,15,0.98); backdrop-filter: blur(14px); border-bottom: 1px solid var(--border); padding: 8px; transform: translateY(-130%); transition: transform .3s; max-height: calc(100vh - var(--nav-h)); overflow-y: auto; }
+    .nav-links.open { transform: none; }
+    .nav-links a, .nav-item { padding: 13px 16px; border-radius: 8px; }
+    .nav-toggle { display: flex; align-items: center; justify-content: center; }
+    .nav-dd { position: static; }
+    .nav-dd-trigger .caret { display: none; }
+    .nav-dd-menu { position: static; opacity: 1; visibility: visible; transform: none; min-width: 0; box-shadow: none; background: transparent; border: none; padding: 0 0 0 12px; backdrop-filter: none; }
+    .dd-link { padding: 11px 14px; }
+    .dd-text i { display: none; }
+    .voices, .fit-cols, .ex-rows .ex-row { grid-template-columns: 1fr; }
+    .about-split { grid-template-columns: 1fr; }
+    .about-divider { display: none; }
+    .about-left, .about-right { padding: 0; }
+    .about-right { margin-top: 32px; padding-top: 32px; border-top: 1px solid var(--border); }
+    .compare-row { grid-template-columns: 1fr; }
+    .compare-mid { writing-mode: horizontal-tb; padding: 6px; }
+    .ex-row { grid-template-columns: 1fr; gap: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════ TOP NAV ═══════════ -->
+<header class="site-nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="index.html" aria-label="乔不不斯首页">
+      <span class="brand-mark">乔</span>
+      <span class="brand-name">AI Native 一人公司 · <span class="accent">乔不不斯</span></span>
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a class="nav-item" href="index.html">首页</a>
+      <div class="nav-dd">
+        <a class="nav-item nav-dd-trigger active" href="products.html">产品服务 <span class="caret">▾</span></a>
+        <div class="nav-dd-menu">
+          <div class="dd-group">核心服务</div>
+          <a class="dd-link" href="diagnosis.html">
+            <span class="dd-ico">◇</span>
+            <span class="dd-text"><b>能力资产与商业切入口诊断<span class="dd-tag paid">付费</span></b><i>拆清你能离开公司变现的能力与切入口</i></span>
+          </a>
+          <a class="dd-link" href="first-order-sprint.html">
+            <span class="dd-ico">◆</span>
+            <span class="dd-text"><b>0-1 首单变现冲刺<span class="dd-tag paid">付费</span></b><i>30 天把方向做成产品，冲第一笔收入</i></span>
+          </a>
+          <div class="dd-divider"></div>
+          <div class="dd-group">免费前置工具</div>
+          <a class="dd-link free" href="calibrator.html" target="_blank" rel="noopener">
+            <span class="dd-ico">◎</span>
+            <span class="dd-text"><b>一人公司路径校准器<span class="dd-tag free">免费</span></b><i>先自测，检查现在做的事是否在浪费时间</i></span>
+          </a>
+          <a class="dd-link free" href="potential-customer-channels.html" target="_blank" rel="noopener">
+            <span class="dd-ico">⊞</span>
+            <span class="dd-text"><b>潜在客户渠道库<span class="dd-tag free">免费</span></b><i>前期找种子用户的渠道清单</i></span>
+          </a>
+        </div>
+      </div>
+      <a class="nav-item" href="articles.html">最新文章</a>
+      <a class="nav-cta" href="javascript:void(0)" onclick="openWechatModal('能力诊断 + 报名')">立即报名</a>
+    </nav>
+    <button class="nav-toggle" id="navToggle" aria-label="菜单" onclick="toggleNav()">≡</button>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ═══════════ HERO ═══════════ -->
+  <section class="hero">
+    <div class="hero-deco">◇</div>
+    <div class="wrap hero-inner reveal">
+      <span class="hero-tag">CAPABILITY ASSET DIAGNOSIS</span>
+      <h1 class="hero-title">一人公司<em>能力资产</em><br>与<em>商业切入口</em>诊断</h1>
+      <p class="hero-sub">你在公司里做过项目、拿过结果，也知道自己不是从零开始。但一想到离开平台做个人业务，可能就会突然不确定。</p>
+      <div class="q-block">
+        <p>我到底还能靠什么赚钱？</p>
+        <p>哪些能力真正属于我？哪些能力别人可能愿意付费？</p>
+        <p>我最适合先从哪个方向切入？</p>
+      </div>
+      <p class="hero-sub" style="margin-bottom:0;">我用 <span class="accent">2-3 小时</span>，帮你拆清：哪些能力真正属于你；哪些能力有独立变现可能；以及你最适合先切入哪个个人业务方向。</p>
+      <div class="deliver">
+        <div class="deliver-item"><span class="dnum">01</span>能力资产地图</div>
+        <div class="deliver-item"><span class="dnum">02</span>真实案例证据</div>
+        <div class="deliver-item"><span class="dnum">03</span>可独立变现能力判断</div>
+        <div class="deliver-item"><span class="dnum">04</span>能力段位与替代方案对照</div>
+        <div class="deliver-item"><span class="dnum">05</span>2-3 个候选个人业务方向</div>
+        <div class="deliver-item"><span class="dnum">06</span>1 个优先切入口</div>
+        <div class="deliver-item"><span class="dnum">07</span>可复用 AI 判断流程</div>
+      </div>
+      <div class="hero-actions" style="margin-top:34px;">
+        <a class="btn btn-primary" href="javascript:void(0)" onclick="openWechatModal('能力诊断 + 报名')">报名限时早期价 199 元 →</a>
+        <a class="btn btn-secondary" href="javascript:void(0)" onclick="openWechatModal('能力诊断')">不确定？先做初步判断</a>
+      </div>
+      <p style="font-size:13px;color:var(--muted);margin-top:24px;max-width:640px;">这不是优势测评，也不是职业规划。它解决的是一个更接近收入的问题：<span class="accent">我过去在公司里积累的能力，哪些能离开组织继续变现？我最适合先从哪个个人业务方向切入？</span></p>
+    </div>
+  </section>
+
+  <!-- ═══════════ 卡点 / 用户原话 ═══════════ -->
+  <section class="block">
+    <div class="wrap reveal">
+      <span class="eyebrow">THE REAL BLOCKER</span>
+      <h2 class="block-title">你可能卡住的不是能力，<br>而是能力离开公司以后怎么变成<em>收入</em></h2>
+      <p class="lead" style="margin-top:20px;">我在和一人公司探索者交流时，反复听到这些话：</p>
+      <div class="voices">
+        <div class="voice">我希望梳理出自己的相对优势，并翻译成能变现的状态。</div>
+        <div class="voice">卡住的的确是离开平台后的能力迁移不明确。</div>
+        <div class="voice">最缺的是能够挖掘出来我的合适方向的人，并且能给出一个类似领域的成功路径。</div>
+        <div class="voice">你只要能把我的能力梳出来，后面我自己去做商业也好，跳槽也好，我就很笃定。</div>
+      </div>
+      <div class="q-block" style="margin-top:36px;max-width:760px;">
+        <p>我不是没有经历，也不是没有能力。</p>
+        <p>但我不知道这些能力离开公司以后，还能不能被别人付费购买。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ 场景 ═══════════ -->
+  <section class="block">
+    <div class="wrap reveal">
+      <span class="eyebrow">YOU MIGHT BE HERE</span>
+      <h2 class="block-title">你可能就在这些<em>场景</em>里</h2>
+      <div class="scene-grid">
+        <div class="scene">
+          <div class="scene-num">01</div>
+          <div class="scene-title">过去做 <em>B 端</em>，<br>现在想做个人业务或 C 端</div>
+          <div class="scene-body">在公司里你面对的是明确客户、明确需求、明确项目边界。但转向个人业务、甚至想服务 C 端，就会突然不确定。</div>
+          <div class="scene-q"><span>· 我过去 B 端的能力，能不能迁移到 C 端？</span><span>· C 端用户会不会为这些能力付费？</span><span>· 复杂项目能不能变成可交付的个人服务？</span></div>
+        </div>
+        <div class="scene">
+          <div class="scene-num">02</div>
+          <div class="scene-title">在政府、平台、大公司里<br>做<em>综合工作</em></div>
+          <div class="scene-body">你协调资源、推动项目、处理复杂关系、理解政策流程。但一离开组织，问题就变了。</div>
+          <div class="scene-q"><span>· 这些综合能力到底哪些属于我？</span><span>· 哪些只是平台位置带来的？</span><span>· 拿到公开市场上，谁会为它付钱？</span></div>
+        </div>
+        <div class="scene">
+          <div class="scene-num">03</div>
+          <div class="scene-title">有几个想法，<br>但不知道哪个<em>更值得做</em></div>
+          <div class="scene-body">咨询、陪跑、训练营、内容 IP 转服务、工具型产品……你都想过，但越想越不确定。</div>
+          <div class="scene-q"><span>· 哪个方向更匹配我的能力？</span><span>· 哪个方向有人愿意付费？</span><span>· 哪个竞品太强，不该硬撞？</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ 适合条件 ═══════════ -->
+  <section class="block">
+    <div class="wrap reveal">
+      <span class="eyebrow">FIT CHECK</span>
+      <h2 class="block-title">满足 3 条，<br>就比较适合这次<em>诊断</em></h2>
+      <div class="cond-list">
+        <div class="cond"><span class="cond-check">✓</span>你有 5 年以上职场经验，做过真实项目或交付。</div>
+        <div class="cond"><span class="cond-check">✓</span>你正在考虑一人公司、咨询、陪跑、训练营、内容服务或个人业务。</div>
+        <div class="cond"><span class="cond-check">✓</span>你不确定自己的能力离开公司后还能不能变现。</div>
+        <div class="cond"><span class="cond-check">✓</span>你有几个方向，但不知道哪个更值得推进。</div>
+        <div class="cond"><span class="cond-check">✓</span>你希望拿到一份清楚的能力资产和方向判断，而不是泛泛建议。</div>
+      </div>
+      <p class="lead" style="margin-top:26px;max-width:760px;">如果你已经有明确产品和用户，只是卡在触达、报价和第一单成交，那你更适合后面的 <a href="first-order-sprint.html" style="color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(88,225,193,0.3);">一人公司 0-1 首单变现冲刺</a>。</p>
+    </div>
+  </section>
+
+  <!-- ═══════════ 交付结果 ═══════════ -->
+  <section class="block">
+    <div class="wrap reveal">
+      <span class="eyebrow">WHAT YOU GET</span>
+      <h2 class="block-title">2-3 小时后，<br>你会拿到一版<em>可用结果</em></h2>
+      <p class="lead" style="margin-top:20px;">这不是一段长期自我探索。一次诊断结束，你会拿到一版可以用于下一步决策的结果：</p>
+      <div class="deliver" style="grid-template-columns:repeat(3,1fr);">
+        <div class="deliver-item"><span class="dnum">01</span>你的能力资产地图</div>
+        <div class="deliver-item"><span class="dnum">02</span>3 个左右真实案例证据</div>
+        <div class="deliver-item"><span class="dnum">03</span>哪些能力来自平台/组织/职位，哪些真正属于你</div>
+        <div class="deliver-item"><span class="dnum">04</span>哪些能力有独立变现可能</div>
+        <div class="deliver-item"><span class="dnum">05</span>2-3 个可能的个人业务方向</div>
+        <div class="deliver-item"><span class="dnum">06</span>每个方向适合谁、解决什么问题、主要风险</div>
+        <div class="deliver-item"><span class="dnum">07</span>能力段位与主要竞品/替代方案对照</div>
+        <div class="deliver-item"><span class="dnum">08</span>1 个优先切入口</div>
+        <div class="deliver-item"><span class="dnum">09</span>后续可复用的 AI 判断流程</div>
+      </div>
+      <div class="q-block" style="margin-top:30px;max-width:760px;">
+        <p>我到底有哪些能力可以拿出来；这些能力能帮谁解决问题；</p>
+        <p>哪个方向更值得先进入下一步产品和客户验证。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ 诊断四步 ═══════════ -->
+  <section class="block">
+    <div class="wrap reveal">
+      <span class="eyebrow">HOW IT WORKS</span>
+      <h2 class="block-title">我们怎么一步步<br>把能力拆成<em>方向</em></h2>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">01</div>
+          <div class="step-line-wrap"><div class="step-dot"></div><div class="step-line"></div></div>
+          <div class="step-content">
+            <div class="step-h">先把你的<em>真实能力</em>找出来</div>
+            <div class="step-p">我们不从"你觉得自己擅长什么"开始——很多人对自己的判断并不准。有些能力其实是平台给的（公司品牌、职位权限、团队资源、既有客户、成熟流程），有些才真正属于你。所以第一步，我们从你的真实项目里拆：当时是什么场景、你解决了什么问题、做了哪些关键动作、结果是什么、这证明了你什么能力、它离开原公司后还能不能继续用。</div>
+            <div class="step-tags"><span class="step-tag">不是"你有沟通能力"这种泛标签</span><span class="step-tag">而是：你能在什么场景、帮什么人、解决什么问题</span></div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <div class="step-line-wrap"><div class="step-dot"></div><div class="step-line"></div></div>
+          <div class="step-content">
+            <div class="step-h">判断哪些能力<em>有独立变现可能</em></div>
+            <div class="step-p">在公司里能做成一件事，不代表离开公司后还能独立交付、独立变现。我们会把你的能力拆成几类：平台能力、组织能力、个人能力、可独立变现能力、暂缓能力。这一步帮你避免两种风险——高估自己（把平台结果误判成个人能力），和低估自己（看不见反复创造结果的隐性能力）。</div>
+            <div class="step-tags"><span class="step-tag">哪些现在就能进入业务判断</span><span class="step-tag">哪些需要继续沉淀</span><span class="step-tag">哪些暂时不能包装成服务</span></div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <div class="step-line-wrap"><div class="step-dot"></div><div class="step-line"></div></div>
+          <div class="step-content">
+            <div class="step-h">把能力翻译成更清楚的<em>个人业务方向</em></div>
+            <div class="step-p">能力本身不是收入，用户不会为"你很有经验"付费，只会为一个更清楚的结果付费。我们会继续判断：你的能力更适合服务谁、这些人现在有什么具体问题、有没有可能为这个问题付费、你更适合做咨询/陪跑/训练营/内容服务、哪个方向更符合你的能力与交付边界、在每个方向里你的能力段位处在什么位置。</div>
+            <div class="step-tags"><span class="step-tag">2-3 个可能方向</span><span class="step-tag">能力段位 vs 替代方案对照</span><span class="step-tag">1 个优先切入口</span></div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">04</div>
+          <div class="step-line-wrap"><div class="step-dot"></div></div>
+          <div class="step-content">
+            <div class="step-h">给你一套之后还能继续用的 <em>AI 判断流程</em></div>
+            <div class="step-p">我不会只给你一个结论。我会把这次判断过程整理成一套你后面还能继续使用的 AI 流程——不是神秘工具，也不是让 AI 替你做决定，而是一套围绕你个人能力资产的判断流程。以后遇到新想法，不用每次都从零开始纠结。</div>
+            <div class="step-tags"><span class="step-tag">能力资产输入模板</span><span class="step-tag">案例证据提取模板</span><span class="step-tag">能力拆分表</span><span class="step-tag">候选方向生成提示词</span><span class="step-tag">方向适配评估表</span><span class="step-tag">风险/反证清单</span><span class="step-tag">下一步验证任务生成</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ 脱敏示例 ═══════════ -->
+  <section class="block">
+    <div class="wrap reveal">
+      <span class="eyebrow">SAMPLE OUTPUT</span>
+      <h2 class="block-title">一个<em>脱敏示例</em>：<br>诊断不会只说"哪个看起来不错"</h2>
+      <p class="lead" style="margin-top:20px;">假设你有 3 个候选方向。诊断会继续拆：这个方向需要什么能力、你的能力在这里处于什么段位、主要竞品是什么水平、你有没有一个更容易赢的小入口。</p>
+      <div class="example">
+        <div class="example-head">// 候选方向 B：做 B 端经验转个人咨询</div>
+        <div class="example-body">
+          <div class="example-cands">
+            <div class="cand"><div class="cand-tag">方向 A</div><div class="cand-name">做职场 AI 工具课</div></div>
+            <div class="cand" style="border-color:rgba(88,225,193,0.4);"><div class="cand-tag">方向 B · 优先</div><div class="cand-name">做 B 端经验转个人咨询</div></div>
+            <div class="cand"><div class="cand-tag">方向 C</div><div class="cand-name">做泛个人成长陪跑</div></div>
+          </div>
+          <div class="ex-sub">你的能力段位</div>
+          <div class="ex-rows">
+            <div class="ex-row"><b>复杂问题拆解</b><span class="ex-lvl lvl-strong">强 · 多个真实项目证据</span></div>
+            <div class="ex-row"><b>B 端业务理解</b><span class="ex-lvl lvl-strong">强 · 长期在 B 端解决问题</span></div>
+            <div class="ex-row"><b>咨询式沟通</b><span class="ex-lvl lvl-mid">中强 · 需进一步产品化</span></div>
+            <div class="ex-row"><b>服务边界设计</b><span class="ex-lvl lvl-mid">中 · 需压缩成更小版本</span></div>
+            <div class="ex-row"><b>客户结果表达</b><span class="ex-lvl lvl-weak">偏弱 · "我能做"→"客户能得到"</span></div>
+          </div>
+          <div class="ex-sub">主要竞品 / 替代方案</div>
+          <div class="ex-other" style="grid-template-columns:1fr 1fr;">
+            <div class="ex-other-card"><b>职业咨询</b>更会做职业选择建议，但不一定懂 B 端业务细节。</div>
+            <div class="ex-other-card"><b>行业顾问</b>经验强，但服务重、价格高、进入门槛高。</div>
+            <div class="ex-other-card"><b>通用 AI 咨询</b>效率高，但缺真实业务判断和个性化交付。</div>
+            <div class="ex-other-card"><b>用户自己摸索</b>成本低，但容易卡在方向和表达上。</div>
+          </div>
+          <div class="ex-verdict"><b>综合判断：</b>这个方向不是最轻松的，但相比其他方向，你的能力证据更强，和竞品重叠没那么高，也更容易做出一个小而清楚的服务入口。<br><br><b>建议优先验证的小入口：</b>面向有 B 端经验、想转个人业务的人，做一次"B 端能力如何变成个人服务"的诊断。</div>
+          <div class="ex-sub">另外两个方向会被这样处理</div>
+          <div class="ex-other">
+            <div class="ex-other-card"><b>方向 A · 职场 AI 工具课</b>需求容易被理解，但竞品多、同质化高。除非有非常清楚的细分场景，否则不建议第一优先。</div>
+            <div class="ex-other-card"><b>方向 C · 泛个人成长陪跑</b>表达空间大，但目标用户太散、能力证据弱、付费理由不清楚，建议暂缓。</div>
+          </div>
+        </div>
+      </div>
+      <p class="lead" style="margin-top:26px;max-width:760px;">这样你筛方向时，不只是凭感觉选一个看起来不错的，而是先选一个<span class="accent">能力更有胜算、用户问题更清楚、验证成本更低</span>的方向。</p>
+    </div>
+  </section>
+
+  <!-- ═══════════ 这不是 / 这是 ═══════════ -->
+  <section class="block">
+    <div class="wrap reveal">
+      <span class="eyebrow">WHY NOT THE OTHERS</span>
+      <h2 class="block-title">为什么不是优势测评、<br>职业咨询或 <em>IP 定位</em></h2>
+      <div class="compare-list">
+        <div class="compare-row">
+          <div class="compare-left"><b>优势测评告诉你</b>你是什么类型的人，你有哪些优势倾向。</div>
+          <div class="compare-mid">VS</div>
+          <div class="compare-right"><b>这次诊断回答</b>你的哪些能力能离开公司继续用。</div>
+        </div>
+        <div class="compare-row">
+          <div class="compare-left"><b>职业咨询告诉你</b>你适合什么工作，下一步职业怎么走。</div>
+          <div class="compare-mid">VS</div>
+          <div class="compare-right"><b>这次诊断回答</b>这些能力能帮谁解决问题。</div>
+        </div>
+        <div class="compare-row">
+          <div class="compare-left"><b>IP 定位告诉你</b>你怎么包装自己，你应该怎么表达自己。</div>
+          <div class="compare-mid">VS</div>
+          <div class="compare-right"><b>这次诊断回答</b>它们适合变成什么个人业务方向，哪个最值得先验证。</div>
+        </div>
+      </div>
+      <div class="q-block" style="margin-top:32px;max-width:680px;">
+        <p>别人帮你总结优势，</p>
+        <p>我帮你把优势变成更清楚的<span class="accent">个人业务方向</span>。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ 为什么是我 ═══════════ -->
+  <section class="block">
+    <div class="wrap reveal">
+      <span class="eyebrow">WHY ME</span>
+      <h2 class="block-title">为什么我能<br>做这件事</h2>
+      <div class="stat-strip">
+        <div class="stat-box"><div class="stat-box-num">一线大厂 · 亿级营收</div><div class="stat-box-label">AI 软硬件产品负责人，职场拿过亿级营收商业化结果</div></div>
+        <div class="stat-box"><div class="stat-box-num">50+ 篇</div><div class="stat-box-label">内容 · 最高 3 万+ 阅读</div></div>
+        <div class="stat-box"><div class="stat-box-num">200+</div><div class="stat-box-label">微信私域用户</div></div>
+        <div class="stat-box"><div class="stat-box-num">3 个月</div><div class="stat-box-label">转型后拿到第一单付费</div></div>
+        <div class="stat-box"><div class="stat-box-num">20+ 套</div><div class="stat-box-label">AI 工作流和判断方法</div></div>
+      </div>
+      <div class="about-narrative">
+        <p class="about-why">我自己也刚刚完成过一次<em>"职场能力到个人业务"的迁移</em>。过去 8 年我一直做 AI 产品和商业化，从普通 AI 产品经理做到一线大厂 AI 软硬件产品负责人，也做过亿级营收相关的商业化结果。</p>
+        <p class="about-why">但<strong>这些成绩在职场里成立，不代表离开公司后还能直接成立</strong>。所以过去几个月，我重新拆了一遍自己的能力，把职场里拿到结果的能力，重新翻译成一人公司场景里的能力资产，再用真实市场验证——<em>上面这些数字，就是这次验证跑出来的结果</em>。</p>
+        <p class="about-why">我帮你做的不是普通测评，也不是职业定位。我会用<em>同样的方式</em>，帮你判断你的哪些能力真的属于你、哪些能离开公司继续使用、可能服务谁、最适合先切入哪个方向。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ 适合 / 不适合 ═══════════ -->
+  <section class="block">
+    <div class="wrap reveal">
+      <span class="eyebrow">FIT / NOT FIT</span>
+      <h2 class="block-title">谁适合，<br>谁<em>不适合</em></h2>
+      <div class="fit-cols">
+        <div>
+          <div class="fit-head"><span class="fit-badge yes">适合</span></div>
+          <div class="fit-items">
+            <div class="fit-item yes">有 5 年以上职场经验、做过真实项目或交付的人</div>
+            <div class="fit-item yes">正在考虑一人公司、咨询、陪跑、训练营、内容服务的人</div>
+            <div class="fit-item yes">不确定能力离开公司后能不能变现的人</div>
+            <div class="fit-item yes">有几个方向、但不知道哪个更值得推进的人</div>
+            <div class="fit-item yes">想要清楚的能力资产和方向判断，而非泛泛建议的人</div>
+          </div>
+        </div>
+        <div>
+          <div class="fit-head"><span class="fit-badge no">不适合</span></div>
+          <div class="fit-items">
+            <div class="fit-item no">完全没有真实项目或专业积累的人</div>
+            <div class="fit-item no">只想要情绪鼓励，不想面对真实市场的人</div>
+            <div class="fit-item no">期待我直接给一个稳赚方向的人</div>
+            <div class="fit-item no">只想做性格测评、简历优化或职业规划的人</div>
+            <div class="fit-item no">已明确产品和用户，只需要首单成交陪跑的人</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ 报名流程 ═══════════ -->
+  <section class="block">
+    <div class="wrap reveal">
+      <span class="eyebrow">THE PROCESS</span>
+      <h2 class="block-title">报名后<br>会怎么进行</h2>
+      <p class="lead" style="margin-top:20px;">为了让 2-3 小时真正产出结果，我会在诊断前先让你准备少量材料。你不需要提前写一大堆，但最好能提供几个真实经历——这次诊断不是靠空想判断，而是基于你的真实案例来拆。</p>
+      <div class="steps">
+        <div class="step"><div class="step-num">01</div><div class="step-line-wrap"><div class="step-dot"></div><div class="step-line"></div></div><div class="step-content"><div class="step-h">加微信，简单说明背景和当前卡点</div></div></div>
+        <div class="step"><div class="step-num">02</div><div class="step-line-wrap"><div class="step-dot"></div><div class="step-line"></div></div><div class="step-content"><div class="step-h">我先判断这次诊断是否适合你</div></div></div>
+        <div class="step"><div class="step-num">03</div><div class="step-line-wrap"><div class="step-dot"></div><div class="step-line"></div></div><div class="step-content"><div class="step-h">确认适合后付款，预约 2-3 小时时段</div></div></div>
+        <div class="step"><div class="step-num">04</div><div class="step-line-wrap"><div class="step-dot"></div><div class="step-line"></div></div><div class="step-content"><div class="step-h">你提前提供 2-3 个代表性项目 / 经历 / 成果</div></div></div>
+        <div class="step"><div class="step-num">05</div><div class="step-line-wrap"><div class="step-dot"></div><div class="step-line"></div></div><div class="step-content"><div class="step-h">诊断中一起拆能力、案例、方向和风险</div></div></div>
+        <div class="step"><div class="step-num">06</div><div class="step-line-wrap"><div class="step-dot"></div></div><div class="step-content"><div class="step-h">诊断后交付能力资产地图、优先切入口和 AI 判断流程</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ 价格 ═══════════ -->
+  <section class="block">
+    <div class="wrap reveal">
+      <span class="eyebrow">PRICE &amp; EARLY SEATS</span>
+      <h2 class="block-title">价格与<br>早期名额</h2>
+      <div class="price-wrap">
+        <div class="price-card">
+          <div class="price-label">限时早期体验价</div>
+          <div class="price-old">公开售价 399 元 / 次</div>
+          <div class="price-now"><span class="num">199</span><span class="unit">元 / 次</span></div>
+          <ul class="price-points">
+            <li>能力资产地图</li>
+            <li>可独立变现能力判断</li>
+            <li>候选个人业务方向</li>
+            <li>能力段位与替代方案对照</li>
+            <li>1 个优先切入口</li>
+            <li>可复用 AI 判断流程</li>
+          </ul>
+        </div>
+        <div>
+          <p class="price-note"><strong>199 元不是买一次泛泛聊天，</strong>而是买一次 2-3 小时的能力资产判断。</p>
+          <p class="price-note">这段时间我会开放<strong>少量早期名额</strong>，用更低价格服务第一批愿意认真梳理自己能力资产和个人业务方向的人。</p>
+          <p class="price-note">一方面当作交个朋友，降低你第一次尝试的门槛；另一方面我也会通过不同用户案例，继续丰富这套能力资产诊断的样板和判断库。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ FINAL CTA ═══════════ -->
+  <section class="cta-block">
+    <div class="wrap reveal">
+      <span class="eyebrow">FINAL CALL</span>
+      <h2 class="cta-title">如果你看到这里已经觉得<br>"<em>这就是我卡住的问题</em>"</h2>
+      <p class="cta-desc">加微信报名或先做初步判断。我帮你把过去在公司里积累的能力，拆成哪些能离开组织继续变现、最适合先从哪个个人业务方向切入。备注「能力诊断」即可，我会先确认这次诊断是否适合你，再决定是否进入。</p>
+      <div class="cta-actions">
+        <a class="btn btn-primary" href="javascript:void(0)" onclick="openWechatModal('能力诊断')">加微信报名限时早期价 199 元 →</a>
+      </div>
+      <p style="font-size:13px;color:var(--dim);margin-top:22px;max-width:600px;">如果你已经完成能力梳理和方向选择，只是卡在做成什么产品、卖给谁、怎么报价、怎么触达客户、怎么完成第一单，可以去 <a href="first-order-sprint.html" style="color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(88,225,193,0.3);">一人公司 0-1 首单变现冲刺</a> 看下一阶段服务。</p>
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══════════ WECHAT MODAL ═══════════ -->
+<div class="modal" id="wechatModal" aria-hidden="true">
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <button class="modal-close" type="button" onclick="closeWechatModal()" aria-label="关闭弹窗">×</button>
+    <div class="modal-label">JOIN</div>
+    <div class="modal-title" id="modalTitle">添加微信进一步沟通</div>
+    <div class="modal-desc">添加下面这个微信号，并按提示备注，我会先帮你判断这次诊断是否适合你。</div>
+    <div class="wechat-box">
+      <div class="wechat-label">WeChat ID</div>
+      <div class="wechat-value">qiaoboose01</div>
+      <div class="wechat-remark" id="modalRemark">备注：能力诊断</div>
+    </div>
+  </div>
+</div>
+
+<footer class="site-foot">
+  <div class="wrap foot-inner">
+    <div class="foot-brand">AI Native 一人公司 · <span class="accent">乔不不斯</span></div>
+    <div class="foot-meta">QIAOBOOSE · SOLO COMPANY · 0 → 1</div>
+  </div>
+</footer>
+
+<script>
+  function openWechatModal(remark) {
+    if (remark) { document.getElementById('modalRemark').textContent = '备注：' + remark; }
+    document.getElementById('wechatModal').classList.add('open');
+  }
+  function closeWechatModal() { document.getElementById('wechatModal').classList.remove('open'); }
+  document.getElementById('wechatModal').addEventListener('click', e => { if (e.target.id === 'wechatModal') closeWechatModal(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeWechatModal(); });
+
+  function toggleNav() { document.getElementById('navLinks').classList.toggle('open'); }
+  document.querySelectorAll('#navLinks a').forEach(a => a.addEventListener('click', () => document.getElementById('navLinks').classList.remove('open')));
+  const io = new IntersectionObserver((es) => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>

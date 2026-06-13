@@ -122,6 +122,12 @@
   .dd-text { display: flex; flex-direction: column; gap: 3px; }
   .dd-text b { font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.3; }
   .dd-text i { font-size: 12px; font-style: normal; color: var(--muted); line-height: 1.4; }
+  .dd-group { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.18em; color: var(--dim); text-transform: uppercase; padding: 10px 14px 6px; }
+  .dd-divider { height: 1px; background: var(--border); margin: 6px 8px; }
+  .dd-tag { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.06em; padding: 2px 7px; border-radius: 2px; margin-left: 8px; vertical-align: 1px; }
+  .dd-tag.paid { background: rgba(88,225,193,0.12); color: var(--accent); }
+  .dd-tag.free { background: rgba(169,176,186,0.10); color: var(--muted); border: 1px solid var(--border2); }
+  .dd-link.free .dd-ico { background: rgba(169,176,186,0.08); border-color: var(--border2); color: var(--muted); }
 
   /* ───────── SECTION SHELL ───────── */
   section.block { padding: clamp(72px, 11vh, 132px) 0; position: relative; }
@@ -401,7 +407,26 @@
   .prod-points li { font-size: 13px; color: var(--muted); padding-left: 18px; position: relative; line-height: 1.6; }
   .prod-points li::before { content: ''; position: absolute; left: 0; top: 9px; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
   .prod-card .btn { align-self: flex-start; }
-  @media (max-width: 768px) { .prod-grid { grid-template-columns: 1fr; } }
+  .prod-price { display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; margin-bottom: 22px; padding: 16px 18px; background: rgba(88,225,193,0.06); border: 1px solid rgba(88,225,193,0.22); border-radius: 2px; }
+  .pp-now { display: flex; align-items: baseline; gap: 8px; }
+  .pp-tag { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em; color: var(--accent); align-self: center; }
+  .pp-num { font-family: var(--font-mono); font-size: 30px; font-weight: 500; color: var(--accent); line-height: 1; letter-spacing: -0.02em; }
+  .pp-unit { font-size: 13px; color: var(--muted); }
+  .pp-old { font-size: 13px; color: var(--dim); }
+  .pp-old s { color: var(--dim); }
+  .prod-grid-1 { grid-template-columns: 1fr; }
+  .prod-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 20px; }
+  .prod-top .prod-ico { margin-bottom: 0; }
+  .prod-badge { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; padding: 5px 12px; border-radius: 2px; white-space: nowrap; }
+  .prod-badge.paid { background: rgba(88,225,193,0.12); color: var(--accent); border: 1px solid rgba(88,225,193,0.3); }
+  .prod-badge.free { background: rgba(169,176,186,0.10); color: var(--muted); border: 1px solid var(--border2); }
+  .prod-card.free { background: var(--bg2); }
+  .prod-card.free:hover { border-color: var(--border2); }
+  .prod-card.free .prod-ico { background: rgba(169,176,186,0.08); border-color: var(--border2); color: var(--muted); }
+  .sec-head { display: flex; align-items: center; gap: 18px; margin: 44px 0 8px; }
+  .sec-kicker { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; color: var(--accent); text-transform: uppercase; white-space: nowrap; }
+  .sec-line { flex: 1; height: 1px; background: var(--border); }
+  @media (max-width: 768px) { .prod-grid { grid-template-columns: 1fr; } .prod-badge { font-size: 10px; padding: 4px 9px; } }
 </style>
 
 </head>
@@ -419,13 +444,24 @@
       <div class="nav-dd">
         <a class="nav-item nav-dd-trigger active" href="products.html">产品服务 <span class="caret">▾</span></a>
         <div class="nav-dd-menu">
-          <a class="dd-link" href="calibrator.html" target="_blank" rel="noopener">
-            <span class="dd-ico">◎</span>
-            <span class="dd-text"><b>一人公司路径校准器</b><i>检查你现在做的事是否在浪费时间</i></span>
+          <div class="dd-group">核心服务</div>
+          <a class="dd-link" href="diagnosis.html">
+            <span class="dd-ico">◇</span>
+            <span class="dd-text"><b>能力资产与商业切入口诊断<span class="dd-tag paid">付费</span></b><i>拆清你能离开公司变现的能力与切入口</i></span>
           </a>
-          <a class="dd-link" href="potential-customer-channels.html" target="_blank" rel="noopener">
+          <a class="dd-link" href="first-order-sprint.html">
+            <span class="dd-ico">◆</span>
+            <span class="dd-text"><b>0-1 首单变现冲刺<span class="dd-tag paid">付费</span></b><i>30 天把方向做成产品，冲第一笔收入</i></span>
+          </a>
+          <div class="dd-divider"></div>
+          <div class="dd-group">免费前置工具</div>
+          <a class="dd-link free" href="calibrator.html" target="_blank" rel="noopener">
+            <span class="dd-ico">◎</span>
+            <span class="dd-text"><b>一人公司路径校准器<span class="dd-tag free">免费</span></b><i>先自测，检查现在做的事是否在浪费时间</i></span>
+          </a>
+          <a class="dd-link free" href="potential-customer-channels.html" target="_blank" rel="noopener">
             <span class="dd-ico">⊞</span>
-            <span class="dd-text"><b>潜在客户渠道库</b><i>前期找种子用户的渠道清单</i></span>
+            <span class="dd-text"><b>潜在客户渠道库<span class="dd-tag free">免费</span></b><i>前期找种子用户的渠道清单</i></span>
           </a>
         </div>
       </div>
@@ -437,14 +473,82 @@
 </header>
 
 <main id="top">
-  <section class="block" id="products" style="padding-top:clamp(56px,9vh,96px);">
+  <!-- ───── 核心服务 ───── -->
+  <section class="block" id="products" style="padding-top:clamp(56px,9vh,96px);padding-bottom:clamp(48px,7vh,72px);">
     <div class="wrap reveal">
       <span class="eyebrow">PRODUCTS &amp; SERVICES</span>
       <h1 class="block-title">产品服务</h1>
-      <p class="lead" style="margin-top:20px;">围绕「一人公司从 0 到 1」打磨的轻量工具与资料，帮助你识别阶段、少走弯路、找到第一批用户。</p>
+      <p class="lead" style="margin-top:20px;">围绕「一人公司从 0 到 1」提供两项核心付费服务：先帮你拆清能力、找准方向，再陪你把方向做成产品、冲到第一单；另有两个免费前置工具，供你先自测、判断自己适不适合再决定是否进入。</p>
+
+      <div class="sec-head">
+        <span class="sec-kicker">CORE SERVICE · 核心服务</span>
+        <span class="sec-line"></span>
+      </div>
       <div class="prod-grid">
-        <div class="prod-card" data-glyph="PATH">
-          <div class="prod-ico">◎</div>
+        <div class="prod-card" data-glyph="DIAG" style="border-color: rgba(88,225,193,0.32); background: linear-gradient(180deg, rgba(88,225,193,0.06), var(--bg2));">
+          <div class="prod-top">
+            <div class="prod-ico">◇</div>
+            <span class="prod-badge paid">第一步 · 找方向</span>
+          </div>
+          <div class="prod-label">CAPABILITY ASSET DIAGNOSIS</div>
+          <div class="prod-title">能力资产与商业切入口诊断</div>
+          <p class="prod-desc">用 2-3 小时，帮你拆清哪些能力真正属于你、哪些能离开公司继续变现、你最适合先切入哪个个人业务方向。交付能力资产地图、可独立变现判断、优先切入口与可复用 AI 判断流程。</p>
+          <ul class="prod-points">
+            <li>能力资产地图 + 真实案例证据</li>
+            <li>2-3 个候选方向 + 能力段位对照 + 1 个优先切入口</li>
+            <li>一套之后还能继续用的 AI 判断流程</li>
+          </ul>
+          <div class="prod-price">
+            <div class="pp-now">
+              <span class="pp-tag">限时早期价</span>
+              <span class="pp-num">¥199</span>
+              <span class="pp-unit">/ 次</span>
+            </div>
+            <div class="pp-old">公开售价 <s>¥399 / 次</s></div>
+          </div>
+          <a class="btn btn-primary" href="diagnosis.html">了解服务详情 →</a>
+        </div>
+        <div class="prod-card" data-glyph="SPRINT" style="border-color: rgba(88,225,193,0.32); background: linear-gradient(180deg, rgba(88,225,193,0.06), var(--bg2));">
+          <div class="prod-top">
+            <div class="prod-ico">◆</div>
+            <span class="prod-badge paid">第二步 · 冲首单</span>
+          </div>
+          <div class="prod-label">0 → 1 FIRST-ORDER SPRINT</div>
+          <div class="prod-title">一人公司 0-1 首单变现冲刺</div>
+          <p class="prod-desc">方向已定后，30 天把它做成能卖的产品服务，找到第一批真实客户，完成沟通报价，冲第一笔收入或清楚的购买信号。我 + AI 陪你跑完一轮 0-1 变现闭环。</p>
+          <ul class="prod-points">
+            <li>做出能卖的小产品 + 第一批真实客户名单</li>
+            <li>真实沟通报价记录 + 首单复盘和下一轮调整</li>
+            <li>AI 协作工作流 + 个人商业知识体系</li>
+          </ul>
+          <div class="prod-price">
+            <div class="pp-now">
+              <span class="pp-tag">限时早期价</span>
+              <span class="pp-num">¥1999</span>
+              <span class="pp-unit">/ 30 天</span>
+            </div>
+            <div class="pp-old">公开售价 <s>¥5999 / 30 天</s></div>
+          </div>
+          <a class="btn btn-primary" href="first-order-sprint.html">了解服务详情 →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───── 免费前置工具 ───── -->
+  <section class="block" style="padding-top:clamp(40px,6vh,64px);">
+    <div class="wrap reveal">
+      <div class="sec-head">
+        <span class="sec-kicker">FREE TOOLS · 免费前置工具</span>
+        <span class="sec-line"></span>
+      </div>
+      <p class="lead" style="margin-top:0;margin-bottom:8px;">这两个工具完全免费，用来帮你先做自测、判断自己适不适合，再决定要不要进入核心诊断。</p>
+      <div class="prod-grid">
+        <div class="prod-card free" data-glyph="PATH">
+          <div class="prod-top">
+            <div class="prod-ico">◎</div>
+            <span class="prod-badge free">免费 · 前置自测</span>
+          </div>
           <div class="prod-label">PATH CALIBRATOR</div>
           <div class="prod-title">一人公司路径校准器</div>
           <p class="prod-desc">在继续投入之前，检查现在做的事情是不是在浪费你的时间。识别你的阶段以及最应该做的事情，少走弯路。</p>
@@ -453,10 +557,13 @@
             <li>识别你当前所处的 0–5 阶段</li>
             <li>给出这个阶段最该做的下一步</li>
           </ul>
-          <a class="btn btn-primary" href="calibrator.html" target="_blank" rel="noopener">进入路径校准器 →</a>
+          <a class="btn btn-secondary" href="calibrator.html" target="_blank" rel="noopener">免费进入校准器 →</a>
         </div>
-        <div class="prod-card" data-glyph="LIST">
-          <div class="prod-ico">⊞</div>
+        <div class="prod-card free" data-glyph="LIST">
+          <div class="prod-top">
+            <div class="prod-ico">⊞</div>
+            <span class="prod-badge free">免费 · 前置工具</span>
+          </div>
           <div class="prod-label">CHANNEL LIBRARY</div>
           <div class="prod-title">潜在客户渠道库</div>
           <p class="prod-desc">前期找潜在客户、早期共创用户的渠道清单。帮你在冷启动阶段，快速找到第一批可以对话和验证的人。</p>
@@ -465,7 +572,7 @@
             <li>适合一人公司的冷启动路径</li>
             <li>持续更新与补充</li>
           </ul>
-          <a class="btn btn-primary" href="potential-customer-channels.html" target="_blank" rel="noopener">进入渠道库 →</a>
+          <a class="btn btn-secondary" href="potential-customer-channels.html" target="_blank" rel="noopener">免费进入渠道库 →</a>
         </div>
       </div>
     </div>
