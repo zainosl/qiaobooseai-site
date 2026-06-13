@@ -324,6 +324,16 @@
   .wechat-inline .wv { font-family: var(--font-mono); font-size: 20px; color: var(--accent); }
   .wechat-inline .wn { font-size: 12px; color: var(--muted); }
 
+  /* other services 导流 */
+  .more-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 36px; }
+  .more-card { display: flex; flex-direction: column; padding: 26px 26px; background: var(--bg2); border: 1px solid var(--border); border-radius: 2px; transition: all .35s cubic-bezier(.22,1,.36,1); }
+  .more-card:hover { border-color: rgba(88,225,193,0.4); transform: translateY(-4px); box-shadow: 0 16px 48px rgba(0,0,0,.25); }
+  .more-tag { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.12em; color: var(--accent); margin-bottom: 12px; }
+  .more-title { font-size: 17px; font-weight: 700; color: var(--text); line-height: 1.4; margin-bottom: 10px; }
+  .more-desc { font-size: 13px; color: var(--muted); line-height: 1.75; margin-bottom: 18px; flex: 1; }
+  .more-price { font-family: var(--font-mono); font-size: 13px; color: var(--accent); margin-bottom: 16px; }
+  .more-card .btn { align-self: flex-start; }
+
   /* final CTA */
   .cta-block { padding: clamp(64px, 9vh, 110px) 0; border-top: 1px solid var(--border); }
   .cta-title { font-size: clamp(26px, 3.6vw, 46px); font-weight: 900; line-height: 1.14; letter-spacing: -0.03em; margin-bottom: 20px; max-width: 760px; }
@@ -396,6 +406,10 @@
         <a class="nav-item nav-dd-trigger active" href="products.html">产品服务 <span class="caret">▾</span></a>
         <div class="nav-dd-menu">
           <div class="dd-group">核心服务</div>
+          <a class="dd-link" href="consultation.html">
+            <span class="dd-ico">○</span>
+            <span class="dd-text"><b>一人公司单次咨询<span class="dd-tag paid">付费</span></b><i>选不准或单点问题，先聊一次 99/小时</i></span>
+          </a>
           <a class="dd-link" href="diagnosis.html">
             <span class="dd-ico">◇</span>
             <span class="dd-text"><b>能力资产与商业切入口诊断<span class="dd-tag paid">付费</span></b><i>拆清你能离开公司变现的能力与切入口</i></span>
@@ -732,8 +746,8 @@
       <h2 class="block-title">价格与<br>早期名额</h2>
       <div class="price-wrap">
         <div class="price-card">
-          <div class="price-label">限时早期体验价</div>
-          <div class="price-old">公开售价 399 元 / 次</div>
+          <div class="price-label">限时早期价</div>
+          <div class="price-old">公开售价 699 元 / 次</div>
           <div class="price-now"><span class="num">199</span><span class="unit">元 / 次</span></div>
           <ul class="price-points">
             <li>能力资产地图</li>
@@ -753,6 +767,31 @@
     </div>
   </section>
 
+  <!-- ═══════════ 其他服务 ═══════════ -->
+  <section class="block" id="more">
+    <div class="wrap reveal">
+      <span class="eyebrow">OTHER SERVICES</span>
+      <h2 class="block-title">这个不太对？<br>看看另外两个<em>服务</em></h2>
+      <p class="lead" style="margin-top:20px;">如果你已经有方向、或者只是想就某个单点问题先聊一次，这两个可能更适合你：</p>
+      <div class="more-grid">
+        <div class="more-card">
+          <div class="more-tag">第二步 · 冲首单</div>
+          <div class="more-title">一人公司 0-1 首单变现冲刺</div>
+          <div class="more-desc">已经完成能力梳理和方向选择，只是卡在做成什么产品、卖给谁、怎么报价、怎么冲第一单？30 天陪你跑完一轮 0-1 变现闭环。</div>
+          <div class="more-price">¥999 / 30 天 · 限时早期价（公开 ¥3999）</div>
+          <a class="btn btn-secondary" href="first-order-sprint.html">了解冲刺详情 →</a>
+        </div>
+        <div class="more-card">
+          <div class="more-tag">最低门槛 · 先聊一次</div>
+          <div class="more-title">一人公司单次咨询</div>
+          <div class="more-desc">还不确定要不要做整套诊断，或想就某个单点问题快速聊清楚？一对一 1 小时，给你判断和下一步建议。</div>
+          <div class="more-price">¥99 / 小时 · 限时早期价（公开 ¥499）</div>
+          <a class="btn btn-secondary" href="consultation.html">了解单次咨询 →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ═══════════ FINAL CTA ═══════════ -->
   <section class="cta-block">
     <div class="wrap reveal">
@@ -762,7 +801,6 @@
       <div class="cta-actions">
         <a class="btn btn-primary" href="javascript:void(0)" onclick="openWechatModal('能力诊断')">加微信报名限时早期价 199 元 →</a>
       </div>
-      <p style="font-size:13px;color:var(--dim);margin-top:22px;max-width:600px;">如果你已经完成能力梳理和方向选择，只是卡在做成什么产品、卖给谁、怎么报价、怎么触达客户、怎么完成第一单，可以去 <a href="first-order-sprint.html" style="color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(88,225,193,0.3);">一人公司 0-1 首单变现冲刺</a> 看下一阶段服务。</p>
     </div>
   </section>
 

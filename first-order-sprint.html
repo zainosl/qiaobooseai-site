@@ -289,6 +289,16 @@
   .price-note strong { color: var(--text); }
   .price-note + .price-note { margin-top: 14px; }
 
+  /* other services 导流 */
+  .more-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 36px; }
+  .more-card { display: flex; flex-direction: column; padding: 26px 26px; background: var(--bg2); border: 1px solid var(--border); border-radius: 2px; transition: all .35s cubic-bezier(.22,1,.36,1); }
+  .more-card:hover { border-color: rgba(88,225,193,0.4); transform: translateY(-4px); box-shadow: 0 16px 48px rgba(0,0,0,.25); }
+  .more-tag { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.12em; color: var(--accent); margin-bottom: 12px; }
+  .more-title { font-size: 17px; font-weight: 700; color: var(--text); line-height: 1.4; margin-bottom: 10px; }
+  .more-desc { font-size: 13px; color: var(--muted); line-height: 1.75; margin-bottom: 18px; flex: 1; }
+  .more-price { font-family: var(--font-mono); font-size: 13px; color: var(--accent); margin-bottom: 16px; }
+  .more-card .btn { align-self: flex-start; }
+
   /* final CTA */
   .cta-block { padding: clamp(64px, 9vh, 110px) 0; border-top: 1px solid var(--border); }
   .cta-title { font-size: clamp(26px, 3.6vw, 46px); font-weight: 900; line-height: 1.14; letter-spacing: -0.03em; margin-bottom: 20px; max-width: 760px; }
@@ -356,6 +366,10 @@
         <a class="nav-item nav-dd-trigger active" href="products.html">产品服务 <span class="caret">▾</span></a>
         <div class="nav-dd-menu">
           <div class="dd-group">核心服务</div>
+          <a class="dd-link" href="consultation.html">
+            <span class="dd-ico">○</span>
+            <span class="dd-text"><b>一人公司单次咨询<span class="dd-tag paid">付费</span></b><i>选不准或单点问题，先聊一次 99/小时</i></span>
+          </a>
           <a class="dd-link" href="diagnosis.html">
             <span class="dd-ico">◇</span>
             <span class="dd-text"><b>能力资产与商业切入口诊断<span class="dd-tag paid">付费</span></b><i>拆清你能离开公司变现的能力与切入口</i></span>
@@ -399,7 +413,7 @@
       </div>
       <p class="hero-sub" style="margin-bottom:0;">这轮要解决的就是这个问题：<span class="accent">做出一个能卖的小产品、找到第一批真实客户、完成沟通报价和成交尝试</span>，目标是在 30 天内拿到 0-1 变现结果。理想是拿到第一笔收入；即使暂时没成交，也至少拿到一轮清楚的市场反馈，知道下一轮该怎么改。</p>
       <div class="hero-actions" style="margin-top:34px;">
-        <a class="btn btn-primary" href="javascript:void(0)" onclick="openWechatModal('首单冲刺 + 报名')">报名限时早期价 1999 元 →</a>
+        <a class="btn btn-primary" href="javascript:void(0)" onclick="openWechatModal('首单冲刺 + 报名')">报名限时早期价 999 元 →</a>
         <a class="btn btn-secondary" href="javascript:void(0)" onclick="openWechatModal('首单冲刺')">不确定？先做初步判断</a>
       </div>
     </div>
@@ -662,9 +676,9 @@
       <h2 class="block-title">价格与<br>早期名额</h2>
       <div class="price-wrap">
         <div class="price-card">
-          <div class="price-label">限时早期体验价</div>
-          <div class="price-old">公开售价 5999 元 / 30 天</div>
-          <div class="price-now"><span class="num">1999</span><span class="unit">元 / 30 天</span></div>
+          <div class="price-label">限时早期价</div>
+          <div class="price-old">公开售价 3999 元 / 30 天</div>
+          <div class="price-now"><span class="num">999</span><span class="unit">元 / 30 天</span></div>
           <ul class="price-points">
             <li>做出能卖的小产品</li>
             <li>找到第一批真实客户</li>
@@ -675,9 +689,34 @@
           </ul>
         </div>
         <div>
-          <p class="price-note"><strong>1999 元不是买一次泛泛咨询，也不是买一套模板</strong>，你买的是一轮 30 天首单冲刺。</p>
+          <p class="price-note"><strong>999 元不是买一次泛泛咨询，也不是买一套模板</strong>，你买的是一轮 30 天首单冲刺。</p>
           <p class="price-note">这段时间我会开放<strong>少量早期名额</strong>，用更低价格服务第一批愿意认真跑完 0-1 首单尝试的人。一方面降低你第一次尝试的门槛；另一方面我也会通过这些真实案例，继续丰富这套首单冲刺的样板和判断库。</p>
           <p class="price-note">报名前我会先确认：你是否已经有明确方向、是否适合用 30 天冲首单、是否愿意真实沟通和报价、这轮最应该先改产品、用户还是表达。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ 其他服务 ═══════════ -->
+  <section class="block" id="more">
+    <div class="wrap reveal">
+      <span class="eyebrow">OTHER SERVICES</span>
+      <h2 class="block-title">还没到这一步？<br>看看另外两个<em>服务</em></h2>
+      <p class="lead" style="margin-top:20px;">如果你还没确定方向，或者只是想就某个单点问题先聊一次，这两个更适合你现在的阶段：</p>
+      <div class="more-grid">
+        <div class="more-card">
+          <div class="more-tag">第一步 · 找方向</div>
+          <div class="more-title">能力资产与商业切入口诊断</div>
+          <div class="more-desc">还不确定哪些能力能离开公司变现、最适合先切入哪个方向？用 2-3 小时系统拆清你的能力资产和优先切入口。</div>
+          <div class="more-price">¥199 / 次 · 限时早期价（公开 ¥699）</div>
+          <a class="btn btn-secondary" href="diagnosis.html">了解诊断详情 →</a>
+        </div>
+        <div class="more-card">
+          <div class="more-tag">最低门槛 · 先聊一次</div>
+          <div class="more-title">一人公司单次咨询</div>
+          <div class="more-desc">不确定选哪个服务，或想就某个单点问题快速聊清楚？一对一 1 小时，给你判断和下一步建议。</div>
+          <div class="more-price">¥99 / 小时 · 限时早期价（公开 ¥499）</div>
+          <a class="btn btn-secondary" href="consultation.html">了解单次咨询 →</a>
         </div>
       </div>
     </div>
@@ -690,9 +729,8 @@
       <h2 class="cta-title">如果你看到这里已经觉得<br>"<em>这就是我现在卡住的问题</em>"</h2>
       <p class="cta-desc">加微信报名或先做初步判断。备注「首单冲刺」即可，我会先确认你是否已经有明确方向、是否适合用 30 天冲首单，再决定是否进入。</p>
       <div class="cta-actions">
-        <a class="btn btn-primary" href="javascript:void(0)" onclick="openWechatModal('首单冲刺')">加微信报名限时早期价 1999 元 →</a>
+        <a class="btn btn-primary" href="javascript:void(0)" onclick="openWechatModal('首单冲刺')">加微信报名限时早期价 999 元 →</a>
       </div>
-      <p style="font-size:13px;color:var(--dim);margin-top:22px;max-width:600px;">如果你还卡在"我到底有什么能力能在公开市场获得收入、最适合先从哪个方向切入"，更适合先做 <a href="diagnosis.html" style="color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(88,225,193,0.3);">能力资产与商业切入口诊断</a>。</p>
     </div>
   </section>
 

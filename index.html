@@ -416,6 +416,10 @@
         <a class="nav-item nav-dd-trigger" href="products.html">产品服务 <span class="caret">▾</span></a>
         <div class="nav-dd-menu">
           <div class="dd-group">核心服务</div>
+          <a class="dd-link" href="consultation.html">
+            <span class="dd-ico">○</span>
+            <span class="dd-text"><b>一人公司单次咨询<span class="dd-tag paid">付费</span></b><i>选不准或单点问题，先聊一次 99/小时</i></span>
+          </a>
           <a class="dd-link" href="diagnosis.html">
             <span class="dd-ico">◇</span>
             <span class="dd-text"><b>能力资产与商业切入口诊断<span class="dd-tag paid">付费</span></b><i>拆清你能离开公司变现的能力与切入口</i></span>
@@ -526,14 +530,14 @@
   <!-- ═══════════ 核心服务 ═══════════ -->
   <section class="block" id="services">
     <style>
-      .home-svc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 36px; }
+      .home-svc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 36px; }
       .home-svc { display: flex; flex-direction: column; padding: 32px 30px; background: linear-gradient(180deg, rgba(88,225,193,0.06), var(--bg2)); border: 1px solid rgba(88,225,193,0.3); border-radius: 2px; transition: all .35s cubic-bezier(.22,1,.36,1); position: relative; overflow: hidden; }
       .home-svc:hover { border-color: rgba(88,225,193,0.5); transform: translateY(-4px); box-shadow: 0 20px 56px rgba(0,0,0,.3); }
       .home-svc::after { content: attr(data-glyph); position: absolute; right: -10px; bottom: -26px; font-family: var(--font-mono); font-size: 66px; color: rgba(88,225,193,0.05); line-height: 1; pointer-events: none; }
       .home-svc-top { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
       .home-svc-ico { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 10px; background: rgba(88,225,193,0.1); border: 1px solid rgba(88,225,193,0.24); color: var(--accent); font-size: 21px; }
       .home-svc-step { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; color: var(--accent); background: rgba(88,225,193,0.12); padding: 5px 12px; border-radius: 2px; }
-      .home-svc-title { font-size: 21px; font-weight: 800; color: var(--text); letter-spacing: -0.02em; margin-bottom: 12px; line-height: 1.3; }
+      .home-svc-title { font-size: 18px; font-weight: 800; color: var(--text); letter-spacing: -0.02em; margin-bottom: 12px; line-height: 1.35; }
       .home-svc-desc { font-size: 13.5px; color: var(--muted); line-height: 1.8; margin-bottom: 20px; flex: 1; }
       .home-svc-price { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 22px; padding: 14px 16px; background: rgba(88,225,193,0.06); border: 1px solid rgba(88,225,193,0.2); border-radius: 2px; }
       .home-svc-now { display: flex; align-items: baseline; gap: 6px; }
@@ -548,13 +552,26 @@
       .home-free-links { display: flex; gap: 10px; flex-wrap: wrap; }
       .home-free-link { font-size: 12.5px; color: var(--muted); border: 1px solid var(--border2); padding: 7px 14px; border-radius: 2px; text-decoration: none; transition: all .25s; white-space: nowrap; }
       .home-free-link:hover { border-color: var(--accent); color: var(--accent); }
-      @media (max-width: 768px) { .home-svc-grid { grid-template-columns: 1fr; } }
+      @media (max-width: 900px) { .home-svc-grid { grid-template-columns: 1fr; } }
     </style>
     <div class="wrap reveal">
       <span class="eyebrow">SERVICES</span>
       <h2 class="block-title">我现在能<br>怎么帮你？</h2>
-      <p class="lead" style="margin-top:20px;">两项核心付费服务，按「先找方向、再冲首单」的顺序，陪你从迷茫走到第一笔真实收入。</p>
+      <p class="lead" style="margin-top:20px;">三项核心付费服务，从一次单点咨询，到拆清方向、再到陪你冲首单，陪你从迷茫走到第一笔真实收入。</p>
       <div class="home-svc-grid">
+        <div class="home-svc" data-glyph="TALK">
+          <div class="home-svc-top">
+            <div class="home-svc-ico">○</div>
+            <span class="home-svc-step">先聊一次 · 最低门槛</span>
+          </div>
+          <div class="home-svc-title">一人公司单次咨询</div>
+          <p class="home-svc-desc">不确定选哪个服务，或想就某个单点问题快速聊清楚？一对一 1 小时，围绕你当前最卡的问题给出判断和下一步建议。</p>
+          <div class="home-svc-price">
+            <div class="home-svc-now"><span class="num">¥99</span><span class="unit">/ 小时 · 限时早期价</span></div>
+            <div class="home-svc-old">公开售价 <s>¥499</s></div>
+          </div>
+          <a class="btn btn-primary" href="consultation.html">了解服务详情 →</a>
+        </div>
         <div class="home-svc" data-glyph="DIAG">
           <div class="home-svc-top">
             <div class="home-svc-ico">◇</div>
@@ -564,7 +581,7 @@
           <p class="home-svc-desc">用 2-3 小时，帮你拆清哪些能力真正属于你、哪些能离开公司继续变现、最适合先切入哪个个人业务方向。交付能力资产地图、优先切入口与可复用 AI 判断流程。</p>
           <div class="home-svc-price">
             <div class="home-svc-now"><span class="num">¥199</span><span class="unit">/ 次 · 限时早期价</span></div>
-            <div class="home-svc-old">公开售价 <s>¥399</s></div>
+            <div class="home-svc-old">公开售价 <s>¥699</s></div>
           </div>
           <a class="btn btn-primary" href="diagnosis.html">了解服务详情 →</a>
         </div>
@@ -576,8 +593,8 @@
           <div class="home-svc-title">一人公司 0-1 首单变现冲刺</div>
           <p class="home-svc-desc">方向已定后，30 天把它做成能卖的产品服务，找到第一批真实客户，完成沟通报价，冲第一笔收入或清楚的购买信号。我 + AI 陪你跑完一轮 0-1 变现闭环。</p>
           <div class="home-svc-price">
-            <div class="home-svc-now"><span class="num">¥1999</span><span class="unit">/ 30 天 · 限时早期价</span></div>
-            <div class="home-svc-old">公开售价 <s>¥5999</s></div>
+            <div class="home-svc-now"><span class="num">¥999</span><span class="unit">/ 30 天 · 限时早期价</span></div>
+            <div class="home-svc-old">公开售价 <s>¥3999</s></div>
           </div>
           <a class="btn btn-primary" href="first-order-sprint.html">了解服务详情 →</a>
         </div>
