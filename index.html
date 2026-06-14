@@ -538,7 +538,11 @@
       .home-svc-ico { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 10px; background: rgba(88,225,193,0.1); border: 1px solid rgba(88,225,193,0.24); color: var(--accent); font-size: 21px; }
       .home-svc-step { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; color: var(--accent); background: rgba(88,225,193,0.12); padding: 5px 12px; border-radius: 2px; }
       .home-svc-title { font-size: 18px; font-weight: 800; color: var(--text); letter-spacing: -0.02em; margin-bottom: 12px; line-height: 1.35; }
-      .home-svc-desc { font-size: 13.5px; color: var(--muted); line-height: 1.8; margin-bottom: 20px; flex: 1; }
+      .home-svc-desc { font-size: 13.5px; color: var(--muted); line-height: 1.8; margin-bottom: 16px; }
+      .home-svc-points { list-style: none; display: flex; flex-direction: column; gap: 7px; margin-bottom: 20px; flex: 1; }
+      .home-svc-points li { font-size: 12.5px; color: var(--muted); padding-left: 16px; position: relative; line-height: 1.55; }
+      .home-svc-points li::before { content: ''; position: absolute; left: 0; top: 8px; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
+      .home-svc-points li b { color: var(--text); font-weight: 700; }
       .home-svc-price { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 22px; padding: 14px 16px; background: rgba(88,225,193,0.06); border: 1px solid rgba(88,225,193,0.2); border-radius: 2px; }
       .home-svc-now { display: flex; align-items: baseline; gap: 6px; }
       .home-svc-now .num { font-family: var(--font-mono); font-size: 26px; font-weight: 500; color: var(--accent); line-height: 1; }
@@ -566,6 +570,11 @@
           </div>
           <div class="home-svc-title">一人公司单次咨询</div>
           <p class="home-svc-desc">不确定选哪个服务，或想就某个单点问题快速聊清楚？一对一 1 小时，围绕你当前最卡的问题给出判断和下一步建议。</p>
+          <ul class="home-svc-points">
+            <li><b>一对一 1 小时咨询</b></li>
+            <li><b>聚焦你当前最卡的单点问题</b></li>
+            <li><b>帮你确认更适合哪个后续服务</b></li>
+          </ul>
           <div class="home-svc-price">
             <div class="home-svc-now"><span class="num">¥99</span><span class="unit">/ 小时 · 限时早期价</span></div>
             <div class="home-svc-old">公开售价 <s>¥499</s></div>
@@ -578,7 +587,12 @@
             <span class="home-svc-step">第一步 · 找方向</span>
           </div>
           <div class="home-svc-title">能力资产与商业切入口诊断</div>
-          <p class="home-svc-desc">用 2-3 小时，帮你拆清哪些能力真正属于你、哪些能离开公司继续变现、最适合先切入哪个个人业务方向。交付能力资产地图、优先切入口与可复用 AI 判断流程。</p>
+          <p class="home-svc-desc">用 2-3 小时，从你的真实项目和成果里，拆出哪些能力真正属于你、能不能被公开市场购买。</p>
+          <ul class="home-svc-points">
+            <li><b>能力转译成可验证的商业切入口</b></li>
+            <li><b>判断哪些能力能离开平台独立交付</b></li>
+            <li><b>沉淀可复用的 AI 商业判断工作流</b></li>
+          </ul>
           <div class="home-svc-price">
             <div class="home-svc-now"><span class="num">¥199</span><span class="unit">/ 次 · 限时早期价</span></div>
             <div class="home-svc-old">公开售价 <s>¥699</s></div>
@@ -591,7 +605,13 @@
             <span class="home-svc-step">第二步 · 冲首单</span>
           </div>
           <div class="home-svc-title">一人公司 0-1 首单变现冲刺</div>
-          <p class="home-svc-desc">方向已定后，30 天把它做成能卖的产品服务，找到第一批真实客户，完成沟通报价，冲第一笔收入或清楚的购买信号。我 + AI 陪你跑完一轮 0-1 变现闭环。</p>
+          <p class="home-svc-desc">方向已定后，30 天陪你跑完一轮 0-1 变现闭环。</p>
+          <ul class="home-svc-points">
+            <li><b>第一单变现闭环</b>：冲第一单或强购买信号</li>
+            <li><b>做出能卖的 MVP 产品服务</b></li>
+            <li><b>真人校准关键节点</b></li>
+            <li><b>沉淀个人商业知识体系</b></li>
+          </ul>
           <div class="home-svc-price">
             <div class="home-svc-now"><span class="num">¥999</span><span class="unit">/ 30 天 · 限时早期价</span></div>
             <div class="home-svc-old">公开售价 <s>¥3999</s></div>

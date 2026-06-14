@@ -179,6 +179,17 @@
   .q-block { border-left: 3px solid var(--accent); background: rgba(88,225,193,0.05); padding: 18px 22px; margin: 26px 0; display: flex; flex-direction: column; gap: 7px; max-width: 640px; }
   .q-block p { font-size: clamp(14px,1.4vw,16px); color: var(--text); font-weight: 500; line-height: 1.7; }
 
+  /* core USP strip (首屏核心卖点) */
+  .usp-strip { display: grid; gap: 12px; margin: 30px 0; }
+  .usp-3 { grid-template-columns: repeat(3, 1fr); }
+  .usp-4 { grid-template-columns: repeat(4, 1fr); }
+  .usp-card { padding: 20px 20px; background: var(--bg2); border: 1px solid var(--border); border-top: 2px solid var(--accent); border-radius: 2px; transition: all .3s cubic-bezier(.22,1,.36,1); }
+  .usp-card:hover { border-color: rgba(88,225,193,0.35); border-top-color: var(--accent); transform: translateY(-3px); box-shadow: 0 12px 36px rgba(0,0,0,.22); }
+  .usp-top { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.12em; color: var(--accent); margin-bottom: 10px; }
+  .usp-h { font-size: 15px; font-weight: 700; color: var(--text); line-height: 1.4; margin-bottom: 8px; }
+  .usp-p { font-size: 12.5px; color: var(--muted); line-height: 1.7; }
+  @media (max-width: 900px) { .usp-3, .usp-4 { grid-template-columns: 1fr; } }
+
   /* deliverable list (你会拿到) */
   .deliver { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 30px; }
   .deliver-item { display: flex; align-items: flex-start; gap: 12px; font-size: 13.5px; color: var(--muted); line-height: 1.55; padding: 14px 16px; background: var(--bg2); border: 1px solid var(--border); border-radius: 2px; transition: all .3s; }
@@ -451,7 +462,27 @@
         <p>哪些能力真正属于我？哪些能力别人可能愿意付费？</p>
         <p>我最适合先从哪个方向切入？</p>
       </div>
-      <p class="hero-sub" style="margin-bottom:0;">我用 <span class="accent">2-3 小时</span>，帮你拆清：哪些能力真正属于你；哪些能力有独立变现可能；以及你最适合先切入哪个个人业务方向。</p>
+      <p class="hero-sub" style="margin-bottom:0;">如果你有多年职场积累，但不确定离开平台后还能靠什么获得收入，我用 <span class="accent">2-3 小时</span>帮你做一次能力资产与方向诊断：从你的真实项目和成果里，拆出哪些能力真正属于你、能不能被公开市场购买，最后<span class="accent">收敛出 1 个最值得先验证的收入方向</span>，而不是只给你一份能力总结。</p>
+
+      <div class="usp-strip usp-3">
+        <div class="usp-card">
+          <div class="usp-top">TOP 1 · 核心价值</div>
+          <div class="usp-h">能力转译成<br>可验证的商业切入口</div>
+          <div class="usp-p">不止总结你有什么能力，而是把它翻译成一个能拿去市场验证的收入方向。</div>
+        </div>
+        <div class="usp-card">
+          <div class="usp-top">TOP 2 · 关键判断</div>
+          <div class="usp-h">判断哪些能力能<br>离开平台独立交付</div>
+          <div class="usp-p">分清哪些是平台/职位给的，哪些是你自己能迁移、能被公开市场购买的。</div>
+        </div>
+        <div class="usp-card">
+          <div class="usp-top">TOP 3 · 长期资产</div>
+          <div class="usp-h">沉淀可复用的<br>AI 商业判断工作流</div>
+          <div class="usp-p">不只给结论，还给你一套之后判断新方向时还能继续用的 AI 流程。</div>
+        </div>
+      </div>
+
+      <div class="sub-label" style="margin-bottom:12px;">// 你会拿到</div>
       <div class="deliver">
         <div class="deliver-item"><span class="dnum">01</span>能力资产地图</div>
         <div class="deliver-item"><span class="dnum">02</span>真实案例证据</div>

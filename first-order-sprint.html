@@ -178,6 +178,21 @@
   .q-block { border-left: 3px solid var(--accent); background: rgba(88,225,193,0.05); padding: 18px 22px; margin: 26px 0; display: flex; flex-direction: column; gap: 7px; max-width: 640px; }
   .q-block p { font-size: clamp(14px,1.4vw,16px); color: var(--text); font-weight: 500; line-height: 1.7; }
 
+  /* core USP strip (首屏核心卖点) */
+  .usp-strip { display: grid; gap: 12px; margin: 30px 0; }
+  .usp-3 { grid-template-columns: repeat(3, 1fr); }
+  .usp-4 { grid-template-columns: repeat(4, 1fr); }
+  .usp-card { padding: 20px 20px; background: var(--bg2); border: 1px solid var(--border); border-top: 2px solid var(--accent); border-radius: 2px; transition: all .3s cubic-bezier(.22,1,.36,1); }
+  .usp-card:hover { border-color: rgba(88,225,193,0.35); border-top-color: var(--accent); transform: translateY(-3px); box-shadow: 0 12px 36px rgba(0,0,0,.22); }
+  .usp-top { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.12em; color: var(--accent); margin-bottom: 10px; }
+  .usp-h { font-size: 15px; font-weight: 700; color: var(--text); line-height: 1.4; margin-bottom: 8px; }
+  .usp-p { font-size: 12.5px; color: var(--muted); line-height: 1.7; }
+  .usp-oneline { font-size: clamp(14px,1.5vw,16px); color: var(--text); line-height: 1.85; max-width: 720px; padding: 16px 20px; background: rgba(88,225,193,0.05); border-left: 3px solid var(--accent); border-radius: 2px; margin-top: 4px; }
+  .usp-oneline .accent { color: var(--accent); font-weight: 700; }
+  @media (max-width: 1000px) { .usp-4 { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 900px) { .usp-3 { grid-template-columns: 1fr; } }
+  @media (max-width: 560px) { .usp-4 { grid-template-columns: 1fr; } }
+
   .deliver { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 30px; }
   .deliver-item { display: flex; align-items: flex-start; gap: 12px; font-size: 13.5px; color: var(--muted); line-height: 1.55; padding: 14px 16px; background: var(--bg2); border: 1px solid var(--border); border-radius: 2px; transition: all .3s; }
   .deliver-item:hover { border-color: rgba(88,225,193,0.35); color: var(--text); transform: translateY(-2px); }
@@ -411,7 +426,29 @@
         <p>怎么说对方才愿意听？怎么开口报价？</p>
         <p>如果对方没买，我到底该改哪里？</p>
       </div>
-      <p class="hero-sub" style="margin-bottom:0;">这轮要解决的就是这个问题：<span class="accent">做出一个能卖的小产品、找到第一批真实客户、完成沟通报价和成交尝试</span>，目标是在 30 天内拿到 0-1 变现结果。理想是拿到第一笔收入；即使暂时没成交，也至少拿到一轮清楚的市场反馈，知道下一轮该怎么改。</p>
+      <div class="usp-strip usp-4">
+        <div class="usp-card">
+          <div class="usp-top">TOP 1 · 结果</div>
+          <div class="usp-h">第一单<br>变现闭环</div>
+          <div class="usp-p">陪你把已选方向推进到真实触达、报价、成交尝试和试交付，目标是拿到第一单收入、强购买信号或明确失败归因。</div>
+        </div>
+        <div class="usp-card">
+          <div class="usp-top">TOP 2 · 产品</div>
+          <div class="usp-h">做出能卖的<br>MVP 产品服务</div>
+          <div class="usp-p">把模糊方向做成客户听得懂、你能报价也能交付的 MVP：卖给谁、解决什么、交付什么、怎么定价、边界怎么控。</div>
+        </div>
+        <div class="usp-card">
+          <div class="usp-top">TOP 3 · 判断</div>
+          <div class="usp-h">真人校准<br>关键节点</div>
+          <div class="usp-p">在产品设计、潜客选择、触达反馈、报价被拒、成交判断、试交付和复盘节点，帮你判断到底卡在哪。</div>
+        </div>
+        <div class="usp-card">
+          <div class="usp-top">TOP 4 · 资产</div>
+          <div class="usp-h">沉淀个人<br>商业知识体系</div>
+          <div class="usp-p">把这轮的能力、用户、产品、交付、反馈和判断沉淀成你自己的资产，让下一轮不再从零开始。</div>
+        </div>
+      </div>
+      <p class="usp-oneline">陪你跑一轮<span class="accent">首单变现闭环</span>：先做出能卖的 MVP 产品服务，再拿去真实触达和报价；过程中用<span class="accent">真人校准</span>关键判断，最后沉淀成可复用的<span class="accent">个人商业知识体系</span>。</p>
       <div class="hero-actions" style="margin-top:34px;">
         <a class="btn btn-primary" href="javascript:void(0)" onclick="openWechatModal('首单冲刺 + 报名')">报名限时早期价 999 元 →</a>
         <a class="btn btn-secondary" href="javascript:void(0)" onclick="openWechatModal('首单冲刺')">不确定？先做初步判断</a>
