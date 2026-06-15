@@ -374,18 +374,6 @@
   .wechat-value { font-family: var(--font-mono); font-size: clamp(20px, 4vw, 28px); color: var(--accent); word-break: break-all; margin-bottom: 6px; }
   .wechat-remark { font-size: 12.5px; color: var(--muted); }
 
-  /* ───────── PAGE TOC ───────── */
-  .toc { position: fixed; right: 22px; top: 50%; transform: translateY(-50%); z-index: 150; display: flex; flex-direction: column; gap: 2px; }
-  .toc a { display: flex; align-items: center; gap: 10px; text-decoration: none; padding: 5px 8px; justify-content: flex-end; border-radius: 6px; transition: background .2s; }
-  .toc a:hover { background: rgba(255,255,255,0.04); }
-  .toc .dot { width: 6px; height: 6px; border-radius: 50%; border: 1px solid var(--dim); background: transparent; flex-shrink: 0; transition: all .25s; }
-  .toc .lbl { font-size: 11.5px; color: var(--dim); white-space: nowrap; transition: color .25s; font-family: var(--font-sans); }
-  .toc a:hover .lbl { color: var(--muted); }
-  .toc a:hover .dot { border-color: var(--accent); }
-  .toc a.active .dot { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 8px rgba(88,225,193,.5); }
-  .toc a.active .lbl { color: var(--accent); font-weight: 700; }
-  @media (max-width: 1500px) { .toc { display: none; } }
-
   /* ───────── RESPONSIVE ───────── */
   @media (max-width: 900px) {
     .scene-grid, .paths, .example-cands, .ex-other { grid-template-columns: 1fr; }
@@ -462,24 +450,6 @@
 
 <main id="top">
 
-  <!-- ═══════════ PAGE TOC ═══════════ -->
-  <nav class="toc" id="pageToc" aria-label="页面目录">
-    <a href="#top"><span class="lbl">概览</span><span class="dot"></span></a>
-    <a href="#blocker"><span class="lbl">你卡在哪</span><span class="dot"></span></a>
-    <a href="#scene"><span class="lbl">你的场景</span><span class="dot"></span></a>
-    <a href="#fitcond"><span class="lbl">适合条件</span><span class="dot"></span></a>
-    <a href="#deliverable"><span class="lbl">你会拿到</span><span class="dot"></span></a>
-    <a href="#how"><span class="lbl">怎么做</span><span class="dot"></span></a>
-    <a href="#example"><span class="lbl">脱敏示例</span><span class="dot"></span></a>
-    <a href="#whynot"><span class="lbl">为何不同</span><span class="dot"></span></a>
-    <a href="#whyme"><span class="lbl">为什么是我</span><span class="dot"></span></a>
-    <a href="#fit"><span class="lbl">适合谁</span><span class="dot"></span></a>
-    <a href="#process"><span class="lbl">报名流程</span><span class="dot"></span></a>
-    <a href="#price"><span class="lbl">价格</span><span class="dot"></span></a>
-    <a href="#more"><span class="lbl">其他服务</span><span class="dot"></span></a>
-    <a href="#cta"><span class="lbl">报名</span><span class="dot"></span></a>
-  </nav>
-
   <!-- ═══════════ HERO ═══════════ -->
   <section class="hero">
     <div class="hero-deco">◇</div>
@@ -531,7 +501,7 @@
   </section>
 
   <!-- ═══════════ 卡点 / 用户原话 ═══════════ -->
-  <section class="block" id="blocker">
+  <section class="block">
     <div class="wrap reveal">
       <span class="eyebrow">THE REAL BLOCKER</span>
       <h2 class="block-title">你可能卡住的不是能力，<br>而是能力离开公司以后怎么变成<em>收入</em></h2>
@@ -550,7 +520,7 @@
   </section>
 
   <!-- ═══════════ 场景 ═══════════ -->
-  <section class="block" id="scene">
+  <section class="block">
     <div class="wrap reveal">
       <span class="eyebrow">YOU MIGHT BE HERE</span>
       <h2 class="block-title">你可能就在这些<em>场景</em>里</h2>
@@ -578,7 +548,7 @@
   </section>
 
   <!-- ═══════════ 适合条件 ═══════════ -->
-  <section class="block" id="fitcond">
+  <section class="block">
     <div class="wrap reveal">
       <span class="eyebrow">FIT CHECK</span>
       <h2 class="block-title">满足 3 条，<br>就比较适合这次<em>诊断</em></h2>
@@ -594,7 +564,7 @@
   </section>
 
   <!-- ═══════════ 交付结果 ═══════════ -->
-  <section class="block" id="deliverable">
+  <section class="block">
     <div class="wrap reveal">
       <span class="eyebrow">WHAT YOU GET</span>
       <h2 class="block-title">2-3 小时后，<br>你会拿到一版<em>可用结果</em></h2>
@@ -618,7 +588,7 @@
   </section>
 
   <!-- ═══════════ 诊断四步 ═══════════ -->
-  <section class="block" id="how">
+  <section class="block">
     <div class="wrap reveal">
       <span class="eyebrow">HOW IT WORKS</span>
       <h2 class="block-title">我们怎么一步步<br>把能力拆成<em>方向</em></h2>
@@ -664,7 +634,7 @@
   </section>
 
   <!-- ═══════════ 脱敏示例 ═══════════ -->
-  <section class="block" id="example">
+  <section class="block">
     <div class="wrap reveal">
       <span class="eyebrow">SAMPLE OUTPUT</span>
       <h2 class="block-title">一个<em>脱敏示例</em>：<br>诊断不会只说"哪个看起来不错"</h2>
@@ -705,7 +675,7 @@
   </section>
 
   <!-- ═══════════ 这不是 / 这是 ═══════════ -->
-  <section class="block" id="whynot">
+  <section class="block">
     <div class="wrap reveal">
       <span class="eyebrow">WHY NOT THE OTHERS</span>
       <h2 class="block-title">为什么不是优势测评、<br>职业咨询或 <em>IP 定位</em></h2>
@@ -734,7 +704,7 @@
   </section>
 
   <!-- ═══════════ 为什么是我 ═══════════ -->
-  <section class="block" id="whyme">
+  <section class="block">
     <div class="wrap reveal">
       <span class="eyebrow">WHY ME</span>
       <h2 class="block-title">为什么我能<br>做这件事</h2>
@@ -754,7 +724,7 @@
   </section>
 
   <!-- ═══════════ 适合 / 不适合 ═══════════ -->
-  <section class="block" id="fit">
+  <section class="block">
     <div class="wrap reveal">
       <span class="eyebrow">FIT / NOT FIT</span>
       <h2 class="block-title">谁适合，<br>谁<em>不适合</em></h2>
@@ -784,7 +754,7 @@
   </section>
 
   <!-- ═══════════ 报名流程 ═══════════ -->
-  <section class="block" id="process">
+  <section class="block">
     <div class="wrap reveal">
       <span class="eyebrow">THE PROCESS</span>
       <h2 class="block-title">报名后<br>会怎么进行</h2>
@@ -801,7 +771,7 @@
   </section>
 
   <!-- ═══════════ 价格 ═══════════ -->
-  <section class="block" id="price">
+  <section class="block">
     <div class="wrap reveal">
       <span class="eyebrow">PRICE &amp; EARLY SEATS</span>
       <h2 class="block-title">价格与<br>早期名额</h2>
@@ -854,7 +824,7 @@
   </section>
 
   <!-- ═══════════ FINAL CTA ═══════════ -->
-  <section class="cta-block" id="cta">
+  <section class="cta-block">
     <div class="wrap reveal">
       <span class="eyebrow">FINAL CALL</span>
       <h2 class="cta-title">如果你看到这里已经觉得<br>"<em>这就是我卡住的问题</em>"</h2>
@@ -902,23 +872,6 @@
   document.querySelectorAll('#navLinks a').forEach(a => a.addEventListener('click', () => document.getElementById('navLinks').classList.remove('open')));
   const io = new IntersectionObserver((es) => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: 0.12 });
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
-
-  /* ── 页内目录滚动高亮 ── */
-  (function(){
-    const links = Array.from(document.querySelectorAll('#pageToc a'));
-    const map = links.map(a => ({ a, sec: document.querySelector(a.getAttribute('href')) })).filter(x => x.sec);
-    if (!map.length) return;
-    const spy = new IntersectionObserver((entries) => {
-      entries.forEach(en => {
-        if (en.isIntersecting) {
-          links.forEach(l => l.classList.remove('active'));
-          const hit = map.find(x => x.sec === en.target);
-          if (hit) hit.a.classList.add('active');
-        }
-      });
-    }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
-    map.forEach(x => spy.observe(x.sec));
-  })();
 </script>
 
 </body>
