@@ -1,0 +1,1700 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>乔不不斯的一人公司待办</title>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap");
+
+    :root {
+      --bg: #0B0D0F;
+      --bg2: #13161A;
+      --bg3: #1C2026;
+      --paper: rgba(19, 22, 26, 0.92);
+      --paper2: rgba(28, 32, 38, 0.92);
+      --ink: #F7F8FA;
+      --muted: #A9B0BA;
+      --dim: #4A525C;
+      --line: rgba(255, 255, 255, 0.07);
+      --line2: rgba(255, 255, 255, 0.12);
+      --accent: #58E1C1;
+      --accent-2: #3BB89A;
+      --accent-3: #7AF2D8;
+      --danger: #F6B66B;
+      --gold: #D8B15D;
+      --blue: #7BA7E8;
+      --rose: #E889A8;
+      --shadow: 0 30px 100px rgba(0, 0, 0, 0.26);
+      --radius: 2px;
+      --radius-panel: 12px;
+      color-scheme: dark;
+      font-family: "Noto Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+      line-height: 1.72;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(88, 225, 193, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(88, 225, 193, 0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 82% 4%, rgba(88, 225, 193, 0.10), transparent 34%),
+        radial-gradient(circle at 8% 92%, rgba(88, 225, 193, 0.055), transparent 32%),
+        linear-gradient(180deg, rgba(11, 13, 15, 0), rgba(11, 13, 15, 0.94));
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    button {
+      border: 1px solid var(--line);
+      background: rgba(11, 13, 15, 0.72);
+      color: var(--ink);
+      min-height: 36px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: 180ms ease;
+    }
+
+    button:hover {
+      border-color: rgba(88, 225, 193, 0.45);
+      color: var(--accent);
+      background: rgba(88, 225, 193, 0.06);
+      transform: translateY(-1px);
+    }
+
+    button:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible,
+    select:focus-visible {
+      outline: 3px solid rgba(88, 225, 193, 0.10);
+      outline-offset: 1px;
+    }
+
+    .app {
+      width: min(1320px, calc(100vw - 48px));
+      margin: 0 auto;
+      padding: 28px 0 48px;
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: minmax(240px, 1fr) auto;
+      gap: 18px;
+      align-items: end;
+      margin-bottom: 18px;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: clamp(26px, 4vw, 42px);
+      line-height: 1.05;
+      letter-spacing: 0;
+      font-weight: 900;
+    }
+
+    .brand p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 300;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      font-family: "DM Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      color: var(--accent);
+      text-transform: uppercase;
+      border: 1px solid rgba(88, 225, 193, 0.30);
+      background: rgba(88, 225, 193, 0.025);
+      padding: 6px 14px;
+      border-radius: var(--radius);
+      margin-bottom: 14px;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .toolbar button,
+    .icon-button {
+      width: 38px;
+      padding: 0;
+      display: inline-grid;
+      place-items: center;
+      font-size: 17px;
+    }
+
+    .primary {
+      background: var(--accent);
+      color: var(--bg);
+      border-color: var(--accent);
+      font-weight: 900;
+    }
+
+    .primary:hover {
+      background: var(--accent-2);
+      border-color: var(--accent-2);
+      color: var(--bg);
+    }
+
+    .danger:hover {
+      border-color: rgba(246, 182, 107, 0.55);
+      color: var(--danger);
+    }
+
+    .quick-add {
+      background: rgba(19, 22, 26, 0.88);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 14px;
+      display: grid;
+      grid-template-columns: minmax(220px, 2.3fr) minmax(150px, 0.9fr) minmax(150px, 0.9fr) 42px;
+      gap: 10px;
+      position: sticky;
+      top: 10px;
+      z-index: 4;
+      backdrop-filter: blur(14px);
+    }
+
+    .quick-add::before,
+    .stat::before,
+    .quadrant::before,
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      border-top: 1px solid rgba(88, 225, 193, 0.16);
+    }
+
+    .field {
+      display: grid;
+      gap: 5px;
+    }
+
+    label {
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 0.04em;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      border: 1px solid var(--line2);
+      border-radius: var(--radius);
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 38px;
+      padding: 8px 10px;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: var(--dim);
+    }
+
+    textarea {
+      min-height: 96px;
+      resize: vertical;
+      line-height: 1.5;
+    }
+
+    .stats {
+      margin: 18px 0;
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .stat {
+      border: 1px solid var(--line);
+      background: rgba(19, 22, 26, 0.84);
+      border-radius: var(--radius);
+      padding: 12px;
+      min-height: 78px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat b {
+      display: block;
+      font-size: 24px;
+      line-height: 1;
+      margin-bottom: 8px;
+      color: var(--accent);
+      font-weight: 900;
+      font-family: "DM Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .quadrant {
+      border: 1px solid var(--line);
+      background: rgba(19, 22, 26, 0.86);
+      border-radius: var(--radius);
+      min-height: 300px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .quadrant header,
+    .quadrant summary {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 14px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(11, 13, 15, 0.28);
+    }
+
+    .quadrant summary {
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .quadrant summary .count,
+    .panel summary .count {
+      margin-left: auto;
+    }
+
+    .quadrant summary::-webkit-details-marker,
+    .panel summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .quadrant summary::after,
+    .panel summary::after {
+      content: "⌃";
+      color: var(--muted);
+      font-family: "DM Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 14px;
+    }
+
+    .quadrant:not([open]) summary::after,
+    .panel:not([open]) summary::after {
+      content: "⌄";
+    }
+
+    .quadrant h2 {
+      margin: 0;
+      font-size: 17px;
+      letter-spacing: 0;
+      font-weight: 900;
+    }
+
+    .count {
+      color: var(--muted);
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .q-important_urgent header {
+      border-top: 2px solid var(--danger);
+    }
+
+    .q-important_not_urgent header {
+      border-top: 2px solid var(--accent);
+    }
+
+    .q-urgent_not_important header {
+      border-top: 2px solid var(--gold);
+    }
+
+    .q-not_important_not_urgent header {
+      border-top: 2px solid var(--blue);
+    }
+
+    .q-ongoing {
+      grid-column: 1 / -1;
+      min-height: 0;
+    }
+
+    .q-ongoing header,
+    .q-ongoing summary {
+      border-top: 2px solid var(--rose);
+    }
+
+    .tasks {
+      display: grid;
+      gap: 10px;
+      padding: 12px;
+      min-height: 96px;
+    }
+
+    .empty {
+      color: var(--muted);
+      font-size: 13px;
+      padding: 18px 4px;
+      text-align: center;
+      border: 1px dashed var(--line2);
+      border-radius: var(--radius);
+      background: rgba(11, 13, 15, 0.32);
+    }
+
+    .task {
+      border: 1px solid var(--line);
+      background: rgba(28, 32, 38, 0.84);
+      border-radius: var(--radius);
+      padding: 11px;
+      display: grid;
+      gap: 9px;
+      cursor: grab;
+      transition: border-color 160ms ease, background 160ms ease, opacity 160ms ease, transform 160ms ease;
+    }
+
+    .task:active {
+      cursor: grabbing;
+    }
+
+    .task.dragging {
+      opacity: 0.42;
+      border-color: rgba(88, 225, 193, 0.58);
+    }
+
+    .task.focused {
+      border-color: rgba(88, 225, 193, 0.68);
+      background: linear-gradient(90deg, rgba(88, 225, 193, 0.16), rgba(28, 32, 38, 0.92));
+      box-shadow: inset 3px 0 0 var(--accent), 0 18px 48px rgba(88, 225, 193, 0.08);
+    }
+
+    .task-top {
+      display: flex;
+      gap: 8px;
+      align-items: start;
+      justify-content: space-between;
+    }
+
+    .task-title {
+      margin: 0;
+      font-weight: 700;
+      line-height: 1.35;
+      overflow-wrap: anywhere;
+      color: var(--ink);
+    }
+
+    .drag-mark {
+      color: var(--dim);
+      font-family: "DM Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 16px;
+      line-height: 1;
+      padding-top: 2px;
+      user-select: none;
+    }
+
+    .task-meta {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .pill {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 3px 8px;
+      background: rgba(88, 225, 193, 0.06);
+      color: var(--accent);
+      font-family: "DM Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      letter-spacing: 0.02em;
+    }
+
+    .focus-pill {
+      border-color: rgba(88, 225, 193, 0.45);
+      background: rgba(88, 225, 193, 0.14);
+      color: var(--accent-3);
+    }
+
+    .note {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+      overflow-wrap: anywhere;
+    }
+
+    .note a {
+      color: var(--accent-3);
+    }
+
+    .actions {
+      display: flex;
+      gap: 6px;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      cursor: default;
+    }
+
+    .actions button {
+      width: 34px;
+      min-height: 32px;
+      padding: 0;
+      display: inline-grid;
+      place-items: center;
+    }
+
+    .q-ongoing .tasks {
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    }
+
+    .q-ongoing .task {
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 8px;
+      padding: 9px;
+    }
+
+    .q-ongoing .task-top {
+      min-width: 0;
+      align-items: center;
+    }
+
+    .q-ongoing .task-title {
+      font-size: 14px;
+    }
+
+    .q-ongoing .task-meta {
+      display: none;
+    }
+
+    .q-ongoing .note {
+      grid-column: 1 / -1;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .q-ongoing .actions {
+      grid-column: 2;
+      grid-row: 1;
+      flex-wrap: nowrap;
+    }
+
+    .q-ongoing .actions button {
+      width: 30px;
+      min-height: 30px;
+    }
+
+    .side {
+      display: grid;
+      gap: 14px;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      background: rgba(19, 22, 26, 0.86);
+      border-radius: var(--radius);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .panel header,
+    .panel summary {
+      padding: 13px 14px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .panel summary {
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .panel h2 {
+      margin: 0;
+      font-size: 17px;
+    }
+
+    .history-list {
+      display: grid;
+      gap: 10px;
+      padding: 12px;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      max-height: 420px;
+      overflow: auto;
+    }
+
+    .history-item {
+      border: 1px solid var(--line);
+      background: rgba(28, 32, 38, 0.84);
+      border-radius: var(--radius);
+      padding: 9px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 6px 8px;
+      align-items: center;
+    }
+
+    .history-title {
+      font-weight: 700;
+      line-height: 1.35;
+      overflow-wrap: anywhere;
+    }
+
+    .history-meta {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+      grid-column: 1 / -1;
+    }
+
+    .history-actions {
+      display: flex;
+      gap: 6px;
+      justify-content: flex-end;
+      grid-column: 2;
+      grid-row: 1;
+    }
+
+    .history-actions button {
+      width: 30px;
+      min-height: 30px;
+      padding: 0;
+    }
+
+    dialog {
+      width: min(560px, calc(100vw - 28px));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 0;
+      background: var(--bg2);
+      color: var(--ink);
+      box-shadow: 0 24px 90px rgba(0, 0, 0, 0.46);
+    }
+
+    dialog::backdrop {
+      background: rgba(0, 0, 0, 0.62);
+    }
+
+    .modal {
+      padding: 16px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .modal header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 4px;
+    }
+
+    .modal h2 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .modal-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      margin-top: 4px;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 22px;
+      transform: translateX(-50%) translateY(12px);
+      background: var(--accent);
+      color: var(--bg);
+      padding: 10px 14px;
+      border-radius: var(--radius);
+      opacity: 0;
+      pointer-events: none;
+      transition: 180ms ease;
+      z-index: 20;
+      font-size: 14px;
+      font-weight: 900;
+      max-width: calc(100vw - 32px);
+      text-align: center;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .file-input {
+      display: none;
+    }
+
+    .user-badge {
+      align-self: center;
+      font-family: "DM Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 12px;
+      color: var(--muted);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 6px 10px;
+      max-width: 200px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .sync-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 6px;
+      vertical-align: middle;
+      background: var(--dim);
+    }
+
+    .sync-dot.online { background: var(--accent); }
+    .sync-dot.offline { background: var(--danger); }
+
+    .login-hint {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 1080px) {
+      .side {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 820px) {
+      .app {
+        width: min(100vw - 32px, 760px);
+        padding-top: 16px;
+      }
+
+      .topbar {
+        grid-template-columns: 1fr;
+        align-items: start;
+      }
+
+      .toolbar {
+        justify-content: flex-start;
+      }
+
+      .quick-add {
+        position: static;
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .quick-add .field:first-child {
+        grid-column: 1 / -1;
+      }
+
+      .quick-add button {
+        width: 100%;
+      }
+
+      .stats,
+      .board {
+        grid-template-columns: 1fr;
+      }
+
+      .modal-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .quick-add {
+        grid-template-columns: 1fr;
+      }
+
+      .brand h1 {
+        font-size: 28px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section class="topbar" aria-label="顶部">
+      <div class="brand">
+        <div class="eyebrow">AI NATIVE / SOLO COMPANY / TASK SYSTEM</div>
+        <h1>乔不不斯的一人公司待办</h1>
+        <p id="statusLine">准备中…</p>
+      </div>
+      <div class="toolbar" aria-label="数据操作">
+        <span id="userBadge" class="user-badge" hidden></span>
+        <button type="button" id="loginBtn" title="登录同步" aria-label="登录同步" hidden>登录</button>
+        <button type="button" id="logoutBtn" title="退出登录" aria-label="退出登录" hidden>退出</button>
+        <button type="button" id="exportBtn" title="导出 JSON" aria-label="导出 JSON">⇩</button>
+        <button type="button" id="importBtn" title="导入 JSON" aria-label="导入 JSON">⇧</button>
+        <button type="button" id="resetBtn" title="载入初始待办" aria-label="载入初始待办">↺</button>
+        <input class="file-input" id="importFile" type="file" accept="application/json,.json">
+      </div>
+    </section>
+
+    <form class="quick-add" id="addForm">
+      <div class="field">
+        <label for="newTitle">待办</label>
+        <input id="newTitle" autocomplete="off" placeholder="写入一个新任务">
+      </div>
+      <div class="field">
+        <label for="newQuadrant">象限</label>
+        <select id="newQuadrant"></select>
+      </div>
+      <div class="field">
+        <label for="newCategory">主题</label>
+        <input id="newCategory" list="categoryList" autocomplete="off" placeholder="业务主题">
+      </div>
+      <button class="primary" type="submit" title="新增" aria-label="新增">＋</button>
+    </form>
+
+    <datalist id="categoryList"></datalist>
+
+    <section class="stats" aria-label="统计">
+      <div class="stat"><b id="activeCount">0</b><span>进行中</span></div>
+      <div class="stat"><b id="ongoingCount">0</b><span>持续性</span></div>
+      <div class="stat"><b id="categoryCount">0</b><span>业务主题</span></div>
+      <div class="stat"><b id="topPriority">0/3</b><span>今日聚焦</span></div>
+      <div class="stat"><b id="doneCount">0</b><span>已完成</span></div>
+    </section>
+
+    <section class="layout">
+      <div class="board" id="board" aria-label="待办面板"></div>
+      <aside class="side">
+        <details class="panel" open>
+          <summary>
+            <h2>完成历史</h2>
+            <span class="count" id="historyCount">0 条</span>
+          </summary>
+          <div class="history-list" id="historyList"></div>
+        </details>
+      </aside>
+    </section>
+  </main>
+
+  <dialog id="editDialog">
+    <form class="modal" id="editForm" method="dialog">
+      <header>
+        <h2>编辑待办</h2>
+        <button class="icon-button" value="cancel" type="button" id="closeEdit" title="关闭" aria-label="关闭">×</button>
+      </header>
+      <input type="hidden" id="editId">
+      <div class="field">
+        <label for="editTitle">待办</label>
+        <input id="editTitle" required>
+      </div>
+      <div class="modal-grid">
+        <div class="field">
+          <label for="editQuadrant">象限</label>
+          <select id="editQuadrant"></select>
+        </div>
+        <div class="field">
+          <label for="editCategory">主题</label>
+          <input id="editCategory" list="categoryList">
+        </div>
+      </div>
+      <div class="field">
+        <label for="editNote">备注</label>
+        <textarea id="editNote"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button type="button" id="cancelEdit">取消</button>
+        <button class="primary" type="submit">保存</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="loginDialog">
+    <form class="modal" id="loginForm" method="dialog">
+      <header>
+        <h2>登录以多设备同步</h2>
+        <button class="icon-button" type="button" id="closeLogin" title="关闭" aria-label="关闭">×</button>
+      </header>
+      <p class="login-hint">输入你的邮箱，我们会发送一个登录链接。点击邮件里的链接即可登录，之后所有设备共享同一份待办。</p>
+      <div class="field">
+        <label for="loginEmail">邮箱</label>
+        <input id="loginEmail" type="email" autocomplete="email" placeholder="you@example.com" required>
+      </div>
+      <div class="modal-actions">
+        <button type="button" id="cancelLogin">取消</button>
+        <button class="primary" type="submit" id="sendLink">发送登录链接</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+    // ===================== Supabase 配置 =====================
+    // 在 Supabase 控制台 → Project Settings → API 里复制下面两项填入：
+    const SUPABASE_URL = "https://hvwcnzvpsyyhuexigcft.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_FUd9Z_gmtm970LdMA3F5Hg_Y1TBX_b_";
+    // ========================================================
+
+    const SUPABASE_READY =
+      SUPABASE_URL.startsWith("http") && SUPABASE_ANON_KEY.length > 20;
+
+    const supabase = SUPABASE_READY
+      ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+      : null;
+
+    let session = null;          // 当前登录会话
+    let cloudMode = false;       // true=云端同步，false=本地兜底
+    let syncing = false;         // 防止重复全量同步
+
+    const STORAGE_KEY = "solo_company_todo_v1";
+    const quadrants = [
+      { id: "ongoing", label: "持续性待办" },
+      { id: "important_urgent", label: "重要且紧急" },
+      { id: "important_not_urgent", label: "重要不紧急" },
+      { id: "urgent_not_important", label: "紧急不重要" },
+      { id: "not_important_not_urgent", label: "不重要不紧急" }
+    ];
+
+    const seedTasks = [
+      ["一堂用户需求课", "important_urgent", "用户调研", 95, ""],
+      ["微信调研信息整理", "important_urgent", "用户调研", 92, ""],
+      ["一堂同学调研", "important_urgent", "用户调研", 88, ""],
+      ["私域用户调研", "important_urgent", "用户调研", 86, ""],
+      ["短视频工作规划和启动", "important_urgent", "AI短视频", 84, ""],
+      ["vikki朋友圈skill", "important_not_urgent", "朋友圈优化", 72, ""],
+      ["录制: 0510-普通人学习获客,最大的误区", "important_not_urgent", "核心内容输入", 70, "录制文件：https://meeting.tencent.com/crm/N8PPwRRXc2"],
+      ["收藏内容阅读", "ongoing", "核心内容输入", 66, ""],
+      ["书单阅读", "ongoing", "核心内容输入", 62, ""],
+      ["看 AI 官方内容", "ongoing", "核心内容输入", 60, "官方文档、发布说明、研究/产品更新"]
+    ];
+
+    let state = loadState();
+    let toastTimer = null;
+
+    const els = {
+      board: document.querySelector("#board"),
+      addForm: document.querySelector("#addForm"),
+      newTitle: document.querySelector("#newTitle"),
+      newQuadrant: document.querySelector("#newQuadrant"),
+      newCategory: document.querySelector("#newCategory"),
+      categoryList: document.querySelector("#categoryList"),
+      statusLine: document.querySelector("#statusLine"),
+      activeCount: document.querySelector("#activeCount"),
+      ongoingCount: document.querySelector("#ongoingCount"),
+      doneCount: document.querySelector("#doneCount"),
+      categoryCount: document.querySelector("#categoryCount"),
+      topPriority: document.querySelector("#topPriority"),
+      historyCount: document.querySelector("#historyCount"),
+      historyList: document.querySelector("#historyList"),
+      editDialog: document.querySelector("#editDialog"),
+      editForm: document.querySelector("#editForm"),
+      editId: document.querySelector("#editId"),
+      editTitle: document.querySelector("#editTitle"),
+      editQuadrant: document.querySelector("#editQuadrant"),
+      editCategory: document.querySelector("#editCategory"),
+      editNote: document.querySelector("#editNote"),
+      exportBtn: document.querySelector("#exportBtn"),
+      importBtn: document.querySelector("#importBtn"),
+      resetBtn: document.querySelector("#resetBtn"),
+      importFile: document.querySelector("#importFile"),
+      closeEdit: document.querySelector("#closeEdit"),
+      cancelEdit: document.querySelector("#cancelEdit"),
+      toast: document.querySelector("#toast"),
+      userBadge: document.querySelector("#userBadge"),
+      loginBtn: document.querySelector("#loginBtn"),
+      logoutBtn: document.querySelector("#logoutBtn"),
+      loginDialog: document.querySelector("#loginDialog"),
+      loginForm: document.querySelector("#loginForm"),
+      loginEmail: document.querySelector("#loginEmail"),
+      closeLogin: document.querySelector("#closeLogin"),
+      cancelLogin: document.querySelector("#cancelLogin")
+    };
+
+    function nowIso() {
+      return new Date().toISOString();
+    }
+
+    function makeId() {
+      return "task_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2, 8);
+    }
+
+    function createTask(title, quadrant, category, note, order) {
+      const timestamp = nowIso();
+      return {
+        id: makeId(),
+        title: title.trim(),
+        quadrant,
+        category: (category || "未归类").trim(),
+        priority: 50,
+        order: Number.isFinite(Number(order)) ? Number(order) : nextOrderForQuadrant(quadrant, true),
+        focused: false,
+        status: "active",
+        note: (note || "").trim(),
+        createdAt: timestamp,
+        updatedAt: timestamp,
+        completedAt: null
+      };
+    }
+
+    function createSeedState() {
+      return {
+        version: 1,
+        updatedAt: nowIso(),
+        tasks: seedTasks.map(([title, quadrant, category, priority, note], index) =>
+          createTask(title, quadrant, category, note, index)
+        )
+      };
+    }
+
+    function loadState() {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) {
+        const seeded = createSeedState();
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(seeded));
+        return seeded;
+      }
+
+      try {
+        const parsed = JSON.parse(raw);
+        if (!parsed || !Array.isArray(parsed.tasks)) {
+          throw new Error("Invalid local data");
+        }
+        return {
+          version: parsed.version || 1,
+          updatedAt: parsed.updatedAt || nowIso(),
+          tasks: migrateTaskOrder(parsed.tasks.map(normalizeTask))
+        };
+      } catch (error) {
+        console.warn(error);
+        const backupKey = STORAGE_KEY + "_broken_" + Date.now();
+        localStorage.setItem(backupKey, raw);
+        const seeded = createSeedState();
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(seeded));
+        return seeded;
+      }
+    }
+
+    function normalizeTask(task) {
+      const timestamp = task.createdAt || nowIso();
+      return {
+        id: task.id || makeId(),
+        title: String(task.title || "").trim() || "未命名任务",
+        quadrant: quadrants.some(q => q.id === task.quadrant) ? task.quadrant : "important_not_urgent",
+        category: String(task.category || "未归类").trim(),
+        priority: clampPriority(task.priority),
+        order: Number.isFinite(Number(task.order)) ? Number(task.order) : null,
+        focused: Boolean(task.focused),
+        status: task.status === "completed" ? "completed" : "active",
+        note: String(task.note || "").trim(),
+        createdAt: timestamp,
+        updatedAt: task.updatedAt || timestamp,
+        completedAt: task.completedAt || null
+      };
+    }
+
+    function clampPriority(value) {
+      const number = Number(value);
+      if (!Number.isFinite(number)) return 50;
+      return Math.max(1, Math.min(100, Math.round(number)));
+    }
+
+    function migrateTaskOrder(tasks) {
+      const grouped = new Map();
+      tasks.forEach(task => {
+        if (!grouped.has(task.quadrant)) grouped.set(task.quadrant, []);
+        grouped.get(task.quadrant).push(task);
+      });
+
+      grouped.forEach(items => {
+        const needsMigration = items.some(task => task.order === null);
+        if (!needsMigration) return;
+        [...items]
+          .sort((a, b) => {
+            if (b.priority !== a.priority) return b.priority - a.priority;
+            return String(a.createdAt).localeCompare(String(b.createdAt));
+          })
+          .forEach((task, index) => {
+            task.order = index;
+          });
+      });
+
+      return tasks.map(task => ({
+        ...task,
+        order: task.order === null ? 0 : task.order,
+        focused: task.status === "active" && task.focused
+      }));
+    }
+
+    function nextOrderForQuadrant(quadrant, placeAtTop = false) {
+      const orders = state && Array.isArray(state.tasks)
+        ? state.tasks
+            .filter(task => task.status === "active" && task.quadrant === quadrant)
+            .map(task => Number(task.order))
+            .filter(Number.isFinite)
+        : [];
+      if (!orders.length) return 0;
+      return placeAtTop ? Math.min(...orders) - 1 : Math.max(...orders) + 1;
+    }
+
+    function saveState(message) {
+      state.updatedAt = nowIso();
+      // 本地始终保留一份，作为离线兜底
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      render();
+      if (message) showToast(message);
+      // 登录后把整份数据推送到云端
+      if (cloudMode) pushAllToCloud();
+    }
+
+    // ===================== 云端数据层 =====================
+    function rowFromTask(task) {
+      return {
+        id: task.id,
+        user_id: session.user.id,
+        title: task.title,
+        quadrant: task.quadrant,
+        category: task.category,
+        priority: task.priority,
+        order: task.order,
+        focused: task.focused,
+        status: task.status,
+        note: task.note,
+        created_at: task.createdAt,
+        updated_at: task.updatedAt,
+        completed_at: task.completedAt
+      };
+    }
+
+    function taskFromRow(row) {
+      return normalizeTask({
+        id: row.id,
+        title: row.title,
+        quadrant: row.quadrant,
+        category: row.category,
+        priority: row.priority,
+        order: row.order,
+        focused: row.focused,
+        status: row.status,
+        note: row.note,
+        createdAt: row.created_at,
+        updatedAt: row.updated_at,
+        completedAt: row.completed_at
+      });
+    }
+
+    // 拉取云端全部待办；若云端为空则把本地种子数据上传一次
+    async function loadFromCloud() {
+      const { data, error } = await supabase
+        .from("tasks")
+        .select("*")
+        .eq("user_id", session.user.id);
+
+      if (error) {
+        console.warn(error);
+        showToast("云端读取失败，已使用本地数据");
+        cloudMode = false;
+        return;
+      }
+
+      if (data && data.length) {
+        state = {
+          version: 1,
+          updatedAt: nowIso(),
+          tasks: migrateTaskOrder(data.map(taskFromRow))
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } else {
+        // 云端无数据：把当前本地数据作为初始数据上传
+        await pushAllToCloud();
+      }
+    }
+
+    // 把整份 state 覆盖式同步到云端（先删后插，保证与本地一致）
+    async function pushAllToCloud() {
+      if (!cloudMode || syncing) return;
+      syncing = true;
+      setSyncDot("online", "同步中…");
+      try {
+        const uid = session.user.id;
+        // 删掉云端已不存在于本地的任务
+        const localIds = state.tasks.map(t => t.id);
+        const { data: remote } = await supabase
+          .from("tasks").select("id").eq("user_id", uid);
+        const toDelete = (remote || [])
+          .map(r => r.id)
+          .filter(id => !localIds.includes(id));
+        if (toDelete.length) {
+          await supabase.from("tasks").delete().in("id", toDelete);
+        }
+        // upsert 本地全部任务
+        if (state.tasks.length) {
+          const rows = state.tasks.map(rowFromTask);
+          const { error } = await supabase.from("tasks").upsert(rows);
+          if (error) throw error;
+        }
+        setSyncDot("online", "已同步 · " + session.user.email);
+      } catch (err) {
+        console.warn(err);
+        setSyncDot("offline", "同步失败（本地已保存）");
+      } finally {
+        syncing = false;
+      }
+    }
+
+    function setSyncDot(stateName, text) {
+      els.userBadge.hidden = false;
+      els.userBadge.innerHTML =
+        `<span class="sync-dot ${stateName}"></span>${escapeHtml(text)}`;
+    }
+
+    // 根据登录状态切换 UI（登录/退出按钮）
+    function applyAuthUi() {
+      const loggedIn = Boolean(session);
+      els.loginBtn.hidden = loggedIn;
+      els.logoutBtn.hidden = !loggedIn;
+      if (!SUPABASE_READY) {
+        els.userBadge.hidden = false;
+        els.userBadge.innerHTML =
+          `<span class="sync-dot offline"></span>未配置云端 · 仅本地`;
+        els.loginBtn.hidden = true;
+        els.logoutBtn.hidden = true;
+      } else if (loggedIn) {
+        setSyncDot("online", "已登录 · " + session.user.email);
+      } else {
+        els.userBadge.hidden = false;
+        els.userBadge.innerHTML =
+          `<span class="sync-dot offline"></span>未登录 · 仅本地`;
+      }
+    }
+
+    async function initAuth() {
+      if (!SUPABASE_READY) {
+        applyAuthUi();
+        return;
+      }
+      const { data } = await supabase.auth.getSession();
+      session = data.session;
+      cloudMode = Boolean(session);
+      applyAuthUi();
+      if (cloudMode) {
+        await loadFromCloud();
+        render();
+      }
+      // 监听登录状态变化（点击邮件链接回来后会触发）
+      supabase.auth.onAuthStateChange(async (_event, newSession) => {
+        const wasLoggedOut = !session;
+        session = newSession;
+        cloudMode = Boolean(session);
+        applyAuthUi();
+        if (cloudMode && wasLoggedOut) {
+          await loadFromCloud();
+          render();
+          showToast("已登录，云端同步开启");
+        }
+      });
+    }
+    // ===================================================
+
+    function showToast(message) {
+      clearTimeout(toastTimer);
+      els.toast.textContent = message;
+      els.toast.classList.add("show");
+      toastTimer = setTimeout(() => els.toast.classList.remove("show"), 1800);
+    }
+
+    function setupOptions() {
+      const optionHtml = quadrants.map(q => `<option value="${q.id}">${q.label}</option>`).join("");
+      els.newQuadrant.innerHTML = optionHtml;
+      els.editQuadrant.innerHTML = optionHtml;
+    }
+
+    function activeTasks() {
+      return state.tasks.filter(task => task.status === "active");
+    }
+
+    function completedTasks() {
+      return state.tasks
+        .filter(task => task.status === "completed")
+        .sort((a, b) => String(b.completedAt).localeCompare(String(a.completedAt)));
+    }
+
+    function sortedTasks(tasks) {
+      return [...tasks].sort((a, b) => {
+        if (a.order !== b.order) return a.order - b.order;
+        return String(a.createdAt).localeCompare(String(b.createdAt));
+      });
+    }
+
+    function render() {
+      renderCategoryList();
+      renderBoard();
+      renderHistory();
+      renderStats();
+      els.statusLine.textContent =
+        (cloudMode ? "云端已同步 · " : "本地已保存 · ") + formatDateTime(state.updatedAt);
+    }
+
+    function renderCategoryList() {
+      const categories = [...new Set(state.tasks.map(task => task.category).filter(Boolean))].sort();
+      els.categoryList.innerHTML = categories.map(category => `<option value="${escapeHtml(category)}"></option>`).join("");
+      if (!els.newCategory.value && categories.length) {
+        els.newCategory.placeholder = categories[0];
+      }
+    }
+
+    function renderBoard() {
+      const active = activeTasks();
+      els.board.innerHTML = quadrants.map(quadrant => {
+        const tasks = sortedTasks(active.filter(task => task.quadrant === quadrant.id));
+        if (quadrant.id === "ongoing") {
+          return `
+            <details class="quadrant q-${quadrant.id}" data-quadrant="${quadrant.id}" open>
+              <summary>
+                <h2>${quadrant.label}</h2>
+                <span class="count">${tasks.length} 条</span>
+              </summary>
+              <div class="tasks" data-dropzone="${quadrant.id}">
+                ${tasks.length ? tasks.map(renderTask).join("") : `<div class="empty">暂无任务</div>`}
+              </div>
+            </details>
+          `;
+        }
+        return `
+          <section class="quadrant q-${quadrant.id}" data-quadrant="${quadrant.id}">
+            <header>
+              <h2>${quadrant.label}</h2>
+              <span class="count">${tasks.length} 条</span>
+            </header>
+            <div class="tasks" data-dropzone="${quadrant.id}">
+              ${tasks.length ? tasks.map(renderTask).join("") : `<div class="empty">暂无任务</div>`}
+            </div>
+          </section>
+        `;
+      }).join("");
+    }
+
+    function renderTask(task) {
+      const note = linkify(task.note);
+      return `
+        <article class="task${task.focused ? " focused" : ""}" data-id="${task.id}" draggable="true">
+          <div class="task-top">
+            <div>
+              <p class="task-title">${escapeHtml(task.title)}</p>
+              ${task.focused ? `<span class="pill focus-pill">今日聚焦</span>` : ""}
+            </div>
+            <span class="drag-mark" title="拖拽排序">⋮⋮</span>
+          </div>
+          <div class="task-meta">
+            <span class="pill">${escapeHtml(task.category)}</span>
+            <span class="pill">${formatDate(task.updatedAt)}</span>
+          </div>
+          ${note ? `<div class="note">${note}</div>` : ""}
+          <div class="actions">
+            <button type="button" data-action="complete" title="完成" aria-label="完成">✓</button>
+            <button type="button" data-action="focus" title="今日聚焦" aria-label="今日聚焦">◆</button>
+            <button type="button" data-action="edit" title="编辑" aria-label="编辑">✎</button>
+            <button type="button" class="danger" data-action="delete" title="删除" aria-label="删除">×</button>
+          </div>
+        </article>
+      `;
+    }
+
+    function renderHistory() {
+      const done = completedTasks();
+      els.historyCount.textContent = done.length + " 条";
+      els.historyList.innerHTML = done.length ? done.map(task => `
+        <article class="history-item" data-id="${task.id}">
+          <div class="history-title">${escapeHtml(task.title)}</div>
+          <div class="history-meta">
+            ${escapeHtml(labelForQuadrant(task.quadrant))} · ${escapeHtml(task.category)}<br>
+            ${formatDateTime(task.completedAt)}
+          </div>
+          <div class="history-actions">
+            <button type="button" data-action="restore" title="恢复" aria-label="恢复">↩</button>
+            <button type="button" class="danger" data-action="delete" title="删除" aria-label="删除">×</button>
+          </div>
+        </article>
+      `).join("") : `<div class="empty">暂无完成记录</div>`;
+    }
+
+    function renderStats() {
+      const active = activeTasks();
+      const done = completedTasks();
+      const categories = new Set(state.tasks.filter(task => task.status === "active").map(task => task.category));
+      const focusedCount = active.filter(task => task.focused).length;
+      els.activeCount.textContent = active.length;
+      els.ongoingCount.textContent = active.filter(task => task.quadrant === "ongoing").length;
+      els.doneCount.textContent = done.length;
+      els.categoryCount.textContent = categories.size;
+      els.topPriority.textContent = focusedCount + "/3";
+    }
+
+    function labelForQuadrant(id) {
+      return (quadrants.find(q => q.id === id) || quadrants[1]).label;
+    }
+
+    function formatDate(value) {
+      if (!value) return "-";
+      return new Intl.DateTimeFormat("zh-CN", { month: "2-digit", day: "2-digit" }).format(new Date(value));
+    }
+
+    function formatDateTime(value) {
+      if (!value) return "-";
+      return new Intl.DateTimeFormat("zh-CN", {
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit"
+      }).format(new Date(value));
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function linkify(value) {
+      const escaped = escapeHtml(value || "");
+      return escaped.replace(/https?:\/\/[^\s<]+/g, url => {
+        const clean = url.replace(/[，。；、）)]$/, "");
+        const tail = url.slice(clean.length);
+        return `<a href="${clean}" target="_blank" rel="noreferrer">${clean}</a>${tail}`;
+      });
+    }
+
+    function findTask(id) {
+      return state.tasks.find(task => task.id === id);
+    }
+
+    function touchTask(task) {
+      task.updatedAt = nowIso();
+    }
+
+    function openEdit(task) {
+      els.editId.value = task.id;
+      els.editTitle.value = task.title;
+      els.editQuadrant.value = task.quadrant;
+      els.editCategory.value = task.category;
+      els.editNote.value = task.note;
+      els.editDialog.showModal();
+      els.editTitle.focus();
+    }
+
+    function handleTaskAction(event) {
+      const button = event.target.closest("button[data-action]");
+      if (!button) return;
+
+      const item = button.closest("[data-id]");
+      const task = item ? findTask(item.dataset.id) : null;
+      if (!task) return;
+
+      const action = button.dataset.action;
+      if (action === "complete") {
+        task.status = "completed";
+        task.focused = false;
+        task.completedAt = nowIso();
+        touchTask(task);
+        saveState("已完成");
+      }
+
+      if (action === "focus") {
+        if (!task.focused && activeTasks().filter(item => item.focused).length >= 3) {
+          showToast("今日聚焦最多 3 个");
+          return;
+        }
+        task.focused = !task.focused;
+        touchTask(task);
+        saveState(task.focused ? "已加入今日聚焦" : "已取消聚焦");
+      }
+
+      if (action === "edit") {
+        openEdit(task);
+      }
+
+      if (action === "restore") {
+        task.status = "active";
+        task.completedAt = null;
+        task.order = nextOrderForQuadrant(task.quadrant, true);
+        touchTask(task);
+        saveState("已恢复");
+      }
+
+      if (action === "delete") {
+        const ok = confirm("删除「" + task.title + "」？");
+        if (!ok) return;
+        state.tasks = state.tasks.filter(item => item.id !== task.id);
+        saveState("已删除");
+      }
+    }
+
+    function getDragAfterElement(container, y) {
+      const cards = [...container.querySelectorAll(".task:not(.dragging)")];
+      return cards.reduce((closest, card) => {
+        const box = card.getBoundingClientRect();
+        const offset = y - box.top - box.height / 2;
+        if (offset < 0 && offset > closest.offset) {
+          return { offset, element: card };
+        }
+        return closest;
+      }, { offset: Number.NEGATIVE_INFINITY, element: null }).element;
+    }
+
+    function handleDragStart(event) {
+      const card = event.target.closest(".task");
+      if (!card || event.target.closest("button, input, select, textarea, a")) return;
+      event.dataTransfer.effectAllowed = "move";
+      event.dataTransfer.setData("text/plain", card.dataset.id);
+      card.classList.add("dragging");
+    }
+
+    function handleDragEnd(event) {
+      const card = event.target.closest(".task");
+      if (card) card.classList.remove("dragging");
+    }
+
+    function handleDragOver(event) {
+      const zone = event.target.closest("[data-dropzone]");
+      if (!zone) return;
+      event.preventDefault();
+
+      const dragging = els.board.querySelector(".task.dragging");
+      if (!dragging) return;
+
+      const empty = zone.querySelector(".empty");
+      if (empty) empty.remove();
+
+      const afterElement = getDragAfterElement(zone, event.clientY);
+      if (afterElement) {
+        zone.insertBefore(dragging, afterElement);
+      } else {
+        zone.append(dragging);
+      }
+    }
+
+    function handleDrop(event) {
+      const zone = event.target.closest("[data-dropzone]");
+      if (!zone) return;
+      event.preventDefault();
+      persistBoardOrder();
+      saveState("排序已保存");
+    }
+
+    function persistBoardOrder() {
+      els.board.querySelectorAll("[data-dropzone]").forEach(zone => {
+        const quadrant = zone.dataset.dropzone;
+        [...zone.querySelectorAll(".task")].forEach((card, index) => {
+          const task = findTask(card.dataset.id);
+          if (!task) return;
+          task.quadrant = quadrant;
+          task.order = index;
+          touchTask(task);
+        });
+      });
+    }
+
+    els.addForm.addEventListener("submit", event => {
+      event.preventDefault();
+      const title = els.newTitle.value.trim();
+      if (!title) {
+        showToast("请先写入待办");
+        els.newTitle.focus();
+        return;
+      }
+
+      const task = createTask(
+        title,
+        els.newQuadrant.value,
+        els.newCategory.value || els.newCategory.placeholder || "未归类",
+        "",
+        nextOrderForQuadrant(els.newQuadrant.value, true)
+      );
+      state.tasks.push(task);
+      els.newTitle.value = "";
+      saveState("已新增");
+    });
+
+    els.board.addEventListener("click", handleTaskAction);
+    els.board.addEventListener("dragstart", handleDragStart);
+    els.board.addEventListener("dragend", handleDragEnd);
+    els.board.addEventListener("dragover", handleDragOver);
+    els.board.addEventListener("drop", handleDrop);
+    els.historyList.addEventListener("click", handleTaskAction);
+
+    els.editForm.addEventListener("submit", event => {
+      event.preventDefault();
+      const task = findTask(els.editId.value);
+      if (!task) return;
+
+      const title = els.editTitle.value.trim();
+      if (!title) {
+        showToast("待办不能为空");
+        return;
+      }
+
+      task.title = title;
+      if (task.quadrant !== els.editQuadrant.value) {
+        task.quadrant = els.editQuadrant.value;
+        task.order = nextOrderForQuadrant(task.quadrant, true);
+      }
+      task.category = (els.editCategory.value || "未归类").trim();
+      task.note = els.editNote.value.trim();
+      touchTask(task);
+      els.editDialog.close();
+      saveState("已保存");
+    });
+
+    els.closeEdit.addEventListener("click", () => els.editDialog.close());
+    els.cancelEdit.addEventListener("click", () => els.editDialog.close());
+
+    els.exportBtn.addEventListener("click", () => {
+      const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = "solo-company-todo-" + new Date().toISOString().slice(0, 10) + ".json";
+      document.body.append(anchor);
+      anchor.click();
+      anchor.remove();
+      URL.revokeObjectURL(url);
+      showToast("已导出 JSON");
+    });
+
+    els.importBtn.addEventListener("click", () => els.importFile.click());
+
+    els.importFile.addEventListener("change", async event => {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      try {
+        const text = await file.text();
+        const imported = JSON.parse(text);
+        if (!imported || !Array.isArray(imported.tasks)) {
+          throw new Error("Invalid JSON");
+        }
+        const ok = confirm("导入会替换当前本地数据，继续？");
+        if (!ok) return;
+        state = {
+          version: imported.version || 1,
+          updatedAt: nowIso(),
+          tasks: migrateTaskOrder(imported.tasks.map(normalizeTask))
+        };
+        saveState("导入完成");
+      } catch (error) {
+        console.warn(error);
+        showToast("导入失败");
+      } finally {
+        els.importFile.value = "";
+      }
+    });
+
+    els.resetBtn.addEventListener("click", () => {
+      const ok = confirm("用初始待办替换当前本地数据？");
+      if (!ok) return;
+      state = createSeedState();
+      saveState("已载入初始待办");
+    });
+
+    // ===================== 登录交互 =====================
+    els.loginBtn.addEventListener("click", () => {
+      if (!SUPABASE_READY) {
+        showToast("请先在文件里填写 Supabase 配置");
+        return;
+      }
+      els.loginEmail.value = "";
+      els.loginDialog.showModal();
+      els.loginEmail.focus();
+    });
+
+    els.loginForm.addEventListener("submit", async event => {
+      event.preventDefault();
+      const email = els.loginEmail.value.trim();
+      if (!email) return;
+      els.loginDialog.close();
+      showToast("正在发送登录链接…");
+      const { error } = await supabase.auth.signInWithOtp({
+        email,
+        options: { emailRedirectTo: window.location.href }
+      });
+      showToast(error ? "发送失败：" + error.message : "登录链接已发送，请查收邮箱");
+    });
+
+    els.closeLogin.addEventListener("click", () => els.loginDialog.close());
+    els.cancelLogin.addEventListener("click", () => els.loginDialog.close());
+
+    els.logoutBtn.addEventListener("click", async () => {
+      await supabase.auth.signOut();
+      session = null;
+      cloudMode = false;
+      applyAuthUi();
+      showToast("已退出登录（本地数据保留）");
+    });
+    // ===================================================
+
+    setupOptions();
+    render();
+    initAuth();
+    showToast(SUPABASE_READY ? "已加载" : "本地缓存已加载");
+  </script>
+</body>
+</html>
