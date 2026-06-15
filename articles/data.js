@@ -1,9 +1,16 @@
 /*
   文章数据源（由 scripts/sync-articles.py 自动生成，请勿手改）
-  来源：/sessions/loving-magical-mendel/mnt/.hermes/hermes任务/内容输出
-  生成时间：2026-06-10 04:17
+  来源：/sessions/confident-modest-hopper/mnt/.hermes/hermes任务/内容输出
+  生成时间：2026-06-15 13:50
 */
 window.ARTICLES = [
+  {
+    "id": "pub-b7f7805f",
+    "date": "2026-06-15",
+    "cat": "一人公司认知",
+    "glyph": "AI",
+    "title": "AI 的尽头不是替代人，而是逼人持续升级"
+  },
   {
     "id": "pub-fa073c3d",
     "date": "2026-06-08",

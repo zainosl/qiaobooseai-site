@@ -240,6 +240,18 @@
   .wechat-value { font-family: var(--font-mono); font-size: clamp(20px, 4vw, 28px); color: var(--accent); word-break: break-all; margin-bottom: 6px; }
   .wechat-remark { font-size: 12.5px; color: var(--muted); }
 
+  /* page toc */
+  .toc { position: fixed; right: 22px; top: 50%; transform: translateY(-50%); z-index: 150; display: flex; flex-direction: column; gap: 2px; }
+  .toc a { display: flex; align-items: center; gap: 10px; text-decoration: none; padding: 5px 8px; justify-content: flex-end; border-radius: 6px; transition: background .2s; }
+  .toc a:hover { background: rgba(255,255,255,0.04); }
+  .toc .dot { width: 6px; height: 6px; border-radius: 50%; border: 1px solid var(--dim); background: transparent; flex-shrink: 0; transition: all .25s; }
+  .toc .lbl { font-size: 11.5px; color: var(--dim); white-space: nowrap; transition: color .25s; font-family: var(--font-sans); }
+  .toc a:hover .lbl { color: var(--muted); }
+  .toc a:hover .dot { border-color: var(--accent); }
+  .toc a.active .dot { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 8px rgba(88,225,193,.5); }
+  .toc a.active .lbl { color: var(--accent); font-weight: 700; }
+  @media (max-width: 1500px) { .toc { display: none; } }
+
   /* responsive */
   @media (max-width: 900px) {
     .scene-grid, .more-grid { grid-template-columns: 1fr; }
@@ -307,6 +319,17 @@
 
 <main id="top">
 
+  <!-- ═══════════ PAGE TOC ═══════════ -->
+  <nav class="toc" id="pageToc" aria-label="页面目录">
+    <a href="#top"><span class="lbl">概览</span><span class="dot"></span></a>
+    <a href="#who"><span class="lbl">谁适合</span><span class="dot"></span></a>
+    <a href="#topics"><span class="lbl">能聊什么</span><span class="dot"></span></a>
+    <a href="#how"><span class="lbl">怎么进行</span><span class="dot"></span></a>
+    <a href="#price"><span class="lbl">价格</span><span class="dot"></span></a>
+    <a href="#more"><span class="lbl">其他服务</span><span class="dot"></span></a>
+    <a href="#cta"><span class="lbl">报名</span><span class="dot"></span></a>
+  </nav>
+
   <!-- ═══════════ HERO ═══════════ -->
   <section class="hero">
     <div class="hero-deco">○</div>
@@ -328,7 +351,7 @@
   </section>
 
   <!-- ═══════════ 适合谁 ═══════════ -->
-  <section class="block">
+  <section class="block" id="who">
     <div class="wrap reveal">
       <span class="eyebrow">WHO IT'S FOR</span>
       <h2 class="block-title">什么时候<br>适合先来一次<em>咨询</em></h2>
@@ -353,7 +376,7 @@
   </section>
 
   <!-- ═══════════ 能聊什么 ═══════════ -->
-  <section class="block">
+  <section class="block" id="topics">
     <div class="wrap reveal">
       <span class="eyebrow">WHAT WE TALK ABOUT</span>
       <h2 class="block-title">一次咨询<br>能聊些<em>什么</em></h2>
@@ -372,7 +395,7 @@
   </section>
 
   <!-- ═══════════ 怎么进行 ═══════════ -->
-  <section class="block">
+  <section class="block" id="how">
     <div class="wrap reveal">
       <span class="eyebrow">HOW IT WORKS</span>
       <h2 class="block-title">咨询<br>怎么<em>进行</em></h2>
@@ -386,7 +409,7 @@
   </section>
 
   <!-- ═══════════ 价格 ═══════════ -->
-  <section class="block">
+  <section class="block" id="price">
     <div class="wrap reveal">
       <span class="eyebrow">PRICE</span>
       <h2 class="block-title">价格</h2>
@@ -437,7 +460,7 @@
   </section>
 
   <!-- ═══════════ FINAL CTA ═══════════ -->
-  <section class="cta-block">
+  <section class="cta-block" id="cta">
     <div class="wrap reveal">
       <span class="eyebrow">FINAL CALL</span>
       <h2 class="cta-title">卡在某个点上，<br>就<em>先聊一次</em>吧</h2>
@@ -485,6 +508,23 @@
   document.querySelectorAll('#navLinks a').forEach(a => a.addEventListener('click', () => document.getElementById('navLinks').classList.remove('open')));
   const io = new IntersectionObserver((es) => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: 0.12 });
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  /* ── 页内目录滚动高亮 ── */
+  (function(){
+    const links = Array.from(document.querySelectorAll('#pageToc a'));
+    const map = links.map(a => ({ a, sec: document.querySelector(a.getAttribute('href')) })).filter(x => x.sec);
+    if (!map.length) return;
+    const spy = new IntersectionObserver((entries) => {
+      entries.forEach(en => {
+        if (en.isIntersecting) {
+          links.forEach(l => l.classList.remove('active'));
+          const hit = map.find(x => x.sec === en.target);
+          if (hit) hit.a.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+    map.forEach(x => spy.observe(x.sec));
+  })();
 </script>
 
 </body>
