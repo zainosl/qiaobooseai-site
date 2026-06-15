@@ -292,7 +292,7 @@ td .name{font-weight:700;}
   </div>
   <div class="seg seg-prod">
     <button data-prod="" class="active" onclick="setProduct(this,'')">全部</button>
-    <button data-prod="01" onclick="setProduct(this,'01')">01 诊断</button>
+    <button data-prod="01" onclick="setProduct(this,'01')">01 能力判断</button>
     <button data-prod="02" onclick="setProduct(this,'02')">02 首单冲刺</button>
   </div>
   <input type="hidden" id="filterProduct" value="">
@@ -484,7 +484,7 @@ const STAGES = [
 ];
 const STAGE_MAP = Object.fromEntries(STAGES.map(s=>[s.key,s]));
 const stagesOf = (track)=>STAGES.filter(s=>s.track===track);
-const PRODUCT_LABEL = {'01':'01 诊断','02':'02 首单冲刺','无':'未指定'};
+const PRODUCT_LABEL = {'01':'01 能力判断','02':'02 首单冲刺','无':'未指定'};
 // 旧状态 → 新状态迁移表（兼容历史数据）
 const LEGACY_MAP = {lead:'intent', invited:'intent', trial:'deposit', delivered:'to_serve'};
 const KEY = 'yrgs_crm_v1';
@@ -656,7 +656,7 @@ function renderBoard(){
   const board=document.getElementById('boardView');
   board.innerHTML='';
   const fp=document.getElementById('filterProduct').value;
-  const prodTag=fp?`<span class="track-prod">${fp==='01'?'01 诊断':'02 首单冲刺'}</span>`:'';
+  const prodTag=fp?`<span class="track-prod">${fp==='01'?'01 能力判断':'02 首单冲刺'}</span>`:'';
   TRACKS.forEach(t=>{
     const tStages=stagesOf(t.key);
     const tCount=list.filter(c=>STAGE_MAP[c.status] && STAGE_MAP[c.status].track===t.key).length;
