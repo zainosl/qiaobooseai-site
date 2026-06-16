@@ -412,22 +412,25 @@
     </a>
     <nav class="nav-links" id="navLinks">
       <a class="nav-item active" href="index.html">首页</a>
-      <a class="nav-item" href="#opportunity">趋势判断</a>
       <div class="nav-dd">
         <a class="nav-item nav-dd-trigger" href="products.html">产品服务 <span class="caret">▾</span></a>
         <div class="nav-dd-menu">
           <div class="dd-group">核心服务</div>
-          <a class="dd-link" href="consultation.html">
-            <span class="dd-ico">○</span>
-            <span class="dd-text"><b>一人公司单次咨询<span class="dd-tag paid">付费</span></b><i>选不准或单点问题，先聊一次 99/小时</i></span>
-          </a>
           <a class="dd-link" href="diagnosis.html">
             <span class="dd-ico">◇</span>
             <span class="dd-text"><b>能力资产与商业切入口诊断<span class="dd-tag paid">付费</span></b><i>拆清你能离开公司变现的能力与切入口</i></span>
           </a>
+          <a class="dd-link" href="closed-loop-diagnosis.html">
+            <span class="dd-ico">◈</span>
+            <span class="dd-text"><b>一人公司 0-1 闭环诊断<span class="dd-tag paid">付费</span></b><i>把想法拆成 14 天可验证的最小可卖方案</i></span>
+          </a>
           <a class="dd-link" href="first-order-sprint.html">
             <span class="dd-ico">◆</span>
             <span class="dd-text"><b>0-1 首单变现冲刺<span class="dd-tag paid">付费</span></b><i>30 天把方向做成产品，冲第一笔收入</i></span>
+          </a>
+          <a class="dd-link" href="consultation.html">
+            <span class="dd-ico">○</span>
+            <span class="dd-text"><b>一人公司单次咨询<span class="dd-tag paid">付费</span></b><i>选不准或单点问题，先聊一次 99/小时</i></span>
           </a>
           <div class="dd-divider"></div>
           <div class="dd-group">免费前置工具</div>
@@ -442,7 +445,7 @@
         </div>
       </div>
       <a class="nav-item" href="articles.html">最新文章</a>
-      <a class="nav-cta" href="#services">查看服务</a>
+      <a class="nav-cta" href="javascript:void(0)" onclick="openWechatModal('围观')">申请围观</a>
     </nav>
     <button class="nav-toggle" id="navToggle" aria-label="菜单" onclick="toggleNav()">≡</button>
   </div>
@@ -811,26 +814,8 @@
     <div class="wrap reveal">
       <span class="eyebrow">SERVICES</span>
       <h2 class="block-title">我现在能怎么帮你</h2>
-      <p class="lead" style="margin-top:20px;">三项核心付费服务，从一次单点咨询，到拆清方向、再到陪你冲首单，陪你从迷茫走到第一笔真实收入。</p>
-      <div class="home-svc-grid">
-        <div class="home-svc" data-glyph="TALK">
-          <div class="home-svc-top">
-            <div class="home-svc-ico">○</div>
-            <span class="home-svc-step">先聊一次 · 最低门槛</span>
-          </div>
-          <div class="home-svc-title">一人公司单次咨询</div>
-          <p class="home-svc-desc">不确定选哪个服务，或想就某个单点问题快速聊清楚？一对一 1 小时，围绕你当前最卡的问题给出判断和下一步建议。</p>
-          <ul class="home-svc-points">
-            <li><b>一对一 1 小时咨询</b></li>
-            <li><b>聚焦你当前最卡的单点问题</b></li>
-            <li><b>帮你确认更适合哪个后续服务</b></li>
-          </ul>
-          <div class="home-svc-price">
-            <div class="home-svc-now"><span class="num">¥99</span><span class="unit">/ 小时 · 限时早期价</span></div>
-            <div class="home-svc-old">公开售价 <s>¥499</s></div>
-          </div>
-          <a class="btn btn-primary" href="consultation.html">了解服务详情 →</a>
-        </div>
+      <p class="lead" style="margin-top:20px;">一条三步主线：<span class="accent">第一步</span>拆清方向，<span class="accent">第二步</span>把想法拆成可验证的最小可卖方案，<span class="accent">第三步</span>陪你冲首单——陪你从迷茫走到第一笔真实收入。另有一个随时可用的单次咨询入口。</p>
+      <div class="home-svc-grid" style="grid-template-columns:repeat(3,1fr);">
         <div class="home-svc" data-glyph="DIAG">
           <div class="home-svc-top">
             <div class="home-svc-ico">◇</div>
@@ -849,10 +834,29 @@
           </div>
           <a class="btn btn-primary" href="diagnosis.html">了解服务详情 →</a>
         </div>
+        <div class="home-svc" data-glyph="LOOP">
+          <div class="home-svc-top">
+            <div class="home-svc-ico">◈</div>
+            <span class="home-svc-step">第二步 · 拆方案</span>
+          </div>
+          <div class="home-svc-title">一人公司 0-1 闭环诊断</div>
+          <p class="home-svc-desc">已经在行动，却卡在不知道卖什么、卖给谁？一次高密度商业拆解，把一团乱的想法拆成一个能在 14 天内验证的最小可卖方案。</p>
+          <ul class="home-svc-points">
+            <li><b>最小可卖服务 + 目标用户</b></li>
+            <li><b>触达报价表达 + 14 天行动表</b></li>
+            <li><b>轻量 AI 业务工作流 + 提示词模板</b></li>
+            <li><b>14 天内 2-3 次关键材料校准</b></li>
+          </ul>
+          <div class="home-svc-price">
+            <div class="home-svc-now"><span class="num">¥399</span><span class="unit">/ 单次 · 限时早期价</span></div>
+            <div class="home-svc-old">公开 <s>¥999</s> · 体验版 ¥999</div>
+          </div>
+          <a class="btn btn-primary" href="closed-loop-diagnosis.html">了解服务详情 →</a>
+        </div>
         <div class="home-svc" data-glyph="SPRINT">
           <div class="home-svc-top">
             <div class="home-svc-ico">◆</div>
-            <span class="home-svc-step">第二步 · 冲首单</span>
+            <span class="home-svc-step">第三步 · 冲首单</span>
           </div>
           <div class="home-svc-title">一人公司 0-1 首单变现冲刺</div>
           <p class="home-svc-desc">方向已定后，30 天陪你跑完一轮 0-1 变现闭环。</p>
@@ -863,10 +867,34 @@
             <li><b>沉淀个人商业知识体系</b></li>
           </ul>
           <div class="home-svc-price">
-            <div class="home-svc-now"><span class="num">¥999</span><span class="unit">/ 30 天 · 限时早期价</span></div>
-            <div class="home-svc-old">公开售价 <s>¥3999</s></div>
+            <div class="home-svc-now"><span class="num">¥1999</span><span class="unit">/ 30 天 · 限时早期价</span></div>
+            <div class="home-svc-old">公开售价 <s>¥6999</s></div>
           </div>
           <a class="btn btn-primary" href="first-order-sprint.html">了解服务详情 →</a>
+        </div>
+      </div>
+      <div class="home-svc-grid" style="grid-template-columns:1fr;margin-top:18px;">
+        <div class="home-svc" data-glyph="TALK" style="background:var(--bg2);border-color:var(--border);flex-direction:row;flex-wrap:wrap;align-items:center;gap:0 32px;">
+          <div style="flex:1 1 320px;min-width:280px;">
+            <div class="home-svc-top">
+              <div class="home-svc-ico" style="background:rgba(169,176,186,0.08);border-color:var(--border2);color:var(--muted);">○</div>
+              <span class="home-svc-step" style="background:rgba(169,176,186,0.10);color:var(--muted);">先聊一次 · 最低门槛</span>
+            </div>
+            <div class="home-svc-title">一人公司单次咨询</div>
+            <p class="home-svc-desc" style="margin-bottom:0;">不确定选哪个服务，或想就某个单点问题快速聊清楚？一对一 1 小时，围绕你当前最卡的问题给出判断和下一步建议。不在 1-2-3 主线里，更像一个随时可用的入口。</p>
+          </div>
+          <div style="flex:1 1 240px;min-width:240px;display:flex;flex-direction:column;gap:16px;">
+            <ul class="home-svc-points" style="margin-bottom:0;flex:none;">
+              <li><b>一对一 1 小时咨询</b></li>
+              <li><b>聚焦你当前最卡的单点问题</b></li>
+              <li><b>帮你确认更适合哪个后续服务</b></li>
+            </ul>
+            <div class="home-svc-price" style="margin-bottom:0;">
+              <div class="home-svc-now"><span class="num">¥99</span><span class="unit">/ 小时 · 限时早期价</span></div>
+              <div class="home-svc-old">公开售价 <s>¥499</s></div>
+            </div>
+            <a class="btn btn-secondary" href="consultation.html" style="align-self:flex-start;">了解服务详情 →</a>
+          </div>
         </div>
       </div>
       <div class="home-free">

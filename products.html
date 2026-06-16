@@ -446,17 +446,21 @@
         <a class="nav-item nav-dd-trigger active" href="products.html">产品服务 <span class="caret">▾</span></a>
         <div class="nav-dd-menu">
           <div class="dd-group">核心服务</div>
-          <a class="dd-link" href="consultation.html">
-            <span class="dd-ico">○</span>
-            <span class="dd-text"><b>一人公司单次咨询<span class="dd-tag paid">付费</span></b><i>选不准或单点问题，先聊一次 99/小时</i></span>
-          </a>
           <a class="dd-link" href="diagnosis.html">
             <span class="dd-ico">◇</span>
             <span class="dd-text"><b>能力资产与商业切入口诊断<span class="dd-tag paid">付费</span></b><i>拆清你能离开公司变现的能力与切入口</i></span>
           </a>
+          <a class="dd-link" href="closed-loop-diagnosis.html">
+            <span class="dd-ico">◈</span>
+            <span class="dd-text"><b>一人公司 0-1 闭环诊断<span class="dd-tag paid">付费</span></b><i>把想法拆成 14 天可验证的最小可卖方案</i></span>
+          </a>
           <a class="dd-link" href="first-order-sprint.html">
             <span class="dd-ico">◆</span>
             <span class="dd-text"><b>0-1 首单变现冲刺<span class="dd-tag paid">付费</span></b><i>30 天把方向做成产品，冲第一笔收入</i></span>
+          </a>
+          <a class="dd-link" href="consultation.html">
+            <span class="dd-ico">○</span>
+            <span class="dd-text"><b>一人公司单次咨询<span class="dd-tag paid">付费</span></b><i>选不准或单点问题，先聊一次 99/小时</i></span>
           </a>
           <div class="dd-divider"></div>
           <div class="dd-group">免费前置工具</div>
@@ -471,7 +475,7 @@
         </div>
       </div>
       <a class="nav-item" href="articles.html">最新文章</a>
-      <a class="nav-cta" href="javascript:void(0)" onclick="openWechatModal('种子用户')">申请种子用户</a>
+      <a class="nav-cta" href="javascript:void(0)" onclick="openWechatModal('围观')">申请围观</a>
     </nav>
     <button class="nav-toggle" id="navToggle" aria-label="菜单" onclick="toggleNav()">≡</button>
   </div>
@@ -483,36 +487,13 @@
     <div class="wrap reveal">
       <span class="eyebrow">PRODUCTS &amp; SERVICES</span>
       <h1 class="block-title">产品服务</h1>
-      <p class="lead" style="margin-top:20px;">围绕「一人公司从 0 到 1」提供三项核心付费服务：从一次单点咨询，到系统拆清能力、找准方向，再到陪你把方向做成产品、冲到第一单；另有两个免费前置工具，供你先自测、判断自己适不适合再决定是否进入。</p>
+      <p class="lead" style="margin-top:20px;">围绕「一人公司从 0 到 1」有一条三步主线：<span class="accent">第一步</span>拆清能力、找准方向，<span class="accent">第二步</span>把想法拆成可验证的最小可卖方案，<span class="accent">第三步</span>陪你把方向做成产品、冲到第一单。另有一个随时可用的单次咨询入口，以及两个免费前置工具，供你先自测、判断自己适不适合再决定是否进入。</p>
 
       <div class="sec-head">
         <span class="sec-kicker">CORE SERVICE · 核心服务</span>
         <span class="sec-line"></span>
       </div>
       <div class="prod-grid" style="grid-template-columns:repeat(3,1fr);">
-        <div class="prod-card" data-glyph="TALK" style="border-color: rgba(88,225,193,0.32); background: linear-gradient(180deg, rgba(88,225,193,0.06), var(--bg2));">
-          <div class="prod-top">
-            <div class="prod-ico">○</div>
-            <span class="prod-badge paid">先聊一次 · 最低门槛</span>
-          </div>
-          <div class="prod-label">1-ON-1 CONSULTATION</div>
-          <div class="prod-title">一人公司单次咨询</div>
-          <p class="prod-desc">不确定选哪个服务，或想就某个单点问题快速聊清楚？一对一 1 小时，围绕你当前最卡的问题给出判断和下一步建议。</p>
-          <ul class="prod-points">
-            <li>一对一 1 小时咨询</li>
-            <li>聚焦你当前最卡的单点问题</li>
-            <li>帮你确认更适合哪个后续服务</li>
-          </ul>
-          <div class="prod-price">
-            <div class="pp-now">
-              <span class="pp-tag">限时早期价</span>
-              <span class="pp-num">¥99</span>
-              <span class="pp-unit">/ 小时</span>
-            </div>
-            <div class="pp-old">公开售价 <s>¥499 / 小时</s></div>
-          </div>
-          <a class="btn btn-primary" href="consultation.html">了解服务详情 →</a>
-        </div>
         <div class="prod-card" data-glyph="DIAG" style="border-color: rgba(88,225,193,0.32); background: linear-gradient(180deg, rgba(88,225,193,0.06), var(--bg2));">
           <div class="prod-top">
             <div class="prod-ico">◇</div>
@@ -536,10 +517,34 @@
           </div>
           <a class="btn btn-primary" href="diagnosis.html">了解服务详情 →</a>
         </div>
+        <div class="prod-card" data-glyph="LOOP" style="border-color: rgba(88,225,193,0.32); background: linear-gradient(180deg, rgba(88,225,193,0.06), var(--bg2));">
+          <div class="prod-top">
+            <div class="prod-ico">◈</div>
+            <span class="prod-badge paid">第二步 · 拆方案</span>
+          </div>
+          <div class="prod-label">0 → 1 CLOSED-LOOP DIAGNOSIS</div>
+          <div class="prod-title">一人公司 0-1 闭环诊断</div>
+          <p class="prod-desc">已经在发内容、找人聊、试报价，却还卡在不知道卖什么、卖给谁？一次高密度商业拆解，把一团乱的想法拆成一个能在 14 天内验证的最小可卖方案。比陪跑冲刺更轻、更便宜。</p>
+          <ul class="prod-points">
+            <li><b>最小可卖服务 + 目标用户</b>：收敛出现在最值得卖的一个小服务，和第一批该找的人</li>
+            <li><b>触达报价表达 + 14 天行动表</b>：做出能发出去的表达，给一张明确到天的验证行动表</li>
+            <li><b>轻量 AI 业务工作流</b>：让 AI 参与你的调研、判断、生产和复盘，诊断后还能反复调用</li>
+            <li><b>2-3 次关键材料校准</b>：14 天内帮你判断哪里太像推销、哪里该立刻调整</li>
+          </ul>
+          <div class="prod-price">
+            <div class="pp-now">
+              <span class="pp-tag">限时早期价</span>
+              <span class="pp-num">¥399</span>
+              <span class="pp-unit">/ 单次诊断</span>
+            </div>
+            <div class="pp-old">公开售价 <s>¥999</s>　·　体验版 ¥999（公开 ¥3999）</div>
+          </div>
+          <a class="btn btn-primary" href="closed-loop-diagnosis.html">了解服务详情 →</a>
+        </div>
         <div class="prod-card" data-glyph="SPRINT" style="border-color: rgba(88,225,193,0.32); background: linear-gradient(180deg, rgba(88,225,193,0.06), var(--bg2));">
           <div class="prod-top">
             <div class="prod-ico">◆</div>
-            <span class="prod-badge paid">第二步 · 冲首单</span>
+            <span class="prod-badge paid">第三步 · 冲首单</span>
           </div>
           <div class="prod-label">0 → 1 FIRST-ORDER SPRINT</div>
           <div class="prod-title">一人公司 0-1 首单变现冲刺</div>
@@ -553,12 +558,46 @@
           <div class="prod-price">
             <div class="pp-now">
               <span class="pp-tag">限时早期价</span>
-              <span class="pp-num">¥999</span>
+              <span class="pp-num">¥1999</span>
               <span class="pp-unit">/ 30 天</span>
             </div>
-            <div class="pp-old">公开售价 <s>¥3999 / 30 天</s></div>
+            <div class="pp-old">公开售价 <s>¥6999 / 30 天</s></div>
           </div>
           <a class="btn btn-primary" href="first-order-sprint.html">了解服务详情 →</a>
+        </div>
+      </div>
+
+      <div class="sec-head" style="margin-top:44px;">
+        <span class="sec-kicker">ALSO · 随时可用的入口</span>
+        <span class="sec-line"></span>
+      </div>
+      <div class="prod-grid" style="grid-template-columns:1fr;">
+        <div class="prod-card" data-glyph="TALK" style="flex-direction:row;flex-wrap:wrap;align-items:center;gap:0 32px;">
+          <div style="flex:1 1 320px;min-width:280px;">
+            <div class="prod-top">
+              <div class="prod-ico" style="background:rgba(169,176,186,0.08);border-color:var(--border2);color:var(--muted);margin-bottom:0;">○</div>
+              <span class="prod-badge free">先聊一次 · 最低门槛</span>
+            </div>
+            <div class="prod-label" style="margin-top:18px;">1-ON-1 CONSULTATION</div>
+            <div class="prod-title">一人公司单次咨询</div>
+            <p class="prod-desc" style="margin-bottom:0;">不确定选哪个服务，或想就某个单点问题快速聊清楚？一对一 1 小时，围绕你当前最卡的问题给出判断和下一步建议。它不在 1-2-3 主线里，更像一个随时可用的入口。</p>
+          </div>
+          <div style="flex:1 1 240px;min-width:240px;display:flex;flex-direction:column;gap:18px;">
+            <ul class="prod-points" style="margin-bottom:0;">
+              <li>一对一 1 小时咨询</li>
+              <li>聚焦你当前最卡的单点问题</li>
+              <li>帮你确认更适合哪个后续服务</li>
+            </ul>
+            <div class="prod-price" style="margin-bottom:0;">
+              <div class="pp-now">
+                <span class="pp-tag">限时早期价</span>
+                <span class="pp-num">¥99</span>
+                <span class="pp-unit">/ 小时</span>
+              </div>
+              <div class="pp-old">公开售价 <s>¥499 / 小时</s></div>
+            </div>
+            <a class="btn btn-secondary" href="consultation.html" style="align-self:flex-start;">了解服务详情 →</a>
+          </div>
         </div>
       </div>
     </div>

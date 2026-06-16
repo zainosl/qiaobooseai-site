@@ -257,6 +257,20 @@
     .dd-link { padding: 11px 14px; }
     .dd-text i { display: none; }
   }
+
+  /* ───────── SIDEBAR TOC ───────── */
+  .toc { position: fixed; top: 50%; left: 24px; transform: translateY(-50%); z-index: 150; display: flex; flex-direction: column; gap: 2px; max-height: 76vh; overflow-y: auto; padding: 6px 0; }
+  .toc::-webkit-scrollbar { width: 0; }
+  .toc a { position: relative; display: flex; align-items: center; gap: 10px; padding: 5px 10px 5px 0; font-size: 12px; color: var(--dim); text-decoration: none; line-height: 1.4; transition: color .2s; white-space: nowrap; }
+  .toc a .toc-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border2); flex-shrink: 0; transition: all .2s; }
+  .toc a .toc-label { opacity: 0; transform: translateX(-4px); transition: opacity .2s, transform .2s; max-width: 0; overflow: hidden; }
+  .toc:hover a .toc-label { opacity: 1; transform: none; max-width: 180px; }
+  .toc a:hover { color: var(--text); }
+  .toc a:hover .toc-dot { background: var(--muted); }
+  .toc a.active { color: var(--accent); }
+  .toc a.active .toc-dot { background: var(--accent); box-shadow: 0 0 8px rgba(88,225,193,.5); width: 8px; height: 8px; }
+  .toc a.active .toc-label { opacity: 1; transform: none; max-width: 180px; font-weight: 700; }
+  @media (max-width: 1340px) { .toc { display: none; } }
 </style>
 </head>
 <body>
@@ -274,17 +288,21 @@
         <a class="nav-item nav-dd-trigger active" href="products.html">产品服务 <span class="caret">▾</span></a>
         <div class="nav-dd-menu">
           <div class="dd-group">核心服务</div>
-          <a class="dd-link" href="consultation.html">
-            <span class="dd-ico">○</span>
-            <span class="dd-text"><b>一人公司单次咨询<span class="dd-tag paid">付费</span></b><i>选不准或单点问题，先聊一次 99/小时</i></span>
-          </a>
           <a class="dd-link" href="diagnosis.html">
             <span class="dd-ico">◇</span>
             <span class="dd-text"><b>能力资产与商业切入口诊断<span class="dd-tag paid">付费</span></b><i>拆清你能离开公司变现的能力与切入口</i></span>
           </a>
+          <a class="dd-link" href="closed-loop-diagnosis.html">
+            <span class="dd-ico">◈</span>
+            <span class="dd-text"><b>一人公司 0-1 闭环诊断<span class="dd-tag paid">付费</span></b><i>把想法拆成 14 天可验证的最小可卖方案</i></span>
+          </a>
           <a class="dd-link" href="first-order-sprint.html">
             <span class="dd-ico">◆</span>
             <span class="dd-text"><b>0-1 首单变现冲刺<span class="dd-tag paid">付费</span></b><i>30 天把方向做成产品，冲第一笔收入</i></span>
+          </a>
+          <a class="dd-link" href="consultation.html">
+            <span class="dd-ico">○</span>
+            <span class="dd-text"><b>一人公司单次咨询<span class="dd-tag paid">付费</span></b><i>选不准或单点问题，先聊一次 99/小时</i></span>
           </a>
           <div class="dd-divider"></div>
           <div class="dd-group">免费前置工具</div>
@@ -306,9 +324,19 @@
 </header>
 
 <main id="top">
+  <nav class="toc" aria-label="目录">
+    <a href="#hero"><span class="toc-dot"></span><span class="toc-label">单次咨询</span></a>
+    <a href="#who"><span class="toc-dot"></span><span class="toc-label">适合谁</span></a>
+    <a href="#talk"><span class="toc-dot"></span><span class="toc-label">聊什么</span></a>
+    <a href="#how"><span class="toc-dot"></span><span class="toc-label">怎么进行</span></a>
+    <a href="#price"><span class="toc-dot"></span><span class="toc-label">价格</span></a>
+    <a href="#more"><span class="toc-dot"></span><span class="toc-label">其他服务</span></a>
+    <a href="#cta"><span class="toc-dot"></span><span class="toc-label">先聊一次</span></a>
+  </nav>
+
 
   <!-- ═══════════ HERO ═══════════ -->
-  <section class="hero">
+  <section class="hero" id="hero">
     <div class="hero-deco">○</div>
     <div class="wrap hero-inner reveal">
       <span class="hero-tag">1-ON-1 CONSULTATION · 1 HOUR</span>
@@ -328,7 +356,7 @@
   </section>
 
   <!-- ═══════════ 适合谁 ═══════════ -->
-  <section class="block">
+  <section class="block" id="who">
     <div class="wrap reveal">
       <span class="eyebrow">WHO IT'S FOR</span>
       <h2 class="block-title">什么时候<br>适合先来一次<em>咨询</em></h2>
@@ -353,7 +381,7 @@
   </section>
 
   <!-- ═══════════ 能聊什么 ═══════════ -->
-  <section class="block">
+  <section class="block" id="talk">
     <div class="wrap reveal">
       <span class="eyebrow">WHAT WE TALK ABOUT</span>
       <h2 class="block-title">一次咨询<br>能聊些<em>什么</em></h2>
@@ -372,7 +400,7 @@
   </section>
 
   <!-- ═══════════ 怎么进行 ═══════════ -->
-  <section class="block">
+  <section class="block" id="how">
     <div class="wrap reveal">
       <span class="eyebrow">HOW IT WORKS</span>
       <h2 class="block-title">咨询<br>怎么<em>进行</em></h2>
@@ -386,7 +414,7 @@
   </section>
 
   <!-- ═══════════ 价格 ═══════════ -->
-  <section class="block">
+  <section class="block" id="price">
     <div class="wrap reveal">
       <span class="eyebrow">PRICE</span>
       <h2 class="block-title">价格</h2>
@@ -429,7 +457,7 @@
           <div class="more-tag">第二步 · 冲首单</div>
           <div class="more-title">一人公司 0-1 首单变现冲刺</div>
           <div class="more-desc">方向已定后，30 天把它做成能卖的产品，找到第一批真实客户，完成沟通报价，冲第一笔收入或清楚的购买信号。</div>
-          <div class="more-price">¥999 / 30 天 · 限时早期价（公开 ¥3999）</div>
+          <div class="more-price">¥1999 / 30 天 · 限时早期价（公开 ¥6999）</div>
           <a class="btn btn-secondary" href="first-order-sprint.html">了解冲刺详情 →</a>
         </div>
       </div>
@@ -437,7 +465,7 @@
   </section>
 
   <!-- ═══════════ FINAL CTA ═══════════ -->
-  <section class="cta-block">
+  <section class="cta-block" id="cta">
     <div class="wrap reveal">
       <span class="eyebrow">FINAL CALL</span>
       <h2 class="cta-title">卡在某个点上，<br>就<em>先聊一次</em>吧</h2>
@@ -485,6 +513,24 @@
   document.querySelectorAll('#navLinks a').forEach(a => a.addEventListener('click', () => document.getElementById('navLinks').classList.remove('open')));
   const io = new IntersectionObserver((es) => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: 0.12 });
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // sidebar TOC scroll-spy
+  (function(){
+    var links = Array.prototype.slice.call(document.querySelectorAll('.toc a'));
+    if (!links.length) return;
+    var map = links.map(function(a){ return { a: a, sec: document.querySelector(a.getAttribute('href')) }; }).filter(function(m){ return m.sec; });
+    function onScroll(){
+      var pos = window.scrollY + (window.innerHeight * 0.3);
+      var current = map[0];
+      for (var i=0; i<map.length; i++){ if (map[i].sec.offsetTop <= pos) current = map[i]; }
+      links.forEach(function(a){ a.classList.remove('active'); });
+      if (current) current.a.classList.add('active');
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    onScroll();
+  })();
+
 </script>
 
 </body>
