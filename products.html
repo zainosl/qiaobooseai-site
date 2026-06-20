@@ -427,9 +427,35 @@
   .sec-head { display: flex; align-items: center; gap: 18px; margin: 44px 0 8px; }
   .sec-kicker { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; color: var(--accent); text-transform: uppercase; white-space: nowrap; }
   .sec-line { flex: 1; height: 1px; background: var(--border); }
-  @media (max-width: 768px) { .prod-grid { grid-template-columns: 1fr; } .prod-badge { font-size: 10px; padding: 4px 9px; } }
+  .core-service-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .single-service-grid { grid-template-columns: 1fr; }
+  @media (max-width: 900px) {
+    .prod-grid,
+    .core-service-grid,
+    .single-service-grid {
+      grid-template-columns: 1fr !important;
+    }
+    .prod-card {
+      width: 100%;
+    }
+    .consult-card {
+      flex-direction: column !important;
+      align-items: stretch !important;
+      gap: 20px !important;
+    }
+    .consult-card > div {
+      min-width: 0 !important;
+      width: 100%;
+    }
+    .prod-card .btn {
+      align-self: stretch;
+      justify-content: center;
+    }
+  }
+  @media (max-width: 768px) { .prod-badge { font-size: 10px; padding: 4px 9px; } }
 </style>
 
+<link rel="stylesheet" href="mobile-fixes.css?v=20260621b" />
 </head>
 <body>
 
@@ -493,7 +519,7 @@
         <span class="sec-kicker">CORE SERVICE · 核心服务</span>
         <span class="sec-line"></span>
       </div>
-      <div class="prod-grid" style="grid-template-columns:repeat(3,1fr);">
+      <div class="prod-grid core-service-grid">
         <div class="prod-card" data-glyph="DIAG" style="border-color: rgba(88,225,193,0.32); background: linear-gradient(180deg, rgba(88,225,193,0.06), var(--bg2));">
           <div class="prod-top">
             <div class="prod-ico">◇</div>
@@ -571,8 +597,8 @@
         <span class="sec-kicker">ALSO · 随时可用的入口</span>
         <span class="sec-line"></span>
       </div>
-      <div class="prod-grid" style="grid-template-columns:1fr;">
-        <div class="prod-card" data-glyph="TALK" style="flex-direction:row;flex-wrap:wrap;align-items:center;gap:0 32px;">
+      <div class="prod-grid single-service-grid">
+        <div class="prod-card consult-card" data-glyph="TALK" style="flex-direction:row;flex-wrap:wrap;align-items:center;gap:0 32px;">
           <div style="flex:1 1 320px;min-width:280px;">
             <div class="prod-top">
               <div class="prod-ico" style="background:rgba(169,176,186,0.08);border-color:var(--border2);color:var(--muted);margin-bottom:0;">○</div>

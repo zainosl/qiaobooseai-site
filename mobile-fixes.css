@@ -1,0 +1,330 @@
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+img,
+svg,
+video,
+canvas {
+  max-width: 100%;
+}
+
+input,
+select,
+textarea,
+button {
+  min-width: 0;
+}
+
+@media (max-width: 900px) {
+  .article-grid,
+  .cards,
+  .closed-loop-grid,
+  .copy-grid,
+  .deliver,
+  .eiofs-grid,
+  .fit-cols,
+  .framework,
+  .goal-cards,
+  .grid-2,
+  .grid-3,
+  .grid-4,
+  .home-svc-grid,
+  .invite-cols,
+  .matrix,
+  .method-list,
+  .more-grid,
+  .opp-grid,
+  .price-wrap,
+  .prod-grid,
+  .progress-split,
+  .reasons,
+  .scene-grid,
+  .signal-grid,
+  .three,
+  .two-col,
+  .usp-3,
+  .usp-4,
+  [style*="grid-template-columns:repeat(2"],
+  [style*="grid-template-columns: repeat(2"],
+  [style*="grid-template-columns:repeat(3"],
+  [style*="grid-template-columns: repeat(3"],
+  [style*="grid-template-columns:repeat(4"],
+  [style*="grid-template-columns: repeat(4"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  .about-split,
+  .compare-row,
+  .ex-row,
+  .invite-cols,
+  .utp {
+    grid-template-columns: 1fr !important;
+  }
+
+  .about-divider,
+  .invite-divider,
+  .compare-mid {
+    display: none !important;
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --nav-h: 58px;
+  }
+
+  .wrap,
+  .wrap-narrow {
+    width: min(100% - 28px, var(--wrap, 1120px)) !important;
+  }
+
+  header.site-nav {
+    min-height: var(--nav-h);
+    height: auto !important;
+  }
+
+  .nav-inner {
+    min-height: var(--nav-h);
+    gap: 12px !important;
+  }
+
+  .brand-name {
+    max-width: 58vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .nav-links {
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+  }
+
+  .shell,
+  .sidebar,
+  main {
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .sidebar {
+    width: 100% !important;
+  }
+
+  .side-title,
+  .brand {
+    overflow-wrap: anywhere;
+    white-space: normal !important;
+  }
+
+  .side-meta {
+    grid-template-columns: 1fr !important;
+  }
+
+  .nav-dd-menu {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .dd-link {
+    padding: 12px 10px !important;
+  }
+
+  section.block,
+  .section {
+    padding-top: 56px !important;
+    padding-bottom: 56px !important;
+  }
+
+  .hero {
+    min-height: auto !important;
+    padding-top: 54px !important;
+    padding-bottom: 54px !important;
+  }
+
+  .hero-title,
+  h1 {
+    font-size: clamp(34px, 12vw, 48px) !important;
+    line-height: 1.12 !important;
+    letter-spacing: 0 !important;
+    overflow-wrap: anywhere;
+  }
+
+  .hero-title-line,
+  h1 em {
+    display: inline !important;
+    white-space: normal !important;
+    overflow-wrap: anywhere;
+  }
+
+  .hero-tag,
+  .eyebrow,
+  .sec-kicker {
+    max-width: 100%;
+    white-space: normal !important;
+    line-height: 1.5;
+  }
+
+  .hero-sub,
+  .lead,
+  .desc {
+    max-width: 100% !important;
+    font-size: 15px !important;
+  }
+
+  .hero-actions,
+  .cta-actions,
+  .download-prompt,
+  .top-actions {
+    align-items: stretch !important;
+    flex-direction: column !important;
+  }
+
+  .btn,
+  .nav-cta,
+  .hero-actions a,
+  .hero-actions button,
+  .cta-actions a,
+  .cta-actions button,
+  .download-prompt button {
+    justify-content: center !important;
+    width: 100% !important;
+  }
+
+  .panel,
+  .card,
+  .prod-card,
+  .goal-card,
+  .tool-card,
+  .price-card {
+    padding: 22px 18px !important;
+  }
+
+  .about-left,
+  .about-right,
+  .invite-col {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .stats-row,
+  .signal-grid,
+  .score-band,
+  .priority-strip,
+  .map,
+  .week,
+  .path-line,
+  .q-grid,
+  .early-cols {
+    grid-template-columns: 1fr !important;
+  }
+
+  .article-grid.list-mode .acard,
+  .article-grid.list-mode .article-card {
+    display: block !important;
+  }
+
+  .article-grid.list-mode .acard-thumb,
+  .article-grid.list-mode .article-thumb {
+    width: 100% !important;
+    aspect-ratio: 16 / 10 !important;
+  }
+
+  .tablewrap,
+  .flow,
+  .priority-table-wrap,
+  .type-table-wrap {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  table {
+    width: 100% !important;
+    min-width: 0 !important;
+    table-layout: fixed;
+  }
+
+  th,
+  td {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .modal,
+  .wechat-modal,
+  dialog {
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+  }
+
+  .modal-card {
+    width: min(100%, 420px) !important;
+    padding: 26px 18px !important;
+  }
+}
+
+@media (max-width: 560px) {
+  .wrap,
+  .wrap-narrow {
+    width: min(100% - 22px, var(--wrap, 1120px)) !important;
+  }
+
+  .brand-mark {
+    width: 24px !important;
+    height: 24px !important;
+  }
+
+  .brand-name {
+    font-size: 13px !important;
+  }
+
+  .nav-toggle {
+    flex: 0 0 38px;
+  }
+
+  .hero-title,
+  h1 {
+    font-size: clamp(30px, 11vw, 40px) !important;
+  }
+
+  .block-title,
+  h2 {
+    font-size: clamp(24px, 8.8vw, 34px) !important;
+    line-height: 1.18 !important;
+    letter-spacing: 0 !important;
+  }
+
+  .hero-deco {
+    display: none !important;
+  }
+
+  .tag-pill,
+  .chip,
+  .prod-badge {
+    white-space: normal !important;
+  }
+
+  .big-stat {
+    gap: 10px !important;
+  }
+
+  .big-num {
+    font-size: clamp(52px, 22vw, 86px) !important;
+  }
+
+  .compare-left,
+  .compare-right,
+  .opp-col,
+  .goal-card,
+  .prod-card {
+    padding: 20px 16px !important;
+  }
+
+  .tl-item,
+  .step {
+    grid-template-columns: 42px 1px 1fr !important;
+  }
+}
