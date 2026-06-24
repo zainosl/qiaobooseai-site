@@ -152,7 +152,15 @@
       flex-wrap: wrap;
     }
 
-    .toolbar button,
+    .toolbar button {
+      width: auto;
+      min-width: 58px;
+      padding: 0 12px;
+      display: inline-grid;
+      place-items: center;
+      font-size: 14px;
+    }
+
     .icon-button {
       width: 38px;
       padding: 0;
@@ -684,39 +692,6 @@
       display: none;
     }
 
-    .user-badge {
-      align-self: center;
-      font-family: "DM Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      font-size: 12px;
-      color: var(--muted);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 6px 10px;
-      max-width: 200px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .sync-dot {
-      display: inline-block;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      margin-right: 6px;
-      vertical-align: middle;
-      background: var(--dim);
-    }
-
-    .sync-dot.online { background: var(--accent); }
-    .sync-dot.offline { background: var(--danger); }
-
-    .login-hint {
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
     @media (max-width: 1080px) {
       .side {
         grid-template-columns: 1fr;
@@ -782,11 +757,8 @@
         <p id="statusLine">准备中…</p>
       </div>
       <div class="toolbar" aria-label="数据操作">
-        <span id="userBadge" class="user-badge" hidden></span>
-        <button type="button" id="loginBtn" title="开启同步" aria-label="开启同步" hidden>同步</button>
-        <button type="button" id="logoutBtn" title="关闭同步" aria-label="关闭同步" hidden>断开</button>
-        <button type="button" id="exportBtn" title="导出 JSON" aria-label="导出 JSON">⇩</button>
-        <button type="button" id="importBtn" title="导入 JSON" aria-label="导入 JSON">⇧</button>
+        <button type="button" id="exportBtn" title="下载备份" aria-label="下载备份">下载</button>
+        <button type="button" id="importBtn" title="上传恢复" aria-label="上传恢复">上传</button>
         <button type="button" id="resetBtn" title="载入初始待办" aria-label="载入初始待办">↺</button>
         <input class="file-input" id="importFile" type="file" accept="application/json,.json">
       </div>
@@ -866,26 +838,7 @@
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-  <script type="module">
-    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-
-    // ===================== Supabase 配置 =====================
-    // 在 Supabase 控制台 → Project Settings → API 里复制下面两项填入：
-    const SUPABASE_URL = "https://hvwcnzvpsyyhuexigcft.supabase.co";
-    const SUPABASE_ANON_KEY = "sb_publishable_FUd9Z_gmtm970LdMA3F5Hg_Y1TBX_b_";
-    // ========================================================
-
-    const SUPABASE_READY =
-      SUPABASE_URL.startsWith("http") && SUPABASE_ANON_KEY.length > 20;
-
-    const supabase = SUPABASE_READY
-      ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-      : null;
-
-    let session = null;          // 当前登录会话
-    let cloudMode = false;       // true=云端同步，false=本地兜底
-    let syncing = false;         // 防止重复全量同步
-
+  <script>
     const STORAGE_KEY = "solo_company_todo_v1";
     const quadrants = [
       { id: "ongoing", label: "持续性待办" },
@@ -939,10 +892,7 @@
       importFile: document.querySelector("#importFile"),
       closeEdit: document.querySelector("#closeEdit"),
       cancelEdit: document.querySelector("#cancelEdit"),
-      toast: document.querySelector("#toast"),
-      userBadge: document.querySelector("#userBadge"),
-      loginBtn: document.querySelector("#loginBtn"),
-      logoutBtn: document.querySelector("#logoutBtn"),
+      toast: document.querySelector("#toast")
     };
 
     function nowIso() {
@@ -1077,161 +1027,7 @@
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
       render();
       if (message) showToast(message);
-      // 开启同步后把整份数据推送到云端
-      if (cloudMode) pushAllToCloud();
     }
-
-    // ===================== 云端数据层 =====================
-    function rowFromTask(task) {
-      return {
-        id: task.id,
-        user_id: session.user.id,
-        title: task.title,
-        quadrant: task.quadrant,
-        category: task.category,
-        priority: task.priority,
-        order: task.order,
-        focused: task.focused,
-        status: task.status,
-        note: task.note,
-        created_at: task.createdAt,
-        updated_at: task.updatedAt,
-        completed_at: task.completedAt
-      };
-    }
-
-    function taskFromRow(row) {
-      return normalizeTask({
-        id: row.id,
-        title: row.title,
-        quadrant: row.quadrant,
-        category: row.category,
-        priority: row.priority,
-        order: row.order,
-        focused: row.focused,
-        status: row.status,
-        note: row.note,
-        createdAt: row.created_at,
-        updatedAt: row.updated_at,
-        completedAt: row.completed_at
-      });
-    }
-
-    // 拉取云端全部待办；若云端为空则把本地种子数据上传一次
-    async function loadFromCloud() {
-      const { data, error } = await supabase
-        .from("tasks")
-        .select("*")
-        .eq("user_id", session.user.id);
-
-      if (error) {
-        console.warn(error);
-        showToast("云端读取失败，已使用本地数据");
-        cloudMode = false;
-        return;
-      }
-
-      if (data && data.length) {
-        state = {
-          version: 1,
-          updatedAt: nowIso(),
-          tasks: migrateTaskOrder(data.map(taskFromRow))
-        };
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-      } else {
-        // 云端无数据：把当前本地数据作为初始数据上传
-        await pushAllToCloud();
-      }
-    }
-
-    // 把整份 state 覆盖式同步到云端（先删后插，保证与本地一致）
-    async function pushAllToCloud() {
-      if (!cloudMode || syncing) return;
-      syncing = true;
-      setSyncDot("online", "同步中…");
-      try {
-        const uid = session.user.id;
-        // 删掉云端已不存在于本地的任务
-        const localIds = state.tasks.map(t => t.id);
-        const { data: remote } = await supabase
-          .from("tasks").select("id").eq("user_id", uid);
-        const toDelete = (remote || [])
-          .map(r => r.id)
-          .filter(id => !localIds.includes(id));
-        if (toDelete.length) {
-          await supabase.from("tasks").delete().in("id", toDelete);
-        }
-        // upsert 本地全部任务
-        if (state.tasks.length) {
-          const rows = state.tasks.map(rowFromTask);
-          const { error } = await supabase.from("tasks").upsert(rows);
-          if (error) throw error;
-        }
-        setSyncDot("online", "已同步 · " + accountLabel());
-      } catch (err) {
-        console.warn(err);
-        setSyncDot("offline", "同步失败（本地已保存）");
-      } finally {
-        syncing = false;
-      }
-    }
-
-    function setSyncDot(stateName, text) {
-      els.userBadge.hidden = false;
-      els.userBadge.innerHTML =
-        `<span class="sync-dot ${stateName}"></span>${escapeHtml(text)}`;
-    }
-
-    function accountLabel() {
-      return session?.user?.email || "匿名账号";
-    }
-
-    // 根据同步状态切换 UI
-    function applyAuthUi() {
-      const loggedIn = Boolean(session);
-      els.loginBtn.hidden = loggedIn;
-      els.logoutBtn.hidden = !loggedIn;
-      if (!SUPABASE_READY) {
-        els.userBadge.hidden = false;
-        els.userBadge.innerHTML =
-          `<span class="sync-dot offline"></span>未配置云端 · 仅本地`;
-        els.loginBtn.hidden = true;
-        els.logoutBtn.hidden = true;
-      } else if (loggedIn) {
-        setSyncDot("online", "已同步 · " + accountLabel());
-      } else {
-        els.userBadge.hidden = false;
-        els.userBadge.innerHTML =
-          `<span class="sync-dot offline"></span>未同步 · 仅本地`;
-      }
-    }
-
-    async function initAuth() {
-      if (!SUPABASE_READY) {
-        applyAuthUi();
-        return;
-      }
-      const { data } = await supabase.auth.getSession();
-      session = data.session;
-      cloudMode = Boolean(session);
-      applyAuthUi();
-      if (cloudMode) {
-        await loadFromCloud();
-        render();
-      }
-      supabase.auth.onAuthStateChange(async (_event, newSession) => {
-        const wasLoggedOut = !session;
-        session = newSession;
-        cloudMode = Boolean(session);
-        applyAuthUi();
-        if (cloudMode && wasLoggedOut) {
-          await loadFromCloud();
-          render();
-          showToast("同步已开启");
-        }
-      });
-    }
-    // ===================================================
 
     function showToast(message) {
       clearTimeout(toastTimer);
@@ -1268,8 +1064,7 @@
       renderBoard();
       renderHistory();
       renderStats();
-      els.statusLine.textContent =
-        (cloudMode ? "云端已同步 · " : "本地已保存 · ") + formatDateTime(state.updatedAt);
+      els.statusLine.textContent = "本地已保存 · " + formatDateTime(state.updatedAt);
     }
 
     function renderCategoryList() {
@@ -1598,7 +1393,7 @@
       anchor.click();
       anchor.remove();
       URL.revokeObjectURL(url);
-      showToast("已导出 JSON");
+      showToast("备份已下载");
     });
 
     els.importBtn.addEventListener("click", () => els.importFile.click());
@@ -1613,17 +1408,17 @@
         if (!imported || !Array.isArray(imported.tasks)) {
           throw new Error("Invalid JSON");
         }
-        const ok = confirm("导入会替换当前本地数据，继续？");
+        const ok = confirm("上传备份会替换当前本地待办，继续？");
         if (!ok) return;
         state = {
           version: imported.version || 1,
           updatedAt: nowIso(),
           tasks: migrateTaskOrder(imported.tasks.map(normalizeTask))
         };
-        saveState("导入完成");
+        saveState("备份已恢复");
       } catch (error) {
         console.warn(error);
-        showToast("导入失败");
+        showToast("上传失败");
       } finally {
         els.importFile.value = "";
       }
@@ -1636,49 +1431,9 @@
       saveState("已载入初始待办");
     });
 
-    // ===================== 同步交互 =====================
-    els.loginBtn.addEventListener("click", async () => {
-      if (!SUPABASE_READY) {
-        showToast("请先在文件里填写 Supabase 配置");
-        return;
-      }
-      els.loginBtn.disabled = true;
-      showToast("正在开启同步…");
-      const { data, error } = await supabase.auth.signInAnonymously();
-      els.loginBtn.disabled = false;
-      if (error) {
-        console.warn(error);
-        if (/anonymous/i.test(error.message || "")) {
-          showToast("需先在 Supabase 开启匿名登录");
-        } else {
-          showToast("同步开启失败，本地仍可使用");
-        }
-        return;
-      }
-      session = data.session;
-      cloudMode = Boolean(session);
-      applyAuthUi();
-      if (cloudMode) {
-        await loadFromCloud();
-        render();
-        showToast("同步已开启");
-      }
-    });
-
-    els.logoutBtn.addEventListener("click", async () => {
-      await supabase.auth.signOut();
-      session = null;
-      cloudMode = false;
-      applyAuthUi();
-      render();
-      showToast("已断开同步（本地数据保留）");
-    });
-    // ===================================================
-
     setupOptions();
     render();
-    initAuth();
-    showToast(SUPABASE_READY ? "已加载" : "本地缓存已加载");
+    showToast("本地待办已加载");
   </script>
 </body>
 </html>
