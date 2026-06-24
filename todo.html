@@ -783,8 +783,8 @@
       </div>
       <div class="toolbar" aria-label="数据操作">
         <span id="userBadge" class="user-badge" hidden></span>
-        <button type="button" id="loginBtn" title="登录同步" aria-label="登录同步" hidden>登录</button>
-        <button type="button" id="logoutBtn" title="退出登录" aria-label="退出登录" hidden>退出</button>
+        <button type="button" id="loginBtn" title="开启同步" aria-label="开启同步" hidden>同步</button>
+        <button type="button" id="logoutBtn" title="关闭同步" aria-label="关闭同步" hidden>断开</button>
         <button type="button" id="exportBtn" title="导出 JSON" aria-label="导出 JSON">⇩</button>
         <button type="button" id="importBtn" title="导入 JSON" aria-label="导入 JSON">⇧</button>
         <button type="button" id="resetBtn" title="载入初始待办" aria-label="载入初始待办">↺</button>
@@ -860,24 +860,6 @@
       <div class="modal-actions">
         <button type="button" id="cancelEdit">取消</button>
         <button class="primary" type="submit">保存</button>
-      </div>
-    </form>
-  </dialog>
-
-  <dialog id="loginDialog">
-    <form class="modal" id="loginForm" method="dialog">
-      <header>
-        <h2>登录以多设备同步</h2>
-        <button class="icon-button" type="button" id="closeLogin" title="关闭" aria-label="关闭">×</button>
-      </header>
-      <p class="login-hint">输入你的邮箱，我们会发送一个登录链接。点击邮件里的链接即可登录，之后所有设备共享同一份待办。</p>
-      <div class="field">
-        <label for="loginEmail">邮箱</label>
-        <input id="loginEmail" type="email" autocomplete="email" placeholder="you@example.com" required>
-      </div>
-      <div class="modal-actions">
-        <button type="button" id="cancelLogin">取消</button>
-        <button class="primary" type="submit" id="sendLink">发送登录链接</button>
       </div>
     </form>
   </dialog>
@@ -961,11 +943,6 @@
       userBadge: document.querySelector("#userBadge"),
       loginBtn: document.querySelector("#loginBtn"),
       logoutBtn: document.querySelector("#logoutBtn"),
-      loginDialog: document.querySelector("#loginDialog"),
-      loginForm: document.querySelector("#loginForm"),
-      loginEmail: document.querySelector("#loginEmail"),
-      closeLogin: document.querySelector("#closeLogin"),
-      cancelLogin: document.querySelector("#cancelLogin")
     };
 
     function nowIso() {
@@ -1100,7 +1077,7 @@
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
       render();
       if (message) showToast(message);
-      // 登录后把整份数据推送到云端
+      // 开启同步后把整份数据推送到云端
       if (cloudMode) pushAllToCloud();
     }
 
@@ -1190,7 +1167,7 @@
           const { error } = await supabase.from("tasks").upsert(rows);
           if (error) throw error;
         }
-        setSyncDot("online", "已同步 · " + session.user.email);
+        setSyncDot("online", "已同步 · " + accountLabel());
       } catch (err) {
         console.warn(err);
         setSyncDot("offline", "同步失败（本地已保存）");
@@ -1205,7 +1182,11 @@
         `<span class="sync-dot ${stateName}"></span>${escapeHtml(text)}`;
     }
 
-    // 根据登录状态切换 UI（登录/退出按钮）
+    function accountLabel() {
+      return session?.user?.email || "匿名账号";
+    }
+
+    // 根据同步状态切换 UI
     function applyAuthUi() {
       const loggedIn = Boolean(session);
       els.loginBtn.hidden = loggedIn;
@@ -1217,11 +1198,11 @@
         els.loginBtn.hidden = true;
         els.logoutBtn.hidden = true;
       } else if (loggedIn) {
-        setSyncDot("online", "已登录 · " + session.user.email);
+        setSyncDot("online", "已同步 · " + accountLabel());
       } else {
         els.userBadge.hidden = false;
         els.userBadge.innerHTML =
-          `<span class="sync-dot offline"></span>未登录 · 仅本地`;
+          `<span class="sync-dot offline"></span>未同步 · 仅本地`;
       }
     }
 
@@ -1238,7 +1219,6 @@
         await loadFromCloud();
         render();
       }
-      // 监听登录状态变化（点击邮件链接回来后会触发）
       supabase.auth.onAuthStateChange(async (_event, newSession) => {
         const wasLoggedOut = !session;
         session = newSession;
@@ -1247,7 +1227,7 @@
         if (cloudMode && wasLoggedOut) {
           await loadFromCloud();
           render();
-          showToast("已登录，云端同步开启");
+          showToast("同步已开启");
         }
       });
     }
@@ -1656,39 +1636,42 @@
       saveState("已载入初始待办");
     });
 
-    // ===================== 登录交互 =====================
-    els.loginBtn.addEventListener("click", () => {
+    // ===================== 同步交互 =====================
+    els.loginBtn.addEventListener("click", async () => {
       if (!SUPABASE_READY) {
         showToast("请先在文件里填写 Supabase 配置");
         return;
       }
-      els.loginEmail.value = "";
-      els.loginDialog.showModal();
-      els.loginEmail.focus();
+      els.loginBtn.disabled = true;
+      showToast("正在开启同步…");
+      const { data, error } = await supabase.auth.signInAnonymously();
+      els.loginBtn.disabled = false;
+      if (error) {
+        console.warn(error);
+        if (/anonymous/i.test(error.message || "")) {
+          showToast("需先在 Supabase 开启匿名登录");
+        } else {
+          showToast("同步开启失败，本地仍可使用");
+        }
+        return;
+      }
+      session = data.session;
+      cloudMode = Boolean(session);
+      applyAuthUi();
+      if (cloudMode) {
+        await loadFromCloud();
+        render();
+        showToast("同步已开启");
+      }
     });
-
-    els.loginForm.addEventListener("submit", async event => {
-      event.preventDefault();
-      const email = els.loginEmail.value.trim();
-      if (!email) return;
-      els.loginDialog.close();
-      showToast("正在发送登录链接…");
-      const { error } = await supabase.auth.signInWithOtp({
-        email,
-        options: { emailRedirectTo: window.location.href }
-      });
-      showToast(error ? "发送失败：" + error.message : "登录链接已发送，请查收邮箱");
-    });
-
-    els.closeLogin.addEventListener("click", () => els.loginDialog.close());
-    els.cancelLogin.addEventListener("click", () => els.loginDialog.close());
 
     els.logoutBtn.addEventListener("click", async () => {
       await supabase.auth.signOut();
       session = null;
       cloudMode = false;
       applyAuthUi();
-      showToast("已退出登录（本地数据保留）");
+      render();
+      showToast("已断开同步（本地数据保留）");
     });
     // ===================================================
 
