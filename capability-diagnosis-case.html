@@ -270,7 +270,8 @@
     .skills,
     .funnel,
     .materials,
-    .fit-grid {
+    .fit-grid,
+    .clarity-grid {
       display: grid;
       gap: 12px;
       margin-top: 14px;
@@ -280,6 +281,7 @@
     .deliverables { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .skills { grid-template-columns: repeat(4, minmax(0, 1fr)); }
     .funnel { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .clarity-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .materials, .fit-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
     .card {
@@ -549,6 +551,7 @@
       .deliverables,
       .skills,
       .funnel,
+      .clarity-grid,
       .timeline,
       .pathbar { grid-template-columns: 1fr; }
       .button { justify-self: start; }
@@ -750,6 +753,16 @@
       </div>
     </section>
 
+    <section>
+      <h2>看完这个案例，你应该能判断三件事</h2>
+      <p class="note">如果你也处在类似状态，这套服务会优先帮你把混在一起的问题拆开，而不是继续给你增加更多可能性。</p>
+      <div class="clarity-grid">
+        <div class="card"><span class="tag">CLARITY 01</span><h3>哪些是真能力</h3><p>从最近真实做过、写过、聊过、交付过的材料里，判断哪些能力不只是岗位、平台或运气带来的结果。</p></div>
+        <div class="card"><span class="tag">CLARITY 02</span><h3>哪些暂时不该卖</h3><p>把看起来像优势、但进入服务后会让交付变重、表达变虚、成交变难的部分先标出来。</p></div>
+        <div class="card"><span class="tag">CLARITY 03</span><h3>先验证哪个切口</h3><p>把多个商业方向压到一个低成本、可拿反馈的验证动作，而不是继续在脑子里比较。</p></div>
+      </div>
+    </section>
+
     <section id="materials">
       <h2>你需要给什么材料？</h2>
       <p class="note">你不需要先把自己总结清楚。先把材料交出来：近期材料帮我们发现能力，远期材料帮我们验证这些能力是否长期存在、是否为真。</p>
@@ -777,14 +790,17 @@
           </ul>
         </div>
       </div>
+      <div class="result-callout">
+        <p>材料不用整理得很漂亮。你可以先发 1 份最能代表你最近状态的材料：一段 AI 对话、一个项目记录、一篇草稿或复盘、一次用户/同事反馈，都可以作为开始。</p>
+      </div>
     </section>
 
     <div class="cta">
       <div>
         <h2>如果你之前报过名，可以直接进入服务</h2>
-        <p>先发近期主证据，再补远期佐证。我们会从真实材料里开始第一步能力资产诊断，让你更清楚自己到底有什么、哪些能力长期成立、下一步最值得验证什么。</p>
+        <p>先发 1 份近期主证据也可以，后续再补更多近期材料和远期佐证。我们会从真实材料里开始第一步能力资产诊断，让你更清楚自己到底有什么、哪些能力长期成立、下一步最值得验证什么。</p>
       </div>
-      <div class="button">回复：我发近期材料</div>
+      <div class="button">回复：我先发 1 份材料</div>
     </div>
   </main>
 </body>
