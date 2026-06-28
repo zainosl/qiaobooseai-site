@@ -536,9 +536,17 @@
       border-radius: var(--radius);
       background: var(--accent);
       color: var(--bg);
+      font: inherit;
       font-weight: 900;
       white-space: nowrap;
+      cursor: pointer;
       box-shadow: 0 0 0 4px rgba(88,225,193,.08);
+    }
+
+    .button:hover {
+      background: var(--accent2);
+      border-color: var(--accent2);
+      transform: translateY(-1px);
     }
 
     .cta-actions {
@@ -552,6 +560,108 @@
       color: var(--accent);
       border-color: rgba(88,225,193,.36);
       box-shadow: none;
+    }
+
+    .button.secondary:hover {
+      background: rgba(88,225,193,.08);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: rgba(11,13,15,.78);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .modal.open { display: flex; }
+
+    .modal-card {
+      position: relative;
+      width: min(460px, 100%);
+      padding: 30px;
+      border: 1px solid var(--border2);
+      border-radius: 12px;
+      background: linear-gradient(180deg, rgba(19,22,26,.98), rgba(11,13,15,.98));
+      box-shadow: 0 24px 80px rgba(0,0,0,.38);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 34px;
+      height: 34px;
+      border: 1px solid var(--border2);
+      border-radius: 50%;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .modal-close:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .modal-label {
+      margin-bottom: 12px;
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+
+    .modal-title {
+      margin-bottom: 14px;
+      font-size: clamp(22px, 3vw, 30px);
+      font-weight: 800;
+      line-height: 1.2;
+    }
+
+    .modal-desc {
+      margin-bottom: 20px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .wechat-box {
+      padding: 18px;
+      border: 1px solid rgba(88,225,193,.25);
+      border-radius: 10px;
+      background: rgba(88,225,193,.07);
+    }
+
+    .wechat-label {
+      margin-bottom: 10px;
+      color: var(--dim);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+
+    .wechat-value {
+      margin-bottom: 6px;
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: clamp(20px, 4vw, 28px);
+      word-break: break-all;
+    }
+
+    .wechat-remark {
+      color: var(--muted);
+      font-size: 12.5px;
     }
 
     @media (max-width: 980px) {
@@ -586,6 +696,7 @@
       .artifact-head { display: block; }
       .artifact-head span { display: inline-block; margin-top: 8px; }
       th, td { padding: 9px; font-size: 12px; }
+      .modal-card { padding: 26px 18px; }
     }
   </style>
 </head>
@@ -815,10 +926,45 @@
         <p>先发 1 份近期主证据也可以，后续再补更多近期材料和远期佐证。我们会从真实材料里开始第一步能力资产诊断，让你更清楚自己到底有什么、哪些能力长期成立、下一步最值得验证什么。</p>
       </div>
       <div class="cta-actions">
-        <div class="button">已报名：我先发 1 份材料</div>
-        <div class="button secondary">未报名：加我微信报名</div>
+        <button class="button" type="button" onclick="openWechatModal('能力诊断 + 已报名发材料')">已报名：我先发 1 份材料</button>
+        <button class="button secondary" type="button" onclick="openWechatModal('能力诊断 + 报名')">未报名：加我微信报名</button>
       </div>
     </div>
   </main>
+
+  <div class="modal" id="wechatModal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button class="modal-close" type="button" onclick="closeWechatModal()" aria-label="关闭弹窗">×</button>
+      <div class="modal-label">JOIN</div>
+      <div class="modal-title" id="modalTitle">添加微信进一步沟通</div>
+      <div class="modal-desc">添加下面这个微信号，并按提示备注，我会先帮你判断这次诊断是否适合你。</div>
+      <div class="wechat-box">
+        <div class="wechat-label">WeChat ID</div>
+        <div class="wechat-value">qiaoboose01</div>
+        <div class="wechat-remark" id="modalRemark">备注：能力诊断</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function openWechatModal(remark) {
+      if (remark) document.getElementById('modalRemark').textContent = '备注：' + remark;
+      document.getElementById('wechatModal').classList.add('open');
+      document.getElementById('wechatModal').setAttribute('aria-hidden', 'false');
+    }
+
+    function closeWechatModal() {
+      document.getElementById('wechatModal').classList.remove('open');
+      document.getElementById('wechatModal').setAttribute('aria-hidden', 'true');
+    }
+
+    document.getElementById('wechatModal').addEventListener('click', function(event) {
+      if (event.target.id === 'wechatModal') closeWechatModal();
+    });
+
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') closeWechatModal();
+    });
+  </script>
 </body>
 </html>
