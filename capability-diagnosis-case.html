@@ -541,6 +541,19 @@
       box-shadow: 0 0 0 4px rgba(88,225,193,.08);
     }
 
+    .cta-actions {
+      display: grid;
+      gap: 10px;
+      justify-items: stretch;
+    }
+
+    .button.secondary {
+      background: transparent;
+      color: var(--accent);
+      border-color: rgba(88,225,193,.36);
+      box-shadow: none;
+    }
+
     @media (max-width: 980px) {
       .hero,
       .artifact-grid,
@@ -555,6 +568,7 @@
       .timeline,
       .pathbar { grid-template-columns: 1fr; }
       .button { justify-self: start; }
+      .cta-actions { justify-items: start; }
     }
 
     @media (min-width: 981px) and (max-width: 1180px) {
@@ -800,7 +814,10 @@
         <h2>如果你之前报过名，可以直接进入服务</h2>
         <p>先发 1 份近期主证据也可以，后续再补更多近期材料和远期佐证。我们会从真实材料里开始第一步能力资产诊断，让你更清楚自己到底有什么、哪些能力长期成立、下一步最值得验证什么。</p>
       </div>
-      <div class="button">回复：我先发 1 份材料</div>
+      <div class="cta-actions">
+        <div class="button">已报名：我先发 1 份材料</div>
+        <div class="button secondary">未报名：加我微信报名</div>
+      </div>
     </div>
   </main>
 </body>
