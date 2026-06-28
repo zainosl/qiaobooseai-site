@@ -319,6 +319,45 @@
   .price-note { font-size: 13.5px; color: var(--muted); line-height: 1.95; }
   .price-note strong { color: var(--text); }
   .price-note + .price-note { margin-top: 14px; }
+  .case-entry {
+    display: grid;
+    gap: 12px;
+    margin-top: 22px;
+    padding: 20px 22px;
+    border: 1px solid rgba(88,225,193,0.26);
+    border-radius: 2px;
+    background: linear-gradient(180deg, rgba(88,225,193,0.07), rgba(19,22,26,0.88));
+    text-decoration: none;
+    transition: all .28s cubic-bezier(.22,1,.36,1);
+  }
+  .case-entry:hover {
+    border-color: rgba(88,225,193,0.48);
+    transform: translateY(-2px);
+    box-shadow: 0 14px 38px rgba(0,0,0,.22);
+  }
+  .case-entry-tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+  .case-entry-title {
+    color: var(--text);
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 1.35;
+  }
+  .case-entry-desc {
+    color: var(--muted);
+    font-size: 13.5px;
+    line-height: 1.75;
+  }
+  .case-entry-action {
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 700;
+  }
 
   /* path choices (你可以这样继续) */
   .paths { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 36px; }
@@ -829,6 +868,12 @@
           <p class="price-note"><strong>199 元不是买一次泛泛聊天，</strong>而是买一次 2-3 小时的能力资产判断。</p>
           <p class="price-note">这段时间我会开放<strong>少量早期名额</strong>，用更低价格服务第一批愿意认真梳理自己能力资产和个人业务方向的人。</p>
           <p class="price-note">一方面当作交个朋友，降低你第一次尝试的门槛；另一方面我也会通过不同用户案例，继续丰富这套能力资产诊断的样板和判断库。</p>
+          <a class="case-entry" href="capability-diagnosis-case.html" target="_blank" rel="noopener">
+            <span class="case-entry-tag">DESENSITIZED CASE SAMPLE</span>
+            <span class="case-entry-title">查看一页版脱敏案例样张</span>
+            <span class="case-entry-desc">看一位真实用户如何从“能力很多但不知道卖什么”，被拆成能力资产地图、优先商业切口和 14 天验证计划。</span>
+            <span class="case-entry-action">打开案例入口 →</span>
+          </a>
         </div>
       </div>
     </div>
