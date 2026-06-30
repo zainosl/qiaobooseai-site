@@ -67,15 +67,15 @@
 
   /* ───────── TOP NAV ───────── */
   header.site-nav {
-    position: sticky; top: 0; z-index: 200;
+    position: fixed; top: 0; left: 0; right: 0; z-index: 200;
     height: var(--nav-h);
     display: flex; align-items: center;
     background: rgba(11,13,15,0.72);
     backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
     border-bottom: 1px solid var(--border);
   }
-  .nav-inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; width: 100%; }
-  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; flex-shrink: 0; }
+  .nav-inner { position: relative; display: flex; align-items: center; justify-content: center; gap: 24px; width: 100%; }
+  .brand { position: absolute; left: 0; display: flex; align-items: center; gap: 10px; text-decoration: none; flex-shrink: 0; }
   .brand-mark {
     width: 26px; height: 26px; border-radius: 6px;
     background: linear-gradient(135deg, var(--accent), var(--accent2));
@@ -84,7 +84,7 @@
   }
   .brand-name { font-size: 15px; font-weight: 700; color: var(--text); letter-spacing: -0.01em; white-space: nowrap; }
   .brand-name .accent { color: var(--accent); }
-  .nav-links { display: flex; align-items: center; gap: 4px; }
+  .nav-links { display: flex; align-items: center; justify-content: center; gap: 4px; }
   .nav-links a {
     font-size: 13.5px; color: var(--muted); text-decoration: none;
     padding: 8px 14px; border-radius: 7px; transition: all .2s; white-space: nowrap;
@@ -421,6 +421,9 @@
     .stat-box { min-width: 120px; }
   }
   @media (max-width: 768px) {
+    body { padding-top: var(--nav-h); }
+    .nav-inner { justify-content: space-between; }
+    .brand { position: static; }
     .nav-links { position: fixed; top: var(--nav-h); left: 0; right: 0; flex-direction: column; align-items: stretch; gap: 0; background: rgba(11,13,15,0.98); backdrop-filter: blur(14px); border-bottom: 1px solid var(--border); padding: 8px; transform: translateY(-130%); transition: transform .3s; max-height: calc(100vh - var(--nav-h)); overflow-y: auto; }
     .nav-links.open { transform: none; }
     .nav-links a, .nav-item { padding: 13px 16px; border-radius: 8px; }
