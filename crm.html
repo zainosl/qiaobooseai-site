@@ -493,6 +493,7 @@ const STAGE_MAP = Object.fromEntries(STAGES.map(s=>[s.key,s]));
 const stagesOf = (track)=>STAGES.filter(s=>s.track===track);
 const stageField = (track)=>track==='sales'?'salesStatus':'deliveryStatus';
 const stageOf = (c,track)=>c[stageField(track)] || (track==='sales'?'intent':'to_serve');
+const isDeliveryCustomer = (c)=>stageOf(c,'sales')==='won' || c.converted==='yes';
 const PRODUCT_LABEL = {'01':'01 能力判断','02':'02 首单冲刺','无':'未指定'};
 // 旧状态 → 新状态迁移表（兼容历史数据）
 const LEGACY_MAP = {lead:'intent', invited:'intent', trial:'deposit', delivered:'to_serve', serving:'ability_mine'};
@@ -712,7 +713,7 @@ function render(){
 function renderStats(){
   const total=data.length;
   const inSales=data.filter(c=>!['lost','won'].includes(stageOf(c,'sales'))).length;
-  const inDelivery=data.filter(c=>!['served','aftercare'].includes(stageOf(c,'delivery'))).length;
+  const inDelivery=data.filter(c=>isDeliveryCustomer(c)&&!['served','aftercare'].includes(stageOf(c,'delivery'))).length;
   const won=data.filter(c=>c.converted==='yes'||stageOf(c,'sales')==='won').length;
   document.getElementById('statRow').innerHTML=
     `<div class="stat"><b>${total}</b><span>客户总数</span></div>
@@ -728,14 +729,15 @@ function renderBoard(){
   const fp=document.getElementById('filterProduct').value;
   const prodTag=fp?`<span class="track-prod">${fp==='01'?'01 能力判断':'02 首单冲刺'}</span>`:'';
   TRACKS.filter(t=>t.key===activeTrack).forEach(t=>{
+    const trackList=t.key==='delivery'?list.filter(isDeliveryCustomer):list;
     const tStages=stagesOf(t.key);
-    const tCount=list.length;
+    const tCount=trackList.length;
     const section=document.createElement('div'); section.className='track';
     section.innerHTML=`<div class="track-head"><span class="track-name">${t.label}</span>${prodTag}
       <span class="track-hint">${t.hint}</span><span class="track-count">${tCount}</span></div>`;
     const cols=document.createElement('div'); cols.className='track-cols';
     tStages.forEach(s=>{
-      const items=list.filter(c=>stageOf(c,t.key)===s.key);
+      const items=trackList.filter(c=>stageOf(c,t.key)===s.key);
       const col=document.createElement('div'); col.className='col';
       col.innerHTML=`<div class="col-head"><span class="dot" style="background:${s.dot}"></span><h3>${s.label}</h3><span class="count">${items.length}</span></div>`;
       const body=document.createElement('div'); body.className='col-body'; body.dataset.track=t.key; body.dataset.stage=s.key;
@@ -758,12 +760,13 @@ function cardEl(c,track){
   const canUpsell = track==='delivery' && c.product==='01' && ['served','aftercare'].includes(stageOf(c,'delivery'));
   const pairStage = track==='sales' ? STAGE_MAP[stageOf(c,'delivery')] : STAGE_MAP[stageOf(c,'sales')];
   const pairLabel = track==='sales' ? '交付' : '销售';
+  const pairText = track==='sales'&&!isDeliveryCustomer(c) ? '未进入' : (pairStage?pairStage.label:'—');
   el.innerHTML=
     `<div class="row1"><span class="name">${esc(c.name||'未命名')}</span>${conv}</div>
      ${c.wx?`<div class="note-wx">微信：${esc(c.wx)}</div>`:''}
      <div class="meta">
        <span class="pill prod">${PRODUCT_LABEL[c.product||'无']}</span>
-       <span class="pill src">${pairLabel}：${pairStage?pairStage.label:'—'}</span>
+       <span class="pill src">${pairLabel}：${pairText}</span>
        ${c.source?`<span class="pill src">${esc(c.source)}</span>`:''}
      </div>
      ${ll?`<div class="last">↳ ${ll.t} ${esc(ll.text)}</div>`:''}
@@ -791,12 +794,14 @@ function renderTable(){
   if(list.length===0){ tb.innerHTML='<tr><td colspan="8" class="empty">没有匹配的客户</td></tr>'; return; }
   list.forEach(c=>{
     const ss=STAGE_MAP[stageOf(c,'sales')]; const ds=STAGE_MAP[stageOf(c,'delivery')]; const ll=lastLog(c);
+    const deliveryLabel=isDeliveryCustomer(c)?ds.label:'未进入';
+    const deliveryColor=isDeliveryCustomer(c)?ds.dot:'var(--dim)';
     const tr=document.createElement('tr'); tr.onclick=()=>openModal(c.id);
     tr.innerHTML=
       `<td><span class="name">${esc(c.name||'未命名')}</span> ${c.converted==='yes'?'<span style="color:var(--accent3)">✦</span>':''}</td>
        <td>${esc(c.wx||'—')}</td>
        <td><span class="status-chip" style="color:${ss.dot};border-color:${ss.dot}66">${ss.label}</span></td>
-       <td><span class="status-chip" style="color:${ds.dot};border-color:${ds.dot}66">${ds.label}</span></td>
+       <td><span class="status-chip" style="color:${deliveryColor};border-color:${isDeliveryCustomer(c)?ds.dot+'66':'var(--border2)'}">${deliveryLabel}</span></td>
        <td>${PRODUCT_LABEL[c.product||'无']}</td>
        <td>${esc(c.source||'—')}</td>
        <td>${esc(c.contact||'—')}</td>
@@ -815,6 +820,7 @@ function refreshSourceFilters(){
 
 function onDrop(id,track,stage){
   const c=data.find(x=>x.id===id); if(!c||stageOf(c,track)===stage) return;
+  if(track==='delivery'&&!isDeliveryCustomer(c)){ toast('成交后才会进入交付流程'); return; }
   const field=stageField(track);
   c[field]=stage;
   if(track==='sales') c.status=stage;
