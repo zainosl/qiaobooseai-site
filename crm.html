@@ -494,6 +494,7 @@ const stagesOf = (track)=>STAGES.filter(s=>s.track===track);
 const stageField = (track)=>track==='sales'?'salesStatus':'deliveryStatus';
 const stageOf = (c,track)=>c[stageField(track)] || (track==='sales'?'intent':'to_serve');
 const isDeliveryCustomer = (c)=>stageOf(c,'sales')==='won' || c.converted==='yes';
+const isInDeliveryFlow = (c)=>isDeliveryCustomer(c) && c.deliveryRemoved!=='yes';
 const PRODUCT_LABEL = {'01':'01 能力判断','02':'02 首单冲刺','无':'未指定'};
 // 旧状态 → 新状态迁移表（兼容历史数据）
 const LEGACY_MAP = {lead:'intent', invited:'intent', trial:'deposit', delivered:'to_serve', serving:'ability_mine'};
@@ -503,6 +504,7 @@ const KEY = 'yrgs_crm_v1';
 let data = loadLocal();   // 先用本地数据秒开，再异步拉云端覆盖
 let view = 'board';
 let activeTrack = 'sales';
+let modalTrack = 'sales';
 let logsDraft = [];
 
 function loadLocal(){
@@ -598,13 +600,14 @@ function fromRow(r){
     id:r.id, name:r.name||'', wx:r.wx||'', status:r.status||'intent',
     salesStatus:r.sales_status||r.salesStatus||meta.salesStatus||'',
     deliveryStatus:r.delivery_status||r.deliveryStatus||meta.deliveryStatus||'',
+    deliveryRemoved:r.deliveryRemoved||meta.deliveryRemoved||'',
     product:r.product||'无', source:r.source||'', contact:r.contact||'',
     converted:r.converted||'no', notes:r.notes||'', logs:visibleLogs(r.logs)
   };
 }
 function packLogs(c){
   const logs=visibleLogs(c.logs);
-  return [{_crmMeta:true,salesStatus:c.salesStatus||'intent',deliveryStatus:c.deliveryStatus||'to_serve'},...logs];
+  return [{_crmMeta:true,salesStatus:c.salesStatus||'intent',deliveryStatus:c.deliveryStatus||'to_serve',deliveryRemoved:c.deliveryRemoved||''},...logs];
 }
 function visibleLogs(logs){
   return Array.isArray(logs) ? logs.filter(l=>!l?._crmMeta) : [];
@@ -713,7 +716,7 @@ function render(){
 function renderStats(){
   const total=data.length;
   const inSales=data.filter(c=>!['lost','won'].includes(stageOf(c,'sales'))).length;
-  const inDelivery=data.filter(c=>isDeliveryCustomer(c)&&!['served','aftercare'].includes(stageOf(c,'delivery'))).length;
+  const inDelivery=data.filter(c=>isInDeliveryFlow(c)&&!['served','aftercare'].includes(stageOf(c,'delivery'))).length;
   const won=data.filter(c=>c.converted==='yes'||stageOf(c,'sales')==='won').length;
   document.getElementById('statRow').innerHTML=
     `<div class="stat"><b>${total}</b><span>客户总数</span></div>
@@ -729,7 +732,7 @@ function renderBoard(){
   const fp=document.getElementById('filterProduct').value;
   const prodTag=fp?`<span class="track-prod">${fp==='01'?'01 能力判断':'02 首单冲刺'}</span>`:'';
   TRACKS.filter(t=>t.key===activeTrack).forEach(t=>{
-    const trackList=t.key==='delivery'?list.filter(isDeliveryCustomer):list;
+    const trackList=t.key==='delivery'?list.filter(isInDeliveryFlow):list;
     const tStages=stagesOf(t.key);
     const tCount=trackList.length;
     const section=document.createElement('div'); section.className='track';
@@ -760,7 +763,7 @@ function cardEl(c,track){
   const canUpsell = track==='delivery' && c.product==='01' && ['served','aftercare'].includes(stageOf(c,'delivery'));
   const pairStage = track==='sales' ? STAGE_MAP[stageOf(c,'delivery')] : STAGE_MAP[stageOf(c,'sales')];
   const pairLabel = track==='sales' ? '交付' : '销售';
-  const pairText = track==='sales'&&!isDeliveryCustomer(c) ? '未进入' : (pairStage?pairStage.label:'—');
+  const pairText = track==='sales'&&!isInDeliveryFlow(c) ? '未进入' : (pairStage?pairStage.label:'—');
   el.innerHTML=
     `<div class="row1"><span class="name">${esc(c.name||'未命名')}</span>${conv}</div>
      ${c.wx?`<div class="note-wx">微信：${esc(c.wx)}</div>`:''}
@@ -773,7 +776,7 @@ function cardEl(c,track){
      ${canUpsell?`<button class="upsell-btn" data-up="${c.id}">↗ 转 02 意向</button>`:''}`;
   el.addEventListener('dragstart',e=>{e.dataTransfer.setData('id',c.id); el.classList.add('dragging');});
   el.addEventListener('dragend',()=>el.classList.remove('dragging'));
-  el.addEventListener('click',e=>{ if(e.target.dataset.up) return; openModal(c.id); });
+  el.addEventListener('click',e=>{ if(e.target.dataset.up) return; openModal(c.id,track); });
   const up=el.querySelector('.upsell-btn');
   if(up) up.addEventListener('click',e=>{ e.stopPropagation(); upsellTo02(c.id); });
   return el;
@@ -794,14 +797,14 @@ function renderTable(){
   if(list.length===0){ tb.innerHTML='<tr><td colspan="8" class="empty">没有匹配的客户</td></tr>'; return; }
   list.forEach(c=>{
     const ss=STAGE_MAP[stageOf(c,'sales')]; const ds=STAGE_MAP[stageOf(c,'delivery')]; const ll=lastLog(c);
-    const deliveryLabel=isDeliveryCustomer(c)?ds.label:'未进入';
-    const deliveryColor=isDeliveryCustomer(c)?ds.dot:'var(--dim)';
-    const tr=document.createElement('tr'); tr.onclick=()=>openModal(c.id);
+    const deliveryLabel=isInDeliveryFlow(c)?ds.label:'未进入';
+    const deliveryColor=isInDeliveryFlow(c)?ds.dot:'var(--dim)';
+    const tr=document.createElement('tr'); tr.onclick=()=>openModal(c.id,'sales');
     tr.innerHTML=
       `<td><span class="name">${esc(c.name||'未命名')}</span> ${c.converted==='yes'?'<span style="color:var(--accent3)">✦</span>':''}</td>
        <td>${esc(c.wx||'—')}</td>
        <td><span class="status-chip" style="color:${ss.dot};border-color:${ss.dot}66">${ss.label}</span></td>
-       <td><span class="status-chip" style="color:${deliveryColor};border-color:${isDeliveryCustomer(c)?ds.dot+'66':'var(--border2)'}">${deliveryLabel}</span></td>
+       <td><span class="status-chip" style="color:${deliveryColor};border-color:${isInDeliveryFlow(c)?ds.dot+'66':'var(--border2)'}">${deliveryLabel}</span></td>
        <td>${PRODUCT_LABEL[c.product||'无']}</td>
        <td>${esc(c.source||'—')}</td>
        <td>${esc(c.contact||'—')}</td>
@@ -828,6 +831,7 @@ function onDrop(id,track,stage){
   if(track==='sales'&&stage==='won'&&c.converted!=='yes'){
     c.converted='yes';
     if(!c.deliveryStatus) c.deliveryStatus='to_serve';
+    c.deliveryRemoved='';
   }
   persist(c); render(); toast('已更新状态');
 }
@@ -837,11 +841,13 @@ function fillStageSelect(){
   document.getElementById('f_sales_status').innerHTML=stagesOf('sales').map(s=>`<option value="${s.key}">${s.label}</option>`).join('');
   document.getElementById('f_delivery_status').innerHTML=stagesOf('delivery').map(s=>`<option value="${s.key}">${s.label}</option>`).join('');
 }
-function openModal(id){
+function openModal(id,track='sales'){
   fillStageSelect(); logsDraft=[];
   const isEdit=!!id;
+  modalTrack=track;
   document.getElementById('modalTitle').textContent=isEdit?'编辑客户':'新增客户';
   document.getElementById('deleteBtn').style.display=isEdit?'block':'none';
+  document.getElementById('deleteBtn').textContent=track==='delivery'?'退出交付流程':'删除客户';
   if(isEdit){
     const c=data.find(x=>x.id===id);
     document.getElementById('f_id').value=c.id;
@@ -882,6 +888,8 @@ function saveCustomer(){
   const name=document.getElementById('f_name').value.trim();
   if(!name){ toast('请填写姓名'); document.getElementById('f_name').focus(); return; }
   const id=document.getElementById('f_id').value;
+  const existing=id?data.find(x=>x.id===id):null;
+  const wasDeliveryCustomer=existing?isDeliveryCustomer(existing):false;
   const obj={
     name,
     wx:document.getElementById('f_wx').value.trim(),
@@ -895,6 +903,7 @@ function saveCustomer(){
     logs:logsDraft,
   };
   obj.status=obj.salesStatus;
+  if((obj.salesStatus==='won'||obj.converted==='yes')&&!wasDeliveryCustomer){ obj.deliveryRemoved=''; }
   let row;
   if(id){ row=data.find(x=>x.id===id); Object.assign(row,obj); }
   else{ obj.id=uid(); data.push(obj); row=obj; }
@@ -903,6 +912,14 @@ function saveCustomer(){
 function deleteCustomer(){
   const id=document.getElementById('f_id').value;
   if(!id) return;
+  const c=data.find(x=>x.id===id);
+  if(modalTrack==='delivery'&&c){
+    if(!confirm('从交付流程移除这个客户？销售流程中的客户记录会保留。')) return;
+    c.deliveryRemoved='yes';
+    c.logs=c.logs||[]; c.logs.push({t:todayStr(),text:'已从交付流程移除'});
+    persist(c); closeModal(); render(); toast('已退出交付流程');
+    return;
+  }
   if(!confirm('确定删除这个客户？此操作不可撤销。')) return;
   data=data.filter(x=>x.id!==id); persistLocal(); removeFromCloud(id); closeModal(); render(); toast('已删除');
 }
@@ -922,7 +939,7 @@ function importData(e){
       const arr=JSON.parse(r.result);
       if(!Array.isArray(arr)) throw 0;
       if(!confirm('导入将覆盖当前 '+data.length+' 条数据，确定？')) return;
-      data=arr.map(c=>({id:c.id||uid(),name:c.name||'',wx:c.wx||'',status:c.status||'intent',salesStatus:c.salesStatus||c.sales_status||'',deliveryStatus:c.deliveryStatus||c.delivery_status||'',product:c.product||'无',source:c.source||'',contact:c.contact||'',converted:c.converted||'no',notes:c.notes||'',logs:c.logs||[]}));
+      data=arr.map(c=>({id:c.id||uid(),name:c.name||'',wx:c.wx||'',status:c.status||'intent',salesStatus:c.salesStatus||c.sales_status||'',deliveryStatus:c.deliveryStatus||c.delivery_status||'',deliveryRemoved:c.deliveryRemoved||'',product:c.product||'无',source:c.source||'',contact:c.contact||'',converted:c.converted||'no',notes:c.notes||'',logs:c.logs||[]}));
       data=migrate(data);
       persist(); render(); toast('导入成功');
     }catch(err){ toast('文件格式不正确'); }
