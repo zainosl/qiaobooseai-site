@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>一人公司 · 客户管理 CRM</title>
+<link rel="icon" href="data:,">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -257,6 +258,13 @@ td .name{font-weight:700;}
 .lockerr{color:var(--danger); font-size:12px; margin-top:12px; min-height:16px;}
 </style>
 <link rel="stylesheet" href="mobile-fixes.css?v=20260621" />
+<script>
+window.CRM_CONFIG = {
+  accessPassword: '79862g3Q',
+  supabaseUrl: 'https://mswvfuzgqtflhvopxdlt.supabase.co',
+  supabaseKey: 'sb_publishable_YtuNq43vVgo73PgvP_p-Xw_PgRg6PqO'
+};
+</script>
 </head>
 <body>
 
@@ -291,6 +299,10 @@ td .name{font-weight:700;}
     <button id="viewBoard" class="active" onclick="setView('board')">看板</button>
     <button id="viewTable" onclick="setView('table')">表格</button>
   </div>
+  <div class="seg seg-track" id="boardTrackTabs">
+    <button data-track="sales" class="active" onclick="setActiveTrack(this,'sales')">销售流程</button>
+    <button data-track="delivery" onclick="setActiveTrack(this,'delivery')">交付流程</button>
+  </div>
   <div class="seg seg-prod">
     <button data-prod="" class="active" onclick="setProduct(this,'')">全部</button>
     <button data-prod="01" onclick="setProduct(this,'01')">01 能力判断</button>
@@ -313,7 +325,7 @@ td .name{font-weight:700;}
 <div id="tableView" class="tablewrap hidden">
   <table>
     <thead><tr>
-      <th>姓名</th><th>微信备注</th><th>状态</th><th>产品</th><th>来源</th><th>联系方式</th><th>最近跟进</th>
+      <th>姓名</th><th>微信备注</th><th>销售阶段</th><th>交付阶段</th><th>产品</th><th>来源</th><th>联系方式</th><th>最近跟进</th>
     </tr></thead>
     <tbody id="tableBody"></tbody>
   </table>
@@ -331,7 +343,10 @@ td .name{font-weight:700;}
       <div class="field"><label>微信备注名</label><input type="text" id="f_wx" placeholder="微信里的备注"></div>
     </div>
     <div class="field2">
-      <div class="field"><label>所在阶段</label><select id="f_status"></select></div>
+      <div class="field"><label>销售阶段</label><select id="f_sales_status"></select></div>
+      <div class="field"><label>交付阶段</label><select id="f_delivery_status"></select></div>
+    </div>
+    <div class="field2">
       <div class="field"><label>体验产品</label>
         <select id="f_product">
           <option value="01">01 · 能力资产与商业切入口诊断</option>
@@ -375,15 +390,15 @@ td .name{font-weight:700;}
 <div class="toast" id="toast"></div>
 
 <script>
-/* ======================================================================
-   访问密码 —— 在这里修改你的密码（把下面引号里的内容换成你自己的）
-   注意：这是前端轻量防护，能挡住普通人随手打开，但懂技术的人查看源码
-   可绕过。不要把它当成真正的安全加密。
-   ====================================================================== */
-const ACCESS_PASSWORD = '79862g3Q';
+const CRM_CONFIG = window.CRM_CONFIG || {};
+const ACCESS_PASSWORD = CRM_CONFIG.accessPassword || '';
 const UNLOCK_KEY = 'yrgs_crm_unlocked';
 
 function tryUnlock(){
+  if(!ACCESS_PASSWORD){
+    document.getElementById('lockErr').textContent = '请先设置页面访问密码';
+    return;
+  }
   const val = document.getElementById('lockInput').value;
   if(val === ACCESS_PASSWORD){
     try{ sessionStorage.setItem(UNLOCK_KEY,'1'); }catch(e){}
@@ -416,25 +431,13 @@ function initGate(){
   else{ setTimeout(()=>document.getElementById('lockInput').focus(),60); }
 }
 
-/* ======================================================================
-   ☁️ 云端数据库（Supabase）配置 —— 在这里填你自己的两个参数
-   如何获取：见同目录《云数据库设置指南.md》
-
-   ① SUPABASE_URL      = 项目的 Project URL（形如 https://xxxx.supabase.co）
-   ② SUPABASE_KEY      = 「Publishable key」（sb_publishable_... 开头）
-                         旧版的 anon public key（eyJ... 开头）也可以，二选一。
-   ⚠️ 绝对不要填 Secret key / service_role —— 那会绕过所有安全策略，不能放前端！
-
-   没填（保持 'YOUR_...'）→ CRM 自动用纯本地模式，跟以前一样。
-   Publishable / anon key 是「公开密钥」，放前端是 Supabase 官方设计，
-   真正的数据保护靠数据库的 RLS 策略（指南里有）。
-   ====================================================================== */
-const SUPABASE_URL = 'https://mswvfuzgqtflhvopxdlt.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_YtuNq43vVgo73PgvP_p-Xw_PgRg6PqO';   // Publishable key 或旧版 anon key
+const SUPABASE_URL = CRM_CONFIG.supabaseUrl || '';
+const SUPABASE_KEY = CRM_CONFIG.supabaseKey || '';
 const TABLE = 'customers';
 
 let sb = null;                 // supabase client
 let cloudOn = false;           // 是否启用了云端
+let legacyCloudSchema = false; // 云端旧表没有 sales_status / delivery_status 时自动回退
 function initCloud(){
   const configured = SUPABASE_URL.indexOf('http')===0 && SUPABASE_KEY.length>20 && SUPABASE_KEY.indexOf('YOUR_')!==0;
   if(configured && window.supabase){
@@ -465,34 +468,40 @@ async function pushAllToCloud(){
 
 /* ---------- Config ----------
    双管道：销售轨(sales) + 交付轨(delivery)
-   客户在销售轨「已成交」后进入交付轨「待服务」。
+   两条流程彼此独立，同一个客户会同时出现在销售流程和交付流程。
 */
 const TRACKS = [
   {key:'sales',    label:'销售流程', hint:'按购买心智推进'},
-  {key:'delivery', label:'交付流程', hint:'仅已成交客户'},
+  {key:'delivery', label:'交付流程', hint:'按服务履约节点推进'},
 ];
 const STAGES = [
   // 销售轨
-  {key:'intent',   track:'sales',    label:'有意向',   dot:'#A9B0BA'},
-  {key:'deposit',  track:'sales',    label:'已付定金', dot:'#58E1C1'},
-  {key:'won',      track:'sales',    label:'已成交',   dot:'#7AF2D8'},
-  {key:'lost',     track:'sales',    label:'已流失',   dot:'#F6B66B'},
+  {key:'intent',       track:'sales',    label:'有意向',       dot:'#A9B0BA'},
+  {key:'deposit',      track:'sales',    label:'已付定金',     dot:'#58E1C1'},
+  {key:'won',          track:'sales',    label:'已成交',       dot:'#7AF2D8'},
+  {key:'lost',         track:'sales',    label:'已流失',       dot:'#F6B66B'},
   // 交付轨
-  {key:'to_serve', track:'delivery', label:'待服务',   dot:'#A9B0BA'},
-  {key:'serving',  track:'delivery', label:'服务中',   dot:'#58E1C1'},
-  {key:'served',   track:'delivery', label:'服务完成', dot:'#3BB89A'},
-  {key:'aftercare',track:'delivery', label:'售后中',   dot:'#7AF2D8'},
+  {key:'to_serve',     track:'delivery', label:'待服务',       dot:'#A9B0BA'},
+  {key:'ability_mine', track:'delivery', label:'能力挖掘',     dot:'#58E1C1'},
+  {key:'biz_research', track:'delivery', label:'商业模式调研', dot:'#7AF2D8'},
+  {key:'biz_plan',     track:'delivery', label:'商业模式计划', dot:'#3BB89A'},
+  {key:'biz_run',      track:'delivery', label:'商业模式跑通', dot:'#C4F970'},
+  {key:'served',       track:'delivery', label:'服务完成',     dot:'#3BB89A'},
+  {key:'aftercare',    track:'delivery', label:'售后中',       dot:'#7AF2D8'},
 ];
 const STAGE_MAP = Object.fromEntries(STAGES.map(s=>[s.key,s]));
 const stagesOf = (track)=>STAGES.filter(s=>s.track===track);
+const stageField = (track)=>track==='sales'?'salesStatus':'deliveryStatus';
+const stageOf = (c,track)=>c[stageField(track)] || (track==='sales'?'intent':'to_serve');
 const PRODUCT_LABEL = {'01':'01 能力判断','02':'02 首单冲刺','无':'未指定'};
 // 旧状态 → 新状态迁移表（兼容历史数据）
-const LEGACY_MAP = {lead:'intent', invited:'intent', trial:'deposit', delivered:'to_serve'};
+const LEGACY_MAP = {lead:'intent', invited:'intent', trial:'deposit', delivered:'to_serve', serving:'ability_mine'};
 const KEY = 'yrgs_crm_v1';
 
 /* ---------- State ---------- */
 let data = loadLocal();   // 先用本地数据秒开，再异步拉云端覆盖
 let view = 'board';
+let activeTrack = 'sales';
 let logsDraft = [];
 
 function loadLocal(){
@@ -504,8 +513,19 @@ function migrate(arr){
   if(!Array.isArray(arr)) return seed();
   let changed=false;
   arr.forEach(c=>{
-    if(LEGACY_MAP[c.status]){ c.status=LEGACY_MAP[c.status]; changed=true; }
-    if(!STAGE_MAP[c.status]){ c.status='intent'; changed=true; }
+    const oldStatus = LEGACY_MAP[c.status] || c.status;
+    const oldStage = STAGE_MAP[oldStatus];
+    if(!c.salesStatus){
+      c.salesStatus = oldStage?.track==='sales' ? oldStatus : ((oldStage?.track==='delivery' || c.converted==='yes') ? 'won' : 'intent');
+      changed=true;
+    }
+    if(!c.deliveryStatus){
+      c.deliveryStatus = oldStage?.track==='delivery' ? oldStatus : 'to_serve';
+      changed=true;
+    }
+    if(!STAGE_MAP[c.salesStatus] || STAGE_MAP[c.salesStatus].track!=='sales'){ c.salesStatus='intent'; changed=true; }
+    if(!STAGE_MAP[c.deliveryStatus] || STAGE_MAP[c.deliveryStatus].track!=='delivery'){ c.deliveryStatus='to_serve'; changed=true; }
+    c.status = c.salesStatus;
   });
   if(changed){ try{ localStorage.setItem(KEY,JSON.stringify(arr)); }catch(e){} }
   return arr;
@@ -521,11 +541,25 @@ async function persist(changedRow){
   setCloudStatus('syncing');
   try{
     if(changedRow){
-      const { error } = await sb.from(TABLE).upsert(toRow(changedRow));
+      const { error } = await sb.from(TABLE).upsert(legacyCloudSchema ? toLegacyRow(changedRow) : toRow(changedRow));
+      if(isMissingStatusColumn(error)){
+        legacyCloudSchema = true;
+        const retry = await sb.from(TABLE).upsert(toLegacyRow(changedRow));
+        if(retry.error) throw retry.error;
+        setCloudStatus('ok');
+        return;
+      }
       if(error) throw error;
     }else{
       // 批量：覆盖式同步整张表
-      const { error } = await sb.from(TABLE).upsert(data.map(toRow));
+      const { error } = await sb.from(TABLE).upsert(data.map(legacyCloudSchema ? toLegacyRow : toRow));
+      if(isMissingStatusColumn(error)){
+        legacyCloudSchema = true;
+        const retry = await sb.from(TABLE).upsert(data.map(toLegacyRow));
+        if(retry.error) throw retry.error;
+        setCloudStatus('ok');
+        return;
+      }
       if(error) throw error;
     }
     setCloudStatus('ok');
@@ -542,18 +576,46 @@ async function removeFromCloud(id){
 // 应用 ↔ 数据库 字段映射（数据库列名用下划线风格）
 function toRow(c){
   return {
-    id:c.id, name:c.name||'', wx:c.wx||'', status:c.status||'intent',
+    id:c.id, name:c.name||'', wx:c.wx||'', status:c.salesStatus||c.status||'intent',
+    sales_status:c.salesStatus||'intent', delivery_status:c.deliveryStatus||'to_serve',
     product:c.product||'无', source:c.source||'', contact:c.contact||'',
-    converted:c.converted||'no', notes:c.notes||'', logs:c.logs||[],
+    converted:c.converted||'no', notes:c.notes||'', logs:packLogs(c),
+    updated_at:new Date().toISOString()
+  };
+}
+function toLegacyRow(c){
+  return {
+    id:c.id, name:c.name||'', wx:c.wx||'', status:c.salesStatus||c.status||'intent',
+    product:c.product||'无', source:c.source||'', contact:c.contact||'',
+    converted:c.converted||'no', notes:c.notes||'', logs:packLogs(c),
     updated_at:new Date().toISOString()
   };
 }
 function fromRow(r){
+  const meta = readLogMeta(r.logs);
   return {
     id:r.id, name:r.name||'', wx:r.wx||'', status:r.status||'intent',
+    salesStatus:r.sales_status||r.salesStatus||meta.salesStatus||'',
+    deliveryStatus:r.delivery_status||r.deliveryStatus||meta.deliveryStatus||'',
     product:r.product||'无', source:r.source||'', contact:r.contact||'',
-    converted:r.converted||'no', notes:r.notes||'', logs:r.logs||[]
+    converted:r.converted||'no', notes:r.notes||'', logs:visibleLogs(r.logs)
   };
+}
+function packLogs(c){
+  const logs=visibleLogs(c.logs);
+  return [{_crmMeta:true,salesStatus:c.salesStatus||'intent',deliveryStatus:c.deliveryStatus||'to_serve'},...logs];
+}
+function visibleLogs(logs){
+  return Array.isArray(logs) ? logs.filter(l=>!l?._crmMeta) : [];
+}
+function readLogMeta(logs){
+  if(!Array.isArray(logs)) return {};
+  return logs.find(l=>l&&l._crmMeta) || {};
+}
+function isMissingStatusColumn(error){
+  if(!error) return false;
+  const msg=String(error.message||error.details||'').toLowerCase();
+  return msg.includes('sales_status') || msg.includes('delivery_status');
 }
 
 // 启动时：从云端拉取，作为真相源覆盖本地
@@ -583,7 +645,7 @@ function seed(){
   // 真实种子客户（来自微信，均为已付定金阶段）
   // wxNote = 微信备注名；source/添加时间据微信资料填写，未知留空
   const mk=(o)=>({
-    id:uid(), name:o.name, wx:o.wxNote||'', status:'deposit', product:o.product,
+    id:uid(), name:o.name, wx:o.wxNote||'', status:'deposit', salesStatus:'deposit', deliveryStatus:'to_serve', product:o.product,
     source:o.source||'', contact:o.wxId||'', converted:'no',
     notes:[o.role,o.region?('地区：'+o.region):'',o.added?('微信添加：'+o.added):''].filter(Boolean).join(' · '),
     logs:[{t:todayStr(),text:'已付定金，待安排服务'}]
@@ -607,6 +669,13 @@ function setView(v){
   document.getElementById('viewTable').classList.toggle('active',v==='table');
   document.getElementById('boardView').classList.toggle('hidden',v!=='board');
   document.getElementById('tableView').classList.toggle('hidden',v!=='table');
+  document.getElementById('boardTrackTabs').classList.toggle('hidden',v!=='board');
+  render();
+}
+
+function setActiveTrack(btn,track){
+  activeTrack=track;
+  document.querySelectorAll('.seg-track button').forEach(b=>b.classList.toggle('active',b===btn));
   render();
 }
 
@@ -642,13 +711,13 @@ function render(){
 
 function renderStats(){
   const total=data.length;
-  const inSales=data.filter(c=>STAGE_MAP[c.status]&&STAGE_MAP[c.status].track==='sales'&&c.status!=='lost'&&c.status!=='won').length;
-  const serving=data.filter(c=>c.status==='serving').length;
-  const won=data.filter(c=>c.converted==='yes'||c.status==='won').length;
+  const inSales=data.filter(c=>!['lost','won'].includes(stageOf(c,'sales'))).length;
+  const inDelivery=data.filter(c=>!['served','aftercare'].includes(stageOf(c,'delivery'))).length;
+  const won=data.filter(c=>c.converted==='yes'||stageOf(c,'sales')==='won').length;
   document.getElementById('statRow').innerHTML=
     `<div class="stat"><b>${total}</b><span>客户总数</span></div>
      <div class="stat"><b>${inSales}</b><span>销售跟进中</span></div>
-     <div class="stat"><b>${serving}</b><span>服务中</span></div>
+     <div class="stat"><b>${inDelivery}</b><span>交付推进中</span></div>
      <div class="stat"><b>${won}</b><span>已成交</span></div>`;
 }
 
@@ -658,40 +727,43 @@ function renderBoard(){
   board.innerHTML='';
   const fp=document.getElementById('filterProduct').value;
   const prodTag=fp?`<span class="track-prod">${fp==='01'?'01 能力判断':'02 首单冲刺'}</span>`:'';
-  TRACKS.forEach(t=>{
+  TRACKS.filter(t=>t.key===activeTrack).forEach(t=>{
     const tStages=stagesOf(t.key);
-    const tCount=list.filter(c=>STAGE_MAP[c.status] && STAGE_MAP[c.status].track===t.key).length;
+    const tCount=list.length;
     const section=document.createElement('div'); section.className='track';
     section.innerHTML=`<div class="track-head"><span class="track-name">${t.label}</span>${prodTag}
       <span class="track-hint">${t.hint}</span><span class="track-count">${tCount}</span></div>`;
     const cols=document.createElement('div'); cols.className='track-cols';
     tStages.forEach(s=>{
-      const items=list.filter(c=>c.status===s.key);
+      const items=list.filter(c=>stageOf(c,t.key)===s.key);
       const col=document.createElement('div'); col.className='col';
       col.innerHTML=`<div class="col-head"><span class="dot" style="background:${s.dot}"></span><h3>${s.label}</h3><span class="count">${items.length}</span></div>`;
-      const body=document.createElement('div'); body.className='col-body'; body.dataset.stage=s.key;
+      const body=document.createElement('div'); body.className='col-body'; body.dataset.track=t.key; body.dataset.stage=s.key;
       body.addEventListener('dragover',e=>{e.preventDefault(); body.classList.add('drag-over');});
       body.addEventListener('dragleave',()=>body.classList.remove('drag-over'));
-      body.addEventListener('drop',e=>{e.preventDefault(); body.classList.remove('drag-over'); onDrop(e.dataTransfer.getData('id'),s.key);});
+      body.addEventListener('drop',e=>{e.preventDefault(); body.classList.remove('drag-over'); onDrop(e.dataTransfer.getData('id'),t.key,s.key);});
       if(items.length===0) body.innerHTML='<div class="empty">— 空 —</div>';
-      items.forEach(c=>body.appendChild(cardEl(c)));
+      items.forEach(c=>body.appendChild(cardEl(c,t.key)));
       col.appendChild(body); cols.appendChild(col);
     });
     section.appendChild(cols); board.appendChild(section);
   });
 }
 
-function cardEl(c){
+function cardEl(c,track){
   const el=document.createElement('div'); el.className='ccard'; el.draggable=true; el.dataset.id=c.id;
   const ll=lastLog(c);
   const conv=(c.converted==='yes')?'<span class="conv" title="已转化付费">✦</span>':'';
   // 01 客户在交付完成/售后阶段，显示「转 02 意向」入口
-  const canUpsell = (c.product==='01') && (c.status==='served' || c.status==='aftercare');
+  const canUpsell = track==='delivery' && c.product==='01' && ['served','aftercare'].includes(stageOf(c,'delivery'));
+  const pairStage = track==='sales' ? STAGE_MAP[stageOf(c,'delivery')] : STAGE_MAP[stageOf(c,'sales')];
+  const pairLabel = track==='sales' ? '交付' : '销售';
   el.innerHTML=
     `<div class="row1"><span class="name">${esc(c.name||'未命名')}</span>${conv}</div>
      ${c.wx?`<div class="note-wx">微信：${esc(c.wx)}</div>`:''}
      <div class="meta">
        <span class="pill prod">${PRODUCT_LABEL[c.product||'无']}</span>
+       <span class="pill src">${pairLabel}：${pairStage?pairStage.label:'—'}</span>
        ${c.source?`<span class="pill src">${esc(c.source)}</span>`:''}
      </div>
      ${ll?`<div class="last">↳ ${ll.t} ${esc(ll.text)}</div>`:''}
@@ -708,7 +780,7 @@ function cardEl(c){
 function upsellTo02(id){
   const c=data.find(x=>x.id===id); if(!c) return;
   if(!confirm('把「'+(c.name||'该客户')+'」转入 02 首单冲刺的「有意向」？\n（产品改为 02，回到销售轨）')) return;
-  c.product='02'; c.status='intent'; c.converted='no';
+  c.product='02'; c.salesStatus='intent'; c.status='intent'; c.converted='no';
   c.logs=c.logs||[]; c.logs.push({t:todayStr(),text:'01 服务完成，转入 02「有意向」'});
   persist(c); render(); toast('已转入 02 意向');
 }
@@ -716,14 +788,15 @@ function upsellTo02(id){
 function renderTable(){
   const list=getFiltered();
   const tb=document.getElementById('tableBody'); tb.innerHTML='';
-  if(list.length===0){ tb.innerHTML='<tr><td colspan="7" class="empty">没有匹配的客户</td></tr>'; return; }
+  if(list.length===0){ tb.innerHTML='<tr><td colspan="8" class="empty">没有匹配的客户</td></tr>'; return; }
   list.forEach(c=>{
-    const s=STAGE_MAP[c.status]; const ll=lastLog(c);
+    const ss=STAGE_MAP[stageOf(c,'sales')]; const ds=STAGE_MAP[stageOf(c,'delivery')]; const ll=lastLog(c);
     const tr=document.createElement('tr'); tr.onclick=()=>openModal(c.id);
     tr.innerHTML=
       `<td><span class="name">${esc(c.name||'未命名')}</span> ${c.converted==='yes'?'<span style="color:var(--accent3)">✦</span>':''}</td>
        <td>${esc(c.wx||'—')}</td>
-       <td><span class="status-chip" style="color:${s.dot};border-color:${s.dot}66">${s.label}</span></td>
+       <td><span class="status-chip" style="color:${ss.dot};border-color:${ss.dot}66">${ss.label}</span></td>
+       <td><span class="status-chip" style="color:${ds.dot};border-color:${ds.dot}66">${ds.label}</span></td>
        <td>${PRODUCT_LABEL[c.product||'无']}</td>
        <td>${esc(c.source||'—')}</td>
        <td>${esc(c.contact||'—')}</td>
@@ -740,28 +813,23 @@ function refreshSourceFilters(){
   document.getElementById('srcList').innerHTML=sources.map(s=>`<option value="${esc(s)}">`).join('');
 }
 
-function onDrop(id,stage){
-  const c=data.find(x=>x.id===id); if(!c||c.status===stage) return;
-  c.status=stage;
+function onDrop(id,track,stage){
+  const c=data.find(x=>x.id===id); if(!c||stageOf(c,track)===stage) return;
+  const field=stageField(track);
+  c[field]=stage;
+  if(track==='sales') c.status=stage;
   c.logs=c.logs||[]; c.logs.push({t:todayStr(),text:'移至「'+STAGE_MAP[stage].label+'」'});
-  if(stage==='won'&&c.converted!=='yes'){
+  if(track==='sales'&&stage==='won'&&c.converted!=='yes'){
     c.converted='yes';
-    // 成交后自动进入交付轨「待服务」
-    c.status='to_serve';
-    c.logs.push({t:todayStr(),text:'已成交，自动进入交付「待服务」'});
-    persist(c); render(); toast('已成交 → 进入交付待服务');
-    return;
+    if(!c.deliveryStatus) c.deliveryStatus='to_serve';
   }
   persist(c); render(); toast('已更新状态');
 }
 
 /* ---------- Modal ---------- */
 function fillStageSelect(){
-  const html=TRACKS.map(t=>
-    `<optgroup label="${t.label}">`+
-    stagesOf(t.key).map(s=>`<option value="${s.key}">${s.label}</option>`).join('')+
-    `</optgroup>`).join('');
-  document.getElementById('f_status').innerHTML=html;
+  document.getElementById('f_sales_status').innerHTML=stagesOf('sales').map(s=>`<option value="${s.key}">${s.label}</option>`).join('');
+  document.getElementById('f_delivery_status').innerHTML=stagesOf('delivery').map(s=>`<option value="${s.key}">${s.label}</option>`).join('');
 }
 function openModal(id){
   fillStageSelect(); logsDraft=[];
@@ -773,7 +841,8 @@ function openModal(id){
     document.getElementById('f_id').value=c.id;
     document.getElementById('f_name').value=c.name||'';
     document.getElementById('f_wx').value=c.wx||'';
-    document.getElementById('f_status').value=c.status||'intent';
+    document.getElementById('f_sales_status').value=stageOf(c,'sales');
+    document.getElementById('f_delivery_status').value=stageOf(c,'delivery');
     document.getElementById('f_product').value=c.product||'无';
     document.getElementById('f_source').value=c.source||'';
     document.getElementById('f_contact').value=c.contact||'';
@@ -782,7 +851,8 @@ function openModal(id){
     logsDraft=JSON.parse(JSON.stringify(c.logs||[]));
   }else{
     ['f_id','f_name','f_wx','f_source','f_contact','f_notes'].forEach(x=>document.getElementById(x).value='');
-    document.getElementById('f_status').value='intent';
+    document.getElementById('f_sales_status').value='intent';
+    document.getElementById('f_delivery_status').value='to_serve';
     document.getElementById('f_product').value='01';
     document.getElementById('f_converted').value='no';
   }
@@ -809,7 +879,8 @@ function saveCustomer(){
   const obj={
     name,
     wx:document.getElementById('f_wx').value.trim(),
-    status:document.getElementById('f_status').value,
+    salesStatus:document.getElementById('f_sales_status').value,
+    deliveryStatus:document.getElementById('f_delivery_status').value,
     product:document.getElementById('f_product').value,
     source:document.getElementById('f_source').value.trim(),
     contact:document.getElementById('f_contact').value.trim(),
@@ -817,6 +888,7 @@ function saveCustomer(){
     notes:document.getElementById('f_notes').value.trim(),
     logs:logsDraft,
   };
+  obj.status=obj.salesStatus;
   let row;
   if(id){ row=data.find(x=>x.id===id); Object.assign(row,obj); }
   else{ obj.id=uid(); data.push(obj); row=obj; }
@@ -844,7 +916,7 @@ function importData(e){
       const arr=JSON.parse(r.result);
       if(!Array.isArray(arr)) throw 0;
       if(!confirm('导入将覆盖当前 '+data.length+' 条数据，确定？')) return;
-      data=arr.map(c=>({id:c.id||uid(),name:c.name||'',wx:c.wx||'',status:c.status||'intent',product:c.product||'无',source:c.source||'',contact:c.contact||'',converted:c.converted||'no',notes:c.notes||'',logs:c.logs||[]}));
+      data=arr.map(c=>({id:c.id||uid(),name:c.name||'',wx:c.wx||'',status:c.status||'intent',salesStatus:c.salesStatus||c.sales_status||'',deliveryStatus:c.deliveryStatus||c.delivery_status||'',product:c.product||'无',source:c.source||'',contact:c.contact||'',converted:c.converted||'no',notes:c.notes||'',logs:c.logs||[]}));
       data=migrate(data);
       persist(); render(); toast('导入成功');
     }catch(err){ toast('文件格式不正确'); }
