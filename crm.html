@@ -479,6 +479,7 @@ const STAGES = [
   {key:'intent',       track:'sales',    label:'有意向',       dot:'#A9B0BA'},
   {key:'deposit',      track:'sales',    label:'已付定金',     dot:'#58E1C1'},
   {key:'won',          track:'sales',    label:'已成交',       dot:'#7AF2D8'},
+  {key:'abandoned',    track:'sales',    label:'已放弃',       dot:'#6F7682'},
   {key:'lost',         track:'sales',    label:'已流失',       dot:'#F6B66B'},
   // 交付轨
   {key:'to_serve',     track:'delivery', label:'待服务',       dot:'#A9B0BA'},
@@ -493,7 +494,8 @@ const STAGE_MAP = Object.fromEntries(STAGES.map(s=>[s.key,s]));
 const stagesOf = (track)=>STAGES.filter(s=>s.track===track);
 const stageField = (track)=>track==='sales'?'salesStatus':'deliveryStatus';
 const stageOf = (c,track)=>c[stageField(track)] || (track==='sales'?'intent':'to_serve');
-const isDeliveryCustomer = (c)=>stageOf(c,'sales')==='won' || c.converted==='yes';
+const isClosedOut = (c)=>['lost','abandoned'].includes(stageOf(c,'sales'));
+const isDeliveryCustomer = (c)=>stageOf(c,'sales')==='won' || (c.converted==='yes'&&!isClosedOut(c));
 const isInDeliveryFlow = (c)=>isDeliveryCustomer(c) && c.deliveryRemoved!=='yes';
 const PRODUCT_LABEL = {'01':'01 能力判断','02':'02 首单冲刺','无':'未指定'};
 // 旧状态 → 新状态迁移表（兼容历史数据）
@@ -715,9 +717,9 @@ function render(){
 
 function renderStats(){
   const total=data.length;
-  const inSales=data.filter(c=>!['lost','won'].includes(stageOf(c,'sales'))).length;
+  const inSales=data.filter(c=>!['lost','abandoned','won'].includes(stageOf(c,'sales'))).length;
   const inDelivery=data.filter(c=>isInDeliveryFlow(c)&&!['served','aftercare'].includes(stageOf(c,'delivery'))).length;
-  const won=data.filter(c=>c.converted==='yes'||stageOf(c,'sales')==='won').length;
+  const won=data.filter(c=>stageOf(c,'sales')==='won'||(c.converted==='yes'&&!isClosedOut(c))).length;
   document.getElementById('statRow').innerHTML=
     `<div class="stat"><b>${total}</b><span>客户总数</span></div>
      <div class="stat"><b>${inSales}</b><span>销售跟进中</span></div>
