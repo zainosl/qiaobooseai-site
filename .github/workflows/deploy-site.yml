@@ -64,19 +64,11 @@ jobs:
           scp -i ~/.ssh/aliyun_deploy_key server/crm-api/server.py "$ALIYUN_USER@$ALIYUN_HOST:/tmp/qiaoboose-crm-api.py"
 
           ssh -i ~/.ssh/aliyun_deploy_key "$ALIYUN_USER@$ALIYUN_HOST" '
-            set -Ee
-            DEBUG=/var/www/qiaoboose-site/crm-api-deploy-debug.txt
-            echo "start $(date -Is)" > "$DEBUG"
-            trap '"'"'code=$?; echo "FAILED line $LINENO code $code $(date -Is)" >> "$DEBUG"; exit $code'"'"' ERR
-            step(){ echo "$1 $(date -Is)" >> "$DEBUG"; }
-
-            step "mkdir"
+            set -e
             mkdir -p /opt/qiaoboose-crm-api /var/lib/qiaoboose-crm
-            step "move server"
             mv /tmp/qiaoboose-crm-api.py /opt/qiaoboose-crm-api/server.py
             chmod 755 /opt/qiaoboose-crm-api/server.py
 
-            step "write systemd"
             cat > /etc/systemd/system/qiaoboose-crm-api.service <<'"'"'SERVICE'"'"'
           [Unit]
           Description=Qiaoboose CRM JSON API
@@ -94,7 +86,6 @@ jobs:
           WantedBy=multi-user.target
           SERVICE
 
-            step "write nginx"
             cp /etc/nginx/conf.d/ability-intake.conf /etc/nginx/conf.d/ability-intake.conf.bak.$(date +%F-%H%M%S)
             cat > /etc/nginx/conf.d/ability-intake.conf <<'"'"'NGINX'"'"'
           server {
@@ -153,20 +144,13 @@ jobs:
           }
           NGINX
 
-            step "systemd daemon-reload"
+            rm -f /var/www/qiaoboose-site/crm-api-deploy-debug.txt
             systemctl daemon-reload
-            step "py compile"
             python3 -m py_compile /opt/qiaoboose-crm-api/server.py
-            step "enable service"
             systemctl enable --now qiaoboose-crm-api.service
-            step "restart service"
             systemctl restart qiaoboose-crm-api.service
             sleep 1
-            step "service active check"
             systemctl is-active --quiet qiaoboose-crm-api.service
-            step "nginx test"
             nginx -t
-            step "nginx reload"
             nginx -s reload
-            step "done"
           '

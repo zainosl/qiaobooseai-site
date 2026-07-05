@@ -7,6 +7,7 @@ import shutil
 import tempfile
 from datetime import datetime, timezone
 from socketserver import ThreadingMixIn
+from urllib.parse import urlparse
 
 
 class ThreadingHTTPServer(ThreadingMixIn, HTTPServer):
@@ -79,16 +80,18 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self):
-        if self.path == "/health":
+        path = urlparse(self.path).path
+        if path == "/health":
             return self.json_response({"ok": True, "time": utc_now()})
-        if self.path != "/customers":
+        if path != "/customers":
             return self.error_response(404, "not found")
         if not self.authorized():
             return self.error_response(401, "unauthorized")
         return self.json_response(read_payload())
 
     def do_PUT(self):
-        if self.path != "/customers":
+        path = urlparse(self.path).path
+        if path != "/customers":
             return self.error_response(404, "not found")
         if not self.authorized():
             return self.error_response(401, "unauthorized")
