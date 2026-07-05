@@ -482,13 +482,16 @@ const STAGES = [
   {key:'abandoned',    track:'sales',    label:'已放弃',       dot:'#6F7682'},
   {key:'lost',         track:'sales',    label:'已流失',       dot:'#F6B66B'},
   // 交付轨
-  {key:'to_serve',     track:'delivery', label:'待服务',       dot:'#A9B0BA'},
-  {key:'ability_mine', track:'delivery', label:'能力挖掘',     dot:'#58E1C1'},
-  {key:'biz_research', track:'delivery', label:'商业模式调研', dot:'#7AF2D8'},
-  {key:'biz_plan',     track:'delivery', label:'商业模式计划', dot:'#3BB89A'},
-  {key:'biz_run',      track:'delivery', label:'商业模式跑通', dot:'#C4F970'},
-  {key:'served',       track:'delivery', label:'服务完成',     dot:'#3BB89A'},
-  {key:'aftercare',    track:'delivery', label:'售后中',       dot:'#7AF2D8'},
+  {key:'to_serve',             track:'delivery', label:'待服务',       dot:'#A9B0BA'},
+  {key:'material_collecting',  track:'delivery', label:'整理材料中',   dot:'#A9B0BA'},
+  {key:'material_received',    track:'delivery', label:'材料已提交',   dot:'#58E1C1'},
+  {key:'workspace_pending',    track:'delivery', label:'待录入工作台', dot:'#7AF2D8'},
+  {key:'workspace_connecting', track:'delivery', label:'工作台对接中', dot:'#3BB89A'},
+  {key:'biz_research',         track:'delivery', label:'商业模式调研', dot:'#7AF2D8'},
+  {key:'biz_plan',             track:'delivery', label:'商业模式计划', dot:'#3BB89A'},
+  {key:'biz_run',              track:'delivery', label:'商业模式跑通', dot:'#C4F970'},
+  {key:'served',               track:'delivery', label:'服务完成',     dot:'#3BB89A'},
+  {key:'aftercare',            track:'delivery', label:'售后中',       dot:'#7AF2D8'},
 ];
 const STAGE_MAP = Object.fromEntries(STAGES.map(s=>[s.key,s]));
 const stagesOf = (track)=>STAGES.filter(s=>s.track===track);
@@ -501,7 +504,7 @@ const isDeliveryCustomer = (c)=>stageOf(c,'sales')==='won' || (c.converted==='ye
 const isInDeliveryFlow = (c)=>isDeliveryCustomer(c) && c.deliveryRemoved!=='yes';
 const PRODUCT_LABEL = {'01':'01 能力判断','02':'02 首单冲刺','无':'未指定'};
 // 旧状态 → 新状态迁移表（兼容历史数据）
-const LEGACY_MAP = {lead:'intent', invited:'intent', trial:'deposit', delivered:'to_serve', serving:'ability_mine'};
+const LEGACY_MAP = {lead:'intent', invited:'intent', trial:'deposit', delivered:'to_serve', serving:'material_received', ability_mine:'material_received'};
 const KEY = 'yrgs_crm_v1';
 
 /* ---------- State ---------- */
@@ -520,6 +523,8 @@ function migrate(arr){
   if(!Array.isArray(arr)) return seed();
   let changed=false;
   arr.forEach(c=>{
+    if(LEGACY_MAP[c.salesStatus]){ c.salesStatus=LEGACY_MAP[c.salesStatus]; changed=true; }
+    if(LEGACY_MAP[c.deliveryStatus]){ c.deliveryStatus=LEGACY_MAP[c.deliveryStatus]; changed=true; }
     const oldStatus = LEGACY_MAP[c.status] || c.status;
     const oldStage = STAGE_MAP[oldStatus];
     if(!c.salesStatus){
