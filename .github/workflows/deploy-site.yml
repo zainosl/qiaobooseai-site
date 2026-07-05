@@ -1,0 +1,56 @@
+name: Deploy site to Aliyun
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout site
+        uses: actions/checkout@v4
+
+      - name: Check ICP footer
+        run: grep -q "粤ICP备2026086998号" index.html
+
+      - name: Configure SSH
+        env:
+          ALIYUN_HOST: ${{ secrets.ALIYUN_HOST }}
+          ALIYUN_SSH_KEY: ${{ secrets.ALIYUN_SSH_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "$ALIYUN_SSH_KEY" > ~/.ssh/aliyun_deploy_key
+          chmod 600 ~/.ssh/aliyun_deploy_key
+          ssh-keyscan -H "$ALIYUN_HOST" >> ~/.ssh/known_hosts
+
+      - name: Deploy static site
+        env:
+          ALIYUN_HOST: ${{ secrets.ALIYUN_HOST }}
+          ALIYUN_USER: ${{ secrets.ALIYUN_USER }}
+        run: |
+          tar \
+            --exclude='.git' \
+            --exclude='.github' \
+            -czf /tmp/qiaoboose-site.tar.gz .
+
+          ssh -i ~/.ssh/aliyun_deploy_key "$ALIYUN_USER@$ALIYUN_HOST" '
+            set -e
+            rm -rf /tmp/qiaoboose-site-next
+            mkdir -p /tmp/qiaoboose-site-next
+          '
+
+          scp -i ~/.ssh/aliyun_deploy_key /tmp/qiaoboose-site.tar.gz "$ALIYUN_USER@$ALIYUN_HOST:/tmp/qiaoboose-site.tar.gz"
+
+          ssh -i ~/.ssh/aliyun_deploy_key "$ALIYUN_USER@$ALIYUN_HOST" '
+            set -e
+            tar -xzf /tmp/qiaoboose-site.tar.gz -C /tmp/qiaoboose-site-next
+            rm -rf /var/www/qiaoboose-site
+            mv /tmp/qiaoboose-site-next /var/www/qiaoboose-site
+            rm -f /tmp/qiaoboose-site.tar.gz
+            nginx -t
+            nginx -s reload
+          '
