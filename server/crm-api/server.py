@@ -1,11 +1,16 @@
 #!/usr/bin/env python3
-from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 import json
 import os
 import shutil
 import tempfile
 from datetime import datetime, timezone
+from socketserver import ThreadingMixIn
+
+
+class ThreadingHTTPServer(ThreadingMixIn, HTTPServer):
+    daemon_threads = True
 
 
 DATA_DIR = Path(os.environ.get("CRM_DATA_DIR", "/var/lib/qiaoboose-crm"))
@@ -52,7 +57,10 @@ def write_payload(customers):
 
     backups = sorted(BACKUP_DIR.glob("customers-*.json"))
     for old in backups[:-30]:
-        old.unlink(missing_ok=True)
+        try:
+            old.unlink()
+        except FileNotFoundError:
+            pass
     return payload
 
 
