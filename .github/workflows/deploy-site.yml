@@ -92,26 +92,49 @@ jobs:
           path = Path("/etc/nginx/conf.d/ability-intake.conf")
           text = path.read_text(encoding="utf-8")
           block = """    location /crm-api/ {
-                  proxy_pass http://127.0.0.1:8790/;
-                  proxy_http_version 1.1;
-                  proxy_set_header Host $host;
-                  proxy_set_header X-Real-IP $remote_addr;
-                  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-                  proxy_set_header X-Forwarded-Proto $scheme;
-              }
+              proxy_pass http://127.0.0.1:8790/;
+              proxy_http_version 1.1;
+              proxy_set_header Host $host;
+              proxy_set_header X-Real-IP $remote_addr;
+              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+              proxy_set_header X-Forwarded-Proto $scheme;
+          }
 
           """
           if "location /crm-api/" not in text:
-              marker = "    location / {\\n        try_files $uri $uri/ /index.html;\\n    }"
-              if marker not in text:
-                  raise SystemExit("Could not find qiaoboose static location block")
-              text = text.replace(marker, block + marker, 1)
+              server_start = 0
+              inserted = False
+              while True:
+                  server_start = text.find("server {", server_start)
+                  if server_start < 0:
+                      break
+                  server_end = text.find("\\nserver {", server_start + 1)
+                  if server_end < 0:
+                      server_end = len(text)
+                  server_block = text[server_start:server_end]
+                  names_ok = "server_name qiaoboose.com www.qiaoboose.com;" in server_block
+                  https_ok = "listen 443" in server_block
+                  if names_ok and https_ok:
+                      loc = text.find("    location / {", server_start, server_end)
+                      if loc < 0:
+                          loc = text.find("  location / {", server_start, server_end)
+                      if loc < 0:
+                          raise SystemExit("Could not find qiaoboose static location block")
+                      text = text[:loc] + block + text[loc:]
+                      inserted = True
+                      break
+                  server_start = server_end
+              if not inserted:
+                  raise SystemExit("Could not find qiaoboose HTTPS server block")
               path.write_text(text, encoding="utf-8")
           PY
 
             systemctl daemon-reload
+            python3 -m py_compile /opt/qiaoboose-crm-api/server.py
             systemctl enable --now qiaoboose-crm-api.service
             systemctl restart qiaoboose-crm-api.service
+            sleep 1
+            systemctl is-active --quiet qiaoboose-crm-api.service
             nginx -t
             nginx -s reload
           '
