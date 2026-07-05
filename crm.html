@@ -158,7 +158,6 @@ select.filter{cursor:pointer;}
 .ccard.dragging{opacity:.4;}
 .ccard .row1{display:flex; align-items:center; gap:8px;}
 .ccard .name{font-weight:700; font-size:15px;}
-.ccard .conv{margin-left:auto; font-size:14px;}
 .ccard .note-wx{font-size:12px; color:var(--muted); margin-top:2px;}
 .ccard .meta{display:flex; flex-wrap:wrap; gap:5px; margin-top:9px;}
 .pill{
@@ -359,13 +358,6 @@ window.CRM_CONFIG = {
       <div class="field"><label>联系方式</label><input type="text" id="f_contact" placeholder="微信号 / 手机 / 邮箱"></div>
     </div>
     <div class="field">
-      <label>是否已转化付费</label>
-      <select id="f_converted">
-        <option value="no">未转化</option>
-        <option value="yes">已转化付费 ✦</option>
-      </select>
-    </div>
-    <div class="field">
       <label>备注</label>
       <textarea id="f_notes" placeholder="基本情况、需求、特征…"></textarea>
     </div>
@@ -492,7 +484,7 @@ const orderField = (track)=>track==='sales'?'salesOrder':'deliveryOrder';
 const stageOf = (c,track)=>c[stageField(track)] || (track==='sales'?'intent':'to_serve');
 const orderOf = (c,track)=>Number.isFinite(Number(c[orderField(track)]))?Number(c[orderField(track)]):Number.MAX_SAFE_INTEGER;
 const isClosedOut = (c)=>['lost','abandoned'].includes(stageOf(c,'sales'));
-const isDeliveryCustomer = (c)=>stageOf(c,'sales')==='won' || (c.converted==='yes'&&!isClosedOut(c));
+const isDeliveryCustomer = (c)=>stageOf(c,'sales')==='won';
 const isInDeliveryFlow = (c)=>isDeliveryCustomer(c) && c.deliveryRemoved!=='yes';
 const PRODUCT_LABEL = {'01':'01 能力判断','02':'02 首单冲刺','无':'未指定'};
 // 旧状态 → 新状态迁移表（兼容历史数据）
@@ -521,8 +513,17 @@ function migrate(arr){
     if(LEGACY_MAP[c.deliveryStatus]){ c.deliveryStatus=LEGACY_MAP[c.deliveryStatus]; changed=true; }
     const oldStatus = LEGACY_MAP[c.status] || c.status;
     const oldStage = STAGE_MAP[oldStatus];
+    if(c.converted==='yes' && !['lost','abandoned'].includes(c.salesStatus||c.status||'')){
+      c.salesStatus='won';
+      c.status='won';
+      changed=true;
+    }
+    if('converted' in c){
+      delete c.converted;
+      changed=true;
+    }
     if(!c.salesStatus){
-      c.salesStatus = oldStage?.track==='sales' ? oldStatus : ((oldStage?.track==='delivery' || c.converted==='yes') ? 'won' : 'intent');
+      c.salesStatus = oldStage?.track==='sales' ? oldStatus : (oldStage?.track==='delivery' ? 'won' : 'intent');
       changed=true;
     }
     if(!c.deliveryStatus){
@@ -643,7 +644,7 @@ function seed(){
   // wxNote = 微信备注名；source/添加时间据微信资料填写，未知留空
   const mk=(o)=>({
     id:uid(), name:o.name, wx:o.wxNote||'', status:'deposit', salesStatus:'deposit', deliveryStatus:'to_serve', product:o.product,
-    source:o.source||'', contact:o.wxId||'', converted:'no',
+    source:o.source||'', contact:o.wxId||'',
     notes:[o.role,o.region?('地区：'+o.region):'',o.added?('微信添加：'+o.added):''].filter(Boolean).join(' · '),
     logs:[{t:todayStr(),text:'已付定金，待安排服务'}]
   });
@@ -710,7 +711,7 @@ function renderStats(){
   const total=data.length;
   const inSales=data.filter(c=>!['lost','abandoned','won'].includes(stageOf(c,'sales'))).length;
   const inDelivery=data.filter(c=>isInDeliveryFlow(c)&&!['served','aftercare'].includes(stageOf(c,'delivery'))).length;
-  const won=data.filter(c=>stageOf(c,'sales')==='won'||(c.converted==='yes'&&!isClosedOut(c))).length;
+  const won=data.filter(c=>stageOf(c,'sales')==='won').length;
   document.getElementById('statRow').innerHTML=
     `<div class="stat"><b>${total}</b><span>客户总数</span></div>
      <div class="stat"><b>${inSales}</b><span>销售跟进中</span></div>
@@ -768,14 +769,13 @@ function getDragAfterElement(container,y){
 function cardEl(c,track){
   const el=document.createElement('div'); el.className='ccard'; el.draggable=true; el.dataset.id=c.id;
   const ll=lastLog(c);
-  const conv=(c.converted==='yes')?'<span class="conv" title="已转化付费">✦</span>':'';
   // 01 客户在交付完成/售后阶段，显示「转 02 意向」入口
   const canUpsell = track==='delivery' && c.product==='01' && ['served','aftercare'].includes(stageOf(c,'delivery'));
   const pairStage = track==='sales' ? STAGE_MAP[stageOf(c,'delivery')] : STAGE_MAP[stageOf(c,'sales')];
   const pairLabel = track==='sales' ? '交付' : '销售';
   const pairText = track==='sales'&&!isInDeliveryFlow(c) ? '未进入' : (pairStage?pairStage.label:'—');
   el.innerHTML=
-    `<div class="row1"><span class="name">${esc(c.name||'未命名')}</span>${conv}</div>
+    `<div class="row1"><span class="name">${esc(c.name||'未命名')}</span></div>
      ${c.wx?`<div class="note-wx">微信：${esc(c.wx)}</div>`:''}
      <div class="meta">
        <span class="pill prod">${PRODUCT_LABEL[c.product||'无']}</span>
@@ -796,7 +796,7 @@ function cardEl(c,track){
 function upsellTo02(id){
   const c=data.find(x=>x.id===id); if(!c) return;
   if(!confirm('把「'+(c.name||'该客户')+'」转入 02 首单冲刺的「有意向」？\n（产品改为 02，回到销售轨）')) return;
-  c.product='02'; c.salesStatus='intent'; c.status='intent'; c.converted='no';
+  c.product='02'; c.salesStatus='intent'; c.status='intent';
   c.logs=c.logs||[]; c.logs.push({t:todayStr(),text:'01 服务完成，转入 02「有意向」'});
   persist(c); render(); toast('已转入 02 意向');
 }
@@ -811,7 +811,7 @@ function renderTable(){
     const deliveryColor=isInDeliveryFlow(c)?ds.dot:'var(--dim)';
     const tr=document.createElement('tr'); tr.onclick=()=>openModal(c.id,'sales');
     tr.innerHTML=
-      `<td><span class="name">${esc(c.name||'未命名')}</span> ${c.converted==='yes'?'<span style="color:var(--accent3)">✦</span>':''}</td>
+      `<td><span class="name">${esc(c.name||'未命名')}</span></td>
        <td>${esc(c.wx||'—')}</td>
        <td><span class="status-chip" style="color:${ss.dot};border-color:${ss.dot}66">${ss.label}</span></td>
        <td><span class="status-chip" style="color:${deliveryColor};border-color:${isInDeliveryFlow(c)?ds.dot+'66':'var(--border2)'}">${deliveryLabel}</span></td>
@@ -841,8 +841,7 @@ function onDrop(id,track,stage,body){
   if(stageChanged){
     c.logs=c.logs||[]; c.logs.push({t:todayStr(),text:'移至「'+STAGE_MAP[stage].label+'」'});
   }
-  if(stageChanged&&track==='sales'&&stage==='won'&&c.converted!=='yes'){
-    c.converted='yes';
+  if(stageChanged&&track==='sales'&&stage==='won'){
     if(!c.deliveryStatus) c.deliveryStatus='to_serve';
     c.deliveryRemoved='';
   }
@@ -885,7 +884,6 @@ function openModal(id,track='sales'){
     document.getElementById('f_product').value=c.product||'无';
     document.getElementById('f_source').value=c.source||'';
     document.getElementById('f_contact').value=c.contact||'';
-    document.getElementById('f_converted').value=c.converted||'no';
     document.getElementById('f_notes').value=c.notes||'';
     logsDraft=JSON.parse(JSON.stringify(c.logs||[]));
   }else{
@@ -893,7 +891,6 @@ function openModal(id,track='sales'){
     document.getElementById('f_sales_status').value='intent';
     document.getElementById('f_delivery_status').value='to_serve';
     document.getElementById('f_product').value='01';
-    document.getElementById('f_converted').value='no';
   }
   renderLogs();
   document.getElementById('overlay').classList.add('open');
@@ -925,12 +922,11 @@ function saveCustomer(){
     product:document.getElementById('f_product').value,
     source:document.getElementById('f_source').value.trim(),
     contact:document.getElementById('f_contact').value.trim(),
-    converted:document.getElementById('f_converted').value,
     notes:document.getElementById('f_notes').value.trim(),
     logs:logsDraft,
   };
   obj.status=obj.salesStatus;
-  if((obj.salesStatus==='won'||obj.converted==='yes')&&!wasDeliveryCustomer){ obj.deliveryRemoved=''; }
+  if(obj.salesStatus==='won'&&!wasDeliveryCustomer){ obj.deliveryRemoved=''; }
   let row;
   if(id){ row=data.find(x=>x.id===id); Object.assign(row,obj); }
   else{ obj.id=uid(); data.push(obj); row=obj; }
@@ -966,7 +962,7 @@ function importData(e){
       const arr=JSON.parse(r.result);
       if(!Array.isArray(arr)) throw 0;
       if(!confirm('导入将覆盖当前 '+data.length+' 条数据，确定？')) return;
-      data=arr.map(c=>({id:c.id||uid(),name:c.name||'',wx:c.wx||'',status:c.status||'intent',salesStatus:c.salesStatus||c.sales_status||'',deliveryStatus:c.deliveryStatus||c.delivery_status||'',deliveryRemoved:c.deliveryRemoved||'',salesOrder:c.salesOrder,deliveryOrder:c.deliveryOrder,product:c.product||'无',source:c.source||'',contact:c.contact||'',converted:c.converted||'no',notes:c.notes||'',logs:c.logs||[]}));
+      data=arr.map(c=>({id:c.id||uid(),name:c.name||'',wx:c.wx||'',status:c.status||'intent',salesStatus:c.salesStatus||c.sales_status||'',deliveryStatus:c.deliveryStatus||c.delivery_status||'',deliveryRemoved:c.deliveryRemoved||'',salesOrder:c.salesOrder,deliveryOrder:c.deliveryOrder,product:c.product||'无',source:c.source||'',contact:c.contact||'',notes:c.notes||'',logs:c.logs||[]}));
       data=migrate(data);
       persist(); render(); toast('导入成功');
     }catch(err){ toast('文件格式不正确'); }
