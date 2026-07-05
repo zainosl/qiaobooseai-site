@@ -35,6 +35,7 @@ jobs:
           tar \
             --exclude='.git' \
             --exclude='.github' \
+            --exclude='server' \
             -czf /tmp/qiaoboose-site.tar.gz .
 
           ssh -i ~/.ssh/aliyun_deploy_key "$ALIYUN_USER@$ALIYUN_HOST" '
@@ -51,6 +52,66 @@ jobs:
             rm -rf /var/www/qiaoboose-site
             mv /tmp/qiaoboose-site-next /var/www/qiaoboose-site
             rm -f /tmp/qiaoboose-site.tar.gz
+            nginx -t
+            nginx -s reload
+          '
+
+      - name: Deploy CRM cloud store
+        env:
+          ALIYUN_HOST: ${{ secrets.ALIYUN_HOST }}
+          ALIYUN_USER: ${{ secrets.ALIYUN_USER }}
+        run: |
+          scp -i ~/.ssh/aliyun_deploy_key server/crm-api/server.py "$ALIYUN_USER@$ALIYUN_HOST:/tmp/qiaoboose-crm-api.py"
+
+          ssh -i ~/.ssh/aliyun_deploy_key "$ALIYUN_USER@$ALIYUN_HOST" '
+            set -e
+            mkdir -p /opt/qiaoboose-crm-api /var/lib/qiaoboose-crm
+            mv /tmp/qiaoboose-crm-api.py /opt/qiaoboose-crm-api/server.py
+            chmod 755 /opt/qiaoboose-crm-api/server.py
+
+            cat > /etc/systemd/system/qiaoboose-crm-api.service <<'"'"'SERVICE'"'"'
+          [Unit]
+          Description=Qiaoboose CRM JSON API
+          After=network.target
+
+          [Service]
+          Type=simple
+          Environment=CRM_API_TOKEN=79862g3Q
+          Environment=CRM_DATA_DIR=/var/lib/qiaoboose-crm
+          ExecStart=/usr/bin/python3 /opt/qiaoboose-crm-api/server.py
+          Restart=always
+          RestartSec=3
+
+          [Install]
+          WantedBy=multi-user.target
+          SERVICE
+
+            python3 - <<'"'"'PY'"'"'
+          from pathlib import Path
+
+          path = Path("/etc/nginx/conf.d/ability-intake.conf")
+          text = path.read_text(encoding="utf-8")
+          block = """    location /crm-api/ {
+                  proxy_pass http://127.0.0.1:8790/;
+                  proxy_http_version 1.1;
+                  proxy_set_header Host $host;
+                  proxy_set_header X-Real-IP $remote_addr;
+                  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                  proxy_set_header X-Forwarded-Proto $scheme;
+              }
+
+          """
+          if "location /crm-api/" not in text:
+              marker = "    location / {\\n        try_files $uri $uri/ /index.html;\\n    }"
+              if marker not in text:
+                  raise SystemExit("Could not find qiaoboose static location block")
+              text = text.replace(marker, block + marker, 1)
+              path.write_text(text, encoding="utf-8")
+          PY
+
+            systemctl daemon-reload
+            systemctl enable --now qiaoboose-crm-api.service
+            systemctl restart qiaoboose-crm-api.service
             nginx -t
             nginx -s reload
           '

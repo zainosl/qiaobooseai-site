@@ -7,7 +7,6 @@
 <link rel="icon" href="data:,">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
   --bg:#0B0D0F; --bg2:#13161A; --bg3:#1C2026;
@@ -261,8 +260,8 @@ td .name{font-weight:700;}
 <script>
 window.CRM_CONFIG = {
   accessPassword: '79862g3Q',
-  supabaseUrl: 'https://mswvfuzgqtflhvopxdlt.supabase.co',
-  supabaseKey: 'sb_publishable_YtuNq43vVgo73PgvP_p-Xw_PgRg6PqO'
+  apiBase: '/crm-api',
+  apiToken: '79862g3Q'
 };
 </script>
 </head>
@@ -431,19 +430,13 @@ function initGate(){
   else{ setTimeout(()=>document.getElementById('lockInput').focus(),60); }
 }
 
-const SUPABASE_URL = CRM_CONFIG.supabaseUrl || '';
-const SUPABASE_KEY = CRM_CONFIG.supabaseKey || '';
-const TABLE = 'customers';
+const API_BASE = (CRM_CONFIG.apiBase || '').replace(/\/+$/,'');
+const API_TOKEN = CRM_CONFIG.apiToken || ACCESS_PASSWORD;
 
-let sb = null;                 // supabase client
 let cloudOn = false;           // 是否启用了云端
-let legacyCloudSchema = false; // 云端旧表没有 sales_status / delivery_status 时自动回退
+let cloudSaveTimer = null;
 function initCloud(){
-  const configured = SUPABASE_URL.indexOf('http')===0 && SUPABASE_KEY.length>20 && SUPABASE_KEY.indexOf('YOUR_')!==0;
-  if(configured && window.supabase){
-    try{ sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY); cloudOn = true; }
-    catch(e){ cloudOn=false; }
-  }
+  cloudOn = !!API_BASE && !!API_TOKEN && typeof fetch === 'function';
   return cloudOn;
 }
 
@@ -461,8 +454,8 @@ function setCloudStatus(s){
 // 手动：把当前本地全部数据上传覆盖到云端
 async function pushAllToCloud(){
   if(!cloudOn){ toast('未配置云端'); return; }
-  if(!confirm('把当前 '+data.length+' 条数据上传到云端？\n（云端同 id 的记录会被覆盖）')) return;
-  await persist();           // 无参 = 整表 upsert
+  if(!confirm('把当前 '+data.length+' 条数据上传到云端？\n（会覆盖服务器上的 CRM 数据，服务器会自动保留备份）')) return;
+  await saveCloudNow();
   toast('已上传到云端');
 }
 
@@ -506,6 +499,8 @@ const PRODUCT_LABEL = {'01':'01 能力判断','02':'02 首单冲刺','无':'未�
 // 旧状态 → 新状态迁移表（兼容历史数据）
 const LEGACY_MAP = {lead:'intent', invited:'intent', trial:'deposit', delivered:'to_serve', serving:'material_received', ability_mine:'material_received'};
 const KEY = 'yrgs_crm_v1';
+const BACKUP_KEY = 'yrgs_crm_backup_latest';
+let hasStoredLocal = false;
 
 /* ---------- State ---------- */
 let data = loadLocal();   // 先用本地数据秒开，再异步拉云端覆盖
@@ -515,7 +510,7 @@ let modalTrack = 'sales';
 let logsDraft = [];
 
 function loadLocal(){
-  try{ const r = localStorage.getItem(KEY); if(r){ return migrate(JSON.parse(r)); } }catch(e){}
+  try{ const r = localStorage.getItem(KEY); if(r){ hasStoredLocal = true; return migrate(JSON.parse(r)); } }catch(e){}
   return seed();
 }
 // 把旧状态值升级到新的双轨状态
@@ -561,78 +556,55 @@ function ensureTrackOrders(arr){
 }
 
 /* ---------- 持久化：本地立即写 + 云端后台同步 ---------- */
-function persistLocal(){ try{ localStorage.setItem(KEY, JSON.stringify(data)); }catch(e){} }
+function persistLocal(){
+  try{
+    const raw = JSON.stringify(data);
+    localStorage.setItem(KEY, raw);
+    localStorage.setItem(BACKUP_KEY, raw);
+    localStorage.setItem('yrgs_crm_backup_'+todayStr(), raw);
+    hasStoredLocal = true;
+  }catch(e){}
+}
 
-// 通用保存：本地立刻写，云端按需 upsert 整张表
-async function persist(changedRow){
+// 通用保存：本地立刻写，云端后台保存整张表
+function persist(changedRow){
   persistLocal();
   if(!cloudOn) return;
+  scheduleCloudSave();
+}
+
+function apiHeaders(){
+  return {
+    'Content-Type':'application/json',
+    'Authorization':'Bearer '+API_TOKEN
+  };
+}
+
+function scheduleCloudSave(){
+  clearTimeout(cloudSaveTimer);
+  setCloudStatus('syncing');
+  cloudSaveTimer = setTimeout(()=>saveCloudNow(), 700);
+}
+
+async function saveCloudNow(){
+  if(!cloudOn) return;
+  clearTimeout(cloudSaveTimer);
   setCloudStatus('syncing');
   try{
-    if(changedRow){
-      const { error } = await sb.from(TABLE).upsert(legacyCloudSchema ? toLegacyRow(changedRow) : toRow(changedRow));
-      if(isMissingStatusColumn(error)){
-        legacyCloudSchema = true;
-        const retry = await sb.from(TABLE).upsert(toLegacyRow(changedRow));
-        if(retry.error) throw retry.error;
-        setCloudStatus('ok');
-        return;
-      }
-      if(error) throw error;
-    }else{
-      // 批量：覆盖式同步整张表
-      const { error } = await sb.from(TABLE).upsert(data.map(legacyCloudSchema ? toLegacyRow : toRow));
-      if(isMissingStatusColumn(error)){
-        legacyCloudSchema = true;
-        const retry = await sb.from(TABLE).upsert(data.map(toLegacyRow));
-        if(retry.error) throw retry.error;
-        setCloudStatus('ok');
-        return;
-      }
-      if(error) throw error;
-    }
+    const res = await fetch(API_BASE + '/customers', {
+      method:'PUT',
+      headers:apiHeaders(),
+      body:JSON.stringify({customers:data, savedAt:new Date().toISOString()})
+    });
+    if(!res.ok) throw new Error(await res.text());
     setCloudStatus('ok');
   }catch(e){ console.warn('云同步失败',e); setCloudStatus('error'); }
 }
 
 async function removeFromCloud(id){
-  if(!cloudOn) return;
-  setCloudStatus('syncing');
-  try{ const { error } = await sb.from(TABLE).delete().eq('id',id); if(error) throw error; setCloudStatus('ok'); }
-  catch(e){ console.warn('云删除失败',e); setCloudStatus('error'); }
+  await saveCloudNow();
 }
 
-// 应用 ↔ 数据库 字段映射（数据库列名用下划线风格）
-function toRow(c){
-  return {
-    id:c.id, name:c.name||'', wx:c.wx||'', status:c.salesStatus||c.status||'intent',
-    sales_status:c.salesStatus||'intent', delivery_status:c.deliveryStatus||'to_serve',
-    product:c.product||'无', source:c.source||'', contact:c.contact||'',
-    converted:c.converted||'no', notes:c.notes||'', logs:packLogs(c),
-    updated_at:new Date().toISOString()
-  };
-}
-function toLegacyRow(c){
-  return {
-    id:c.id, name:c.name||'', wx:c.wx||'', status:c.salesStatus||c.status||'intent',
-    product:c.product||'无', source:c.source||'', contact:c.contact||'',
-    converted:c.converted||'no', notes:c.notes||'', logs:packLogs(c),
-    updated_at:new Date().toISOString()
-  };
-}
-function fromRow(r){
-  const meta = readLogMeta(r.logs);
-  return {
-    id:r.id, name:r.name||'', wx:r.wx||'', status:r.status||'intent',
-    salesStatus:r.sales_status||r.salesStatus||meta.salesStatus||'',
-    deliveryStatus:r.delivery_status||r.deliveryStatus||meta.deliveryStatus||'',
-    deliveryRemoved:r.deliveryRemoved||meta.deliveryRemoved||'',
-    salesOrder:r.salesOrder??meta.salesOrder,
-    deliveryOrder:r.deliveryOrder??meta.deliveryOrder,
-    product:r.product||'无', source:r.source||'', contact:r.contact||'',
-    converted:r.converted||'no', notes:r.notes||'', logs:visibleLogs(r.logs)
-  };
-}
 function packLogs(c){
   const logs=visibleLogs(c.logs);
   return [{_crmMeta:true,salesStatus:c.salesStatus||'intent',deliveryStatus:c.deliveryStatus||'to_serve',deliveryRemoved:c.deliveryRemoved||'',salesOrder:c.salesOrder,deliveryOrder:c.deliveryOrder},...logs];
@@ -644,28 +616,22 @@ function readLogMeta(logs){
   if(!Array.isArray(logs)) return {};
   return logs.find(l=>l&&l._crmMeta) || {};
 }
-function isMissingStatusColumn(error){
-  if(!error) return false;
-  const msg=String(error.message||error.details||'').toLowerCase();
-  return msg.includes('sales_status') || msg.includes('delivery_status');
-}
 
 // 启动时：从云端拉取，作为真相源覆盖本地
 async function pullCloud(){
   if(!cloudOn) return;
   setCloudStatus('syncing');
   try{
-    const { data:rows, error } = await sb.from(TABLE).select('*');
-    if(error) throw error;
-    if(Array.isArray(rows)){
-      if(rows.length===0){
-        // 云端为空：把当前本地数据作为初始数据上传
-        await persist();
-      }else{
-        data = migrate(rows.map(fromRow));
-        persistLocal();
-        render();
-      }
+    const res = await fetch(API_BASE + '/customers', {headers:apiHeaders()});
+    if(!res.ok) throw new Error(await res.text());
+    const payload = await res.json();
+    const rows = Array.isArray(payload.customers) ? payload.customers : [];
+    if(rows.length>0){
+      data = migrate(rows);
+      persistLocal();
+      render();
+    }else if(hasStoredLocal && data.length>0){
+      await saveCloudNow();
     }
     setCloudStatus('ok');
   }catch(e){ console.warn('云拉取失败',e); setCloudStatus('error'); }
