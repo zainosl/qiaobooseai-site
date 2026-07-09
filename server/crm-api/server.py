@@ -16,6 +16,7 @@ class ThreadingHTTPServer(ThreadingMixIn, HTTPServer):
 
 DATA_DIR = Path(os.environ.get("CRM_DATA_DIR", "/var/lib/qiaoboose-crm"))
 DATA_FILE = DATA_DIR / "customers.json"
+TODO_FILE = DATA_DIR / "todo.json"
 BACKUP_DIR = DATA_DIR / "backups"
 TOKEN = os.environ.get("CRM_API_TOKEN", "")
 
@@ -42,6 +43,23 @@ def read_payload():
     return {"customers": [], "updatedAt": None}
 
 
+def read_todo_payload():
+    if not TODO_FILE.exists():
+        return {"tasks": [], "updatedAt": None, "version": 1}
+    try:
+        data = json.loads(TODO_FILE.read_text(encoding="utf-8"))
+    except Exception:
+        return {"tasks": [], "updatedAt": None, "version": 1}
+    if isinstance(data, dict):
+        tasks = data.get("tasks")
+        return {
+            "version": data.get("version") or 1,
+            "tasks": tasks if isinstance(tasks, list) else [],
+            "updatedAt": data.get("updatedAt"),
+        }
+    return {"tasks": [], "updatedAt": None, "version": 1}
+
+
 def write_payload(customers):
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     BACKUP_DIR.mkdir(parents=True, exist_ok=True)
@@ -57,6 +75,33 @@ def write_payload(customers):
     os.replace(tmp_name, DATA_FILE)
 
     backups = sorted(BACKUP_DIR.glob("customers-*.json"))
+    for old in backups[:-30]:
+        try:
+            old.unlink()
+        except FileNotFoundError:
+            pass
+    return payload
+
+
+def write_todo_payload(todo):
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    BACKUP_DIR.mkdir(parents=True, exist_ok=True)
+    if TODO_FILE.exists():
+        stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+        shutil.copy2(TODO_FILE, BACKUP_DIR / f"todo-{stamp}.json")
+
+    payload = {
+        "version": todo.get("version") or 1,
+        "tasks": todo["tasks"],
+        "updatedAt": utc_now(),
+    }
+    fd, tmp_name = tempfile.mkstemp(prefix="todo-", suffix=".json", dir=str(DATA_DIR))
+    with os.fdopen(fd, "w", encoding="utf-8") as f:
+        json.dump(payload, f, ensure_ascii=False, indent=2)
+        f.write("\n")
+    os.replace(tmp_name, TODO_FILE)
+
+    backups = sorted(BACKUP_DIR.glob("todo-*.json"))
     for old in backups[:-30]:
         try:
             old.unlink()
@@ -83,6 +128,10 @@ class Handler(BaseHTTPRequestHandler):
         path = urlparse(self.path).path
         if path == "/health":
             return self.json_response({"ok": True, "time": utc_now()})
+        if path == "/todo":
+            if not self.authorized():
+                return self.error_response(401, "unauthorized")
+            return self.json_response(read_todo_payload())
         if path != "/customers":
             return self.error_response(404, "not found")
         if not self.authorized():
@@ -91,10 +140,22 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_PUT(self):
         path = urlparse(self.path).path
-        if path != "/customers":
-            return self.error_response(404, "not found")
         if not self.authorized():
             return self.error_response(401, "unauthorized")
+        if path == "/todo":
+            try:
+                length = int(self.headers.get("Content-Length", "0"))
+                raw = self.rfile.read(length)
+                body = json.loads(raw.decode("utf-8"))
+                tasks = body.get("tasks")
+                if not isinstance(tasks, list):
+                    raise ValueError("tasks must be a list")
+                payload = write_todo_payload(body)
+            except Exception as exc:
+                return self.error_response(400, str(exc))
+            return self.json_response({"ok": True, "count": len(payload["tasks"]), "updatedAt": payload["updatedAt"]})
+        if path != "/customers":
+            return self.error_response(404, "not found")
         try:
             length = int(self.headers.get("Content-Length", "0"))
             raw = self.rfile.read(length)

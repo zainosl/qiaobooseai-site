@@ -840,6 +840,10 @@
 
   <script>
     const STORAGE_KEY = "solo_company_todo_v1";
+    const TODO_API = {
+      url: "/todo-api/todo",
+      token: "79862g3Q"
+    };
     const quadrants = [
       { id: "ongoing", label: "持续性待办" },
       { id: "important_urgent", label: "重要且紧急" },
@@ -861,6 +865,9 @@
       ["看 AI 官方内容", "ongoing", "核心内容输入", 60, "官方文档、发布说明、研究/产品更新"]
     ];
 
+    let hasLocalState = false;
+    let cloudStatus = "local";
+    let cloudTimer = null;
     let state = loadState();
     let toastTimer = null;
 
@@ -944,6 +951,7 @@
         if (!parsed || !Array.isArray(parsed.tasks)) {
           throw new Error("Invalid local data");
         }
+        hasLocalState = true;
         return {
           version: parsed.version || 1,
           updatedAt: parsed.updatedAt || nowIso(),
@@ -1025,8 +1033,99 @@
       state.updatedAt = nowIso();
       // 本地始终保留一份，作为离线兜底
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      queueCloudSave();
       render();
       if (message) showToast(message);
+    }
+
+    function apiHeaders() {
+      return {
+        "Authorization": "Bearer " + TODO_API.token,
+        "Content-Type": "application/json"
+      };
+    }
+
+    function normalizeState(payload) {
+      return {
+        version: payload.version || 1,
+        updatedAt: payload.updatedAt || nowIso(),
+        tasks: migrateTaskOrder((payload.tasks || []).map(normalizeTask))
+      };
+    }
+
+    async function fetchCloudState() {
+      const response = await fetch(TODO_API.url, {
+        headers: { "Authorization": "Bearer " + TODO_API.token },
+        cache: "no-store"
+      });
+      if (!response.ok) throw new Error("cloud fetch failed");
+      return response.json();
+    }
+
+    async function saveCloudNow() {
+      cloudStatus = "syncing";
+      renderStatusLine();
+      const response = await fetch(TODO_API.url, {
+        method: "PUT",
+        headers: apiHeaders(),
+        body: JSON.stringify(state)
+      });
+      if (!response.ok) throw new Error("cloud save failed");
+      const result = await response.json();
+      if (result.updatedAt) {
+        state.updatedAt = result.updatedAt;
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      }
+      cloudStatus = "synced";
+      renderStatusLine();
+    }
+
+    function queueCloudSave() {
+      clearTimeout(cloudTimer);
+      cloudStatus = "syncing";
+      cloudTimer = setTimeout(() => {
+        saveCloudNow().catch(error => {
+          console.warn(error);
+          cloudStatus = "error";
+          renderStatusLine();
+          showToast("云端保存失败，本地已保存");
+        });
+      }, 500);
+    }
+
+    async function syncFromCloud() {
+      cloudStatus = "syncing";
+      renderStatusLine();
+      try {
+        const cloud = await fetchCloudState();
+        const cloudHasTasks = Array.isArray(cloud.tasks) && cloud.tasks.length > 0;
+        const localHasTasks = Array.isArray(state.tasks) && state.tasks.length > 0;
+        const cloudTime = cloud.updatedAt ? Date.parse(cloud.updatedAt) : 0;
+        const localTime = state.updatedAt ? Date.parse(state.updatedAt) : 0;
+
+        if (cloudHasTasks && (!hasLocalState || cloudTime >= localTime)) {
+          state = normalizeState(cloud);
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+          cloudStatus = "synced";
+          render();
+          showToast("云端待办已同步");
+          return;
+        }
+
+        if (localHasTasks && (!cloudHasTasks || localTime > cloudTime)) {
+          await saveCloudNow();
+          showToast(cloudHasTasks ? "本地新版本已上传云端" : "本地待办已初始化到云端");
+          return;
+        }
+
+        cloudStatus = "synced";
+        renderStatusLine();
+      } catch (error) {
+        console.warn(error);
+        cloudStatus = "error";
+        renderStatusLine();
+        showToast("云端同步失败，继续使用本地数据");
+      }
     }
 
     function showToast(message) {
@@ -1064,7 +1163,18 @@
       renderBoard();
       renderHistory();
       renderStats();
-      els.statusLine.textContent = "本地已保存 · " + formatDateTime(state.updatedAt);
+      renderStatusLine();
+    }
+
+    function renderStatusLine() {
+      const prefix = cloudStatus === "synced"
+        ? "云端已同步"
+        : cloudStatus === "syncing"
+          ? "云端同步中…"
+          : cloudStatus === "error"
+            ? "云端异常，本地已保存"
+            : "本地已保存";
+      els.statusLine.textContent = prefix + " · " + formatDateTime(state.updatedAt);
     }
 
     function renderCategoryList() {
@@ -1433,7 +1543,8 @@
 
     setupOptions();
     render();
-    showToast("本地待办已加载");
+    syncFromCloud();
+    showToast("待办已加载");
   </script>
 </body>
 </html>
