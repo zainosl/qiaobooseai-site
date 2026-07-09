@@ -1,20 +1,20 @@
 
 const fs = require('fs');
-const html = fs.readFileSync('index.html', 'utf8');
+const html = fs.readFileSync('calibrator.html', 'utf8');
 function assert(cond, msg){ if(!cond){ console.error('FAIL:', msg); process.exitCode = 1; } else { console.log('PASS:', msg); } }
 assert(html.includes('async function generateResult'), 'has generateResult function');
 assert(/await\s+submitPathCheck\s*\(\s*\)\s*;\s*renderResult\s*\(\s*\)/s.test(html), 'generateResult waits for submitPathCheck before renderResult');
 assert(!/renderResult\s*\(\s*\)\s*;\s*await\s+submitPathCheck/s.test(html), 'generateResult does not render before submit');
 assert(html.includes('function downloadCalibrationMarkdown'), 'has markdown download function');
 assert(html.includes('downloadMarkdownFile'), 'has markdown file downloader');
-assert(html.includes('下载校正结果'), 'button label changed to 下载校正结果');
+assert(html.includes('下载校准报告'), 'has download calibration report button');
 assert(!html.includes('复制校正结果'), 'old copy calibration result label removed');
-assert(html.includes('## 用户选择信息'), 'markdown includes user choices section');
-assert(html.includes('## 结果页信息'), 'markdown includes result information section');
+assert(html.includes('### Data Points｜你的填写信息如何支撑这个判断'), 'markdown includes user choice evidence section');
+assert(html.includes('## 01 路径校准结论'), 'markdown includes result information section');
 assert(html.includes('parent_page_url'), 'payload includes parent_page_url for iframe observability');
 assert(html.includes('CALIBRATOR_VERSION'), 'payload includes frontend version constant');
 assert(html.includes('path_calibrator_last_payload'), 'frontend stores last payload locally');
-assert(html.includes('保存编号'), 'result page shows save number');
+assert(html.includes('报告编号'), 'markdown shows report number');
 assert(html.includes('browser_language'), 'payload includes browser language');
 assert(html.includes('screen_size'), 'payload includes screen size');
 assert(html.includes('timezone'), 'payload includes timezone');
@@ -26,7 +26,7 @@ assert(!html.includes('为了避免你的校准结果丢失，需要先确认数
 assert(html.includes('const API_BASE_URLS'), 'uses multiple API base URLs');
 assert(html.includes('submit_path_check',) && html.includes('attempts:5'), 'submissions retry attempts increased to 5');
 assert(html.includes('api_base_url'), 'logs selected API base url');
-assert(html.includes('for(const baseUrl of apiBaseUrls)'), 'tries API base URLs in sequence');
+assert(html.includes('for(let baseIndex=0; baseIndex<apiBaseUrls.length; baseIndex++)'), 'tries API base URLs in sequence');
 assert(html.includes('Math.min(8000'), 'uses capped exponential backoff');
 
 
@@ -37,5 +37,11 @@ assert(!html.includes('数据保存失败，请重试'), 'old data-save failure 
 assert(html.includes('AbortController'), 'uses AbortController to avoid stuck fetch');
 assert(html.includes('setTimeout(() =&gt; controller.abort()') || html.includes('setTimeout(() => controller.abort()'), 'aborts hung requests');
 assert(html.includes('clearTimeout(timeoutId)'), 'clears request timeout after response');
+assert(html.includes('track-cta-field-fix'), 'calibrator version marks CTA field fix');
+const trackCtaBody = html.match(/async function trackCTA\(action\)\{[\s\S]*?\n\}/)?.[0] || '';
+assert(trackCtaBody.includes('cta_action:action'), 'CTA payload includes action');
+assert(trackCtaBody.includes('user_segment:state.computed.user_segment'), 'CTA payload keeps user segment');
+assert(!trackCtaBody.includes('deep_dive_motivation'), 'CTA payload omits unsupported deep_dive_motivation field');
+assert(!trackCtaBody.includes('appointment_priority'), 'CTA payload omits unsupported appointment_priority field');
 
 process.exit(process.exitCode || 0);

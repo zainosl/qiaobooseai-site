@@ -453,8 +453,8 @@ const API_BASE_URLS = [
 ];
 const API_BASE_URL = API_BASE_URLS[0];
 const WECHAT_ID = 'qiaoboose01';
-const CALIBRATOR_VERSION = '2026-05-14-restructured-no-price-signal';
-const SITE_COMMIT = 'e697edd-plus-reliability';
+const CALIBRATOR_VERSION = '2026-07-09-track-cta-field-fix';
+const SITE_COMMIT = 'track-cta-field-fix';
 const REQUEST_TIMEOUT_MS = 15000;
 
 const state = { step: 0, answers: {}, computed: {}, appointment: {}, submission_id: '', submission_record_id: '', debug_id: `dbg_${Date.now()}_${Math.random().toString(36).slice(2,8)}` };
@@ -1487,7 +1487,7 @@ async function submitAppointment(){
   }
 }
 async function trackCTA(action){
-  const payload = { debug_id:state.debug_id, client_debug_id:state.debug_id, event_id:`cta_${Date.now()}_${Math.random().toString(36).slice(2,8)}`, submission_id:state.submission_id, timestamp:new Date().toISOString(), cta_type:state.computed.cta_type, cta_action:action, user_segment:state.computed.user_segment, deep_dive_motivation:state.computed.deep_dive_motivation, appointment_priority:state.computed.appointment_priority, source:getUrlParam('source')||getUrlParam('utm_source')||'direct', utm_source:getUrlParam('utm_source'), utm_campaign:getUrlParam('utm_campaign'), page_url:location.href, parent_page_url:getParentPageUrl(), referrer:document.referrer, user_agent:navigator.userAgent, frontend_version:CALIBRATOR_VERSION, site_commit:SITE_COMMIT };
+  const payload = { debug_id:state.debug_id, client_debug_id:state.debug_id, event_id:`cta_${Date.now()}_${Math.random().toString(36).slice(2,8)}`, submission_id:state.submission_id, timestamp:new Date().toISOString(), cta_type:state.computed.cta_type, cta_action:action, user_segment:state.computed.user_segment, source:getUrlParam('source')||getUrlParam('utm_source')||'direct', utm_source:getUrlParam('utm_source'), utm_campaign:getUrlParam('utm_campaign'), page_url:location.href, parent_page_url:getParentPageUrl(), referrer:document.referrer, user_agent:navigator.userAgent, frontend_version:CALIBRATOR_VERSION, site_commit:SITE_COMMIT };
   try{ return await postJsonWithRetry('/api/track-cta', payload, { label:`track_cta_${action}`, attempts:3 }); }catch(e){ console.warn('cta failed', e); logClientEvent('track_cta_final_failed', { action, error:e.message }); }
 }
 function copyWechat(){ const cta=ctaContent(state.computed.user_segment); navigator.clipboard.writeText(WECHAT_ID).then(()=>alert(cta.copyMessage || '微信号已复制')); trackCTA('copy_wechat'); }
