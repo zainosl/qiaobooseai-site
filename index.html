@@ -15,6 +15,9 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="AI Native 一人公司 · 乔不不斯">
 <meta name="twitter:description" content="乔不不斯的 AI Native 一人公司项目页面，介绍 AI Native 商业模式、项目定位、合作方式与申请入口。">
+<link rel="icon" href="data:,">
+<meta name="theme-color" content="#0B0D0F" id="themeColorMeta">
+<script src="theme-controller.js?v=20260813"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap');
 
@@ -404,6 +407,7 @@
     .progress-split { gap: 40px; }
   }
 </style>
+<link rel="stylesheet" href="site-theme.css?v=20260813" />
 <link rel="stylesheet" href="mobile-fixes.css?v=20260621" />
 </head>
 <body>
@@ -452,7 +456,13 @@
       <a class="nav-item" href="articles.html">最新文章</a>
       <a class="nav-cta" href="javascript:void(0)" onclick="openWechatModal('围观')">申请围观</a>
     </nav>
-    <button class="nav-toggle" id="navToggle" aria-label="菜单" onclick="toggleNav()">≡</button>
+    <div class="nav-actions">
+      <button class="theme-toggle" type="button" data-theme-toggle>
+        <span class="theme-toggle__track" aria-hidden="true"></span>
+        <span class="theme-toggle__label" data-theme-label>DARK</span>
+      </button>
+      <button class="nav-toggle" id="navToggle" aria-label="菜单" onclick="toggleNav()">≡</button>
+    </div>
   </div>
 </header>
 
@@ -953,6 +963,14 @@
 
 <script src="articles/data.js"></script>
 <script>
+  const themeColorMeta = document.getElementById('themeColorMeta');
+  function syncThemeColor(event) {
+    const theme = event?.detail?.theme || document.documentElement.dataset.theme;
+    themeColorMeta.setAttribute('content', theme === 'light' ? '#EEF2F0' : '#0B0D0F');
+  }
+  syncThemeColor();
+  window.addEventListener('qiaoboosi:themechange', syncThemeColor);
+
   const ARTICLES = window.ARTICLES || [];
   /* 首页只展示精选 3 篇，全部文章在 articles.html */
 

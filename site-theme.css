@@ -1,0 +1,219 @@
+@import url('./home-theme.css?v=20260813');
+
+html,
+body { overflow-x: hidden; }
+
+html[data-theme="light"] {
+  --surface: var(--bg2);
+  --surface-2: var(--bg3);
+  --card: var(--bg2);
+  --card2: var(--bg3);
+  --card-elevated: #FFFFFF;
+  --paper: rgba(248, 250, 249, 0.94);
+  --paper2: rgba(227, 233, 230, 0.94);
+  --ink: var(--text);
+  --line: var(--border);
+  --line2: var(--border2);
+  --line-strong: var(--border2);
+  --accent-2: var(--accent2);
+  --accent-line: rgba(19, 122, 102, 0.28);
+  --accent-glow: rgba(19, 122, 102, 0.18);
+  --shadow: var(--shadow-float);
+}
+
+/* 全站切换入口：无标准官网导航的工具页使用悬浮按钮 */
+.global-theme-fab {
+  position: fixed;
+  z-index: 10000;
+  top: auto;
+  right: 16px;
+  bottom: 16px;
+  box-shadow: var(--shadow-soft);
+}
+
+/* 各页面共用的语义表面 */
+html[data-theme="light"] body,
+html[data-theme="light"] .page,
+html[data-theme="light"] .app,
+html[data-theme="light"] .workspace,
+html[data-theme="light"] .main {
+  background-color: var(--bg) !important;
+  color: var(--text) !important;
+}
+
+html[data-theme="light"] .card,
+html[data-theme="light"] .panel,
+html[data-theme="light"] .section-card,
+html[data-theme="light"] .result-card,
+html[data-theme="light"] .case-card,
+html[data-theme="light"] .content-card,
+html[data-theme="light"] .stat-card,
+html[data-theme="light"] .metric-card,
+html[data-theme="light"] .modal-content,
+html[data-theme="light"] .modal-card,
+html[data-theme="light"] .sidebar,
+html[data-theme="light"] .toolbar,
+html[data-theme="light"] .topbar,
+html[data-theme="light"] .hero-header {
+  background-color: var(--bg2) !important;
+  border-color: var(--border) !important;
+  color: var(--text) !important;
+  box-shadow: var(--shadow-soft) !important;
+}
+
+html[data-theme="light"] input,
+html[data-theme="light"] textarea,
+html[data-theme="light"] select {
+  background-color: var(--bg2) !important;
+  border-color: var(--border2) !important;
+  color: var(--text) !important;
+}
+
+html[data-theme="light"] input::placeholder,
+html[data-theme="light"] textarea::placeholder { color: var(--dim) !important; }
+
+html[data-theme="light"] .btn-primary,
+html[data-theme="light"] button.primary,
+html[data-theme="light"] .primary-btn {
+  background: var(--accent) !important;
+  border-color: var(--accent) !important;
+  color: var(--accent-ink) !important;
+}
+
+/* 产品服务页：价格卡与案例入口必须是完整亮色组件，不能保留暗色渐变底 */
+html[data-theme="light"] .price-card {
+  background: linear-gradient(180deg, var(--accent-soft), var(--bg2)) !important;
+  border-color: color-mix(in srgb, var(--accent) 30%, transparent) !important;
+  color: var(--text) !important;
+  box-shadow: var(--shadow-card) !important;
+}
+
+html[data-theme="light"] .price-card::before {
+  color: color-mix(in srgb, var(--accent) 8%, transparent) !important;
+}
+
+html[data-theme="light"] .price-label,
+html[data-theme="light"] .price-now .num,
+html[data-theme="light"] .case-entry-tag,
+html[data-theme="light"] .case-entry-action {
+  color: var(--accent) !important;
+}
+
+html[data-theme="light"] .price-old { color: var(--muted) !important; }
+html[data-theme="light"] .price-now .unit,
+html[data-theme="light"] .price-points li,
+html[data-theme="light"] .case-entry-desc { color: var(--muted) !important; }
+html[data-theme="light"] .case-entry-title { color: var(--text) !important; }
+
+html[data-theme="light"] .case-entry {
+  background: linear-gradient(180deg, var(--accent-soft), var(--bg2)) !important;
+  border-color: color-mix(in srgb, var(--accent) 30%, transparent) !important;
+  box-shadow: var(--shadow-soft) !important;
+}
+
+html[data-theme="light"] .case-entry:hover {
+  background: linear-gradient(180deg, var(--accent-dim), var(--bg2)) !important;
+  border-color: color-mix(in srgb, var(--accent) 52%, transparent) !important;
+  box-shadow: var(--shadow-card) !important;
+}
+
+/* 能力案例页：将原本写死的深色展示面板映射到亮色表面 */
+html[data-theme="light"] .page-capability-case .topbar {
+  background: var(--nav-surface) !important;
+}
+
+html[data-theme="light"] .page-capability-case .hero,
+html[data-theme="light"] .page-capability-case section,
+html[data-theme="light"] .page-capability-case .modal-card {
+  background: var(--bg2) !important;
+  border-color: var(--border2) !important;
+  box-shadow: var(--shadow-soft) !important;
+}
+
+html[data-theme="light"] .page-capability-case .hero::before {
+  background: radial-gradient(circle, var(--accent-dim), transparent 66%) !important;
+}
+
+html[data-theme="light"] .page-capability-case .case-panel,
+html[data-theme="light"] .page-capability-case .card,
+html[data-theme="light"] .page-capability-case .artifact,
+html[data-theme="light"] .page-capability-case .specimen,
+html[data-theme="light"] .page-capability-case .chip,
+html[data-theme="light"] .page-capability-case .mini-list li,
+html[data-theme="light"] .page-capability-case .day,
+html[data-theme="light"] .page-capability-case .path-step {
+  background: var(--bg3) !important;
+  border-color: var(--border) !important;
+}
+
+html[data-theme="light"] .page-capability-case .metric,
+html[data-theme="light"] .page-capability-case .radar-panel,
+html[data-theme="light"] .page-capability-case .knowledge-panel,
+html[data-theme="light"] .page-capability-case .source-card,
+html[data-theme="light"] .page-capability-case .derive-step,
+html[data-theme="light"] .page-capability-case .research-stat,
+html[data-theme="light"] .page-capability-case .mode-card,
+html[data-theme="light"] .page-capability-case .position-card,
+html[data-theme="light"] .page-capability-case .comparison-table,
+html[data-theme="light"] .page-capability-case .ledger-col,
+html[data-theme="light"] .page-capability-case .decision-col,
+html[data-theme="light"] .page-capability-case .skill-node,
+html[data-theme="light"] .page-capability-case .grade-row,
+html[data-theme="light"] .page-capability-case .validation-step {
+  background: var(--bg2) !important;
+  border-color: var(--border) !important;
+}
+
+/* 待办工具：保留信息密度，但不保留暗色底板 */
+html[data-theme="light"] .page-todo button,
+html[data-theme="light"] .page-todo .quick-add,
+html[data-theme="light"] .page-todo .stat,
+html[data-theme="light"] .page-todo .quadrant,
+html[data-theme="light"] .page-todo .panel {
+  background: var(--bg2) !important;
+  border-color: var(--border2) !important;
+  color: var(--text) !important;
+}
+
+html[data-theme="light"] .page-todo .quadrant header,
+html[data-theme="light"] .page-todo .quadrant summary,
+html[data-theme="light"] .page-todo .panel header,
+html[data-theme="light"] .page-todo .panel summary,
+html[data-theme="light"] .page-todo .empty {
+  background: var(--bg3) !important;
+  border-color: var(--border) !important;
+}
+
+html[data-theme="light"] .page-todo .task,
+html[data-theme="light"] .page-todo .history-item {
+  background: #FFFFFF !important;
+  border-color: var(--border) !important;
+  box-shadow: 0 6px 18px rgba(28, 45, 39, 0.06);
+}
+
+html[data-theme="light"] .page-todo .task.focused {
+  background: linear-gradient(90deg, var(--accent-dim), #FFFFFF) !important;
+}
+
+html[data-theme="light"] .page-todo .btn-primary,
+html[data-theme="light"] .page-todo button[type="submit"] {
+  background: var(--accent) !important;
+  color: var(--accent-ink) !important;
+  border-color: var(--accent) !important;
+}
+
+@media (max-width: 600px) {
+  .global-theme-fab {
+    top: auto;
+    right: 10px;
+    bottom: 10px;
+    min-width: 38px;
+    width: 38px;
+    padding: 0;
+  }
+  .global-theme-fab .theme-toggle__label { display: none; }
+}
+
+@media print {
+  .global-theme-fab { display: none !important; }
+}
