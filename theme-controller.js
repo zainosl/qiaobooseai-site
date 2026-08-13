@@ -1,10 +1,9 @@
-/* 乔不不斯官网双主题控制器：全站共享 dark / light / system */
+/* 乔不不斯官网双主题控制器：默认暗色，全站共享 dark / light */
 (function () {
   'use strict';
 
   var STORAGE_KEY = 'qiaoboosi-theme';
   var root = document.documentElement;
-  var media = window.matchMedia('(prefers-color-scheme: dark)');
 
   function isTheme(value) {
     return value === 'dark' || value === 'light';
@@ -28,8 +27,8 @@
     }
   }
 
-  function systemTheme() {
-    return media.matches ? 'dark' : 'light';
+  function defaultTheme() {
+    return 'dark';
   }
 
   function themeButtonMarkup() {
@@ -119,7 +118,7 @@
   }
 
   function apply(theme, persist, source) {
-    var next = isTheme(theme) ? theme : systemTheme();
+    var next = isTheme(theme) ? theme : defaultTheme();
     root.dataset.theme = next;
     root.style.colorScheme = next;
 
@@ -146,11 +145,11 @@
 
   function reset() {
     try { window.localStorage.removeItem(STORAGE_KEY); } catch (error) {}
-    return apply(systemTheme(), false, 'system');
+    return apply(defaultTheme(), false, 'default');
   }
 
   var urlTheme = readUrlTheme();
-  apply(urlTheme || readStoredTheme() || systemTheme(), Boolean(urlTheme), urlTheme ? 'link' : 'initial');
+  apply(urlTheme || readStoredTheme() || defaultTheme(), Boolean(urlTheme), urlTheme ? 'link' : 'initial');
 
   function mount() {
     ensureThemeControl();
@@ -169,10 +168,6 @@
   } else {
     mount();
   }
-
-  media.addEventListener('change', function () {
-    if (!readStoredTheme()) apply(systemTheme(), false, 'system');
-  });
 
   window.addEventListener('storage', function (event) {
     if (event.key !== STORAGE_KEY || !isTheme(event.newValue)) return;
