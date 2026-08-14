@@ -137,16 +137,14 @@ select.filter{cursor:pointer;}
   min-height:120px; display:flex; flex-direction:column;
 }
 .col-head{
-  display:flex; align-items:flex-start; gap:8px; padding:14px 14px 10px;
+  display:flex; align-items:center; gap:8px; padding:14px 14px 10px;
   border-bottom:1px solid var(--border); position:sticky; top:0;
 }
-.col-head .dot{width:8px; height:8px; border-radius:50%; flex:none; margin-top:6px;}
-.col-head .col-title{min-width:0;}
+.col-head .dot{width:8px; height:8px; border-radius:50%; flex:none;}
 .col-head h3{margin:0; font-size:13px; font-weight:700; letter-spacing:.02em;}
-.col-head .stage-hint{margin-top:2px; color:var(--dim); font-size:10px; line-height:1.45; white-space:normal;}
 .col-head .count{
   font-family:var(--font-mono); font-size:11px; color:var(--dim);
-  margin-left:auto; margin-top:1px; background:var(--bg); border:1px solid var(--border); border-radius:20px; padding:1px 9px;
+  margin-left:auto; background:var(--bg); border:1px solid var(--border); border-radius:20px; padding:1px 9px;
 }
 .col-body{padding:10px; display:flex; flex-direction:column; gap:10px; flex:1;}
 .col-body.drag-over{background:var(--accent-soft); outline:1px dashed var(--accent);}
@@ -468,7 +466,7 @@ const STAGES = [
   {key:'intent',       track:'sales',    label:'有意向',       dot:'#A9B0BA'},
   {key:'deposit',      track:'sales',    label:'已付定金',     dot:'#58E1C1'},
   {key:'won',          track:'sales',    label:'已成交',       dot:'#7AF2D8'},
-  {key:'reactivation', track:'sales',    label:'老客待激活',   dot:'#3BB89A', hint:'已服务 · 待复购或再次触达'},
+  {key:'reactivation', track:'sales',    label:'老客待激活',   dot:'#3BB89A'},
   {key:'abandoned',    track:'sales',    label:'已放弃',       dot:'#6F7682'},
   {key:'lost',         track:'sales',    label:'已流失',       dot:'#F6B66B'},
   // 交付轨
@@ -722,7 +720,7 @@ function renderStats(){
     `<div class="stat"><b>${total}</b><span>客户总数</span></div>
      <div class="stat"><b>${inSales}</b><span>销售跟进中</span></div>
      <div class="stat"><b>${inDelivery}</b><span>交付推进中</span></div>
-     <div class="stat"><b>${won}</b><span>成交客户</span></div>`;
+     <div class="stat"><b>${won}</b><span>已成交</span></div>`;
 }
 
 function renderBoard(){
@@ -742,7 +740,7 @@ function renderBoard(){
     tStages.forEach(s=>{
       const items=trackList.filter(c=>stageOf(c,t.key)===s.key).sort((a,b)=>orderOf(a,t.key)-orderOf(b,t.key));
       const col=document.createElement('div'); col.className='col';
-      col.innerHTML=`<div class="col-head"><span class="dot" style="background:${s.dot}"></span><div class="col-title"><h3>${s.label}</h3>${s.hint?`<div class="stage-hint">${s.hint}</div>`:''}</div><span class="count">${items.length}</span></div>`;
+      col.innerHTML=`<div class="col-head"><span class="dot" style="background:${s.dot}"></span><h3>${s.label}</h3><span class="count">${items.length}</span></div>`;
       const body=document.createElement('div'); body.className='col-body'; body.dataset.track=t.key; body.dataset.stage=s.key;
       body.addEventListener('dragover',e=>{
         e.preventDefault(); body.classList.add('drag-over');
@@ -775,8 +773,8 @@ function getDragAfterElement(container,y){
 function cardEl(c,track){
   const el=document.createElement('div'); el.className='ccard'; el.draggable=true; el.dataset.id=c.id;
   const ll=lastLog(c);
-  // 服务完成/售后阶段可直接进入老客池，保留原产品与完整交付记录。
-  const canReactivate = track==='delivery' && stageOf(c,'sales')!=='reactivation' && ['served','aftercare'].includes(stageOf(c,'delivery'));
+  // 01 客户在交付完成/售后阶段，显示「转 02 意向」入口
+  const canUpsell = track==='delivery' && c.product==='01' && ['served','aftercare'].includes(stageOf(c,'delivery'));
   const pairStage = track==='sales' ? STAGE_MAP[stageOf(c,'delivery')] : STAGE_MAP[stageOf(c,'sales')];
   const pairLabel = track==='sales' ? '交付' : '销售';
   const pairText = track==='sales'&&!isInDeliveryFlow(c) ? '未进入' : (pairStage?pairStage.label:'—');
@@ -789,22 +787,22 @@ function cardEl(c,track){
        ${c.source?`<span class="pill src">${esc(c.source)}</span>`:''}
      </div>
      ${ll?`<div class="last">↳ ${ll.t} ${esc(ll.text)}</div>`:''}
-     ${canReactivate?`<button class="upsell-btn" data-reactivate="${c.id}">↗ 移入老客待激活</button>`:''}`;
+     ${canUpsell?`<button class="upsell-btn" data-up="${c.id}">↗ 转 02 意向</button>`:''}`;
   el.addEventListener('dragstart',e=>{e.dataTransfer.setData('id',c.id); el.classList.add('dragging');});
   el.addEventListener('dragend',()=>el.classList.remove('dragging'));
-  el.addEventListener('click',e=>{ if(e.target.dataset.reactivate) return; openModal(c.id,track); });
+  el.addEventListener('click',e=>{ if(e.target.dataset.up) return; openModal(c.id,track); });
   const up=el.querySelector('.upsell-btn');
-  if(up) up.addEventListener('click',e=>{ e.stopPropagation(); moveToReactivation(c.id); });
+  if(up) up.addEventListener('click',e=>{ e.stopPropagation(); upsellTo02(c.id); });
   return el;
 }
 
-// 一键：服务完成/售后 → 销售轨「老客待激活」
-function moveToReactivation(id){
+// 一键：01 服务完 → 转 02 销售轨「有意向」
+function upsellTo02(id){
   const c=data.find(x=>x.id===id); if(!c) return;
-  if(!confirm('把「'+(c.name||'该客户')+'」移入「老客待激活」？\n（保留当前产品与交付记录，后续可在合适时机再次触达）')) return;
-  c.salesStatus='reactivation'; c.status='reactivation';
-  c.logs=c.logs||[]; c.logs.push({t:todayStr(),text:'服务后暂无明确需求，移入「老客待激活」'});
-  persist(c); render(); toast('已移入老客待激活');
+  if(!confirm('把「'+(c.name||'该客户')+'」转入 02 首单冲刺的「有意向」？\n（产品改为 02，回到销售轨）')) return;
+  c.product='02'; c.salesStatus='intent'; c.status='intent';
+  c.logs=c.logs||[]; c.logs.push({t:todayStr(),text:'01 服务完成，转入 02「有意向」'});
+  persist(c); render(); toast('已转入 02 意向');
 }
 
 function renderTable(){
