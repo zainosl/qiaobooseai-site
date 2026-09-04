@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>产品服务 · AI Native 一人公司 · 乔不不斯</title>
-<meta name="description" content="乔不不斯的产品服务：一人公司路径校准器、潜在客户渠道库。">
+<meta name="description" content="有经验却选不定方向，或方向明确却迟迟卖不出第一单？选择与你当前卡点匹配的一人公司共创服务。">
 <link rel="canonical" href="https://qiaoboose.com/products.html">
 <meta property="og:title" content="产品服务 · AI Native 一人公司 · 乔不不斯">
 <meta property="og:type" content="website">
@@ -430,8 +430,16 @@
   .sec-head { display: flex; align-items: center; gap: 18px; margin: 44px 0 8px; }
   .sec-kicker { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; color: var(--accent); text-transform: uppercase; white-space: nowrap; }
   .sec-line { flex: 1; height: 1px; background: var(--border); }
-  .core-service-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .core-service-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .single-service-grid { grid-template-columns: 1fr; }
+  .route-map { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1px; margin-top:34px; border:1px solid var(--border); background:var(--border); }
+  .route-node { background:var(--bg2); padding:22px 22px 24px; min-height:168px; }
+  .route-node.accented { background:linear-gradient(180deg,rgba(88,225,193,.11),var(--bg2)); }
+  .route-k { font-family:var(--font-mono); font-size:10px; letter-spacing:.14em; color:var(--accent); margin-bottom:12px; }
+  .route-h { font-size:16px; font-weight:800; color:var(--text); line-height:1.45; margin-bottom:8px; }
+  .route-p { font-size:12.5px; color:var(--muted); line-height:1.7; }
+  .principle-bar { display:flex; align-items:center; gap:14px; margin-top:18px; padding:16px 18px; border-left:3px solid var(--accent); background:rgba(88,225,193,.05); color:var(--muted); font-size:13.5px; line-height:1.7; }
+  .principle-bar strong { color:var(--text); }
   @media (max-width: 900px) {
     .prod-grid,
     .core-service-grid,
@@ -441,6 +449,7 @@
     .prod-card {
       width: 100%;
     }
+    .route-map { grid-template-columns:1fr; }
     .consult-card {
       flex-direction: column !important;
       align-items: stretch !important;
@@ -479,15 +488,11 @@
           <div class="dd-group">核心服务</div>
           <a class="dd-link" href="diagnosis.html">
             <span class="dd-ico">◇</span>
-            <span class="dd-text"><b>能力资产与商业切入口诊断<span class="dd-tag paid">付费</span></b><i>拆清你能离开公司变现的能力与切入口</i></span>
-          </a>
-          <a class="dd-link" href="closed-loop-diagnosis.html">
-            <span class="dd-ico">◈</span>
-            <span class="dd-text"><b>一人公司 0-1 闭环诊断<span class="dd-tag paid">付费</span></b><i>把想法拆成 14 天可验证的最小可卖方案</i></span>
+            <span class="dd-text"><b>能力资产与商业方向共创<span class="dd-tag paid">付费</span></b><i>认领能力，或共创一个你愿意验证的方向</i></span>
           </a>
           <a class="dd-link" href="first-order-sprint.html">
             <span class="dd-ico">◆</span>
-            <span class="dd-text"><b>0-1 首单变现冲刺<span class="dd-tag paid">付费</span></b><i>30 天把方向做成产品，冲第一笔收入</i></span>
+            <span class="dd-text"><b>0-1 首单验证共创<span class="dd-tag paid">付费</span></b><i>亲自做 MVP、触达与报价，拿市场证据</i></span>
           </a>
           <a class="dd-link" href="consultation.html">
             <span class="dd-ico">○</span>
@@ -517,8 +522,27 @@
   <section class="block" id="products" style="padding-top:clamp(56px,9vh,96px);padding-bottom:clamp(48px,7vh,72px);">
     <div class="wrap reveal">
       <span class="eyebrow">PRODUCTS &amp; SERVICES</span>
-      <h1 class="block-title">产品服务</h1>
-      <p class="lead" style="margin-top:20px;">围绕「一人公司从 0 到 1」有一条三步主线：<span class="accent">第一步</span>拆清能力、找准方向，<span class="accent">第二步</span>把想法拆成可验证的最小可卖方案，<span class="accent">第三步</span>陪你把方向做成产品、冲到第一单。另有一个随时可用的单次咨询入口，以及两个免费前置工具，供你先自测、判断自己适不适合再决定是否进入。</p>
+      <h1 class="block-title">你现在卡在<em class="accent">“选方向”</em>，<br>还是卡在<em class="accent">“拿首单”</em>？</h1>
+      <p class="lead" style="margin-top:20px;max-width:780px;">你可能已经学过方法、问过 AI、看过许多案例。可真正让人停住的，通常不是不知道应该做什么，而是：<span class="accent">不敢把未来押在一个不像自己的方向上</span>，或者<span class="accent">迟迟没有让真实客户对产品作出反应</span>。这里没有固定升级路线，只解决你眼前最关键的一步。</p>
+
+      <div class="route-map" aria-label="服务路径分流">
+        <div class="route-node">
+          <div class="route-k">ROUTE 01 · 我说不清自己值什么</div>
+          <div class="route-h">做过很多事，<br>离开公司却不会介绍自己</div>
+          <div class="route-p">先把散落在项目和经历里的能力证据找回来，让它在工作、内容、协作或 AI 中真正被你用一次。</div>
+        </div>
+        <div class="route-node accented">
+          <div class="route-k">ROUTE 02 · 我不敢押注任何方向</div>
+          <div class="route-h">每条路都讲得通，<br>却没有一条真想长期走</div>
+          <div class="route-p">把赚钱可能、价值认同、身份、能量和生活边界一起放上桌，形成一个你愿意亲自验证的选择。</div>
+        </div>
+        <div class="route-node">
+          <div class="route-k">ROUTE 03 · 我一直没有真正卖</div>
+          <div class="route-h">方向已经有了，<br>产品、触达和报价却总在推迟</div>
+          <div class="route-p">直接进入首单验证。把最大的不确定压成一个短行动，尽快换回购买信号，而不是继续闭门准备。</div>
+        </div>
+      </div>
+      <div class="principle-bar"><strong>为什么不是代做：</strong>方向只有经过你的取舍才值得长期走，市场感觉只有亲自接触客户才会长在你身上。我负责让你少走弯路，但不会拿走你对事业的判断权。</div>
 
       <div class="sec-head">
         <span class="sec-kicker">CORE SERVICE · 核心服务</span>
@@ -528,71 +552,48 @@
         <div class="prod-card" data-glyph="DIAG" style="border-color: rgba(88,225,193,0.32); background: linear-gradient(180deg, rgba(88,225,193,0.06), var(--bg2));">
           <div class="prod-top">
             <div class="prod-ico">◇</div>
-            <span class="prod-badge paid">第一步 · 找方向</span>
+            <span class="prod-badge paid">路径 A · 能力 / 方向</span>
           </div>
-          <div class="prod-label">CAPABILITY ASSET DIAGNOSIS</div>
-          <div class="prod-title">能力资产与商业切入口诊断</div>
-          <p class="prod-desc">用 2-3 小时，帮你拆清哪些能力真正属于你、哪些能离开公司继续变现、你最适合先切入哪个个人业务方向。交付能力资产地图、可独立变现判断、优先切入口与可复用 AI 判断流程。</p>
+          <div class="prod-label">CAPABILITY &amp; DIRECTION CO-CREATION</div>
+          <div class="prod-title">能力资产与商业方向共创</div>
+          <p class="prod-desc">当你能力不少、方向很多，最怕的不是选错一次，而是把几年时间押在一条“看起来能赚钱、其实越做越不像自己”的路上。这项服务帮你找回能力与方向的所有权。</p>
           <ul class="prod-points">
-            <li><b>能力转译成可验证的商业切入口</b>：把你的能力翻译成一个能拿去市场验证的收入方向</li>
-            <li><b>判断哪些能力能离开平台独立交付</b>：分清哪些真正属于你、能被公开市场购买</li>
-            <li><b>沉淀可复用的 AI 商业判断工作流</b>：之后判断新方向还能继续用</li>
+            <li><b>你会说清</b>：哪些能力离开平台仍然成立，别人为什么会需要</li>
+            <li><b>你会选定</b>：一个兼顾赚钱可能与长期意愿的方向，而不是被结论推着走</li>
+            <li><b>你会开始</b>：完成一次能力调用或最小外部动作，不把清晰停在纸上</li>
+            <li><b>你能继续</b>：判断、分歧和证据都留在可编辑工作台，而非沉进长报告</li>
           </ul>
           <div class="prod-price">
             <div class="pp-now">
-              <span class="pp-tag">限时早期价</span>
+              <span class="pp-tag">限时早鸟价</span>
               <span class="pp-num">¥199</span>
               <span class="pp-unit">/ 次</span>
             </div>
-            <div class="pp-old">公开售价 <s>¥699 / 次</s></div>
+            <div class="pp-old">公开原价 <s>¥699 / 次</s> · 能力出口可独立结束</div>
           </div>
           <a class="btn btn-primary" href="diagnosis.html">了解服务详情 →</a>
-        </div>
-        <div class="prod-card" data-glyph="LOOP" style="border-color: rgba(88,225,193,0.32); background: linear-gradient(180deg, rgba(88,225,193,0.06), var(--bg2));">
-          <div class="prod-top">
-            <div class="prod-ico">◈</div>
-            <span class="prod-badge paid">第二步 · 拆方案</span>
-          </div>
-          <div class="prod-label">0 → 1 CLOSED-LOOP DIAGNOSIS</div>
-          <div class="prod-title">一人公司 0-1 闭环诊断</div>
-          <p class="prod-desc">已经在发内容、找人聊、试报价，却还卡在不知道卖什么、卖给谁？一次高密度商业拆解，把一团乱的想法拆成一个能在 14 天内验证的最小可卖方案。比陪跑冲刺更轻、更便宜。</p>
-          <ul class="prod-points">
-            <li><b>最小可卖服务 + 目标用户</b>：收敛出现在最值得卖的一个小服务，和第一批该找的人</li>
-            <li><b>触达报价表达 + 14 天行动表</b>：做出能发出去的表达，给一张明确到天的验证行动表</li>
-            <li><b>轻量 AI 业务工作流</b>：让 AI 参与你的调研、判断、生产和复盘，诊断后还能反复调用</li>
-            <li><b>2-3 次关键材料校准</b>：14 天内帮你判断哪里太像推销、哪里该立刻调整</li>
-          </ul>
-          <div class="prod-price">
-            <div class="pp-now">
-              <span class="pp-tag">限时早期价</span>
-              <span class="pp-num">¥399</span>
-              <span class="pp-unit">/ 单次诊断</span>
-            </div>
-            <div class="pp-old">公开售价 <s>¥999</s>　·　体验版 ¥999（公开 ¥3999）</div>
-          </div>
-          <a class="btn btn-primary" href="closed-loop-diagnosis.html">了解服务详情 →</a>
         </div>
         <div class="prod-card" data-glyph="SPRINT" style="border-color: rgba(88,225,193,0.32); background: linear-gradient(180deg, rgba(88,225,193,0.06), var(--bg2));">
           <div class="prod-top">
             <div class="prod-ico">◆</div>
-            <span class="prod-badge paid">第三步 · 冲首单</span>
+            <span class="prod-badge paid">路径 B · 首单验证</span>
           </div>
-          <div class="prod-label">0 → 1 FIRST-ORDER SPRINT</div>
-          <div class="prod-title">一人公司 0-1 首单变现冲刺</div>
-          <p class="prod-desc">方向已定后，30 天把它做成能卖的产品服务，找到第一批真实客户，完成沟通报价，冲第一笔收入或清楚的购买信号。我 + AI 陪你跑完一轮 0-1 变现闭环。</p>
+          <div class="prod-label">0 → 1 FIRST-ORDER VALIDATION</div>
+          <div class="prod-title">一人公司 0-1 首单验证共创</div>
+          <p class="prod-desc">当方向已经有了，继续研究常常只是更体面的拖延。这项服务不是帮你把方案写得更完整，而是帮你尽快知道：到底有没有人愿意为这个结果付钱。</p>
           <ul class="prod-points">
-            <li><b>第一单变现闭环</b>：推进到真实触达、报价、成交尝试，冲第一单或强购买信号</li>
-            <li><b>做出能卖的 MVP 产品服务</b>：客户听得懂、你能报价也能交付</li>
-            <li><b>真人校准关键节点</b>：帮你判断到底卡在用户、需求、产品、信任、价格还是交付</li>
-            <li><b>沉淀个人商业知识体系</b>：下一轮打磨、触达、复盘不再从零开始</li>
+            <li><b>先卖清楚</b>：把方向压成客户一听就懂、你也交付得了的小产品</li>
+            <li><b>再找到人</b>：从现有关系与渠道中找到第一批最可能购买的客户</li>
+            <li><b>进入购买动作</b>：不再只问意见，真实触达、沟通并明确报价</li>
+            <li><b>每轮都有收获</b>：争取首单；即使没成交，也能定位下一步该改哪里</li>
           </ul>
           <div class="prod-price">
             <div class="pp-now">
-              <span class="pp-tag">限时早期价</span>
+              <span class="pp-tag">限时早鸟价</span>
               <span class="pp-num">¥1999</span>
-              <span class="pp-unit">/ 30 天</span>
+              <span class="pp-unit">/ 首期共创</span>
             </div>
-            <div class="pp-old">公开售价 <s>¥6999 / 30 天</s></div>
+            <div class="pp-old">公开原价 <s>¥6999</s> · 具体周期按任务确认</div>
           </div>
           <a class="btn btn-primary" href="first-order-sprint.html">了解服务详情 →</a>
         </div>
@@ -611,7 +612,7 @@
             </div>
             <div class="prod-label" style="margin-top:18px;">1-ON-1 CONSULTATION</div>
             <div class="prod-title">一人公司单次咨询</div>
-            <p class="prod-desc" style="margin-bottom:0;">不确定选哪个服务，或想就某个单点问题快速聊清楚？一对一 1 小时，围绕你当前最卡的问题给出判断和下一步建议。它不在 1-2-3 主线里，更像一个随时可用的入口。</p>
+            <p class="prod-desc" style="margin-bottom:0;">不确定自己属于哪条路径，或只想把一个单点问题聊清楚？一对一 1 小时，围绕当前最卡的问题形成一个判断和一个下一步。它不是两条主服务的必经步骤，也不默认升级。</p>
           </div>
           <div style="flex:1 1 240px;min-width:240px;display:flex;flex-direction:column;gap:18px;">
             <ul class="prod-points" style="margin-bottom:0;">
@@ -641,7 +642,7 @@
         <span class="sec-kicker">FREE TOOLS · 免费前置工具</span>
         <span class="sec-line"></span>
       </div>
-      <p class="lead" style="margin-top:0;margin-bottom:8px;">这两个工具完全免费，用来帮你先做自测、判断自己适不适合，再决定要不要进入核心诊断。</p>
+      <p class="lead" style="margin-top:0;margin-bottom:8px;">这两个工具完全免费，用来先做阶段自测或寻找潜在客户渠道，再判断是否需要进入产品 A、产品 B 或只做一次咨询。</p>
       <div class="prod-grid">
         <div class="prod-card free" data-glyph="PATH">
           <div class="prod-top">
