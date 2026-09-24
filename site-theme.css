@@ -8,7 +8,7 @@ html[data-theme="light"] {
   --surface-2: var(--bg3);
   --card: var(--bg2);
   --card2: var(--bg3);
-  --card-elevated: #FFFFFF;
+  --card-elevated: var(--bg2);
   --paper: rgba(248, 250, 249, 0.94);
   --paper2: rgba(227, 233, 230, 0.94);
   --ink: var(--text);
@@ -186,13 +186,13 @@ html[data-theme="light"] .page-todo .empty {
 
 html[data-theme="light"] .page-todo .task,
 html[data-theme="light"] .page-todo .history-item {
-  background: #FFFFFF !important;
+  background: var(--bg2) !important;
   border-color: var(--border) !important;
   box-shadow: 0 6px 18px rgba(28, 45, 39, 0.06);
 }
 
 html[data-theme="light"] .page-todo .task.focused {
-  background: linear-gradient(90deg, var(--accent-dim), #FFFFFF) !important;
+  background: linear-gradient(90deg, var(--accent-dim), var(--bg2)) !important;
 }
 
 html[data-theme="light"] .page-todo .btn-primary,
@@ -200,6 +200,220 @@ html[data-theme="light"] .page-todo button[type="submit"] {
   background: var(--accent) !important;
   color: var(--accent-ink) !important;
   border-color: var(--accent) !important;
+}
+
+/* 路径校准器：旧版页面包含大量暗色半透明面板，亮色主题必须完整翻译。 */
+html[data-theme="light"] body.page-calibrator {
+  background:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px),
+    radial-gradient(ellipse at 52% -8%, var(--ambient-strong), transparent 40%),
+    radial-gradient(ellipse at 90% 8%, rgba(19, 122, 102, 0.045), transparent 32%),
+    var(--bg) !important;
+  background-size: 60px 60px, 60px 60px, 100% 100%, 100% 100%, 100% 100% !important;
+}
+
+html[data-theme="light"] .page-calibrator h1 {
+  background: none !important;
+  color: var(--text) !important;
+  -webkit-text-fill-color: currentColor !important;
+  filter: none !important;
+}
+
+html[data-theme="light"] .page-calibrator .hero::after {
+  background: radial-gradient(circle, var(--ambient-strong), transparent 62%) !important;
+}
+
+html[data-theme="light"] .page-calibrator .hero-card {
+  background: linear-gradient(180deg, var(--bg2), color-mix(in srgb, var(--bg3) 48%, var(--bg2))) !important;
+  border-color: var(--border2) !important;
+  box-shadow: var(--shadow-card) !important;
+}
+
+html[data-theme="light"] .page-calibrator .hero-note,
+html[data-theme="light"] .page-calibrator .feature {
+  background: var(--bg3) !important;
+  border-color: var(--border) !important;
+}
+
+html[data-theme="light"] .page-calibrator .calibration-rail,
+html[data-theme="light"] .page-calibrator .calibration-main,
+html[data-theme="light"] .page-calibrator .report-cover,
+html[data-theme="light"] .page-calibrator .appointment-modal {
+  background: var(--bg2) !important;
+  border-color: var(--border2) !important;
+  box-shadow: var(--shadow-card) !important;
+}
+
+html[data-theme="light"] .page-calibrator .calibration-main {
+  background: linear-gradient(180deg, var(--bg2), color-mix(in srgb, var(--bg3) 35%, var(--bg2))) !important;
+}
+
+html[data-theme="light"] .page-calibrator .calibration-rail {
+  background: color-mix(in srgb, var(--bg2) 94%, transparent) !important;
+}
+
+html[data-theme="light"] .page-calibrator .rail-step,
+html[data-theme="light"] .page-calibrator .final-report-actions,
+html[data-theme="light"] .page-calibrator .path-node-signal,
+html[data-theme="light"] .page-calibrator .eiofs-matrix-table th,
+html[data-theme="light"] .page-calibrator .eiofs-matrix-table td {
+  border-color: var(--border) !important;
+}
+
+html[data-theme="light"] .page-calibrator .question,
+html[data-theme="light"] .page-calibrator .metric,
+html[data-theme="light"] .page-calibrator .result-box,
+html[data-theme="light"] .page-calibrator .profile-mini,
+html[data-theme="light"] .page-calibrator .path-map-item,
+html[data-theme="light"] .page-calibrator .boundary-card,
+html[data-theme="light"] .page-calibrator .eiofs-logic,
+html[data-theme="light"] .page-calibrator .eiofs-matrix,
+html[data-theme="light"] .page-calibrator .reasoning-step,
+html[data-theme="light"] .page-calibrator .data-points-details {
+  background: var(--bg3) !important;
+  border-color: var(--border) !important;
+  box-shadow: none !important;
+}
+
+html[data-theme="light"] .page-calibrator .option,
+html[data-theme="light"] .page-calibrator .legend-pill,
+html[data-theme="light"] .page-calibrator .boundary-col,
+html[data-theme="light"] .page-calibrator .modal-close {
+  background: var(--bg2) !important;
+  border-color: var(--border2) !important;
+  color: var(--text) !important;
+}
+
+html[data-theme="light"] .page-calibrator .option:hover {
+  background: var(--accent-soft) !important;
+  border-color: color-mix(in srgb, var(--accent) 42%, transparent) !important;
+  box-shadow: var(--shadow-soft) !important;
+}
+
+html[data-theme="light"] .page-calibrator .option.selected {
+  background: var(--accent-dim) !important;
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 28%, transparent) !important;
+}
+
+html[data-theme="light"] .page-calibrator .option.selected .check,
+html[data-theme="light"] .page-calibrator .rail-step.active .rail-dot {
+  color: var(--accent-ink) !important;
+}
+
+html[data-theme="light"] .page-calibrator input[type="text"],
+html[data-theme="light"] .page-calibrator textarea,
+html[data-theme="light"] .page-calibrator select,
+html[data-theme="light"] .page-calibrator .appointment-field input,
+html[data-theme="light"] .page-calibrator .appointment-field textarea,
+html[data-theme="light"] .page-calibrator .appointment-field select {
+  background: var(--bg2) !important;
+  border-color: var(--border2) !important;
+  color: var(--text) !important;
+}
+
+html[data-theme="light"] .page-calibrator input[type="text"]:focus,
+html[data-theme="light"] .page-calibrator textarea:focus,
+html[data-theme="light"] .page-calibrator select:focus {
+  background: var(--bg2) !important;
+  box-shadow: 0 0 0 3px var(--accent-dim) !important;
+}
+
+html[data-theme="light"] .page-calibrator .section,
+html[data-theme="light"] .page-calibrator .cta-box {
+  background: var(--bg2) !important;
+  border-color: var(--border) !important;
+  box-shadow: var(--shadow-soft) !important;
+}
+
+html[data-theme="light"] .page-calibrator .archetype-card,
+html[data-theme="light"] .page-calibrator .path-map,
+html[data-theme="light"] .page-calibrator .diagnosis-summary,
+html[data-theme="light"] .page-calibrator .download-prompt,
+html[data-theme="light"] .page-calibrator .prescription-goal,
+html[data-theme="light"] .page-calibrator .cta-copy-block,
+html[data-theme="light"] .page-calibrator .appointment-entry,
+html[data-theme="light"] .page-calibrator .appointment-success-inline,
+html[data-theme="light"] .page-calibrator .appointment-panel,
+html[data-theme="light"] .page-calibrator .nextstep-recheck-prompt,
+html[data-theme="light"] .page-calibrator .reasoning-step.result-focus,
+html[data-theme="light"] .page-calibrator .reasoning-conclusion {
+  background: linear-gradient(135deg, var(--accent-dim), var(--bg2)) !important;
+  border-color: color-mix(in srgb, var(--accent) 28%, transparent) !important;
+  box-shadow: none !important;
+}
+
+html[data-theme="light"] .page-calibrator .path-risk-badge,
+html[data-theme="light"] .page-calibrator .path-node,
+html[data-theme="light"] .page-calibrator .eiofs-matrix-table th:first-child,
+html[data-theme="light"] .page-calibrator .eiofs-matrix-table td:first-child {
+  background: var(--bg2) !important;
+  border-color: var(--border2) !important;
+  color: var(--text) !important;
+}
+
+html[data-theme="light"] .page-calibrator .path-node.active,
+html[data-theme="light"] .page-calibrator .path-node.next,
+html[data-theme="light"] .page-calibrator .eiofs-matrix-table td.active-stage,
+html[data-theme="light"] .page-calibrator .eiofs-matrix-table th.active-stage,
+html[data-theme="light"] .page-calibrator .eiofs-matrix-table td.next-stage,
+html[data-theme="light"] .page-calibrator .eiofs-matrix-table th.next-stage {
+  background: var(--accent-dim) !important;
+  border-color: color-mix(in srgb, var(--accent) 36%, transparent) !important;
+}
+
+html[data-theme="light"] .page-calibrator .early-risk-card {
+  background: linear-gradient(135deg, var(--accent-dim), var(--bg2)) !important;
+  border-color: color-mix(in srgb, var(--accent) 32%, transparent) !important;
+  box-shadow: var(--shadow-soft) !important;
+}
+
+html[data-theme="light"] .page-calibrator .early-risk-card.risk-high {
+  background: linear-gradient(135deg, rgba(181, 63, 63, 0.10), var(--bg2)) !important;
+  border-color: rgba(181, 63, 63, 0.32) !important;
+}
+
+html[data-theme="light"] .page-calibrator .early-risk-card.risk-medium,
+html[data-theme="light"] .page-calibrator .boundary-col.cannot-do,
+html[data-theme="light"] .page-calibrator .eiofs-card.missing {
+  background: linear-gradient(135deg, rgba(139, 91, 18, 0.09), var(--bg2)) !important;
+  border-color: rgba(139, 91, 18, 0.28) !important;
+}
+
+html[data-theme="light"] .page-calibrator .early-risk-card.risk-high .early-risk-kicker,
+html[data-theme="light"] .page-calibrator .early-risk-card.risk-high .early-risk-level strong,
+html[data-theme="light"] .page-calibrator .motive-card b,
+html[data-theme="light"] .page-calibrator .motive-card.active b {
+  color: #A33A3A !important;
+  text-shadow: none !important;
+}
+
+html[data-theme="light"] .page-calibrator .early-risk-card.risk-medium .early-risk-kicker,
+html[data-theme="light"] .page-calibrator .early-risk-card.risk-medium .early-risk-level strong,
+html[data-theme="light"] .page-calibrator .boundary-col.cannot-do b,
+html[data-theme="light"] .page-calibrator .eiofs-card.missing b,
+html[data-theme="light"] .page-calibrator .appointment-status.error {
+  color: #815313 !important;
+  text-shadow: none !important;
+}
+
+html[data-theme="light"] .page-calibrator .motive-card,
+html[data-theme="light"] .page-calibrator .motive-card.active {
+  background: color-mix(in srgb, #A33A3A 6%, var(--bg2)) !important;
+  border-color: color-mix(in srgb, #A33A3A 24%, transparent) !important;
+  box-shadow: none !important;
+}
+
+html[data-theme="light"] .page-calibrator .loader-ring {
+  border-color: var(--border2) !important;
+  border-top-color: var(--accent) !important;
+  border-right-color: color-mix(in srgb, var(--accent) 58%, transparent) !important;
+}
+
+html[data-theme="light"] .page-calibrator .back-home {
+  color: var(--accent-ink) !important;
+  box-shadow: var(--shadow-soft) !important;
 }
 
 @media (max-width: 600px) {
