@@ -1,0 +1,13 @@
+
+.campaign-nav{position:sticky;top:0;z-index:100;background:var(--surface-nav,var(--bg));border-bottom:1px solid var(--border);backdrop-filter:blur(16px);padding:0 24px;height:auto;min-height:76px;display:block}
+.campaign-nav__inner{max-width:1320px;min-height:76px;margin:auto;display:flex;align-items:center;gap:24px}
+.campaign-brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);font-weight:650;white-space:nowrap;font-size:14px}
+.campaign-brand__mark{display:grid;place-items:center;width:30px;height:30px;background:var(--accent);color:var(--accent-ink);border-radius:6px;font-size:15px}
+.campaign-links{margin-left:auto;display:flex;align-items:center;gap:20px}.campaign-links>a{font-size:13px;color:var(--muted);text-decoration:none;white-space:nowrap}.campaign-links>a[aria-current]{color:var(--text)}
+.campaign-nav .resource-entry{display:inline-flex;gap:8px;align-items:center;color:var(--text);border:1px solid var(--accent-border);padding:9px 12px;border-radius:7px;background:var(--accent-soft)}
+.campaign-theme{background:var(--bg2);color:var(--muted);border:1px solid var(--border2);border-radius:6px;padding:9px 11px;font-size:11px;cursor:pointer;white-space:nowrap}
+.campaign-footer{border-top:1px solid var(--border);margin-top:80px;padding:30px 24px;display:flex;justify-content:center;gap:24px;flex-wrap:wrap;color:var(--muted);font-size:12px}.campaign-footer a{color:inherit}
+@media(max-width:700px){.campaign-nav{padding:0 16px}.campaign-nav__inner{gap:12px;min-height:68px;flex-wrap:wrap;padding:10px 0}.campaign-brand{font-size:12px}.campaign-brand__detail{display:none}.campaign-links{gap:12px}.campaign-links>a{font-size:12px}.campaign-links .home-link{display:none}.campaign-nav .resource-entry{padding:8px}.campaign-theme{padding:8px}.campaign-footer{margin-top:50px;gap:12px}}
+@media(max-width:380px){.campaign-nav .resource-entry__badge{font-size:8px;padding:2px 3px}.campaign-links{gap:8px}.campaign-theme{font-size:10px}}
+
+@media(max-width:480px){.campaign-brand>span:not(.campaign-brand__mark){display:none}.campaign-nav__inner{flex-wrap:nowrap;gap:8px}.campaign-links{gap:10px}.campaign-brand__mark{width:28px;height:28px}}

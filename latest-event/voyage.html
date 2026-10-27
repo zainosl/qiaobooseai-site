@@ -1,0 +1,570 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="钟蔚的一人公司实战共创邀请。结合一堂 AI 大航海，从方向、需求、产品，走向真实成交与交付。">
+<title>一起完成你的一人公司 0～1｜钟蔚 · AI 大航海</title>
+<style>/*
+  钟蔚个人品牌设计系统 v2.0
+  双主题核心：dark / light / system
+
+  用法：
+  1. 在 <head> 中加载本文件与 theme-controller.js。
+  2. 组件只使用语义变量，不写死黑白色。
+  3. html[data-theme="dark|light"] 由控制器维护。
+*/
+
+:root,
+html[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* Signature dark palette */
+  --bg: #0B0D0F;
+  --bg2: #13161A;
+  --bg3: #1C2026;
+  --text: #F7F8FA;
+  --muted: #A9B0BA;
+  --dim: #737C88;
+  --accent: #58E1C1;
+  --accent2: #3BB89A;
+  --accent3: #7AF2D8;
+  --accent-ink: #07110E;
+  --border: rgba(255, 255, 255, 0.08);
+  --border2: rgba(255, 255, 255, 0.14);
+
+  /* Semantic surfaces */
+  --surface: var(--bg2);
+  --surface-raised: rgba(19, 22, 26, 0.94);
+  --card: var(--bg3);
+  --card2: var(--bg2);
+  --surface-inset: rgba(5, 6, 7, 0.58);
+  --surface-nav: rgba(11, 13, 15, 0.82);
+  --surface-hover: rgba(28, 32, 38, 0.96);
+
+  /* Accent treatments */
+  --accent-dim: rgba(88, 225, 193, 0.11);
+  --accent-soft: rgba(88, 225, 193, 0.055);
+  --accent-glow: rgba(88, 225, 193, 0.28);
+  --accent-border: rgba(88, 225, 193, 0.30);
+
+  /* Atmosphere and elevation */
+  --grid-line: rgba(88, 225, 193, 0.032);
+  --ambient-strong: rgba(88, 225, 193, 0.11);
+  --ambient-soft: rgba(88, 225, 193, 0.055);
+  --page-fade: rgba(11, 13, 15, 0.94);
+  --shadow-color: rgba(0, 0, 0, 0.30);
+  --shadow-soft: 0 18px 52px rgba(0, 0, 0, 0.18);
+  --shadow-card: 0 30px 100px var(--shadow-color);
+
+  /* Status */
+  --danger: #F6B66B;
+  --danger-soft: rgba(246, 182, 107, 0.11);
+  --success: var(--accent);
+  --focus-ring: rgba(88, 225, 193, 0.18);
+}
+
+html[data-theme="light"] {
+  color-scheme: light;
+
+  /* Cold-mist light palette: intentionally not pure white */
+  --bg: #EEF2F0;
+  --bg2: #F8FAF9;
+  --bg3: #E3E9E6;
+  --text: #151A18;
+  --muted: #56615D;
+  --dim: #77827E;
+  --accent: #137A66;
+  --accent2: #0C6656;
+  --accent3: #1C947C;
+  --accent-ink: #F7FFFC;
+  --border: rgba(21, 26, 24, 0.10);
+  --border2: rgba(21, 26, 24, 0.18);
+
+  --surface: var(--bg2);
+  --surface-raised: rgba(248, 250, 249, 0.94);
+  --card: var(--bg3);
+  --card2: var(--bg2);
+  --surface-inset: rgba(223, 230, 226, 0.72);
+  --surface-nav: rgba(238, 242, 240, 0.86);
+  --surface-hover: #DFE7E3;
+
+  --accent-dim: rgba(19, 122, 102, 0.11);
+  --accent-soft: rgba(19, 122, 102, 0.055);
+  --accent-glow: rgba(19, 122, 102, 0.16);
+  --accent-border: rgba(19, 122, 102, 0.32);
+
+  --grid-line: rgba(19, 122, 102, 0.052);
+  --ambient-strong: rgba(19, 122, 102, 0.10);
+  --ambient-soft: rgba(19, 122, 102, 0.05);
+  --page-fade: rgba(238, 242, 240, 0.93);
+  --shadow-color: rgba(28, 45, 39, 0.12);
+  --shadow-soft: 0 14px 38px rgba(28, 45, 39, 0.08);
+  --shadow-card: 0 24px 72px var(--shadow-color);
+
+  --danger: #9A5B16;
+  --danger-soft: rgba(154, 91, 22, 0.10);
+  --success: var(--accent);
+  --focus-ring: rgba(19, 122, 102, 0.18);
+}
+
+:root {
+  /* Typography */
+  --font-sans: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'DM Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* Layout */
+  --wrap: 1120px;
+  --wrap-narrow: 840px;
+  --radius-sharp: 2px;
+  --radius-card: 12px;
+  --radius-panel: 16px;
+  --transition-theme: 180ms ease;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { background: var(--bg); scroll-behavior: smooth; }
+html, body { margin: 0; min-height: 100%; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  line-height: 1.72;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  transition: background-color var(--transition-theme), color var(--transition-theme);
+}
+
+button, input, textarea, select { color-scheme: inherit; }
+button { font: inherit; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+/* Optional brand grid background */
+.brand-grid-bg::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+.brand-grid-bg::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 80% 10%, var(--ambient-strong), transparent 34%),
+    radial-gradient(circle at 10% 88%, var(--ambient-soft), transparent 32%),
+    linear-gradient(180deg, transparent, var(--page-fade));
+}
+
+.wrap { width: min(var(--wrap), calc(100% - 48px)); margin: 0 auto; }
+.wrap-narrow { width: min(var(--wrap-narrow), calc(100% - 40px)); margin: 0 auto; }
+
+.eyebrow {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  color: var(--accent);
+  text-transform: uppercase;
+  border: 1px solid var(--accent-border);
+  background: var(--accent-soft);
+  padding: 6px 14px;
+  border-radius: var(--radius-sharp);
+}
+
+.hero-title {
+  margin: 0;
+  font-size: clamp(40px, 6vw, 76px);
+  line-height: 1.06;
+  letter-spacing: -0.035em;
+  font-weight: 900;
+}
+.hero-title em,
+.accent { color: var(--accent); font-style: normal; }
+
+.section-title {
+  margin: 0;
+  font-size: clamp(26px, 3.2vw, 44px);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+}
+
+.body-large {
+  font-size: clamp(15px, 1.45vw, 20px);
+  color: var(--muted);
+  font-weight: 300;
+  line-height: 1.85;
+}
+
+.card {
+  position: relative;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sharp);
+  padding: clamp(22px, 4vw, 42px);
+  box-shadow: var(--shadow-card);
+}
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-top: 1px solid var(--accent-border);
+}
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 22px;
+  box-shadow: var(--shadow-soft);
+}
+
+.btn-primary,
+.btn-secondary,
+.btn-ghost {
+  border-radius: var(--radius-sharp);
+  padding: 14px 28px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: transform .22s, color .22s, border-color .22s, background-color .22s;
+  font-family: var(--font-sans);
+  letter-spacing: .05em;
+}
+.btn-primary {
+  background: var(--accent);
+  color: var(--accent-ink);
+  border: 1px solid var(--accent);
+}
+.btn-primary:hover { background: var(--accent2); border-color: var(--accent2); transform: translateY(-2px); }
+.btn-secondary { background: transparent; color: var(--text); border: 1px solid var(--border2); }
+.btn-secondary:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+.btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+.btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+.tag {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: var(--radius-sharp);
+  font-size: 11px;
+  font-family: var(--font-mono);
+  letter-spacing: 0.08em;
+  font-weight: 500;
+  margin: 2px 4px 2px 0;
+  background: var(--accent-dim);
+  color: var(--accent);
+  border: 1px solid var(--accent-border);
+}
+
+.input,
+input[type="text"],
+textarea,
+select {
+  width: 100%;
+  padding: 13px 14px;
+  border-radius: var(--radius-sharp);
+  border: 1px solid var(--border2);
+  background: var(--surface-inset);
+  color: var(--text);
+  font: inherit;
+  outline: none;
+}
+.input:focus,
+input[type="text"]:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--focus-ring);
+}
+::placeholder { color: var(--dim); opacity: 1; }
+
+/* Reusable accessible theme control */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 40px;
+  padding: 8px 11px;
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-sharp);
+  background: var(--surface-nav);
+  color: var(--text);
+  cursor: pointer;
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(16px);
+  transition: color .18s, border-color .18s, background-color .18s, transform .18s;
+}
+.theme-toggle:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-1px); }
+.theme-toggle:focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 2px; }
+.theme-toggle__track {
+  position: relative;
+  width: 34px;
+  height: 18px;
+  border: 1px solid var(--border2);
+  background: var(--surface-inset);
+  flex: none;
+}
+.theme-toggle__track::after {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  left: 3px;
+  top: 3px;
+  background: var(--accent);
+  transition: transform .18s ease;
+}
+html[data-theme="light"] .theme-toggle__track::after { transform: translateX(16px); }
+.theme-toggle__label {
+  min-width: 2.5em;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 768px) {
+  .wrap { width: min(100% - 32px, var(--wrap)); }
+  .wrap-narrow { width: min(100% - 32px, var(--wrap-narrow)); }
+  .hero-title { font-size: clamp(34px, 10vw, 48px); }
+  .card { padding: 22px; }
+}
+
+/* Reports and browser print use the clarity palette by default. */
+@media print {
+  html[data-theme] {
+    color-scheme: light;
+    --bg: #FFFFFF;
+    --bg2: #FFFFFF;
+    --bg3: #EEF2F0;
+    --text: #151A18;
+    --muted: #56615D;
+    --dim: #77827E;
+    --accent: #137A66;
+    --accent2: #0C6656;
+    --accent3: #1C947C;
+    --accent-ink: #FFFFFF;
+    --border: rgba(21, 26, 24, 0.12);
+    --border2: rgba(21, 26, 24, 0.20);
+    --surface: #FFFFFF;
+    --surface-raised: #FFFFFF;
+    --card: #EEF2F0;
+    --card2: #FFFFFF;
+    --surface-inset: #EEF2F0;
+    --surface-nav: #FFFFFF;
+    --surface-hover: #E3E9E6;
+    --shadow-soft: none;
+    --shadow-card: none;
+    --grid-line: transparent;
+    --ambient-strong: transparent;
+    --ambient-soft: transparent;
+    --page-fade: transparent;
+  }
+  .theme-toggle { display: none !important; }
+}
+</style>
+<script>/* 钟蔚双主题控制器：dark / light / system */
+(function () {
+  'use strict';
+
+  var STORAGE_KEY = 'qiaoboosi-theme';
+  var root = document.documentElement;
+  var media = window.matchMedia('(prefers-color-scheme: dark)');
+
+  function isTheme(value) {
+    return value === 'dark' || value === 'light';
+  }
+
+  function readStoredTheme() {
+    try {
+      var value = window.localStorage.getItem(STORAGE_KEY);
+      return isTheme(value) ? value : null;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function systemTheme() {
+    return media.matches ? 'dark' : 'light';
+  }
+
+  function resolvedTheme() {
+    return readStoredTheme() || systemTheme();
+  }
+
+  function syncControls(theme) {
+    var isLight = theme === 'light';
+    document.querySelectorAll('[data-theme-toggle]').forEach(function (button) {
+      button.setAttribute('aria-pressed', String(isLight));
+      button.setAttribute('aria-label', isLight ? '切换到暗色模式' : '切换到亮色模式');
+      var label = button.querySelector('[data-theme-label]');
+      if (label) label.textContent = isLight ? '切换暗黑' : '切换浅色';
+    });
+  }
+
+  function apply(theme, persist) {
+    var next = isTheme(theme) ? theme : systemTheme();
+    root.dataset.theme = next;
+    root.style.colorScheme = next;
+
+    if (persist) {
+      try { window.localStorage.setItem(STORAGE_KEY, next); } catch (error) {}
+    }
+
+    if (document.body) syncControls(next);
+    window.dispatchEvent(new CustomEvent('qiaoboosi:themechange', {
+      detail: { theme: next, source: persist ? 'user' : 'system' }
+    }));
+    return next;
+  }
+
+  function toggle() {
+    return apply(root.dataset.theme === 'light' ? 'dark' : 'light', true);
+  }
+
+  function reset() {
+    try { window.localStorage.removeItem(STORAGE_KEY); } catch (error) {}
+    return apply(systemTheme(), false);
+  }
+
+  /* Apply synchronously when this script is loaded in <head>, preventing a theme flash. */
+  apply(resolvedTheme(), false);
+
+  function mount() {
+    syncControls(root.dataset.theme);
+    document.querySelectorAll('[data-theme-toggle]').forEach(function (button) {
+      if (button.dataset.themeReady === 'true') return;
+      button.dataset.themeReady = 'true';
+      button.addEventListener('click', toggle);
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', mount, { once: true });
+  } else {
+    mount();
+  }
+
+  media.addEventListener('change', function () {
+    if (!readStoredTheme()) apply(systemTheme(), false);
+  });
+
+  window.QiaoboosiTheme = {
+    get: function () { return root.dataset.theme; },
+    set: function (theme) { return apply(theme, true); },
+    toggle: toggle,
+    reset: reset
+  };
+})();
+</script>
+<style>
+:root{--wrap:1120px}body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}a{color:inherit;text-decoration:none}button{cursor:pointer}img{max-width:100%;height:auto}h1,h2,h3,p{margin:0}h1,h2,h3{text-wrap:balance}em{font-style:normal;color:var(--accent)}p{line-height:1.85}a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:5px}.shell{width:min(1120px,calc(100% - 64px));margin:auto}.topbar{border-bottom:1px solid var(--border);background:var(--bg)}.nav{min-height:76px;display:flex;align-items:center;justify-content:space-between;gap:24px}.brand{display:flex;gap:14px;align-items:center}.mark{font:700 30px var(--font-mono);color:var(--accent)}.brand strong{font-size:16px;display:block}.brand small{font:10px var(--font-mono);color:var(--muted);letter-spacing:.1em}.nav-right{display:flex;align-items:center;gap:23px;font-size:13px;color:var(--muted)}.nav-join{color:var(--accent)}.theme-toggle{box-shadow:none}.label,.index{font:12px var(--font-mono);letter-spacing:.09em;color:var(--accent)}.tiny{font-size:12px;color:var(--muted)}.section{padding:80px 0;border-top:1px solid var(--border)}.section-top{display:grid;grid-template-columns:170px 1fr;gap:24px;margin-bottom:34px}.index{padding-top:8px}.section h2{font-size:clamp(27px,3.1vw,39px);line-height:1.45;letter-spacing:-.025em}.intro{font-size:16px;color:var(--muted);margin-top:18px;max-width:740px}.button{display:inline-flex;align-items:center;justify-content:center;gap:12px;padding:14px 22px;min-height:48px;font-size:14px;font-weight:600;border:1px solid var(--border2);background:transparent;color:var(--text);border-radius:2px}.button.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}.button:hover{border-color:var(--accent)}.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}.skip{position:absolute;left:16px;top:-90px;background:var(--accent);color:var(--accent-ink);padding:12px;z-index:10}.skip:focus{top:8px}section[id]{scroll-margin-top:25px}.profile{padding:42px 0 34px;display:grid;grid-template-columns:1fr 315px;gap:52px;align-items:center}.profile h2{font-size:28px;line-height:1.5;margin:9px 0}.profile p{font-size:15px;color:var(--muted);max-width:750px}.profile p strong{color:var(--text);font-weight:500}.honors{display:grid;gap:10px}.honor{display:flex;justify-content:space-between;align-items:center;padding:15px 18px;border:1px solid var(--accent-border);background:var(--accent-soft);font-size:14px}.honor b{font:600 19px var(--font-mono);color:var(--accent)}.hero{padding:48px 0 52px;border-top:1px solid var(--border);display:grid;grid-template-columns:1.45fr .75fr;gap:60px;align-items:center}.hero h1{font-size:clamp(38px,4.4vw,56px);line-height:1.3;letter-spacing:-.04em;margin:16px 0 22px;font-weight:750}.title-line{display:block}.hero .lead{font-size:17px;color:var(--muted);max-width:650px}.hero .lead strong{font-weight:500;color:var(--text)}.destination{padding:25px;border:1px solid var(--accent-border);background:var(--accent-soft)}.zero-one{font:500 clamp(66px,7vw,88px) var(--font-mono);letter-spacing:-.08em;color:var(--accent);margin:17px 0 10px}.destination h2{font-size:20px}.mini-path{list-style:none;padding:16px 0 0;margin:0;border-top:1px solid var(--border);display:grid;gap:9px}.mini-path li{display:flex;align-items:center;gap:12px;font-size:14px;color:var(--muted)}.mini-path li:before{content:"";height:5px;width:5px;background:var(--accent);flex-shrink:0}.positions{display:grid;grid-template-columns:1fr 1fr 1.35fr;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:36px}.position{padding:25px 25px 25px 0}.position+.position{padding-left:25px;border-left:1px solid var(--border)}.position h3{font-size:18px;margin:7px 0}.position p{color:var(--muted);font-size:14px}.position.focus h3{color:var(--accent)}.bridge-note{font-size:16px;max-width:870px;color:var(--muted);margin-bottom:48px}.bridge-note strong{color:var(--text);font-weight:550}.two{display:grid;grid-template-columns:1fr 1fr;gap:24px}.three{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}.block{border:1px solid var(--border);background:var(--bg2);padding:28px}.block h3{font-size:23px;margin:12px 0 15px}.block p{color:var(--muted);font-size:15px}.problem-list{list-style:none;padding:0;margin:0}.problem-list li{font-size:15px;color:var(--muted);padding:12px 0;border-bottom:1px solid var(--border)}.problem-list li:last-child{border:0}.open-note{margin-top:22px;padding-left:16px;border-left:2px solid var(--accent);font-size:15px;color:var(--muted)}.journey{display:grid;grid-template-columns:repeat(5,1fr);margin-bottom:26px}.journey div{border-top:1px solid var(--accent-border);padding:20px 18px 15px 0}.journey span{font:12px var(--font-mono);color:var(--accent)}.journey h3{font-size:17px;margin:9px 0}.journey p{font-size:13px;color:var(--muted)}details{border-bottom:1px solid var(--border);padding:19px 0}summary{cursor:pointer;font-size:16px;line-height:1.7}details p{font-size:14px;color:var(--muted);margin:16px 0 0}.award-detail{padding:0 22px;border:1px solid var(--accent-border);background:var(--accent-soft)}.award-detail summary{padding:20px 0;display:list-item}.award-detail img{display:block;margin:0 auto 20px;max-height:650px;object-fit:contain;background:var(--bg2)}.case-label{margin:42px 0 19px;font-size:18px}.case{padding:25px 22px;border-top:2px solid var(--accent-border);background:var(--bg2)}.case blockquote{font-size:18px;line-height:1.8;margin:14px 0 17px;color:var(--text)}.case p{font-size:14px;color:var(--muted)}.case .result{padding-top:15px;margin-top:16px;border-top:1px solid var(--border)}.case .result strong{color:var(--text);font-weight:500}.note{font-size:12px;color:var(--muted);margin-top:18px;line-height:1.8}.value-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:25px}.value h3{font-size:18px;margin:12px 0}.value p{font-size:14px;color:var(--muted)}.value .num{font:14px var(--font-mono);color:var(--accent)}.assets{margin-top:36px}.asset{padding:0;overflow:hidden}.asset-top{padding:24px 27px;border-bottom:1px solid var(--border);background:var(--accent-soft)}.asset-top h3{margin:8px 0 10px}.asset-body{padding:24px 27px}.asset-flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:22px 0}.asset-flow span{padding:7px 11px;font-size:13px;border:1px solid var(--border2);background:var(--bg)}.asset-flow i{font-style:normal;color:var(--accent)}.asset-footer{font-size:13px;color:var(--accent);display:inline-block;margin-top:16px}.asset details{padding-bottom:0;border:0}.asset summary{font-size:14px}.install{font-size:14px;line-height:1.9;color:var(--muted);padding-left:20px}.route-board{border:1px solid var(--border)}.board-head{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;background:var(--accent-soft);padding:17px 24px;border-bottom:1px solid var(--border);font-size:14px}.board-head strong{color:var(--accent)}.board-head span{color:var(--muted);font-size:12px}.route-row{display:grid;grid-template-columns:45px 140px 1fr 1fr;gap:20px;align-items:start;padding:24px;border-bottom:1px solid var(--border)}.route-row:last-child{border:0}.route-row .n{font:15px var(--font-mono);color:var(--accent);padding-top:4px}.route-row h3{font-size:20px}.route-row p{font-size:14px;color:var(--muted)}.route-row p strong{display:block;color:var(--text);font-weight:500;margin-bottom:5px}.scene-tasks{margin-top:24px}.scene-tasks .block{padding:24px}.scene-tasks h3{font-size:21px;margin:8px 0}.rhythm{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:24px 0;font-size:14px;border-bottom:1px solid var(--border)}.rhythm span{color:var(--muted)}.rhythm i{color:var(--accent);font-style:normal}.pace{margin-top:24px;color:var(--muted);font-size:15px}.pace strong{color:var(--text)}.method{display:grid;grid-template-columns:.8fr 1.2fr;gap:40px}.method-intro h3{font-size:26px;margin-bottom:16px}.method-intro p{font-size:15px;color:var(--muted);margin-bottom:18px}.method-row{display:grid;grid-template-columns:32px 1fr;gap:14px;padding:18px 0;border-top:1px solid var(--border)}.method-row span{font:13px var(--font-mono);color:var(--accent);padding-top:4px}.method-row h4{font-size:16px;margin:0 0 8px}.method-row p{font-size:14px;color:var(--muted)}.nodes{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:22px 0 5px}.node{padding:15px 12px;border:1px solid var(--border);font-size:13px;background:var(--bg2)}.node b{display:block;color:var(--accent);font:12px var(--font-mono);margin-bottom:8px}.node small{display:block;color:var(--muted);font-size:11px;margin-top:5px}.outcomes{display:grid;grid-template-columns:1fr 1fr;gap:0 45px}.outcome{border-top:1px solid var(--border);padding:23px 0;display:flex;gap:20px}.outcome .n{font:24px var(--font-mono);color:var(--accent)}.outcome h3{font-size:20px;margin-bottom:8px}.outcome p{font-size:15px;color:var(--muted)}.leave-with{border:1px solid var(--accent-border);background:var(--accent-soft);padding:24px 28px;margin-top:14px;color:var(--muted);font-size:16px}.leave-with strong{color:var(--accent)}.faq{max-width:840px;margin-left:auto}.join{display:grid;grid-template-columns:1.2fr .8fr;gap:65px;padding:75px 0}.join h2{font-size:clamp(29px,3.8vw,44px);line-height:1.4;margin:15px 0 23px}.join p{font-size:16px;color:var(--muted)}.join p+p{margin-top:15px}.join-box{border:1px solid var(--accent-border);background:var(--accent-soft);padding:32px;align-self:start}.join-box h3{font-size:18px}.wechat{font:32px var(--font-mono);color:var(--accent);margin:13px 0}.join-box .button{width:100%;margin-top:22px}.join-box p{font-size:14px}.status{font-size:12px!important;min-height:24px;margin-top:12px}.manual{margin-top:12px}.join-questions{padding-top:18px;margin-top:22px;border-top:1px solid var(--border);font-size:13px;color:var(--muted);display:grid;gap:8px}.footer{padding:25px 0 35px;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:20px;color:var(--muted);font-size:12px}.footer span:last-child{font-family:var(--font-mono)}
+@media(max-width:900px){.nav-right a:not(.nav-join){display:none}.profile{grid-template-columns:1fr 260px;gap:25px}.hero{gap:30px;grid-template-columns:1.4fr .8fr}.hero h1{font-size:43px}.section-top{grid-template-columns:130px 1fr}.value-grid{grid-template-columns:1fr 1fr}.route-row{grid-template-columns:25px 100px 1fr 1fr;gap:16px}.nodes{grid-template-columns:repeat(3,1fr)}.join{gap:30px}.method{gap:25px}.positions{grid-template-columns:1fr 1fr 1.2fr}}
+@media(max-width:650px){.shell{width:calc(100% - 36px)}.nav{min-height:66px;gap:12px}.nav-right{gap:12px}.brand small{font-size:9px}.nav-join{font-size:12px}.theme-toggle{padding:7px;min-height:38px}.theme-toggle__label{display:none}.profile{grid-template-columns:1fr;padding:29px 0;gap:20px}.profile h2{font-size:25px}.profile p{font-size:14px}.honors{grid-template-columns:1fr 1fr;gap:8px}.honor{padding:11px;display:block;font-size:12px}.honor b{display:block;font-size:18px;margin-top:5px}.hero{grid-template-columns:1fr;padding:33px 0;gap:26px}.hero h1{font-size:clamp(31px,8.9vw,46px);line-height:1.4;letter-spacing:-.035em}.hero .lead{font-size:16px}.hero .actions{gap:10px}.button{font-size:13px;padding:12px 16px}.destination{display:grid;grid-template-columns:.8fr 1fr;gap:12px 20px;padding:21px}.destination>.label{grid-column:1/-1}.zero-one{font-size:54px;align-self:center;margin:0}.destination h2{font-size:17px;align-self:center}.mini-path{grid-column:1/-1;grid-template-columns:1fr 1fr;gap:9px 12px}.mini-path li{font-size:12px}.positions{grid-template-columns:1fr;margin-bottom:20px}.position,.position+.position{padding:19px 0;border:0}.position+.position{border-top:1px solid var(--border)}.position h3{font-size:18px;margin:5px 0}.position p{font-size:14px}.bridge-note{font-size:15px;margin-bottom:32px}.section{padding:43px 0}.section-top{grid-template-columns:1fr;gap:12px;margin-bottom:25px}.index{font-size:11px;padding:0}.section h2{font-size:27px}.intro{font-size:15px;margin-top:13px}.two,.three,.method,.outcomes,.join{grid-template-columns:1fr}.block{padding:23px}.two{gap:16px}.block h3{font-size:22px}.journey{grid-template-columns:1fr}.journey div{display:grid;grid-template-columns:25px 110px 1fr;gap:10px;padding:16px 0;align-items:start}.journey span{padding-top:3px}.journey h3{margin:0;font-size:15px}.journey p{font-size:13px}.case-label{margin-top:30px}.case blockquote{font-size:18px}.case{padding:22px}.value-grid{gap:25px 20px}.value h3{font-size:17px}.value p{font-size:14px}.asset-top,.asset-body{padding:23px}.asset-flow{gap:6px}.asset-flow span{font-size:12px;padding:6px 9px}.board-head{padding:16px;gap:8px}.route-row{grid-template-columns:25px 1fr;padding:21px 17px;gap:9px 12px}.route-row h3{font-size:21px}.route-row p{grid-column:2;font-size:14px}.route-row p+p{padding-top:6px}.method{gap:20px}.nodes{grid-template-columns:1fr 1fr}.node{font-size:13px}.rhythm{gap:8px;font-size:13px;line-height:1.8}.outcome{gap:16px}.outcome h3{font-size:19px}.leave-with{padding:22px;font-size:15px}.join{gap:25px;padding:46px 0}.join h2{font-size:31px}.join-box{padding:26px}.footer{display:block}.footer span{display:block;margin-top:8px}.award-detail{padding:0 18px}summary{font-size:15px}.faq{margin:0}}
+@media print{.nav-right,.actions,.join-box button,.status,.skip{display:none}.section{padding:30px 0}.shell{width:100%}.profile,.hero,.join{padding:24px 0}.hero h1{font-size:36px}.block,.case,.outcome,.route-row{break-inside:avoid}.profile{grid-template-columns:1fr 240px}.hero{grid-template-columns:1.4fr 1fr}.two,.outcomes{grid-template-columns:1fr 1fr}.three{grid-template-columns:repeat(3,1fr)}.section h2{font-size:28px}.section-top{grid-template-columns:130px 1fr}}
+</style>
+<style>@media(max-width:650px){.brand small{display:none}.nav-join{white-space:nowrap}.nav-right{flex-shrink:0}}</style>
+<style>
+/* 2026-09-21: evidence first, task-led participation */
+.profile p+p{margin-top:12px}.bio-card{padding:25px;border-left:2px solid var(--accent);background:var(--accent-soft)}.bio-year{font:54px var(--font-mono);color:var(--accent);margin:8px 0}.bio-year span{font:14px var(--font-sans);color:var(--text)}.bio-card p{font-size:14px}.metrics{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--accent-border);margin-bottom:28px;background:var(--accent-soft)}.metrics>div{padding:22px}.metrics>div+div{border-left:1px solid var(--border)}.metrics b{display:block;font:36px var(--font-mono);color:var(--accent);margin-bottom:8px}.metrics small{font:13px var(--font-sans)}.metrics span{font-size:13px;color:var(--muted)}.comparison{border-top:1px solid var(--border)}.compare-row{display:grid;grid-template-columns:125px 1fr 1.3fr;gap:25px;padding:22px 18px;border-bottom:1px solid var(--border)}.compare-row h3{font-size:17px}.compare-row p{font-size:14px;color:var(--muted)}.compare-row p:last-child{color:var(--text)}.compare-head{background:var(--bg2);font-size:13px;color:var(--muted)}.compare-head span:last-child{color:var(--accent)}.voyage-takeaway{margin-top:32px;padding:29px;border-left:2px solid var(--accent);background:var(--accent-soft)}.voyage-takeaway h3{font-size:29px;line-height:1.5;margin:10px 0 17px}.voyage-takeaway p{font-size:15px;color:var(--muted);max-width:850px}.voyage-takeaway p+p{margin-top:12px}.stages{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.stage{padding:23px 20px;border:1px solid var(--border);background:var(--bg2)}.stage.invited{border-color:var(--accent-border);background:var(--accent-soft)}.stage:not(.invited) .label{color:var(--muted)}.stage b{display:block;font:32px var(--font-mono);margin:14px 0}.stage.invited b{color:var(--accent)}.stage h3{font-size:20px;margin-bottom:12px}.stage p{font-size:14px;color:var(--muted)}.fit-focus{margin:25px 0 32px;color:var(--muted);font-size:16px}.fit-focus strong{color:var(--text)}.block-sub{font-size:14px!important;margin-bottom:14px}.case h3{font-size:21px;margin:14px 0;line-height:1.55}.case strong{color:var(--text);font-weight:550}.case-response{font-size:15px!important;color:var(--accent)!important;border-left:2px solid var(--accent);padding-left:12px;margin-bottom:0!important}#together .positions{margin-bottom:25px}#together .bridge-note{margin-bottom:0}.task-loop{display:grid;grid-template-columns:repeat(4,1fr);margin:0 0 34px;gap:18px}.task-loop article{border-top:2px solid var(--accent-border);padding-top:18px}.task-loop b{font:18px var(--font-mono);color:var(--accent)}.task-loop h3{font-size:20px;margin:10px 0}.task-loop p{color:var(--muted);font-size:14px}.triangle-example{padding:30px;margin-top:30px;border:1px solid var(--accent-border);background:var(--accent-soft)}.triangle-example>h3{font-size:25px;margin:13px 0}.triangle-example .intro{margin-top:10px}.triangle-pair{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:27px}.triangle-pair h4{font-size:18px;margin:0 0 16px}.triangle-pair dl{display:grid;grid-template-columns:58px 1fr;gap:16px 12px;margin:0;font-size:14px}.triangle-pair dt{color:var(--accent)}.triangle-pair dd{margin:0;color:var(--muted);line-height:1.8}.example-result{font-size:15px;color:var(--muted);border-top:1px solid var(--border);padding-top:20px;margin-top:25px}.example-result strong{color:var(--text)}
+@media(max-width:900px){.stages{grid-template-columns:1fr 1fr}.metrics b{font-size:29px}.compare-row{grid-template-columns:100px 1fr 1fr;gap:18px}.task-loop{grid-template-columns:1fr 1fr}}
+@media(max-width:650px){.bio-card{padding:18px}.bio-year{font-size:40px}.profile{gap:22px}.metrics{grid-template-columns:1fr 1fr}.metrics>div{padding:18px 14px}.metrics>div:nth-child(3){border-left:0}.metrics>div:nth-child(n+3){border-top:1px solid var(--border)}.metrics b{font-size:29px}.metrics span{font-size:12px}.compare-head{display:none}.compare-row{grid-template-columns:1fr;gap:12px;padding:20px 0}.compare-row h3{font-size:19px}.compare-row p:before{content:attr(data-label);display:block;font:11px var(--font-sans);color:var(--dim);margin-bottom:5px}.compare-row p:last-child:before{color:var(--accent)}.voyage-takeaway{padding:23px}.voyage-takeaway h3{font-size:24px}.stage{padding:18px 14px}.stage .label{font-size:10px;letter-spacing:0}.stage b{font-size:26px}.stage h3{font-size:18px}.stage p{font-size:13px}.fit-focus{font-size:15px}.task-loop{gap:22px 17px}.task-loop h3{font-size:18px}.task-loop p{font-size:13px}.triangle-example{padding:22px}.triangle-example>h3{font-size:22px}.triangle-pair{grid-template-columns:1fr;gap:26px}.triangle-pair dl{grid-template-columns:46px 1fr;gap:14px 10px}.case h3{font-size:22px}.block h3 br{display:none}.hero .lead{font-size:15px}}
+</style>
+<style>.milestone-results{display:grid;grid-template-columns:1fr 1fr;gap:25px;padding:24px;margin-bottom:28px;border:1px solid var(--accent-border);background:var(--accent-soft)}.milestone-results p{font-size:14px;color:var(--muted);margin-top:10px}@media(max-width:650px){.milestone-results{grid-template-columns:1fr;gap:22px;padding:22px}}</style>
+<style>
+.profile-v5{display:block;padding-top:48px}.profile-v5 h2{font-size:34px}.intro-journey{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;margin-top:30px}.intro-journey article{position:relative;padding:27px;border:1px solid var(--border);background:var(--bg2)}.intro-journey article+article:before{content:'→';position:absolute;left:-25px;top:50%;color:var(--accent)}.intro-journey article:last-child{background:var(--accent-soft);border-color:var(--accent-border)}.intro-journey h3{font-size:24px;line-height:1.5;margin:18px 0 14px}.intro-journey p{font-size:14px}.embedded-cases{margin:38px 0}.embedded-cases .case-label{margin-top:0;font-size:23px}.award-visible{margin:0;padding:20px;border:1px solid var(--accent-border);background:var(--accent-soft)}.award-visible figcaption{font-weight:600;margin-bottom:18px}.award-visible img{width:100%;display:block}.award-visible a{display:block}.hero.shell{padding-top:70px;padding-bottom:70px}html[data-theme="dark"]{--pain:#FF939A}html[data-theme="light"]{--pain:#B83240}#fit .problem-list li{color:var(--pain)}.operation-step{position:relative;padding:34px 0 40px;border-top:1px solid var(--border)}.step-heading{display:flex;gap:22px;margin-bottom:25px}.step-heading>b{font:30px var(--font-mono);color:var(--accent);padding-top:3px}.step-heading h3{font-size:26px;line-height:1.5}.step-heading p{color:var(--muted);font-size:15px;margin-top:10px;max-width:870px}.parallel-tracks{display:grid;grid-template-columns:1fr 1fr;gap:24px}.track{border:1px solid var(--border);background:var(--bg2)}.track header{padding:24px;border-bottom:1px solid var(--border);background:var(--accent-soft)}.track h4{font-size:22px;margin:10px 0}.track p{font-size:14px;color:var(--muted)}.track ol{margin:0;padding:8px 24px;list-style:none;counter-reset:tasks}.track li{counter-increment:tasks;display:grid;grid-template-columns:25px 95px 1fr;gap:8px;padding:17px 0;border-bottom:1px solid var(--border);font-size:14px;line-height:1.8}.track li:before{content:counter(tasks,decimal-leading-zero);font:12px var(--font-mono);color:var(--accent);padding-top:5px}.track li:last-child{border:0}.track li span{color:var(--muted)}.track-link{margin:20px 24px;padding:22px 0;border-top:1px solid var(--border)}.track-link strong{font-size:15px}.track-link p{margin-top:10px}.framework-flow{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.framework-flow span{padding:10px 13px;border:1px solid var(--border);font-size:14px}.framework-flow i{font-style:normal;color:var(--accent)}.practice-case{padding:25px;margin-top:24px;border-left:2px solid var(--accent);background:var(--bg2)}.practice-case p{font-size:15px;color:var(--muted);margin-top:13px}.practice-case strong{color:var(--text)}.milestone-results h4{font-size:21px;margin:12px 0}.sharing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:25px}.sharing-grid article{padding:22px;background:var(--bg2);border:1px solid var(--border)}.sharing-grid h4{font-size:18px;margin:0 0 12px}.sharing-grid p{font-size:14px;color:var(--muted)}.next-milestone{display:flex;gap:15px;justify-content:center;flex-wrap:wrap;font-size:15px;margin-top:25px;padding:20px;background:var(--accent-soft)}.next-milestone span{color:var(--accent)}
+@media(max-width:900px){.intro-journey{gap:22px}.intro-journey article{padding:20px}.intro-journey article+article:before{left:-19px}.intro-journey h3{font-size:21px}.track li{grid-template-columns:22px 1fr}.track li span{grid-column:2}.track h4{font-size:20px}}
+@media(max-width:650px){.profile-v5 h2{font-size:28px}.intro-journey,.parallel-tracks,.sharing-grid{grid-template-columns:1fr}.intro-journey{gap:25px}.intro-journey article+article:before{content:'↓';left:50%;top:-27px}.intro-journey h3{font-size:24px}.hero.shell{padding:42px 0}.award-visible{padding:15px}.embedded-cases .case-label{font-size:21px}.operation-step{padding:28px 0}.step-heading{gap:14px}.step-heading>b{font-size:24px}.step-heading h3{font-size:22px}.step-heading p{font-size:14px}.track header{padding:22px}.track li{grid-template-columns:22px 76px 1fr}.track li span{grid-column:auto}.framework-flow{gap:8px}.framework-flow span{font-size:13px}.practice-case{padding:20px}.milestone-results h4{font-size:20px}.next-milestone{justify-content:flex-start;font-size:14px;gap:9px}}
+</style>
+<style>.case-change>span{display:inline-block;color:var(--muted);font-size:12px;margin-top:15px}.case-change p{margin-top:7px}.case-change strong{color:var(--accent)}.proposed-task{margin:22px 0;padding:23px;border:1px dashed var(--accent-border);background:var(--accent-soft)}.proposed-task h4{font-size:21px;margin:12px 0}.proposed-task p{font-size:15px;color:var(--muted)}.proposed-task strong{color:var(--text);font-weight:500}.proposal-flow{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px;font-size:14px}.proposal-flow span{color:var(--accent)}.evidence-gallery{margin:35px 0}.gallery-heading{margin-bottom:20px}.gallery-heading h3{font-size:23px;margin-bottom:8px}.gallery-heading p{font-size:14px;color:var(--muted)}.evidence-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}.evidence-grid figure{margin:0;border:1px solid var(--border);background:var(--bg2);min-width:0}.evidence-grid figure:last-child{grid-column:1/-1;display:grid;grid-template-columns:1.5fr 1fr;align-items:center}.evidence-grid a{display:block}.evidence-grid img{display:block;width:100%;height:auto}.evidence-grid figcaption{padding:20px;display:grid;gap:10px}.evidence-grid strong{font-size:20px}.evidence-grid span{font-size:14px;color:var(--muted);line-height:1.8}.outcome-invite{display:flex;justify-content:space-between;gap:35px;align-items:center;border-top:1px solid var(--accent-border);margin-top:30px;padding-top:30px}.outcome-invite h3{font-size:23px;margin-bottom:10px}.outcome-invite p{font-size:14px;color:var(--muted)}.outcome-invite .button{margin-bottom:12px}.outcome-invite>div:last-child{flex-shrink:0}.compact-contact h2{font-size:30px}@media(max-width:650px){.evidence-grid{grid-template-columns:1fr}.evidence-grid figure:last-child{grid-column:auto;display:block}.outcome-invite{display:block}.outcome-invite>div+div{margin-top:22px}.outcome-invite h3{font-size:21px}.proposal-flow{font-size:12px;gap:8px}}</style><style>
+/* V7: results, shared tasks, and focused peer practice */
+#proof .compare-row p:last-child strong{display:block;color:var(--accent);font-size:19px;line-height:1.5;margin-bottom:5px}#proof .compare-row p:last-child span{display:block;color:var(--muted);font-size:14px}#proof .compare-head span:last-child{color:var(--accent);font-weight:700}.case>h3{color:var(--pain)}.case-change .before-label{color:var(--pain);font-weight:650}.case-change .after-label{color:var(--accent);font-weight:650;margin-top:25px}.case-result{border-top:2px solid var(--accent-border);padding-top:14px}.case-result strong{display:block;font-size:20px;line-height:1.6;margin-bottom:12px}.task-actions .sharing-grid{margin-top:20px}.task-actions b{color:var(--accent);font-size:13px}.task-actions h4{font-size:20px;margin:10px 0}.tool-note{border-top:1px solid var(--border);padding-top:20px;margin-top:20px!important}.route-question{padding:32px 0 0;border-top:1px solid var(--accent-border);margin-top:35px}.route-question h3{font-size:32px;margin:14px 0}.route-question p{color:var(--muted)}.route-question .framework-flow{justify-content:flex-start;gap:25px;margin-bottom:0}.route-question a{color:var(--accent);font-size:15px}#value .value-grid{grid-template-columns:repeat(3,1fr)}.evidence-grid{grid-template-columns:1fr;gap:26px}.evidence-grid figure,.evidence-grid figure:last-child{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(0,1fr);align-items:center;grid-column:auto}.evidence-grid figcaption{padding:28px}.evidence-grid .asset-footer{padding:14px 0 0;font-size:14px}.community-focus{padding:30px;background:var(--accent-soft);border-left:3px solid var(--accent);margin-bottom:28px}.community-focus h3{font-size:26px;margin:13px 0}.community-focus p{font-size:16px;color:var(--muted);max-width:850px}.community-grid h3{font-size:22px;margin:12px 0}.community-grid p{color:var(--muted);font-size:15px}#together .positions{grid-template-columns:1.25fr 1fr 1fr}.outcome-invite>div:first-child{max-width:710px}.outcome-invite>div:last-child{flex-shrink:0}.outcome-invite p{line-height:1.9}
+@media(max-width:800px){.evidence-grid figure,.evidence-grid figure:last-child{grid-template-columns:1fr}.evidence-grid figcaption{padding:23px}.outcome-invite{align-items:flex-start;flex-direction:column}}
+@media(max-width:650px){#value .value-grid,#together .positions{grid-template-columns:1fr}.route-question h3{font-size:27px}.community-focus{padding:23px}.community-focus h3{font-size:23px}.case-result strong{font-size:19px}.profile h2{font-size:26px}.route-question .framework-flow{display:grid;gap:15px}}
+</style><style>
+/* V8: persistent reading navigation and explicit light/dark controls. */
+html{scroll-padding-top:28px}.theme-toggle__label{display:inline!important;font-size:12px;font-family:inherit;letter-spacing:0;white-space:nowrap}.theme-toggle{background:var(--bg2)}.floating-toc{position:fixed;z-index:40;left:20px;top:110px;width:158px;max-height:calc(100dvh - 140px);overflow-y:auto;overscroll-behavior:contain;padding:17px 12px;background:var(--bg2);border:1px solid var(--border);scrollbar-width:thin}.toc-heading{display:flex;align-items:center;justify-content:space-between;padding:0 9px 13px;color:var(--muted);font-size:12px;letter-spacing:.1em}.floating-toc nav{display:grid;gap:3px}.floating-toc nav a{display:flex;align-items:center;gap:9px;min-height:35px;padding:7px 9px;color:var(--muted);font-size:12px;line-height:1.5;border-left:2px solid transparent}.toc-dot{width:4px;height:4px;background:var(--dim);flex:none}.floating-toc nav a:hover{color:var(--text);background:var(--bg3)}.floating-toc nav a[aria-current="location"]{color:var(--accent);background:var(--accent-soft);border-color:var(--accent);font-weight:600}.floating-toc nav a[aria-current="location"] .toc-dot{background:var(--accent)}.toc-tools{margin-top:14px;padding-top:14px;border-top:1px solid var(--border)}.toc-tools .theme-toggle{width:100%;justify-content:center}.toc-launcher,.toc-close{display:none}.faq-contact{margin-top:26px;text-align:right;color:var(--muted)}.faq-contact a{color:var(--accent);text-decoration:underline;text-underline-offset:5px}.faq strong{color:var(--text)}.closing-belief h2{font-size:clamp(28px,3vw,38px);line-height:1.5}.closing-belief p{max-width:620px}.closing-belief .label{margin-bottom:18px}
+@media(min-width:1000px){body{padding-left:188px}.shell{width:min(1120px,calc(100% - 48px))}.section-top{grid-template-columns:145px minmax(0,1fr);gap:22px}.nav-right{gap:16px}.nav-right>a:not(.nav-join){display:none}.compact-contact{grid-template-columns:minmax(0,1.2fr) minmax(280px,1fr);gap:35px}}
+@media(min-width:1000px) and (max-height:800px){.floating-toc{top:24px;max-height:calc(100dvh - 48px)}}
+@media(max-width:999px){.toc-launcher{display:block;position:fixed;z-index:42;bottom:calc(18px + env(safe-area-inset-bottom));left:16px;padding:12px 18px;min-height:44px;color:var(--accent);background:var(--bg2);border:1px solid var(--accent-border);box-shadow:var(--shadow-soft);font-size:14px}.floating-toc{display:none;left:16px;top:auto;bottom:calc(76px + env(safe-area-inset-bottom));width:224px;max-height:calc(100dvh - 100px);padding:14px;box-shadow:var(--shadow-soft)}.floating-toc.is-open{display:block}.toc-close{display:block;padding:0;width:32px;height:32px;border:0;background:transparent;color:var(--muted);font-size:24px}.toc-heading{padding-bottom:8px}.floating-toc nav a{min-height:36px;font-size:13px}.footer{padding-bottom:95px}.theme-toggle__track{width:30px}.theme-toggle{gap:7px}.nav-right{gap:10px}.nav-right .theme-toggle{padding:8px}.faq-contact{text-align:left}}
+@media(max-width:420px){.nav-right .theme-toggle__track{display:none}.brand{gap:8px}.nav-right .theme-toggle{padding:8px 9px}.nav-right{gap:10px}.nav-join{font-size:12px}.closing-belief h2{font-size:27px}}
+@media print{body{padding-left:0}.floating-toc,.toc-launcher,.theme-toggle{display:none!important}}
+</style><style>
+.contact-caption{display:block;color:var(--muted);font-size:13px;margin-bottom:9px}.contact-website{margin-top:22px;padding-bottom:23px;border-bottom:1px solid var(--accent-border)}.contact-website a{font-size:22px;color:var(--accent);overflow-wrap:anywhere}.contact-wechat{padding-top:23px}.contact-card .wechat{font-size:clamp(26px,3vw,36px);margin:0 0 18px;overflow-wrap:anywhere}.contact-card .status{margin-top:12px}.contact-qr{margin:22px 0 0;padding-top:23px;border-top:1px solid var(--accent-border)}.qr-frame{display:block;position:relative;width:min(100%,300px);aspect-ratio:1;margin:14px auto 0;overflow:hidden;background:#fff}.qr-frame img{position:absolute;width:200%;max-width:none;height:auto;left:50%;top:50%;transform:translate(-50%,-52.5%)}.contact-qr p{text-align:center;font-size:12px;color:var(--muted);margin-top:12px}
+</style></head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+<header class="topbar"><div class="shell nav"><a class="brand" href="#main"><span class="mark">Z.</span><span><strong>钟蔚</strong><small>AI NATIVE · SOLO BUSINESS</small></span></a><nav class="nav-right" aria-label="页面导航"><a href="#proof">走过的路</a><a href="#route">这次做什么</a><a class="nav-join" href="#join">一起上船 ↗</a><button type="button" class="theme-toggle" data-theme-toggle aria-label="切换主题"><span class="theme-toggle__track" aria-hidden="true"></span><span class="theme-toggle__label" data-theme-label>DARK</span></button></nav></div></header>
+<button class="toc-launcher" id="toc-launcher" type="button" aria-expanded="false" aria-controls="floating-toc">☰ 目录</button><aside class="floating-toc" id="floating-toc" aria-label="阅读目录"><div class="toc-heading"><span>本页目录</span><button type="button" class="toc-close" aria-label="关闭目录">×</button></div><nav aria-label="章节目录"><a href="#about"><span class="toc-dot" aria-hidden="true"></span>认识钟蔚</a><a href="#proof"><span class="toc-dot" aria-hidden="true"></span>上一轮成果</a><a href="#awards"><span class="toc-dot" aria-hidden="true"></span>实践与认可</a><a href="#voyage-goal"><span class="toc-dot" aria-hidden="true"></span>这次的目标</a><a href="#fit"><span class="toc-dot" aria-hidden="true"></span>适合谁参与</a><a href="#route"><span class="toc-dot" aria-hidden="true"></span>怎么推进</a><a href="#value"><span class="toc-dot" aria-hidden="true"></span>我能提供什么</a><a href="#community"><span class="toc-dot" aria-hidden="true"></span>和谁一起走</a><a href="#together"><span class="toc-dot" aria-hidden="true"></span>怎样协作</a><a href="#outcome"><span class="toc-dot" aria-hidden="true"></span>拿到什么成果</a><a href="#faq"><span class="toc-dot" aria-hidden="true"></span>参与前的问题</a><a href="#join"><span class="toc-dot" aria-hidden="true"></span>理念与联系</a></nav><div class="toc-tools"><button type="button" class="theme-toggle" data-theme-toggle aria-label="切换主题"><span class="theme-toggle__track" aria-hidden="true"></span><span class="theme-toggle__label" data-theme-label>切换浅色</span></button></div></aside>
+<main id="main"><div class="shell"><section class="profile profile-v5" id="about" aria-labelledby="profile-title"><div><div class="label">一堂 AI 大航海 · 钟蔚的共创邀请</div><h2 id="profile-title">我是钟蔚，<br>一堂 3 年学龄的同学，<br>正在做自己的 AI Native 一人公司。</h2><p>我希望帮助本来能创造更大价值的职场人，在不盲目裸辞的前提下，构建自己的 AI 一人公司商业模式，持续拓展认知，走向更自由的人生。</p></div><div class="intro-journey"><article><div class="label">起点 / 产品与商业经验</div><h3>一线大厂<br>AI 产品负责人</h3><p>8 年 AI 产品经验，曾任 AI 大厂产品一号位，负责完整产品线与千万级业务。</p></article><article><div class="label">过程 / 亲自实践</div><h3><em>3 个月</em><br>推进自己的业务</h3><p>利用工作日晚上和周末，把产品、商业与 AI 经验用于一人公司，在真实市场里检验。</p></article><article><div class="label">阶段结果 / 走向市场</div><h3>做出产品，<br><em>获得真实付款</em></h3><p>从模糊想法走到种子用户、付款与交付。我把经历、成果和踩坑持续开源分享。</p></article></div></section></div>
+<section class="section shell" id="proof"><div class="section-top"><div class="index">01 / 上一轮成果</div><div><h2>上一轮商业大航海，<br>3 个月走到<em>有人为产品付款。</em></h2><p class="intro">航海前，我写过几篇阅读过万的文章，也有一百多位因“一人公司”话题加我的联系人。但到底服务谁、卖什么、怎样交付，我都没想清楚。</p></div></div>
+<div class="comparison" role="table" aria-label="上一轮航海前后对比"><div class="compare-row compare-head" role="row"><span role="columnheader">要回答的问题</span><span role="columnheader">航海前</span><span role="columnheader">三个月后</span></div>
+<div class="compare-row" role="row"><h3 role="rowheader">服务谁？</h3><p role="cell" data-label="航海前">泛泛地想服务“做一人公司的职场人”，谁都像用户。</p><p role="cell" data-label="三个月后"><strong>明确目标用户与需求</strong><span>从泛泛的设想，走到具体服务对象。</span></p></div>
+<div class="compare-row" role="row"><h3 role="rowheader">卖什么？</h3><p role="cell" data-label="航海前">0 个正式产品，只有“帮人找方向、启动”的设想。</p><p role="cell" data-label="三个月后"><strong>2 个付费产品</strong><span>完成设计并正式发布。</span></p></div>
+<div class="compare-row" role="row"><h3 role="rowheader">有人买吗？</h3><p role="cell" data-label="航海前">0 位付款用户，不知道大家只是感兴趣，还是真的愿意购买。</p><p role="cell" data-label="三个月后"><strong>7 位付款用户 · 3,193 元</strong><span>获得共创付款，并进入真实交付。</span></p></div>
+<div class="compare-row" role="row"><h3 role="rowheader">交付有用吗？</h3><p role="cell" data-label="航海前">0 个真实交付案例，设计的流程还没有经过用户检验。</p><p role="cell" data-label="三个月后"><strong>完成真实服务与反馈</strong><span>根据用户的实际变化，持续改进服务。</span></p></div>
+<div class="compare-row" role="row"><h3 role="rowheader">客户从哪来？</h3><p role="cell" data-label="航海前">文章有阅读、微信有人加，但还没有购买路径。</p><p role="cell" data-label="三个月后"><strong>首位一堂之外的客户</strong><span>从内容获客走到真实购买。</span></p></div>
+<div class="compare-row" role="row"><h3 role="rowheader">一个人怎么做？</h3><p role="cell" data-label="航海前">研究、内容和业务动作零散地推进。</p><p role="cell" data-label="三个月后"><strong>让 AI 进入实际业务</strong><span>参与研究、内容、运营与交付。</span></p></div><div class="compare-row" role="row"><h3 role="rowheader">怎样持续交流？</h3><p role="cell" data-label="航海前">一百多位因“一人公司”话题加来的联系人。</p><p role="cell" data-label="三个月后"><strong>100+ 人的一人公司运营群</strong><span>围绕共同主题，持续分享与交流。</span></p></div></div>
+
+<div id="cases" class="embedded-cases"><h3 class="case-label">三位同学，从方向不清，到明确下一步。</h3><div class="three">
+<article class="case"><div class="label">同学 A / 从想法很多到选定方向</div><h3>想法不少，<br>但不知道先做哪一个。</h3><div class="case-change"><span class="before-label">原来的卡点</span><p>有多个想做的项目，也学过商业方法，但很难把它们放在一起比较，选出自己的起点。</p><span class="after-label">现在的结果</span><p class="case-result"><strong>确定以作品经营为核心的一人公司方向。</strong>结合自己的人生红点与里程碑，把个人追求、已有项目与接下来的经营方向连接起来。</p></div></article>
+<article class="case"><div class="label">同学 B / 从不认同到重新校准</div><h3>方向看起来可行，<br>却不是自己笃定想做的。</h3><div class="case-change"><span class="before-label">原来的卡点</span><p>能力和经验丰富，但调研后收敛的选项与自身追求不够匹配，看懂了分析，仍迟迟动不起来。</p><span class="after-label">现在的结果</span><p class="case-result"><strong>把重点转向企业智能化升级。</strong>在共同复盘后，自己补充洞察、梳理假设，重新校准方向，并明确由本人参与实践。</p></div></article>
+<article class="case"><div class="label">同学 C / 从能力模糊到收敛切口</div><h3>做过不少尝试，<br>不清楚自己的能力能做什么。</h3><div class="case-change"><span class="before-label">原来的卡点</span><p>低估了部分能力，也不想直接沿着眼前最容易做的选项走，需要比较更适合自己的路径。</p><span class="after-label">现在的结果</span><p class="case-result"><strong>收敛到 AI 内容与工作流服务方向。</strong>从能力校准出发，比较候选，明确先验证的服务切口与目标场景。</p></div></article></div></div></section>
+<section class="section shell" id="awards"><div class="section-top"><div class="index">02 / 上一轮的认可</div><div><h2>实践与开源，<br>获得了两项 TOP 10。</h2><p class="intro">上一轮一堂商业突破大航海，项目“一人公司服务验证”获突破先锋奖与案例开源奖。榜单中的船员编号是 1463，姓名是钟蔚。</p></div></div><div class="two"><figure class="award-visible" id="award-one"><figcaption>突破先锋奖 · TOP 10</figcaption><a href="assets/breakthrough-award.png" target="_blank" rel="noopener" aria-label="查看突破先锋奖 · TOP 10原图"><img loading="lazy" src="assets/breakthrough-award.png" alt="突破先锋奖 · TOP 10获奖原始榜单，钟蔚，船员编号1463"></a></figure><figure class="award-visible" id="award-two"><figcaption>案例开源奖 · TOP 10</figcaption><a href="assets/open-source-award.png" target="_blank" rel="noopener" aria-label="查看案例开源奖 · TOP 10原图"><img loading="lazy" src="assets/open-source-award.png" alt="案例开源奖 · TOP 10获奖原始榜单，钟蔚，船员编号1463"></a></figure></div><div class="voyage-takeaway"><div class="label">我对这段进展的判断</div><h3>不敢说已经走完 0～1，<br>但我已经走到了 0.5。</h3><p>用户、产品、付款、交付和获客开始接起来了。稳定创造用户价值、持续付费和可持续经营，是我接下来要继续走的路。</p><p>我把预判、调研、用户分析、产品设计、关键会议和验证过程持续开源。你可以看到当时怎么想、怎么做、哪里错了、后来怎么改，借这些积累加快自己的起步。</p></div></section>
+<section class="hero shell" id="voyage-goal" aria-labelledby="hero-title"><div><div class="label">这次 AI 大航海 · 我们共同的目标</div><h1 id="hero-title"><span class="title-line">这次 AI 大航海，</span><span class="title-line">一起完成你的一人公司</span><span class="title-line"><em>从 0 到 1。</em></span></h1><p class="lead">这一轮，我想把走过的经验和踩坑开源分享，借助一堂的方法与 AI 实践，<strong>和你从选方向开始，一起走向找到需求、做出产品、获得真实成交收入，再完成交付与反馈。</strong>用三个月，结合你自己的一人公司业务，完成 0～1 商业闭环。</p></div><aside class="destination"><div class="label">YOUR BUSINESS · YOUR JOURNEY</div><div class="zero-one" aria-label="从零到一">0 → 1</div><h2>一门真正开始运转的业务</h2><ul class="mini-path"><li>自己认可的方向</li><li>真实用户的需求</li><li>可购买、可交付的产品</li><li>获得真实成交收入</li></ul></aside></section>
+<section class="section shell" id="fit"><div class="section-top"><div class="index">03 / 这次，我想邀请谁</div><div><h2>你的一人公司启动了吗？<br>现在卡在哪里？</h2><p class="intro">从还没决定要不要做，到真正跑通并放大业务，我们面对的问题很不一样。</p></div></div><div class="stages"><article class="stage invited"><div class="label">阶段 1 · 主要邀请</div><b>−1 → 0</b><h3>还没开始</h3><p>对一人公司有兴趣，但还没想好要不要做、能做什么。</p></article><article class="stage invited"><div class="label">阶段 2 · 主要邀请</div><b>0 → 1</b><h3>确定要做</h3><p>已经决定启动，但还没完成自己的第一个商业闭环。</p></article><article class="stage"><div class="label">阶段 3</div><b>1 → 10</b><h3>想要放大</h3><p>已经完成商业闭环，希望扩大客户、收入与交付规模。</p></article><article class="stage"><div class="label">阶段 4</div><b>10 → 100</b><h3>进一步扩大</h3><p>继续建设组织、渠道和系统，支撑更大规模的经营。</p></article></div><p class="fit-focus"><strong>阶段 1 和阶段 2，是这次我主要想邀请的伙伴。</strong>在接触和服务用户的过程中，我看到这两个阶段的很多人，会卡在下面这些问题上。</p><div class="two"><article class="block"><div class="label">业务线</div><h3>想做一门自己能独立完成<br>商业闭环的生意</h3><p class="block-sub">不大也不小，能由自己组织起来、持续经营。</p><ul class="problem-list"><li>有经验、有能力，但不知道先做哪个方向。</li><li>有了业务想法，但拿不准机会值不值得投入。</li><li>有想做的产品，但没想清谁需要、为什么会买。</li><li>有了初步方案，但卡在做出来、找到客户或卖出去。</li></ul></article><article class="block"><div class="label">工作场景线</div><h3>想把自己的工作结合进 AI，<br>扩大自己的能力边界</h3><p class="block-sub">让一个人能承担的工作更多，也做得更好。</p><ul class="problem-list"><li>不知道怎么用 AI 写文章、做视频。</li><li>不知道怎么用 AI 做调研。</li><li>不知道怎么让 AI 输出高质量的业务分析。</li><li>不知道怎么复用 AI，把一次做对变成持续好用。</li></ul></article></div></section>
+<section class="section shell" id="route"><div class="section-top"><div class="index">04 / 航海安排</div><div><h2>我们怎么开始？<br>一个任务一个任务，做出结果。</h2></div></div>
+<div class="operation-step" id="route-step-1"><div class="step-heading"><b>01</b><div><h3>明确里程碑，从第一个核心任务开始</h3><p>先明确当前阶段要到哪里、做什么算取得进展。业务推进与 AI 工作能力，是两条同级的任务线。</p></div></div>
+<div class="parallel-tracks"><article class="track"><header><div class="label">业务线</div><h4>推进一人公司 0～1</h4><p>把想法一步步推向真实客户与收入。</p></header><ol><li><b>找方向</b><span>选出自己愿意先尝试的方向。</span></li><li><b>做预判</b><span>判断值不值得做、先验证什么。</span></li><li><b>找需求</b><span>找到具体用户和真实问题。</span></li><li><b>做产品</b><span>做出能介绍、报价和交付的方案。</span></li><li><b>卖产品</b><span>争取真实成交，接上交付与反馈。</span></li></ol></article>
+<article class="track"><header><div class="label">工作场景线</div><h4>扩大自己的 AI 工作能力</h4><p>把经常要做的工作，变成可复用的能力。</p></header><ol><li><b>AI 写作</b><span>用自己的素材与标准，写出能采用的文章，留下可复用流程。</span></li><li><b>AI 调研</b><span>围绕真实问题找资料、检查证据，形成能用于决策的判断。</span></li></ol><div class="track-link"><strong>两条线相互连接</strong><p>找方向、做预判时可以用 AI 调研；表达产品、接触用户时可以用 AI 写作。</p></div></article></div><div class="proposed-task"><div class="label">共同扩充的任务池</div><h4>你也可以提出新的任务。</h4><p>把当前任务还没覆盖的痛点提出来，大家一起讨论。<strong>当大家确认有共同痛点、达成共识后，再纳入航海任务与排期。</strong></p><div class="proposal-flow">提出任务 <span>→</span> 讨论共同痛点 <span>→</span> 达成共识 <span>→</span> 纳入任务安排</div></div><p class="pace">两条线贯穿航海，按专题任务组推进。<strong>每个组里，大家集中推进一个任务；不同组可以并行。</strong>你可以从当前卡点加入，也可以按基本里程碑走一遍，完善基座。</p></div>
+<div class="operation-step" id="route-step-2"><div class="step-heading"><b>02</b><div><h3>用实践过的框架，把任务做成自己的版本</h3><p>先看我是怎样做的，再用双三角讲清方法、标准与 AI 执行方式。你带入自己的材料和判断，亲自完成这项任务。</p></div></div>
+<div class="framework-flow"><span>看真实案例与做法</span><i>→</i><span>理解方法与好坏标准</span><i>→</i><span>带入自己的业务与材料</span><i>→</i><span>用 AI 执行、由自己校准</span></div><div class="triangle-example"><div class="label">例如，第一个任务</div><h3>找方向：选出自己愿意经营的生意。</h3><p class="intro">结合自己的人生红点、能力与资源，用加法打开可能性，用减法比较取舍。先形成自己认可、愿意投入的方向，再去市场里验证。</p><div class="triangle-pair"><article><h4>人侧：让判断有依据</h4><dl><dt>审美</dt><dd>结合我走过的案例与踩坑，看什么方向适合当前资源，哪些只是纸面上好看。</dd><dt>体系</dt><dd>用商业模式加减法，打开候选、设定比较维度、检查关键假设。</dd><dt>创造力</dt><dd>放入你自己的洞察、意愿与新组合，提出值得验证的可能性。</dd></dl></article><article><h4>AI 侧：把判断落到工作里</h4><dl><dt>场景</dt><dd>围绕你的能力、资源与长期追求，解决“我现在先试哪个方向”。</dd><dt>数据</dt><dd>带入真实经历、既有尝试、候选模式、市场材料与反面证据。</dd><dt>基本功</dt><dd>借助已有 Skill、提示词与工作流，完成整理、比较和输出，再由本人校准。</dd></dl></article></div></div><div class="practice-case task-actions"><div class="label">在这个任务里，你具体要做什么</div><div class="sharing-grid"><article><b>01 / 用 AI 梳理自己</b><h4>把经历变成选择依据</h4><p>带入人生红点、做过的项目、能力与资源，用 AI 整理，再由你补充和校准。</p></article><article><b>02 / 用 AI 做调研</b><h4>让候选方向接上市场</h4><p>调研目标用户、真实需求与已有商业模式，对照证据，补齐可能性。</p></article><article><b>03 / 比较并作出选择</b><h4>选出愿意先验证的方向</h4><p>用商业模式加减法比较候选，写清为什么选、还有什么不确定、下一步怎么试。</p></article></div><p class="tool-note"><strong>过程中可用的支持：</strong>YAI、我开源的 Skills、一堂的方法论，以及我已经走过的案例和实践经验。结合当期动作使用，逐步形成你自己的 AI 工作方式。</p></div><details><summary>展开：一堂这次航海的 10 个 AI 化节点</summary><div class="nodes"><div class="node"><b>01</b>可复用提示词<small>Prompt</small></div><div class="node"><b>02</b>AI 解题专家<small>Partner</small></div><div class="node"><b>03</b>高阶技能<small>Skill</small></div><div class="node"><b>04</b>高频数据包<small>DataPack</small></div><div class="node"><b>05</b>宪法文档<small>AI 文档中心</small></div><div class="node"><b>06</b>工具与数据连接<small>MCP / CLI</small></div><div class="node"><b>07</b>数字员工训练<small>OpenClaw / Hermes</small></div><div class="node"><b>08</b>硅基数字分身<small>OpenClaw / Hermes</small></div><div class="node"><b>09</b>Agent 团队分工<small>画像、调用与分工</small></div><div class="node"><b>10</b>场景工作台<small>VibeCoding + Harness</small></div></div><p>结合一堂实际日程，把相关节点用到当期任务；已有业务积累可以直接复用。这是我发起的共创邀请，具体参与安排另行沟通。</p></details></div>
+<div class="operation-step" id="route-step-3"><div class="step-heading"><b>03</b><div><h3>拿到自己的结果，再进入下一个任务</h3><p>每个任务约 1～2 周。完成自己的业务成果，分享反馈、校准判断，再带着积累进入下一个任务。专题分组与具体排期，上船后会详细说明。</p></div></div><div class="milestone-results"><div><div class="label">01 / 业务成果</div><h4>推进业务</h4><p>以找方向为例：形成自己的候选方向、取舍依据和下一步验证行动。</p></div><div><div class="label">02 / AI 成果</div><h4>沉淀 AI 工作流</h4><p>以找方向为例：留下自己的背景资料、判断标准，以及可复用的提示词、Skill 或工作流。</p></div></div></div>
+<div class="route-question" id="route-step-4"><div class="label">任务和节奏清楚之后</div><h3>为什么选择我的这条船？</h3><p>除了任务安排，你还能借到哪些经验，和什么样的人一起把事情做成？</p><div class="framework-flow"><a href="#value">我已走过的路与现成积累 ↓</a><a href="#community">同阶段、同目标的同行伙伴 ↓</a></div></div></section>
+<section class="section shell" id="value"><div class="section-top"><div class="index">05 / 我能提供什么</div><div><h2>借鉴走过的经验，<br>让你在起步时少踩一些坑。</h2><p class="intro">这次我会带上自己的实践过程、业务方法、AI 工作流和工作台，结合当期任务做示范、共创与交流。你可以从这些积累出发，做出适合自己的版本。</p></div></div><div class="value-grid"><article class="value"><span class="num">01 / 全过程开源</span><h3>真实业务的完整过程</h3><p>怎么选方向、做预判、找需求、选用户、做产品。原始材料、判断依据与踩坑，都拿出来分享。</p></article><article class="value"><span class="num">02 / 业务方法</span><h3>已经实践过的工作逻辑</h3><p>把一堂方法落到任务里的做法、案例和底稿，让你能照着理解，带入自己的业务实践。</p></article><article class="value"><span class="num">03 / AI 基础框架</span><h3>现成 Skill 与工作流</h3><p>带上自己正在用的 AI 写作系统、调研方法和工作台，作为你的起步参考与复用基础。</p></article></div><div class="evidence-gallery"><div class="gallery-heading"><h3>可以借鉴的积累，已经在这里。</h3><p>知识库、经营工作台与 AI 写作系统的真实页面。点击图片，查看大图。</p></div><div class="evidence-grid">
+<figure><a href="assets/evidence-knowledge-feishu.png" target="_blank" rel="noopener"><img src="assets/evidence-knowledge-feishu.png" loading="lazy" alt="一人公司知识库总览：人生红点、能力定位、商业模式、预判与用户需求"></a><figcaption><strong>一人公司知识库</strong><span>从人生红点、能力定位到商业模式、用户需求，把方法、调研、关键会议和验证过程放在一起。</span><span>你可以参照真实材料与踩坑记录，理解每一步为什么这样做，再带入自己的业务。</span></figcaption></figure>
+<figure><a href="assets/evidence-workbench-business.jpg" target="_blank" rel="noopener"><img src="assets/evidence-workbench-business.jpg" loading="lazy" alt="AI 工作台经营主页：整体进展、商业模式落地链路与最近运行"></a><figcaption><strong>AI 工作台框架</strong><span>从经营主页看到业务进展，再把当前任务、材料、AI 执行与结果连接起来。</span><span>我分享自用工作台的设计、使用与迭代经验，并结合当期任务示范，帮助你建设自己的工作入口。</span></figcaption></figure>
+<figure><a href="assets/evidence-writing-v1.png" target="_blank" rel="noopener"><img src="assets/evidence-writing-v1.png" loading="lazy" alt="AI 写作系统 V1.0：已选中 R09 阶段的双三角版本图"></a><figcaption><strong>AI 写作系统 V1.0</strong><span>把方法、审美标准、素材和复盘放进同一套工作流。看一次示范，带入自己的主题与素材，写出文章，再留下下一篇能复用的流程。</span><span>提供现成安装包、使用说明与写作示范；在支持本地文件读写的 AI 工作环境中，按说明配置和校准。</span><a class="asset-footer" href="assets/ai-writing-system-v1.zip" download>下载 AI 写作系统 V1.0 ↓</a></figcaption></figure>
+</div></div></section>
+<section class="section shell" id="community"><div class="section-top"><div class="index">06 / 和谁一起走</div><div><h2>同阶段的一堂同学，<br>围绕一人公司 <em>0～1</em> 拿结果。</h2><p class="intro">想做的业务可以不同，但我们有共同的目标：把自己的一人公司做起来。相近阶段、共同任务，让讨论聚焦到彼此眼前真正要解决的问题。</p></div></div><div class="community-focus"><div class="label">共同目标，让讨论更聚焦</div><h3>围绕业务结果，<br>展开高质量探讨。</h3><p>聊 AI，就看它怎么帮助完成当前任务；聊商业，就看方向、用户、产品与变现；分享经历，就带上真实做法、卡点和反馈。每次交流，都回到自己的一人公司下一步。</p></div><div class="sharing-grid community-grid"><article><span class="num">01 / 相近阶段</span><h3>你的卡点，有人正在经历</h3><p>同样在起步、找方向、做产品，能理解问题发生的背景，互相追问到具体处。</p></article><article><span class="num">02 / 共同任务</span><h3>带着材料和作品来讨论</h3><p>围绕当期任务比较做法、看结果，交流选择依据和踩坑，借鉴可用的方法。</p></article><article><span class="num">03 / 共同目标</span><h3>把讨论接到下一步行动</h3><p>每次交流后，把有用的反馈带回自己的业务与 AI 工作流，继续推进、验证、拿结果。</p></article></div></section>
+<section class="section shell" id="together"><div class="section-top"><div class="index">07 / 我们怎样协作</div><div><h2>我带来一人公司实践，<br>一堂提供 AI 实践主线，<br>你做出自己的业务成果。</h2><p class="intro">我聚焦一人公司 0～1，把走过的经验与积累开源；结合一堂这次航海的 AI 实践主题与节奏，你带入自己的业务，亲自完成一个个任务。</p></div></div><div class="positions"><article class="position focus"><div class="label">我聚焦的场景</div><h3>一人公司 0～1</h3><p>分享实际案例、业务方法、AI 工具与踩坑经验，围绕当期任务做示范与讨论。</p></article><article class="position"><div class="label">一堂这次航海</div><h3>AI Native 实践</h3><p>提供 AI 实践主题、方法与航海节奏，从提示词、Skill 到工作台，把学到的做出来。</p></article><article class="position"><div class="label">你亲自推进</div><h3>自己的业务与能力成长</h3><p>带入自己的经历、业务与材料，亲自判断、实践、获取市场反馈，拿到属于自己的结果。</p></article></div><p class="bridge-note">经验、方法与同行伙伴，最终都要落到同一件事上：<strong>让你的一人公司从想法走向产品、变现与交付。</strong></p></section>
+<section class="section shell" id="outcome"><div class="section-top"><div class="index">08 / 航海结束的目标</div><div><h2>用 3 个月，一起完成<br>你的一人公司 <em>0～1</em>。</h2><p class="intro">这三个月，我们以从选方向走到真实成交与交付为目标。一项项任务，最终要连到你自己的业务结果上。</p></div></div><div class="outcomes"><article class="outcome"><span class="n">01</span><div><h3>明确自己认可的方向</h3><p>知道为什么选择，也愿意亲自投入和尝试。</p></div></article><article class="outcome"><span class="n">02</span><div><h3>找到真实用户与需求</h3><p>知道为谁解决什么问题，有实际材料和反馈作为依据。</p></div></article><article class="outcome"><span class="n">03</span><div><h3>做出能卖、能交付的产品</h3><p>能向潜在客户介绍方案，给出报价，并履行承诺的价值。</p></div></article><article class="outcome"><span class="n">04</span><div><h3>实现变现，完成首个商业闭环</h3><p>让真实用户为产品付款，获得成交收入，再完成交付与反馈。</p></div></article></div><div class="leave-with">同时留下你自己的<strong>判断、材料与 AI 工作方式</strong>，让下一轮经营站在这一次的积累上。</div></section>
+<section class="section shell" id="faq"><div class="section-top"><div class="index">09 / 参与前先了解</div><div><h2>参与前的几个问题</h2></div></div><div class="faq">
+<details open><summary>01 / 到底怎么判断自己适不适合？</summary><p>本次主要面向还没启动的 −1～0，以及尚未完成商业闭环的 0～1 阶段。如果你想把自己的一人公司做起来，可以带着当前的想法、已有尝试和卡点参与。</p></details>
+<details open><summary>02 / 已经找到方向，但卡在找需求、卖产品，节奏怎么和大家对齐？</summary><p>不用担心，我们会细分专题任务组，<strong>不同组的任务可以并行推进。</strong>你可以加入当前最需要的任务组。如果对前面的任务还不笃定，也建议先按基本里程碑走一遍，完善自己的基座。</p></details>
+<details open><summary>03 / 可以只参与一个任务吗？</summary><p>可以。你可以等自己想解决的专题任务开始时加入；有时间，也可以参与其他任务，补充和完善已经做过的工作。</p></details>
+<details open><summary>04 / 知识库、AI Skills 涉及付费吗？</summary><p><strong>不涉及，全部开源。未来社群模式也永远不会收费。</strong></p></details>
+<details><summary>05 / 会跟一堂的学习进度冲突吗？</summary><p>我们会结合一堂实际节点安排，把学习用于自己的真实任务。你可以根据学习进度和当前卡点选择专题组；具体时间与准备要求会提前说明。</p></details>
+<details><summary>06 / 航海结束完成 0～1，是保证每个人都能拿到首单吗？</summary><p>完成方向、需求、产品、真实成交与交付，是这次共同推进的目标。实际结果取决于业务条件、亲自投入和市场反馈，不能预先保证。过程中，我们会根据真实证据继续、调整或停止某个方向。</p></details>
+<details><summary>07 / 具体机制和节奏，什么时候公布？</summary><p>上船后会发布更详细的机制与节奏，包括专题分组、任务排期、准备要求和交流安排。</p></details>
+</div><p class="faq-contact">还有问题，<a href="#join">加我微信聊 ↗</a></p></section>
+<section class="join shell compact-contact" id="join"><div class="closing-belief"><div class="label">我的理念</div><h2>推动大家的一人公司成功，<br>实现更自由的人生。</h2><p>帮助本来能创造更大价值的职场人，在不盲目裸辞的前提下，构建自己的 AI 一人公司商业模式。让能力创造价值，让认知持续进化，也让人生拥有更多自由。</p></div><div class="join-box contact-card"><div class="label">保持联系</div><div class="contact-website"><span class="contact-caption">官网</span><a href="https://qiaoboose.com" target="_blank" rel="noopener noreferrer">qiaoboose.com ↗</a></div><div class="contact-wechat"><span class="contact-caption">微信号</span><div class="wechat">qiaoboose01</div><button class="button primary" type="button" id="copy-wechat">复制微信号 ↗</button><p class="status" id="copy-status" role="status" aria-live="polite">添加时备注：上船</p><input id="manual-copy" class="manual" type="text" value="qiaoboose01" readonly hidden aria-label="可手动复制的微信号"></div><figure class="contact-qr"><figcaption class="contact-caption">微信二维码</figcaption><a class="qr-frame" href="assets/wechat-qiaoboose01.png" target="_blank" rel="noopener" aria-label="查看完整微信二维码原图"><img src="assets/wechat-qiaoboose01.png" alt="钟蔚的微信二维码，微信号 qiaoboose01" loading="lazy"></a><p>扫码添加微信 · 点击查看原图</p></figure></div></section></main><footer class="shell footer"><span>各自推进自己的业务，一起积累真实的经验。</span><span>钟蔚 · AI NATIVE · 2026</span></footer>
+<script>
+document.getElementById('copy-wechat').addEventListener('click',async()=>{const status=document.getElementById('copy-status');try{if(!navigator.clipboard)throw new Error('No clipboard');await navigator.clipboard.writeText('qiaoboose01');status.textContent='已复制微信号，添加时请备注「上船」。';}catch(e){const input=document.getElementById('manual-copy');input.hidden=false;input.focus();input.select();status.textContent='请复制下方微信号，添加时备注「上船」。';}});
+document.querySelectorAll('.honor').forEach(a=>a.addEventListener('click',()=>{const detail=document.querySelector(a.getAttribute('href'));if(detail)detail.open=true;}));
+</script>
+<script>
+(()=>{const panel=document.getElementById('floating-toc'),launcher=document.getElementById('toc-launcher'),close=panel.querySelector('.toc-close'),links=[...panel.querySelectorAll('nav a')],targets=links.map(a=>document.getElementById(a.hash.slice(1)));const compact=matchMedia('(max-width:999px)');
+function setOpen(open,restoreFocus=false){panel.classList.toggle('is-open',open);launcher.setAttribute('aria-expanded',String(open));if(restoreFocus)launcher.focus();}
+launcher.addEventListener('click',()=>{const open=!panel.classList.contains('is-open');setOpen(open);if(open)(panel.querySelector('[aria-current]')||links[0]).focus();});close.addEventListener('click',()=>setOpen(false,true));
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&panel.classList.contains('is-open'))setOpen(false,true);});document.addEventListener('click',e=>{if(compact.matches&&!panel.contains(e.target)&&!launcher.contains(e.target))setOpen(false);});
+links.forEach((a,i)=>a.addEventListener('click',()=>{if(compact.matches){setOpen(false);targets[i].setAttribute('tabindex','-1');targets[i].focus({preventScroll:true});}}));compact.addEventListener('change',()=>setOpen(false));
+let scheduled=false;function highlight(){scheduled=false;let current=0;targets.forEach((target,i)=>{if(target.getBoundingClientRect().top<=150)current=i;});if(scrollY+innerHeight>=document.documentElement.scrollHeight-8)current=links.length-1;links.forEach((a,i)=>{if(i===current)a.setAttribute('aria-current','location');else a.removeAttribute('aria-current');});}function schedule(){if(!scheduled){scheduled=true;requestAnimationFrame(highlight);}}addEventListener('scroll',schedule,{passive:true});addEventListener('resize',schedule);document.querySelectorAll('details').forEach(d=>d.addEventListener('toggle',schedule));highlight();
+})();
+</script></body></html>
