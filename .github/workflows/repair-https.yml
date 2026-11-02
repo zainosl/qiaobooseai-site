@@ -1,4 +1,4 @@
-name: Inspect HTTPS renewal
+name: Restore HTTPS and automatic renewal
 on:
   push:
     branches: [codex/https-renewal]
@@ -10,7 +10,7 @@ jobs:
   https:
     runs-on: ubuntu-latest
     steps:
-      - name: Inspect certificate renewal
+      - name: Renew certificate and start renewal timer
         env:
           SERVER_HOST: ${{ secrets.ALIYUN_HOST }}
           SERVER_USER: ${{ secrets.ALIYUN_USER }}
@@ -20,7 +20,27 @@ jobs:
           printf '%s\n' "$SERVER_KEY" > ~/.ssh/key
           chmod 600 ~/.ssh/key
           ssh-keyscan -H "$SERVER_HOST" >> ~/.ssh/known_hosts
-          ssh -i ~/.ssh/key "$SERVER_USER@$SERVER_HOST" 'command -v certbot; certbot certificates; cat /etc/letsencrypt/renewal/qiaoboose.com.conf; systemctl list-timers --all | grep -E "certbot|acme"; systemctl list-unit-files | grep certbot; tail -40 /var/log/letsencrypt/letsencrypt.log' > /tmp/diagnostic.txt 2>&1
+          set +e
+          ssh -i ~/.ssh/key "$SERVER_USER@$SERVER_HOST" 'bash -s' > /tmp/diagnostic.txt 2>&1 <<'REMOTE'
+          set -e
+          systemctl cat certbot-renew.timer certbot-renew.service
+          systemctl show certbot-renew.timer -p ActiveState -p SubState -p UnitFileState -p LastTriggerUSec -p NextElapseUSecRealtime
+          journalctl -u certbot-renew.service -n 30 --no-pager
+          backup=/root/https-backup-$(date +%Y%m%d-%H%M%S)
+          install -d -m 700 "$backup"
+          cp -a /etc/nginx "$backup/"
+          cp -a /etc/letsencrypt "$backup/"
+          nginx -t
+          certbot renew --cert-name qiaoboose.com --non-interactive --no-random-sleep-on-renew
+          nginx -t
+          nginx -s reload
+          systemctl enable --now certbot-renew.timer
+          systemctl is-active certbot-renew.timer
+          systemctl list-timers --all | grep certbot
+          certbot certificates
+          REMOTE
+          result=$?
+          set -e
           cat /tmp/diagnostic.txt
           python3 - <<'PY'
           from pathlib import Path
@@ -28,3 +48,4 @@ jobs:
           s=s.replace('%','%25').replace('\r','%0D').replace('\n','%0A')
           print('::notice title=Renewal diagnostics::'+s)
           PY
+          exit "$result"
