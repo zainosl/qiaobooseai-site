@@ -1,14 +1,20 @@
-name: Restore HTTPS and automatic renewal
+name: Maintain HTTPS certificate
 on:
   push:
-    branches: [codex/https-renewal]
+    branches: [main]
     paths: [.github/workflows/repair-https.yml]
   workflow_dispatch:
+  schedule:
+    - cron: "17 21 * * 1,4"
 permissions:
   contents: read
+concurrency:
+  group: https-certificate-renewal
+  cancel-in-progress: false
 jobs:
   https:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
     steps:
       - name: Renew certificate and start renewal timer
         env:
@@ -59,7 +65,6 @@ jobs:
           systemctl is-active certbot-renew.timer
           systemctl list-timers --all | grep certbot
           certbot certificates
-          certbot renew --cert-name qiaoboose.com --dry-run --non-interactive --no-random-sleep-on-renew
           REMOTE
           result=$?
           set -e
@@ -71,3 +76,10 @@ jobs:
           print('::notice title=Renewal result::'+s)
           PYREPORT
           exit "$result"
+      - name: Verify public HTTPS
+        run: |
+          for host in qiaoboose.com www.qiaoboose.com intake.qiaoboose.com; do
+            curl --fail --silent --show-error --max-time 30 "https://$host/" -o /dev/null
+          done
+          curl --fail --silent --show-error --max-time 30 https://qiaoboose.com/latest-event/voyage.html -o /dev/null
+          openssl s_client -connect qiaoboose.com:443 -servername qiaoboose.com </dev/null 2>/dev/null | openssl x509 -checkend 2592000 -noout
