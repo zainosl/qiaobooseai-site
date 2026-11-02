@@ -1,0 +1,30 @@
+name: Inspect HTTPS renewal
+on:
+  push:
+    branches: [codex/https-renewal]
+    paths: [.github/workflows/repair-https.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  https:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Inspect certificate renewal
+        env:
+          SERVER_HOST: ${{ secrets.ALIYUN_HOST }}
+          SERVER_USER: ${{ secrets.ALIYUN_USER }}
+          SERVER_KEY: ${{ secrets.ALIYUN_SSH_KEY }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SERVER_KEY" > ~/.ssh/key
+          chmod 600 ~/.ssh/key
+          ssh-keyscan -H "$SERVER_HOST" >> ~/.ssh/known_hosts
+          ssh -i ~/.ssh/key "$SERVER_USER@$SERVER_HOST" 'command -v certbot; certbot certificates; cat /etc/letsencrypt/renewal/qiaoboose.com.conf; systemctl list-timers --all | grep -E "certbot|acme"; systemctl list-unit-files | grep certbot; tail -40 /var/log/letsencrypt/letsencrypt.log' > /tmp/diagnostic.txt 2>&1
+          cat /tmp/diagnostic.txt
+          python3 - <<'PY'
+          from pathlib import Path
+          s=Path('/tmp/diagnostic.txt').read_text()
+          s=s.replace('%','%25').replace('\r','%0D').replace('\n','%0A')
+          print('::notice title=Renewal diagnostics::'+s)
+          PY
