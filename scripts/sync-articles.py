@@ -399,7 +399,7 @@ def main():
     # ── 增量模式：只处理上次水位线之后的新文章，追加合并 ──
     if '--incremental' in sys.argv:
         existing = read_existing_meta()
-        since = max((m['date'] for m in existing), default=None)
+        since = max((m['date'] for m in existing if not m['id'].startswith('wx-')), default=None)
         arts = build(since=since)
         if not arts:
             print(f"✅ 无新文章（水位线 {since or '无'}）。官网文章页保持不变，共 {len(existing)} 篇。")
@@ -425,7 +425,9 @@ def main():
         return
     if '--write' in sys.argv:
         # 全量重建（首次或需要重置时用）
-        meta = write_site(arts, append_meta=None)
+        # WeChat imports have a separate source; preserve them during legacy rebuilds.
+        imported = [m for m in read_existing_meta() if m['id'].startswith('wx-')]
+        meta = write_site(arts, append_meta=imported)
         print(f"✅ 全量同步 {len(meta)} 篇文章")
         for a in arts:
             print(f"   {a['date']} [{a['cat']}] {a['title'][:34]}")

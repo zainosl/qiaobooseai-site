@@ -1176,8 +1176,33 @@
 <link rel="stylesheet" href="mobile-fixes.css?v=20260621" />
   <script src="theme-controller.js?v=20260813b"></script>
   <link rel="stylesheet" href="site-theme.css?v=20260924" />
+<link rel="stylesheet" href="site-header.css?v=20261111">
 </head>
-<body>
+<body class="q-has-header"><header id="q-site-header" aria-label="网站顶栏">
+  <div class="q-header-inner">
+    <a class="q-brand" href="index.html" aria-label="乔不不斯官网首页"><span class="q-mark">乔</span><span><b>乔不不斯</b><small>AI Native 一人公司</small></span></a>
+    <nav id="q-navigation" aria-label="官网导航">
+      <a data-section="home" href="index.html">首页</a>
+      <details class="q-products"><summary data-section="products" aria-current="page">产品服务 <span aria-hidden="true">⌄</span></summary><div class="q-dropdown">
+        <a href="products.html">全部产品服务 <span>→</span></a>
+        <small>共创与咨询</small>
+        <a href="diagnosis.html">能力资产与商业方向共创</a>
+        <a href="first-order-sprint.html">0–1 首单验证共创</a>
+        <a href="consultation.html">一人公司单次咨询</a>
+        <small>免费工具</small>
+        <a href="calibrator.html">一人公司路径校准器</a>
+        <a href="potential-customer-channels.html">潜在客户渠道库</a>
+      </div></details>
+      <a data-section="events" href="latest-event/">最新活动</a>
+      <a data-section="articles" href="articles.html">最新文章</a>
+      <a data-section="resources" class="q-resource" href="resources/">资料领取 <small>限时免费</small></a>
+    </nav>
+    <div class="q-actions"><button class="q-theme" type="button" data-theme-toggle><span aria-hidden="true">◐</span><span data-theme-label>主题</span></button><button class="q-menu" type="button" aria-expanded="false" aria-controls="q-navigation" aria-label="展开官网菜单">菜单 <span aria-hidden="true">☰</span></button></div>
+  </div>
+  <div class="top-progress" aria-hidden="true"></div>
+</header>
+
+
   <a class="back-home" href="products.html">← 返回产品服务</a>
   <div class="shell">
     <aside class="sidebar">
@@ -2026,5 +2051,5 @@ ${advisorValue("advisorConstraints") || "未填写"}
     setupAdvisorChat();
     setupToc();
   </script>
-</body>
+<script src="site-header.js?v=20261111"></script></body>
 </html>

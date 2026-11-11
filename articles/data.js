@@ -1,9 +1,75 @@
-/*
-  文章数据源（由 scripts/sync-articles.py 自动生成，请勿手改）
-  来源：/sessions/loving-magical-mendel/mnt/.hermes/hermes任务/内容输出
-  生成时间：2026-06-10 04:17
-*/
+/* 官网文章目录：公众号已保存正文 + 历史文章。 */
 window.ARTICLES = [
+  {
+    "id": "wx-5446e00ed4e3",
+    "title": "我让 AI 操作手机，帮我研究别人怎么做生意",
+    "date": "2026-11-11",
+    "cat": "AI 实战",
+    "glyph": "AI · PRACTICE"
+  },
+  {
+    "id": "wx-eaaf59b4a851",
+    "title": "客户的需求变了，我的服务要跟着变吗？",
+    "date": "2026-11-10",
+    "cat": "商业验证",
+    "glyph": "SOLO · BUSINESS"
+  },
+  {
+    "id": "wx-2f1e5caac5d9",
+    "title": "未来99.99%的Token，会被极少数人用掉",
+    "date": "2026-11-05",
+    "cat": "AI 实战",
+    "glyph": "AI · PRACTICE"
+  },
+  {
+    "id": "wx-d0e27667d06e",
+    "title": "做个人事业，我建议你只看未来一年",
+    "date": "2026-10-29",
+    "cat": "一人公司认知",
+    "glyph": "SOLO · BUSINESS"
+  },
+  {
+    "id": "wx-124d85554f3c",
+    "title": "做一人公司，“先做出来再慢慢改”不一定走得通",
+    "date": "2026-10-28",
+    "cat": "商业验证",
+    "glyph": "SOLO · BUSINESS"
+  },
+  {
+    "id": "wx-b832ebc17238",
+    "title": "感情和事业，什么时候值得继续，什么时候可以结束？",
+    "date": "2026-10-25",
+    "cat": "一人公司认知",
+    "glyph": "SOLO · BUSINESS"
+  },
+  {
+    "id": "wx-a8d873e5c45c",
+    "title": "想找到第一位付费客户，服务方案该什么时候拿出来？",
+    "date": "2026-10-22",
+    "cat": "获客增长",
+    "glyph": "SOLO · BUSINESS"
+  },
+  {
+    "id": "wx-3b95d79a744b",
+    "title": "业务刚起步，不知道怎么找客户？先把你在做的事讲出来",
+    "date": "2026-10-14",
+    "cat": "一人公司认知",
+    "glyph": "SOLO · BUSINESS"
+  },
+  {
+    "id": "wx-4d10d1d15b7c",
+    "title": "别照着别人的生意改造自己",
+    "date": "2026-10-14",
+    "cat": "一人公司认知",
+    "glyph": "SOLO · BUSINESS"
+  },
+  {
+    "id": "wx-286bbbae1dbb",
+    "title": "你和 AI 都觉得文章不错，为什么带不来客户？",
+    "date": "2026-10-09",
+    "cat": "AI 实战",
+    "glyph": "AI · PRACTICE"
+  },
   {
     "id": "pub-fa073c3d",
     "date": "2026-06-08",
