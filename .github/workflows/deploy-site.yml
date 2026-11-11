@@ -124,6 +124,21 @@ jobs:
               root /var/www/qiaoboose-site;
               index index.html;
 
+              # The roadshow document stays fresh; content-hashed images are reusable.
+              location = /latest-event/voyage.html {
+                  try_files $uri =404;
+                  gzip on;
+                  gzip_vary on;
+                  gzip_min_length 1024;
+                  gzip_comp_level 5;
+                  add_header Cache-Control "no-cache" always;
+              }
+
+              location ^~ /latest-event/voyage-assets/ {
+                  try_files $uri =404;
+                  add_header Cache-Control "public, max-age=31536000, immutable";
+              }
+
               location / {
                   try_files $uri $uri/ /index.html;
               }
