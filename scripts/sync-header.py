@@ -10,8 +10,8 @@ for name, section in PAGES.items():
     source = re.sub(r'<header\b[^>]*(?:id="q-site-header"|class="(?:site-nav|campaign-nav|topbar site-header)")[^>]*>.*?</header>\n*', lambda m:header, source, count=1, flags=re.S) if re.search(r'<header\b[^>]*(?:id="q-site-header"|class="(?:site-nav|campaign-nav|topbar site-header)")',source) else re.sub(r'(<body\b[^>]*>)',lambda m:m[1]+header,source,count=1)
     if 'q-has-header' not in source:
         source = re.sub(r'<body([^>]*)>',lambda m:'<body'+(m[1].replace('class="','class="q-has-header ',1) if 'class="' in m[1] else m[1]+' class="q-has-header"')+'>',source,count=1)
-    if 'site-header.css' not in source: source=source.replace('</head>',f'<link rel="stylesheet" href="{base}site-header.css?v=20261111b">\n</head>')
-    if 'site-header.js' not in source: source=source.replace('</body>',f'<script src="{base}site-header.js?v=20261111b"></script></body>')
-    if 'src="'+base+'theme-controller.js' not in source: source=source.replace('</head>',f'<script src="{base}theme-controller.js?v=20261111b"></script></head>')
+    if 'site-header.css' not in source: source=source.replace('</head>',f'<link rel="stylesheet" href="{base}site-header.css?v=20261111c">\n</head>')
+    if 'site-header.js' not in source: source=source.replace('</body>',f'<script src="{base}site-header.js?v=20261111c"></script></body>')
+    if 'src="'+base+'theme-controller.js' not in source: source=source.replace('</head>',f'<script src="{base}theme-controller.js?v=20261111c"></script></head>')
     path.write_text(source)
 print(f'Updated {len(PAGES)} public page headers.')

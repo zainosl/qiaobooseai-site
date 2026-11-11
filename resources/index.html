@@ -376,103 +376,10 @@ html[data-theme="light"] .theme-toggle__track::after { transform: translateX(16p
   }
   .theme-toggle { display: none !important; }
 }
-body{font-size:17px}header{padding:20px 5vw;border-bottom:1px solid var(--border2);display:flex;align-items:center;justify-content:space-between;gap:20px}header a{font-weight:600;text-decoration:none}a{color:var(--accent);text-underline-offset:4px}button,input{font:inherit;color:var(--text);background:var(--surface);border:1px solid var(--border2);padding:10px 14px;border-radius:4px}button{cursor:pointer}.wrap{max-width:1220px;margin:auto;padding:48px 36px;display:grid;grid-template-columns:230px minmax(0,1fr);gap:64px}aside{font-size:14px;color:var(--muted);align-self:start;position:sticky;top:24px;max-height:85vh;overflow:auto}aside a{display:block;margin:12px 0;text-decoration:none;color:var(--muted)}main{min-width:0;max-width:820px}.nowrap{white-space:nowrap}h1{text-wrap:balance;font-size:clamp(30px,3.1vw,44px);line-height:1.3;letter-spacing:-.02em;margin:0 0 32px;font-weight:700}h2{font-size:28px;line-height:1.45;margin:56px 0 22px;border-top:1px solid var(--border2);padding-top:26px;scroll-margin-top:24px}h3{font-size:22px;margin-top:34px;line-height:1.5}h4{font-size:18px;margin-top:28px}p{line-height:1.95;margin:18px 0}li{line-height:1.85;margin:10px 0}strong{font-weight:650}blockquote{margin:24px 0;padding:8px 22px;border-left:3px solid var(--accent);background:var(--accent-soft)}pre{padding:22px;background:var(--surface-inset);white-space:pre-wrap;overflow-wrap:anywhere;border:1px solid var(--border2);line-height:1.7;font-size:14px}code{font-family:var(--font-mono);overflow-wrap:anywhere}.table-scroll{overflow:auto;max-width:100%;margin:26px 0}table{width:100%;min-width:540px;border-collapse:collapse;font-size:15px;line-height:1.7}th{background:var(--accent-dim);color:var(--accent);text-align:left}td,th{padding:13px 15px;border:1px solid var(--border2);vertical-align:top}tr:nth-child(even){background:var(--surface)}img{max-width:100%;height:auto}summary{cursor:pointer;color:var(--accent);padding:14px 0}details{border-bottom:1px solid var(--border2)}.meta{color:var(--muted);font-size:14px}.catalog{list-style:none;padding:0}.catalog li{padding:18px 0;border-bottom:1px solid var(--border2)}.catalog a{display:block;font-size:20px;text-decoration:none}.catalog small{display:block;color:var(--muted);margin-top:5px}.search{width:100%;margin:6px 0 24px}.hero{border-bottom:1px solid var(--border2);padding-bottom:24px}.chapter-nav{display:flex;gap:12px;flex-wrap:wrap;margin:24px 0}.chapter-nav a{font-size:15px}.slide{margin-bottom:48px;border-bottom:1px solid var(--border2);padding-bottom:32px}.slide h2{margin-top:36px}footer{padding:24px 5vw;color:var(--muted);border-top:1px solid var(--border2);font-size:13px}aside details{border:0}aside summary{font-weight:600;color:var(--text)}@media(max-width:800px){body{font-size:16px}header{padding:16px 20px;font-size:14px}.wrap{padding:30px 20px;display:block}aside{position:static;max-height:none;margin-bottom:30px}aside details:not([open]) a{display:none}main{max-width:none}.nowrap{white-space:nowrap}h1{text-wrap:balance;font-size:31px}h2{font-size:25px;margin-top:42px}h3{font-size:21px}table{font-size:14px}pre{padding:16px}p{line-height:1.9}}@media print{header,aside,button,.search,footer{display:none}.wrap{display:block;padding:0}main{max-width:none}html,body{background:#fff;color:#151a18}a{color:#137a66}details>*{display:block}summary{display:none}h1,h2,h3{break-after:avoid}tr{break-inside:avoid}.table-scroll{overflow:visible}table{min-width:0}pre{white-space:pre-wrap}.slide{break-after:page}}.launch-article h3{margin-top:68px;padding:24px 0 0;border-top:2px solid var(--accent);color:var(--text);font-size:25px}.figure-link{display:block;cursor:zoom-in}.launch-article img{display:block;margin:30px auto;border:1px solid var(--border2)}.launch-article p:has(>em:only-child){font-size:14px;color:var(--muted);margin-top:-12px}</style><script>/* 乔不不斯双主题控制器：dark / light / system */
-(function () {
-  'use strict';
-
-  var STORAGE_KEY = 'qiaoboosi-theme';
-  var root = document.documentElement;
-  var media = window.matchMedia('(prefers-color-scheme: dark)');
-
-  function isTheme(value) {
-    return value === 'dark' || value === 'light';
-  }
-
-  function readStoredTheme() {
-    try {
-      var value = window.localStorage.getItem(STORAGE_KEY);
-      return isTheme(value) ? value : null;
-    } catch (error) {
-      return null;
-    }
-  }
-
-  function systemTheme() {
-    return media.matches ? 'dark' : 'light';
-  }
-
-  function resolvedTheme() {
-    return readStoredTheme() || systemTheme();
-  }
-
-  function syncControls(theme) {
-    var isLight = theme === 'light';
-    document.querySelectorAll('[data-theme-toggle]').forEach(function (button) {
-      button.setAttribute('aria-pressed', String(isLight));
-      button.setAttribute('aria-label', isLight ? '切换到暗色模式' : '切换到亮色模式');
-      var label = button.querySelector('[data-theme-label]');
-      if (label) label.textContent = isLight ? 'LIGHT' : 'DARK';
-    });
-  }
-
-  function apply(theme, persist) {
-    var next = isTheme(theme) ? theme : systemTheme();
-    root.dataset.theme = next;
-    root.style.colorScheme = next;
-
-    if (persist) {
-      try { window.localStorage.setItem(STORAGE_KEY, next); } catch (error) {}
-    }
-
-    if (document.body) syncControls(next);
-    window.dispatchEvent(new CustomEvent('qiaoboosi:themechange', {
-      detail: { theme: next, source: persist ? 'user' : 'system' }
-    }));
-    return next;
-  }
-
-  function toggle() {
-    return apply(root.dataset.theme === 'light' ? 'dark' : 'light', true);
-  }
-
-  function reset() {
-    try { window.localStorage.removeItem(STORAGE_KEY); } catch (error) {}
-    return apply(systemTheme(), false);
-  }
-
-  /* Apply synchronously when this script is loaded in <head>, preventing a theme flash. */
-  apply(resolvedTheme(), false);
-
-  function mount() {
-    syncControls(root.dataset.theme);
-    document.querySelectorAll('[data-theme-toggle]').forEach(function (button) {
-      if (button.dataset.themeReady === 'true') return;
-      button.dataset.themeReady = 'true';
-      button.addEventListener('click', toggle);
-    });
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', mount, { once: true });
-  } else {
-    mount();
-  }
-
-  media.addEventListener('change', function () {
-    if (!readStoredTheme()) apply(systemTheme(), false);
-  });
-
-  window.QiaoboosiTheme = {
-    get: function () { return root.dataset.theme; },
-    set: function (theme) { return apply(theme, true); },
-    toggle: toggle,
-    reset: reset
-  };
-})();
-</script><link rel="stylesheet" href="../resource-entry.css?v=20261027"><link rel="stylesheet" href="../campaign.css?v=20261027"><style>
+body{font-size:17px}header{padding:20px 5vw;border-bottom:1px solid var(--border2);display:flex;align-items:center;justify-content:space-between;gap:20px}header a{font-weight:600;text-decoration:none}a{color:var(--accent);text-underline-offset:4px}button,input{font:inherit;color:var(--text);background:var(--surface);border:1px solid var(--border2);padding:10px 14px;border-radius:4px}button{cursor:pointer}.wrap{max-width:1220px;margin:auto;padding:48px 36px;display:grid;grid-template-columns:230px minmax(0,1fr);gap:64px}aside{font-size:14px;color:var(--muted);align-self:start;position:sticky;top:24px;max-height:85vh;overflow:auto}aside a{display:block;margin:12px 0;text-decoration:none;color:var(--muted)}main{min-width:0;max-width:820px}.nowrap{white-space:nowrap}h1{text-wrap:balance;font-size:clamp(30px,3.1vw,44px);line-height:1.3;letter-spacing:-.02em;margin:0 0 32px;font-weight:700}h2{font-size:28px;line-height:1.45;margin:56px 0 22px;border-top:1px solid var(--border2);padding-top:26px;scroll-margin-top:24px}h3{font-size:22px;margin-top:34px;line-height:1.5}h4{font-size:18px;margin-top:28px}p{line-height:1.95;margin:18px 0}li{line-height:1.85;margin:10px 0}strong{font-weight:650}blockquote{margin:24px 0;padding:8px 22px;border-left:3px solid var(--accent);background:var(--accent-soft)}pre{padding:22px;background:var(--surface-inset);white-space:pre-wrap;overflow-wrap:anywhere;border:1px solid var(--border2);line-height:1.7;font-size:14px}code{font-family:var(--font-mono);overflow-wrap:anywhere}.table-scroll{overflow:auto;max-width:100%;margin:26px 0}table{width:100%;min-width:540px;border-collapse:collapse;font-size:15px;line-height:1.7}th{background:var(--accent-dim);color:var(--accent);text-align:left}td,th{padding:13px 15px;border:1px solid var(--border2);vertical-align:top}tr:nth-child(even){background:var(--surface)}img{max-width:100%;height:auto}summary{cursor:pointer;color:var(--accent);padding:14px 0}details{border-bottom:1px solid var(--border2)}.meta{color:var(--muted);font-size:14px}.catalog{list-style:none;padding:0}.catalog li{padding:18px 0;border-bottom:1px solid var(--border2)}.catalog a{display:block;font-size:20px;text-decoration:none}.catalog small{display:block;color:var(--muted);margin-top:5px}.search{width:100%;margin:6px 0 24px}.hero{border-bottom:1px solid var(--border2);padding-bottom:24px}.chapter-nav{display:flex;gap:12px;flex-wrap:wrap;margin:24px 0}.chapter-nav a{font-size:15px}.slide{margin-bottom:48px;border-bottom:1px solid var(--border2);padding-bottom:32px}.slide h2{margin-top:36px}footer{padding:24px 5vw;color:var(--muted);border-top:1px solid var(--border2);font-size:13px}aside details{border:0}aside summary{font-weight:600;color:var(--text)}@media(max-width:800px){body{font-size:16px}header{padding:16px 20px;font-size:14px}.wrap{padding:30px 20px;display:block}aside{position:static;max-height:none;margin-bottom:30px}aside details:not([open]) a{display:none}main{max-width:none}.nowrap{white-space:nowrap}h1{text-wrap:balance;font-size:31px}h2{font-size:25px;margin-top:42px}h3{font-size:21px}table{font-size:14px}pre{padding:16px}p{line-height:1.9}}@media print{header,aside,button,.search,footer{display:none}.wrap{display:block;padding:0}main{max-width:none}html,body{background:#fff;color:#151a18}a{color:#137a66}details>*{display:block}summary{display:none}h1,h2,h3{break-after:avoid}tr{break-inside:avoid}.table-scroll{overflow:visible}table{min-width:0}pre{white-space:pre-wrap}.slide{break-after:page}}.launch-article h3{margin-top:68px;padding:24px 0 0;border-top:2px solid var(--accent);color:var(--text);font-size:25px}.figure-link{display:block;cursor:zoom-in}.launch-article img{display:block;margin:30px auto;border:1px solid var(--border2)}.launch-article p:has(>em:only-child){font-size:14px;color:var(--muted);margin-top:-12px}</style><link rel="stylesheet" href="../resource-entry.css?v=20261027"><link rel="stylesheet" href="../campaign.css?v=20261027"><style>
 .launch-article h1{margin-top:14px}.launch-eyebrow{font-size:12px;color:var(--accent);letter-spacing:.08em;margin:0 0 12px}.wechat-contact{margin-top:56px;padding:32px;border:1px solid var(--accent-border);background:var(--accent-soft);display:grid;grid-template-columns:1fr 150px;gap:28px;align-items:center;scroll-margin-top:110px}.wechat-contact h2{border:0;margin:0 0 12px;padding:0;font-size:26px}.wechat-contact p{font-size:15px;margin:10px 0}.wechat-contact__id{font-family:ui-monospace,monospace;font-size:clamp(24px,4vw,34px);font-weight:700;letter-spacing:.03em;color:var(--text);overflow-wrap:anywhere}.wechat-contact__copy{display:inline-flex;align-items:center;gap:18px;background:var(--accent);color:var(--accent-ink);border:0;border-radius:6px;padding:12px 18px;margin-top:16px;font-size:14px;font-weight:650;cursor:pointer}.wechat-contact__qr{display:block;width:150px;height:auto;border:1px solid var(--border);border-radius:5px}.wechat-contact__status{color:var(--accent);min-height:24px}.wechat-contact input{width:100%;padding:10px;background:var(--bg);color:var(--text);border:1px solid var(--border2)}
 @media(max-width:600px){.wechat-contact{padding:22px;grid-template-columns:1fr;gap:20px}.wechat-contact__qr{width:132px}.launch-article{min-width:0}}
-</style><link rel="stylesheet" href="../campaign-tokens.css?v=20261027"><style>.launch-article h1.resource-title{text-wrap:wrap}.resource-title-line{display:block}.resource-title-phrase{white-space:nowrap}</style><link rel="icon" href="../campaign-icon.svg" type="image/svg+xml"><link rel="stylesheet" href="../site-header.css?v=20261111b">
+</style><link rel="stylesheet" href="../campaign-tokens.css?v=20261027"><style>.launch-article h1.resource-title{text-wrap:wrap}.resource-title-line{display:block}.resource-title-phrase{white-space:nowrap}</style><link rel="icon" href="../campaign-icon.svg" type="image/svg+xml"><link rel="stylesheet" href="../site-header.css?v=20261111c">
 <script src="../theme-controller.js?v=20261111"></script></head><body class="q-has-header"><header id="q-site-header" aria-label="网站顶栏">
   <div class="q-header-inner">
     <a class="q-brand" href="../index.html" aria-label="乔不不斯官网首页"><span class="q-mark">乔</span><span class="q-brand-name"><span class="q-brand-descriptor">AI Native 一人公司<span class="q-brand-separator"> · </span></span><b>乔不不斯</b></span></a>
@@ -789,4 +696,4 @@ body{font-size:17px}header{padding:20px 5vw;border-bottom:1px solid var(--border
 <p>我会在查看消息后，回复两天线上公开课的参加说明。你可以带一个业务问题，或者一段想写的素材来，跟着看从判断到实际操作的过程。随包视频是已有实践录屏，本次线上公开课的参加入口和具体安排会在报名后通知。</p>
 <p>如果想先拿套装自己试，添加微信时备注「起盘套装」，获取领取登记与使用说明。听课与领套装可以分别选择，不需要捆绑参加。</p>
 <p>我是乔不不斯。希望你也能在未来几个月内，跑通自己的一人公司。</p>
-<section class="wechat-contact" id="wechat-contact" aria-labelledby="contact-title"><div><p class="launch-eyebrow">领取资料 / 报名公开课</p><h2 id="contact-title">加我微信，接着聊。</h2><div class="wechat-contact__id">qiaoboose01</div><p>领取套装备注「起盘套装」；参加线上公开课备注「公开课」。</p><button type="button" class="wechat-contact__copy" id="copy-wechat">复制微信号 <span aria-hidden="true">↗</span></button><p class="wechat-contact__status" id="copy-status" role="status" aria-live="polite">我会在查看消息后，回复领取或参加说明。</p><input id="wechat-manual" value="qiaoboose01" readonly hidden aria-label="可手动复制的微信号"></div><a href="../latest-event/assets/wechat-qiaoboose01.png" target="_blank" rel="noopener"><img class="wechat-contact__qr" src="../latest-event/assets/wechat-qiaoboose01.png" alt="乔不不斯的微信二维码，微信号 qiaoboose01" loading="lazy" width="1392" height="1823"></a></section></main></div><footer class="campaign-footer"><span>乔不不斯 · AI Native 一人公司</span><a href="../index.html">返回官网</a><a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener">粤ICP备2026086998号</a></footer><script>(()=>{const media=matchMedia('(max-width:799px)'),toc=document.querySelector('aside details');const sync=()=>{toc.open=!media.matches};sync();media.addEventListener('change',sync)})();</script><script>document.getElementById('copy-wechat').addEventListener('click',async()=>{const status=document.getElementById('copy-status');try{if(!navigator.clipboard)throw new Error('Clipboard unavailable');await navigator.clipboard.writeText('qiaoboose01');status.textContent='微信号已复制。添加时备注「起盘套装」或「公开课」。';}catch(error){const input=document.getElementById('wechat-manual');input.hidden=false;input.focus();input.select();status.textContent='请手动复制微信号 qiaoboose01。';}});</script><script src="../site-header.js?v=20261111b"></script></body></html>
+<section class="wechat-contact" id="wechat-contact" aria-labelledby="contact-title"><div><p class="launch-eyebrow">领取资料 / 报名公开课</p><h2 id="contact-title">加我微信，接着聊。</h2><div class="wechat-contact__id">qiaoboose01</div><p>领取套装备注「起盘套装」；参加线上公开课备注「公开课」。</p><button type="button" class="wechat-contact__copy" id="copy-wechat">复制微信号 <span aria-hidden="true">↗</span></button><p class="wechat-contact__status" id="copy-status" role="status" aria-live="polite">我会在查看消息后，回复领取或参加说明。</p><input id="wechat-manual" value="qiaoboose01" readonly hidden aria-label="可手动复制的微信号"></div><a href="../latest-event/assets/wechat-qiaoboose01.png" target="_blank" rel="noopener"><img class="wechat-contact__qr" src="../latest-event/assets/wechat-qiaoboose01.png" alt="乔不不斯的微信二维码，微信号 qiaoboose01" loading="lazy" width="1392" height="1823"></a></section></main></div><footer class="campaign-footer"><span>乔不不斯 · AI Native 一人公司</span><a href="../index.html">返回官网</a><a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener">粤ICP备2026086998号</a></footer><script>(()=>{const media=matchMedia('(max-width:799px)'),toc=document.querySelector('aside details');const sync=()=>{toc.open=!media.matches};sync();media.addEventListener('change',sync)})();</script><script>document.getElementById('copy-wechat').addEventListener('click',async()=>{const status=document.getElementById('copy-status');try{if(!navigator.clipboard)throw new Error('Clipboard unavailable');await navigator.clipboard.writeText('qiaoboose01');status.textContent='微信号已复制。添加时备注「起盘套装」或「公开课」。';}catch(error){const input=document.getElementById('wechat-manual');input.hidden=false;input.focus();input.select();status.textContent='请手动复制微信号 qiaoboose01。';}});</script><script src="../site-header.js?v=20261111c"></script></body></html>
