@@ -22,3 +22,10 @@ Published via GitHub Pages.
 ```sh
 python3 scripts/export-voyage-offline.py /path/to/voyage-offline.html
 ```
+
+## 图片交付优化
+
+导入新文章后运行 `python3 scripts/optimize-public-images.py`（需要 Pillow）。
+资料页与文章正文使用 `media/optimized/` 下按内容命名的 WebP；图解和二维码采用原分辨率无损压缩，头像采用高质量压缩。原始图片与查看原图链接保留。页面图片按阅读位置加载，并预留尺寸防止跳动。
+
+发布配置对公开 HTML、CSS、JS、JSON 和 SVG 开启传输压缩与缓存校验；按内容命名的图片长期缓存，更新图片时会自动使用新地址。

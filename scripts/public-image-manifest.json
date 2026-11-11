@@ -1,0 +1,210 @@
+{
+  "resources/配图/01_方向加减法.png": {
+    "optimized": "media/optimized/0037851e0daeeada.webp",
+    "original_bytes": 152101,
+    "optimized_bytes": 69066,
+    "width": 1080,
+    "height": 1270,
+    "lossless": true
+  },
+  "resources/配图/02_需求研究迭代.png": {
+    "optimized": "media/optimized/f32cb537fcb5645a.webp",
+    "original_bytes": 180456,
+    "optimized_bytes": 77108,
+    "width": 1080,
+    "height": 1560,
+    "lossless": true
+  },
+  "resources/配图/03_AI业务闭环.png": {
+    "optimized": "media/optimized/1eecaa9dd24bf9e8.webp",
+    "original_bytes": 121441,
+    "optimized_bytes": 52102,
+    "width": 1080,
+    "height": 1200,
+    "lossless": true
+  },
+  "resources/配图/03b_写作调整.png": {
+    "optimized": "media/optimized/d842c24ce114234d.webp",
+    "original_bytes": 147949,
+    "optimized_bytes": 60476,
+    "width": 1080,
+    "height": 1390,
+    "lossless": true
+  },
+  "resources/配图/03c_工具为什么做.png": {
+    "optimized": "media/optimized/f673ca2fe50c3357.webp",
+    "original_bytes": 158784,
+    "optimized_bytes": 67858,
+    "width": 1080,
+    "height": 1460,
+    "lossless": true
+  },
+  "resources/配图/04_知识库架构.png": {
+    "optimized": "media/optimized/0d0c2d51063ab4c3.webp",
+    "original_bytes": 141647,
+    "optimized_bytes": 57378,
+    "width": 1080,
+    "height": 1320,
+    "lossless": true
+  },
+  "resources/配图/04b_知识库架构详情.png": {
+    "optimized": "media/optimized/0ad6e0795e1ae3c4.webp",
+    "original_bytes": 181508,
+    "optimized_bytes": 76872,
+    "width": 1080,
+    "height": 1510,
+    "lossless": true
+  },
+  "resources/配图/商业模式调研原图.png": {
+    "optimized": "media/optimized/7520ced27dbc8e77.webp",
+    "original_bytes": 1251399,
+    "optimized_bytes": 416234,
+    "width": 2048,
+    "height": 1152,
+    "lossless": true
+  },
+  "resources/配图/用户分层原图.png": {
+    "optimized": "media/optimized/5e47b0ec9ba6c2f6.webp",
+    "original_bytes": 555846,
+    "optimized_bytes": 186306,
+    "width": 2048,
+    "height": 1152,
+    "lossless": true
+  },
+  "resources/配图/05_视频章节.png": {
+    "optimized": "media/optimized/ba8dcfc67b39fa47.webp",
+    "original_bytes": 143509,
+    "optimized_bytes": 58524,
+    "width": 1080,
+    "height": 1320,
+    "lossless": true
+  },
+  "resources/配图/06_写作Skill真实流程.png": {
+    "optimized": "media/optimized/74fb5646c2d53ed7.webp",
+    "original_bytes": 139251,
+    "optimized_bytes": 55792,
+    "width": 1080,
+    "height": 1320,
+    "lossless": true
+  },
+  "resources/配图/07_两套Partner分工.png": {
+    "optimized": "media/optimized/0a6754d51f3b6bc9.webp",
+    "original_bytes": 139658,
+    "optimized_bytes": 56254,
+    "width": 1080,
+    "height": 1320,
+    "lossless": true
+  },
+  "resources/配图/08_工作台连接图.png": {
+    "optimized": "media/optimized/1469e3fc795746e7.webp",
+    "original_bytes": 147883,
+    "optimized_bytes": 61908,
+    "width": 1080,
+    "height": 1320,
+    "lossless": true
+  },
+  "resources/配图/09_避坑路线.png": {
+    "optimized": "media/optimized/e8334b0973aa0ddc.webp",
+    "original_bytes": 142163,
+    "optimized_bytes": 57464,
+    "width": 1080,
+    "height": 1320,
+    "lossless": true
+  },
+  "resources/配图/10_365天社群.png": {
+    "optimized": "media/optimized/3531920f94c87ed1.webp",
+    "original_bytes": 146102,
+    "optimized_bytes": 60398,
+    "width": 1080,
+    "height": 1320,
+    "lossless": true
+  },
+  "resources/配图/11_一小时咨询.png": {
+    "optimized": "media/optimized/788fa6e80b0344c2.webp",
+    "original_bytes": 139171,
+    "optimized_bytes": 55710,
+    "width": 1080,
+    "height": 1320,
+    "lossless": true
+  },
+  "resources/配图/12_套装免费揭晓.png": {
+    "optimized": "media/optimized/40c08eb524fb47c8.webp",
+    "original_bytes": 106890,
+    "optimized_bytes": 42800,
+    "width": 1080,
+    "height": 1110,
+    "lossless": true
+  },
+  "resources/配图/13_两天公开课.png": {
+    "optimized": "media/optimized/0c792f567a67d034.webp",
+    "original_bytes": 173835,
+    "optimized_bytes": 75130,
+    "width": 1080,
+    "height": 1440,
+    "lossless": true
+  },
+  "latest-event/assets/wechat-qiaoboose01.png": {
+    "optimized": "media/optimized/6c90988266715dc3.webp",
+    "original_bytes": 221963,
+    "optimized_bytes": 115646,
+    "width": 1392,
+    "height": 1823,
+    "lossless": true
+  },
+  "articles/assets/6dc76c4ae6c92c559627.png": {
+    "optimized": "media/optimized/7ec7534fbc5e8884.webp",
+    "original_bytes": 2133990,
+    "optimized_bytes": 341180,
+    "width": 1024,
+    "height": 1024,
+    "lossless": false
+  },
+  "articles/assets/2ec175d20224c301c022.png": {
+    "optimized": "media/optimized/ff79c35d1f11db5d.webp",
+    "original_bytes": 119870,
+    "optimized_bytes": 38274,
+    "width": 1080,
+    "height": 980,
+    "lossless": true
+  },
+  "articles/assets/99a2320f6fcd08ac40d1.png": {
+    "optimized": "media/optimized/af82061dc04920e7.webp",
+    "original_bytes": 160345,
+    "optimized_bytes": 51160,
+    "width": 1080,
+    "height": 1180,
+    "lossless": true
+  },
+  "articles/assets/80a31353056a75857a45.png": {
+    "optimized": "media/optimized/661077f09bb7c9d8.webp",
+    "original_bytes": 193100,
+    "optimized_bytes": 60338,
+    "width": 1080,
+    "height": 1370,
+    "lossless": true
+  },
+  "articles/assets/a7335b33c06802699dcd.png": {
+    "optimized": "media/optimized/4a617fe2591835d8.webp",
+    "original_bytes": 137792,
+    "optimized_bytes": 37766,
+    "width": 1000,
+    "height": 975,
+    "lossless": true
+  },
+  "articles/assets/94dc295ae1913148fe9f.png": {
+    "optimized": "media/optimized/9873204f1bec8214.webp",
+    "original_bytes": 975899,
+    "optimized_bytes": 713436,
+    "width": 1080,
+    "height": 1080,
+    "lossless": true
+  },
+  "articles/assets/8fecc17a7422de19b2fa.png": {
+    "optimized": "media/optimized/63083923d49cb9bf.webp",
+    "original_bytes": 881950,
+    "optimized_bytes": 647534,
+    "width": 1080,
+    "height": 1080,
+    "lossless": true
+  }
+}

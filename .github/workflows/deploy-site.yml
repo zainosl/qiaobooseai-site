@@ -139,9 +139,23 @@ jobs:
                   add_header Cache-Control "public, max-age=31536000, immutable";
               }
 
+              location ^~ /media/optimized/ {
+                  try_files $uri =404;
+                  add_header Cache-Control "public, max-age=31536000, immutable";
+              }
+
+              # Revalidate mutable documents; compress public text assets in transit.
+              # API proxies above keep their own behavior.
               location / {
                   try_files $uri $uri/ /index.html;
+                  gzip on;
+                  gzip_vary on;
+                  gzip_min_length 1024;
+                  gzip_comp_level 5;
+                  gzip_types text/css application/javascript application/json image/svg+xml;
+                  add_header Cache-Control "no-cache" always;
               }
+
           }
 
           server {
