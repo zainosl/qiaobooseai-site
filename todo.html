@@ -4,772 +4,34 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>乔不不斯的一人公司待办</title>
-  <style>
-    @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap");
-
-    :root {
-      --bg: #0B0D0F;
-      --bg2: #13161A;
-      --bg3: #1C2026;
-      --paper: rgba(19, 22, 26, 0.92);
-      --paper2: rgba(28, 32, 38, 0.92);
-      --ink: #F7F8FA;
-      --muted: #A9B0BA;
-      --dim: #4A525C;
-      --line: rgba(255, 255, 255, 0.07);
-      --line2: rgba(255, 255, 255, 0.12);
-      --accent: #58E1C1;
-      --accent-2: #3BB89A;
-      --accent-3: #7AF2D8;
-      --danger: #F6B66B;
-      --gold: #D8B15D;
-      --blue: #7BA7E8;
-      --rose: #E889A8;
-      --shadow: 0 30px 100px rgba(0, 0, 0, 0.26);
-      --radius: 2px;
-      --radius-panel: 12px;
-      color-scheme: dark;
-      font-family: "Noto Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--ink);
-      min-height: 100vh;
-      line-height: 1.72;
-      -webkit-font-smoothing: antialiased;
-      text-rendering: optimizeLegibility;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      z-index: -2;
-      pointer-events: none;
-      background-image:
-        linear-gradient(rgba(88, 225, 193, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(88, 225, 193, 0.03) 1px, transparent 1px);
-      background-size: 60px 60px;
-    }
-
-    body::after {
-      content: "";
-      position: fixed;
-      inset: 0;
-      z-index: -1;
-      pointer-events: none;
-      background:
-        radial-gradient(circle at 82% 4%, rgba(88, 225, 193, 0.10), transparent 34%),
-        radial-gradient(circle at 8% 92%, rgba(88, 225, 193, 0.055), transparent 32%),
-        linear-gradient(180deg, rgba(11, 13, 15, 0), rgba(11, 13, 15, 0.94));
-    }
-
-    button,
-    input,
-    textarea,
-    select {
-      font: inherit;
-    }
-
-    button {
-      border: 1px solid var(--line);
-      background: rgba(11, 13, 15, 0.72);
-      color: var(--ink);
-      min-height: 36px;
-      border-radius: var(--radius);
-      cursor: pointer;
-      transition: 180ms ease;
-    }
-
-    button:hover {
-      border-color: rgba(88, 225, 193, 0.45);
-      color: var(--accent);
-      background: rgba(88, 225, 193, 0.06);
-      transform: translateY(-1px);
-    }
-
-    button:focus-visible,
-    input:focus-visible,
-    textarea:focus-visible,
-    select:focus-visible {
-      outline: 3px solid rgba(88, 225, 193, 0.10);
-      outline-offset: 1px;
-    }
-
-    .app {
-      width: min(1320px, calc(100vw - 48px));
-      margin: 0 auto;
-      padding: 28px 0 48px;
-    }
-
-    .topbar {
-      display: grid;
-      grid-template-columns: minmax(240px, 1fr) auto;
-      gap: 18px;
-      align-items: end;
-      margin-bottom: 18px;
-    }
-
-    .brand h1 {
-      margin: 0;
-      font-size: clamp(26px, 4vw, 42px);
-      line-height: 1.05;
-      letter-spacing: 0;
-      font-weight: 900;
-    }
-
-    .brand p {
-      margin: 8px 0 0;
-      color: var(--muted);
-      font-size: 14px;
-      font-weight: 300;
-    }
-
-    .eyebrow {
-      display: inline-block;
-      font-family: "DM Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      font-size: 10px;
-      letter-spacing: 0.22em;
-      color: var(--accent);
-      text-transform: uppercase;
-      border: 1px solid rgba(88, 225, 193, 0.30);
-      background: rgba(88, 225, 193, 0.025);
-      padding: 6px 14px;
-      border-radius: var(--radius);
-      margin-bottom: 14px;
-    }
-
-    .toolbar {
-      display: flex;
-      gap: 8px;
-      justify-content: flex-end;
-      flex-wrap: wrap;
-    }
-
-    .toolbar button {
-      width: auto;
-      min-width: 58px;
-      padding: 0 12px;
-      display: inline-grid;
-      place-items: center;
-      font-size: 14px;
-    }
-
-    .icon-button {
-      width: 38px;
-      padding: 0;
-      display: inline-grid;
-      place-items: center;
-      font-size: 17px;
-    }
-
-    .primary {
-      background: var(--accent);
-      color: var(--bg);
-      border-color: var(--accent);
-      font-weight: 900;
-    }
-
-    .primary:hover {
-      background: var(--accent-2);
-      border-color: var(--accent-2);
-      color: var(--bg);
-    }
-
-    .danger:hover {
-      border-color: rgba(246, 182, 107, 0.55);
-      color: var(--danger);
-    }
-
-    .quick-add {
-      background: rgba(19, 22, 26, 0.88);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 14px;
-      display: grid;
-      grid-template-columns: minmax(220px, 2.3fr) minmax(150px, 0.9fr) minmax(150px, 0.9fr) 42px;
-      gap: 10px;
-      position: sticky;
-      top: 10px;
-      z-index: 4;
-      backdrop-filter: blur(14px);
-    }
-
-    .quick-add::before,
-    .stat::before,
-    .quadrant::before,
-    .panel::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      border-top: 1px solid rgba(88, 225, 193, 0.16);
-    }
-
-    .field {
-      display: grid;
-      gap: 5px;
-    }
-
-    label {
-      color: var(--muted);
-      font-size: 12px;
-      letter-spacing: 0.04em;
-    }
-
-    input,
-    textarea,
-    select {
-      width: 100%;
-      border: 1px solid var(--line2);
-      border-radius: var(--radius);
-      background: var(--bg);
-      color: var(--ink);
-      min-height: 38px;
-      padding: 8px 10px;
-    }
-
-    input::placeholder,
-    textarea::placeholder {
-      color: var(--dim);
-    }
-
-    textarea {
-      min-height: 96px;
-      resize: vertical;
-      line-height: 1.5;
-    }
-
-    .stats {
-      margin: 18px 0;
-      display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 10px;
-    }
-
-    .stat {
-      border: 1px solid var(--line);
-      background: rgba(19, 22, 26, 0.84);
-      border-radius: var(--radius);
-      padding: 12px;
-      min-height: 78px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .stat b {
-      display: block;
-      font-size: 24px;
-      line-height: 1;
-      margin-bottom: 8px;
-      color: var(--accent);
-      font-weight: 900;
-      font-family: "DM Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-    }
-
-    .stat span {
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .layout {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 18px;
-      align-items: start;
-    }
-
-    .board {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    .quadrant {
-      border: 1px solid var(--line);
-      background: rgba(19, 22, 26, 0.86);
-      border-radius: var(--radius);
-      min-height: 300px;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .quadrant header,
-    .quadrant summary {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      padding: 13px 14px;
-      border-bottom: 1px solid var(--line);
-      background: rgba(11, 13, 15, 0.28);
-    }
-
-    .quadrant summary {
-      cursor: pointer;
-      list-style: none;
-    }
-
-    .quadrant summary .count,
-    .panel summary .count {
-      margin-left: auto;
-    }
-
-    .quadrant summary::-webkit-details-marker,
-    .panel summary::-webkit-details-marker {
-      display: none;
-    }
-
-    .quadrant summary::after,
-    .panel summary::after {
-      content: "⌃";
-      color: var(--muted);
-      font-family: "DM Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      font-size: 14px;
-    }
-
-    .quadrant:not([open]) summary::after,
-    .panel:not([open]) summary::after {
-      content: "⌄";
-    }
-
-    .quadrant h2 {
-      margin: 0;
-      font-size: 17px;
-      letter-spacing: 0;
-      font-weight: 900;
-    }
-
-    .count {
-      color: var(--muted);
-      font-size: 13px;
-      white-space: nowrap;
-    }
-
-    .q-important_urgent header {
-      border-top: 2px solid var(--danger);
-    }
-
-    .q-important_not_urgent header {
-      border-top: 2px solid var(--accent);
-    }
-
-    .q-urgent_not_important header {
-      border-top: 2px solid var(--gold);
-    }
-
-    .q-not_important_not_urgent header {
-      border-top: 2px solid var(--blue);
-    }
-
-    .q-ongoing {
-      grid-column: 1 / -1;
-      min-height: 0;
-    }
-
-    .q-ongoing header,
-    .q-ongoing summary {
-      border-top: 2px solid var(--rose);
-    }
-
-    .tasks {
-      display: grid;
-      gap: 10px;
-      padding: 12px;
-      min-height: 96px;
-    }
-
-    .empty {
-      color: var(--muted);
-      font-size: 13px;
-      padding: 18px 4px;
-      text-align: center;
-      border: 1px dashed var(--line2);
-      border-radius: var(--radius);
-      background: rgba(11, 13, 15, 0.32);
-    }
-
-    .task {
-      border: 1px solid var(--line);
-      background: rgba(28, 32, 38, 0.84);
-      border-radius: var(--radius);
-      padding: 11px;
-      display: grid;
-      gap: 9px;
-      cursor: grab;
-      transition: border-color 160ms ease, background 160ms ease, opacity 160ms ease, transform 160ms ease;
-    }
-
-    .task:active {
-      cursor: grabbing;
-    }
-
-    .task.dragging {
-      opacity: 0.42;
-      border-color: rgba(88, 225, 193, 0.58);
-    }
-
-    .task.focused {
-      border-color: rgba(88, 225, 193, 0.68);
-      background: linear-gradient(90deg, rgba(88, 225, 193, 0.16), rgba(28, 32, 38, 0.92));
-      box-shadow: inset 3px 0 0 var(--accent), 0 18px 48px rgba(88, 225, 193, 0.08);
-    }
-
-    .task-top {
-      display: flex;
-      gap: 8px;
-      align-items: start;
-      justify-content: space-between;
-    }
-
-    .task-title {
-      margin: 0;
-      font-weight: 700;
-      line-height: 1.35;
-      overflow-wrap: anywhere;
-      color: var(--ink);
-    }
-
-    .drag-mark {
-      color: var(--dim);
-      font-family: "DM Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      font-size: 16px;
-      line-height: 1;
-      padding-top: 2px;
-      user-select: none;
-    }
-
-    .task-meta {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .pill {
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 3px 8px;
-      background: rgba(88, 225, 193, 0.06);
-      color: var(--accent);
-      font-family: "DM Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      letter-spacing: 0.02em;
-    }
-
-    .focus-pill {
-      border-color: rgba(88, 225, 193, 0.45);
-      background: rgba(88, 225, 193, 0.14);
-      color: var(--accent-3);
-    }
-
-    .note {
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.45;
-      overflow-wrap: anywhere;
-    }
-
-    .note a {
-      color: var(--accent-3);
-    }
-
-    .actions {
-      display: flex;
-      gap: 6px;
-      justify-content: flex-end;
-      flex-wrap: wrap;
-      cursor: default;
-    }
-
-    .actions button {
-      width: 34px;
-      min-height: 32px;
-      padding: 0;
-      display: inline-grid;
-      place-items: center;
-    }
-
-    .q-ongoing .tasks {
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    }
-
-    .q-ongoing .task {
-      grid-template-columns: minmax(0, 1fr) auto;
-      align-items: center;
-      gap: 8px;
-      padding: 9px;
-    }
-
-    .q-ongoing .task-top {
-      min-width: 0;
-      align-items: center;
-    }
-
-    .q-ongoing .task-title {
-      font-size: 14px;
-    }
-
-    .q-ongoing .task-meta {
-      display: none;
-    }
-
-    .q-ongoing .note {
-      grid-column: 1 / -1;
-      font-size: 12px;
-      line-height: 1.35;
-    }
-
-    .q-ongoing .actions {
-      grid-column: 2;
-      grid-row: 1;
-      flex-wrap: nowrap;
-    }
-
-    .q-ongoing .actions button {
-      width: 30px;
-      min-height: 30px;
-    }
-
-    .side {
-      display: grid;
-      gap: 14px;
-    }
-
-    .panel {
-      border: 1px solid var(--line);
-      background: rgba(19, 22, 26, 0.86);
-      border-radius: var(--radius);
-      overflow: hidden;
-      position: relative;
-    }
-
-    .panel header,
-    .panel summary {
-      padding: 13px 14px;
-      border-bottom: 1px solid var(--line);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-    }
-
-    .panel summary {
-      cursor: pointer;
-      list-style: none;
-    }
-
-    .panel h2 {
-      margin: 0;
-      font-size: 17px;
-    }
-
-    .history-list {
-      display: grid;
-      gap: 10px;
-      padding: 12px;
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-      max-height: 420px;
-      overflow: auto;
-    }
-
-    .history-item {
-      border: 1px solid var(--line);
-      background: rgba(28, 32, 38, 0.84);
-      border-radius: var(--radius);
-      padding: 9px;
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 6px 8px;
-      align-items: center;
-    }
-
-    .history-title {
-      font-weight: 700;
-      line-height: 1.35;
-      overflow-wrap: anywhere;
-    }
-
-    .history-meta {
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.45;
-      grid-column: 1 / -1;
-    }
-
-    .history-actions {
-      display: flex;
-      gap: 6px;
-      justify-content: flex-end;
-      grid-column: 2;
-      grid-row: 1;
-    }
-
-    .history-actions button {
-      width: 30px;
-      min-height: 30px;
-      padding: 0;
-    }
-
-    dialog {
-      width: min(560px, calc(100vw - 28px));
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 0;
-      background: var(--bg2);
-      color: var(--ink);
-      box-shadow: 0 24px 90px rgba(0, 0, 0, 0.46);
-    }
-
-    dialog::backdrop {
-      background: rgba(0, 0, 0, 0.62);
-    }
-
-    .modal {
-      padding: 16px;
-      display: grid;
-      gap: 12px;
-    }
-
-    .modal header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 4px;
-    }
-
-    .modal h2 {
-      margin: 0;
-      font-size: 20px;
-    }
-
-    .modal-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .modal-actions {
-      display: flex;
-      gap: 8px;
-      justify-content: flex-end;
-      margin-top: 4px;
-    }
-
-    .toast {
-      position: fixed;
-      left: 50%;
-      bottom: 22px;
-      transform: translateX(-50%) translateY(12px);
-      background: var(--accent);
-      color: var(--bg);
-      padding: 10px 14px;
-      border-radius: var(--radius);
-      opacity: 0;
-      pointer-events: none;
-      transition: 180ms ease;
-      z-index: 20;
-      font-size: 14px;
-      font-weight: 900;
-      max-width: calc(100vw - 32px);
-      text-align: center;
-    }
-
-    .toast.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
-
-    .file-input {
-      display: none;
-    }
-
-    @media (max-width: 1080px) {
-      .side {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 820px) {
-      .app {
-        width: min(100vw - 32px, 760px);
-        padding-top: 16px;
-      }
-
-      .topbar {
-        grid-template-columns: 1fr;
-        align-items: start;
-      }
-
-      .toolbar {
-        justify-content: flex-start;
-      }
-
-      .quick-add {
-        position: static;
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .quick-add .field:first-child {
-        grid-column: 1 / -1;
-      }
-
-      .quick-add button {
-        width: 100%;
-      }
-
-      .stats,
-      .board {
-        grid-template-columns: 1fr;
-      }
-
-      .modal-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 520px) {
-      .quick-add {
-        grid-template-columns: 1fr;
-      }
-
-      .brand h1 {
-        font-size: 28px;
-      }
-    }
-  </style>
-<link rel="stylesheet" href="mobile-fixes.css?v=20260621" />
   <script src="theme-controller.js?v=20260813b"></script>
-  <link rel="stylesheet" href="site-theme.css?v=20260924" />
+  <link rel="stylesheet" href="todo-tokens.css?v=20261112">
+  <link rel="stylesheet" href="home-theme.css?v=20260813">
+  <link rel="stylesheet" href="todo.css?v=20261112">
 </head>
 <body class="page-todo">
   <main class="app">
     <section class="topbar" aria-label="顶部">
       <div class="brand">
-        <div class="eyebrow">AI NATIVE / SOLO COMPANY / TASK SYSTEM</div>
-        <h1>乔不不斯的一人公司待办</h1>
+        <div class="eyebrow">QIAOBOOSI / PERSONAL WORKSPACE</div>
+        <h1>一人公司待办<span>乔不不斯 · 待办工作台</span></h1>
         <p id="statusLine">准备中…</p>
       </div>
-      <div class="toolbar" aria-label="数据操作">
-        <button type="button" id="exportBtn" title="下载备份" aria-label="下载备份">下载</button>
-        <button type="button" id="importBtn" title="上传恢复" aria-label="上传恢复">上传</button>
-        <button type="button" id="resetBtn" title="载入初始待办" aria-label="载入初始待办">↺</button>
-        <input class="file-input" id="importFile" type="file" accept="application/json,.json">
+      <div class="toolbar" aria-label="工作台设置">
+        <button class="theme-toggle" type="button" data-theme-toggle><span class="theme-toggle__track" aria-hidden="true"></span><span class="theme-toggle__label" data-theme-label>DARK</span></button>
+        <details class="data-menu"><summary>数据管理 <span aria-hidden="true">⌄</span></summary><div class="data-menu-content">
+        <button type="button" id="exportBtn" title="下载备份" aria-label="下载备份">下载备份</button>
+        <button type="button" id="importBtn" title="上传恢复" aria-label="上传恢复">从备份恢复</button>
+        <button type="button" id="resetBtn" title="载入初始待办" aria-label="载入初始待办">载入初始待办</button>
+        </div></details>
+        <input hidden class="file-input" id="importFile" type="file" accept="application/json,.json">
       </div>
     </section>
 
     <form class="quick-add" id="addForm">
       <div class="field">
-        <label for="newTitle">待办</label>
-        <input id="newTitle" autocomplete="off" placeholder="写入一个新任务">
+        <label for="newTitle">下一步，准备做什么？</label>
+        <input id="newTitle" autocomplete="off" placeholder="写下具体行动，按 Enter 添加" maxlength="300">
       </div>
       <div class="field">
         <label for="newQuadrant">象限</label>
@@ -777,12 +39,17 @@
       </div>
       <div class="field">
         <label for="newCategory">主题</label>
-        <input id="newCategory" list="categoryList" autocomplete="off" placeholder="业务主题">
+        <input id="newCategory" list="categoryList" autocomplete="off" placeholder="可选，如：内容创作">
       </div>
-      <button class="primary" type="submit" title="新增" aria-label="新增">＋</button>
+      <button class="primary" type="submit" title="新增任务" aria-label="新增任务">＋ 添加任务</button>
     </form>
 
     <datalist id="categoryList"></datalist>
+
+    <section class="focus-section" aria-labelledby="focusHeading">
+      <div class="section-heading"><div><span class="section-kicker">TODAY</span><h2 id="focusHeading">今日聚焦 <span id="focusCount">0 / 3</span></h2></div><p>先把最重要的三件事，向前推进一步。</p></div>
+      <div id="focusList" class="focus-list"></div>
+    </section>
 
     <section class="stats" aria-label="统计">
       <div class="stat"><b id="activeCount">0</b><span>进行中</span></div>
@@ -792,10 +59,21 @@
       <div class="stat"><b id="doneCount">0</b><span>已完成</span></div>
     </section>
 
+    <section class="board-toolbar" aria-label="筛选待办">
+      <div class="view-switch" role="group" aria-label="任务视图">
+        <button type="button" data-view="all" aria-pressed="true">全部待办</button>
+        <button type="button" data-view="focus" aria-pressed="false">今日聚焦</button>
+      </div>
+      <div class="filters">
+        <label class="search-field"><span class="sr-only">搜索待办</span><input type="search" id="searchInput" placeholder="搜索任务、备注…" aria-keyshortcuts="/"></label>
+        <label><span class="sr-only">筛选主题</span><select id="categoryFilter"><option value="">全部主题</option></select></label>
+      </div>
+    </section>
+    <div class="board-caption"><span id="resultCount" role="status" aria-live="polite"></span><button type="button" id="clearFilters" hidden>清除筛选</button><span class="board-help">点击标题编辑 · 拖动卡片调整象限</span></div>
     <section class="layout">
       <div class="board" id="board" aria-label="待办面板"></div>
       <aside class="side">
-        <details class="panel" open>
+        <details class="panel" id="historyPanel">
           <summary>
             <h2>完成历史</h2>
             <span class="count" id="historyCount">0 条</span>
@@ -806,10 +84,10 @@
     </section>
   </main>
 
-  <dialog id="editDialog">
+  <dialog id="editDialog" aria-labelledby="editHeading">
     <form class="modal" id="editForm" method="dialog">
       <header>
-        <h2>编辑待办</h2>
+        <h2 id="editHeading">编辑待办</h2>
         <button class="icon-button" value="cancel" type="button" id="closeEdit" title="关闭" aria-label="关闭">×</button>
       </header>
       <input type="hidden" id="editId">
@@ -819,7 +97,7 @@
       </div>
       <div class="modal-grid">
         <div class="field">
-          <label for="editQuadrant">象限</label>
+          <label for="editQuadrant">移动到象限</label>
           <select id="editQuadrant"></select>
         </div>
         <div class="field">
@@ -872,6 +150,10 @@
     let cloudTimer = null;
     let state = loadState();
     let toastTimer = null;
+    let undoAction = null;
+    const view = { query: "", category: "", mode: "all", ongoingOpen: true };
+    // Local previews never contact or modify the production task store.
+    const isLocalPreview = ["localhost", "127.0.0.1", ""].includes(location.hostname);
 
     const els = {
       board: document.querySelector("#board"),
@@ -1035,7 +317,7 @@
       state.updatedAt = nowIso();
       // 本地始终保留一份，作为离线兜底
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-      queueCloudSave();
+      if (!isLocalPreview) queueCloudSave();
       render();
       if (message) showToast(message);
     }
@@ -1130,11 +412,39 @@
       }
     }
 
-    function showToast(message) {
+    function showToast(message, undo = null) {
       clearTimeout(toastTimer);
-      els.toast.textContent = message;
+      undoAction = undo;
+      els.toast.replaceChildren(document.createTextNode(message));
+      if (undo) {
+        const button = document.createElement("button");
+        button.textContent = "撤销";
+        button.type = "button";
+        button.addEventListener("click", () => {
+          const action = undoAction;
+          undoAction = null;
+          if (action) action();
+        });
+        els.toast.append(button);
+      }
       els.toast.classList.add("show");
-      toastTimer = setTimeout(() => els.toast.classList.remove("show"), 1800);
+      toastTimer = setTimeout(() => {
+        els.toast.classList.remove("show");
+        undoAction = null;
+      }, undo ? 10000 : 3500);
+    }
+
+    function saveWithUndo(message, previousTask) {
+      saveState();
+      showToast(message, () => {
+        const index = state.tasks.findIndex(task => task.id === previousTask.id);
+        const restored = { ...previousTask, updatedAt: nowIso() };
+        // Respect the focus cap if other tasks were focused after this action.
+        if (restored.focused && activeTasks().filter(task => task.id !== restored.id && task.focused).length >= 3) restored.focused = false;
+        if (index < 0) state.tasks.push(restored);
+        else state.tasks[index] = restored;
+        saveState("已撤销");
+      });
     }
 
     function setupOptions() {
@@ -1161,15 +471,27 @@
     }
 
     function render() {
+      const focusedElement = document.activeElement;
+      const focusedCard = focusedElement?.closest("[data-id]");
+      const focusedAction = focusedElement?.dataset.action;
+      const focusedRegion = focusedElement?.closest("#focusList, #board, #historyList")?.id;
+      const focusedId = focusedCard?.dataset.id;
       renderCategoryList();
       renderBoard();
+      renderFocus();
       renderHistory();
       renderStats();
       renderStatusLine();
+      if (focusedId && focusedAction && focusedRegion) {
+        const region = document.getElementById(focusedRegion);
+        const replacement = [...region.querySelectorAll("[data-id]")].find(card => card.dataset.id === focusedId);
+        const target = replacement?.querySelector(`[data-action="${focusedAction}"]`) || region.querySelector("button[data-action]");
+        if (target) target.focus({ preventScroll: true });
+      }
     }
 
     function renderStatusLine() {
-      const prefix = cloudStatus === "synced"
+      const prefix = isLocalPreview ? "本地预览 · 数据仅保存在此浏览器" : cloudStatus === "synced"
         ? "云端已同步"
         : cloudStatus === "syncing"
           ? "云端同步中…"
@@ -1182,66 +504,73 @@
     function renderCategoryList() {
       const categories = [...new Set(state.tasks.map(task => task.category).filter(Boolean))].sort();
       els.categoryList.innerHTML = categories.map(category => `<option value="${escapeHtml(category)}"></option>`).join("");
-      if (!els.newCategory.value && categories.length) {
-        els.newCategory.placeholder = categories[0];
-      }
+      const filter = document.querySelector("#categoryFilter");
+      filter.innerHTML = '<option value="">全部主题</option>' + categories.map(category => `<option value="${escapeHtml(category)}">${escapeHtml(category)}</option>`).join("");
+      if (view.category && !categories.includes(view.category)) view.category = "";
+      filter.value = view.category;
     }
 
+    function matchesFilters(task) {
+      return (!view.category || task.category === view.category) &&
+        (!view.query || [task.title, task.category, task.note].join(" ").toLocaleLowerCase().includes(view.query.toLocaleLowerCase())) &&
+        (view.mode !== "focus" || task.focused);
+    }
+
+    function filtersActive() { return Boolean(view.query || view.category || view.mode !== "all"); }
+
     function renderBoard() {
-      const active = activeTasks();
-      els.board.innerHTML = quadrants.map(quadrant => {
+      const active = activeTasks().filter(matchesFilters);
+      document.querySelector("#resultCount").textContent = filtersActive() ? `找到 ${active.length} 项待办` : `共 ${active.length} 项待办`;
+      document.querySelector("#clearFilters").hidden = !filtersActive();
+      document.querySelector(".board-help").textContent = filtersActive() ? "点击标题编辑 · 清除筛选后可拖动排序" : "点击标题编辑 · 拖动卡片调整象限";
+      document.querySelectorAll("[data-view]").forEach(button => button.setAttribute("aria-pressed", String(button.dataset.view === view.mode)));
+      const hints = { important_urgent: "优先处理", important_not_urgent: "留出时间，持续推进", urgent_not_important: "尽量简化或委托", not_important_not_urgent: "暂缓，留给以后", ongoing: "保持节奏，长期积累" };
+      const orderedQuadrants = [...quadrants.slice(1), quadrants[0]];
+      els.board.innerHTML = orderedQuadrants.map(quadrant => {
         const tasks = sortedTasks(active.filter(task => task.quadrant === quadrant.id));
-        if (quadrant.id === "ongoing") {
-          return `
-            <details class="quadrant q-${quadrant.id}" data-quadrant="${quadrant.id}" open>
-              <summary>
-                <h2>${quadrant.label}</h2>
-                <span class="count">${tasks.length} 条</span>
-              </summary>
-              <div class="tasks" data-dropzone="${quadrant.id}">
-                ${tasks.length ? tasks.map(renderTask).join("") : `<div class="empty">暂无任务</div>`}
-              </div>
-            </details>
-          `;
-        }
-        return `
-          <section class="quadrant q-${quadrant.id}" data-quadrant="${quadrant.id}">
-            <header>
-              <h2>${quadrant.label}</h2>
-              <span class="count">${tasks.length} 条</span>
-            </header>
-            <div class="tasks" data-dropzone="${quadrant.id}">
-              ${tasks.length ? tasks.map(renderTask).join("") : `<div class="empty">暂无任务</div>`}
-            </div>
-          </section>
-        `;
+        const ongoing = quadrant.id === "ongoing";
+        const tag = ongoing ? "details" : "section";
+        const header = ongoing ? "summary" : "header";
+        return `<${tag} class="quadrant q-${quadrant.id}" data-quadrant="${quadrant.id}" ${ongoing && view.ongoingOpen ? "open" : ""}>
+          <${header}><div><h2>${quadrant.label} <span class="count">${tasks.length}</span></h2><p>${hints[quadrant.id]}</p></div>
+          ${ongoing ? "" : `<button type="button" class="add-in-quadrant" data-add="${quadrant.id}" aria-label="添加到${quadrant.label}" title="添加到${quadrant.label}">＋</button>`}</${header}>
+          <div class="tasks" data-dropzone="${quadrant.id}">
+            ${tasks.length ? tasks.map(renderTask).join("") : `<div class="empty">${filtersActive() ? "此象限没有匹配的任务" : "暂时没有待办"}<button type="button" data-add="${quadrant.id}">＋ 添加任务</button></div>`}
+          </div>
+        </${tag}>`;
       }).join("");
+      els.board.querySelector("details").addEventListener("toggle", event => { view.ongoingOpen = event.target.open; });
+    }
+
+    function renderFocus() {
+      const tasks = sortedTasks(activeTasks().filter(task => task.focused));
+      document.querySelector("#focusCount").textContent = tasks.length + " / 3";
+      document.querySelector("#focusList").innerHTML = tasks.map((task, index) => `
+        <article class="focus-card" data-id="${escapeHtml(task.id)}">
+          <span class="focus-number">0${index + 1}</span>
+          <div><button class="task-title" type="button" data-action="edit">${escapeHtml(task.title)}</button><p>${escapeHtml(task.category)}</p></div>
+          <button class="complete-button" type="button" data-action="complete" aria-label="完成：${escapeHtml(task.title)}" title="标记完成">✓</button>
+        </article>`).join("") + Array.from({ length: Math.max(0, 3 - tasks.length) }, (_, index) => `
+        <button type="button" class="focus-placeholder" data-pick-focus><span class="focus-number">0${tasks.length + index + 1}</span><span>选一件今天要推进的事<small>点击任务上的 ☆ 加入聚焦</small></span><span aria-hidden="true">＋</span></button>`).join("");
     }
 
     function renderTask(task) {
       const note = linkify(task.note);
-      return `
-        <article class="task${task.focused ? " focused" : ""}" data-id="${task.id}" draggable="true">
-          <div class="task-top">
-            <div>
-              <p class="task-title">${escapeHtml(task.title)}</p>
-              ${task.focused ? `<span class="pill focus-pill">今日聚焦</span>` : ""}
-            </div>
-            <span class="drag-mark" title="拖拽排序">⋮⋮</span>
+      return `<article class="task${task.focused ? " focused" : ""}" data-id="${escapeHtml(task.id)}" draggable="${!filtersActive()}">
+          <button class="complete-button" type="button" data-action="complete" title="标记完成" aria-label="完成：${escapeHtml(task.title)}">✓</button>
+          <div class="task-body">
+            <button class="task-title" type="button" data-action="edit" title="编辑任务">${escapeHtml(task.title)}</button>
+            <div class="task-meta"><span class="pill">${escapeHtml(task.category)}</span>${task.focused ? '<span class="focus-pill">今日聚焦</span>' : ""}<span title="最近更新">${formatDate(task.updatedAt)}</span></div>
+            ${note ? `<div class="note">${note}</div>` : ""}
           </div>
-          <div class="task-meta">
-            <span class="pill">${escapeHtml(task.category)}</span>
-            <span class="pill">${formatDate(task.updatedAt)}</span>
-          </div>
-          ${note ? `<div class="note">${note}</div>` : ""}
           <div class="actions">
-            <button type="button" data-action="complete" title="完成" aria-label="完成">✓</button>
-            <button type="button" data-action="focus" title="今日聚焦" aria-label="今日聚焦">◆</button>
-            <button type="button" data-action="edit" title="编辑" aria-label="编辑">✎</button>
-            <button type="button" class="danger" data-action="delete" title="删除" aria-label="删除">×</button>
+            <button type="button" data-action="focus" aria-pressed="${task.focused}" title="${task.focused ? "移出今日聚焦" : "加入今日聚焦"}" aria-label="${task.focused ? "移出今日聚焦" : "加入今日聚焦"}：${escapeHtml(task.title)}">${task.focused ? "★" : "☆"}</button>
+            <details class="task-menu"><summary aria-label="更多操作：${escapeHtml(task.title)}" title="更多操作">⋯</summary><div class="task-menu-content">
+              <button type="button" data-action="edit">编辑 / 移动</button>
+              <button type="button" class="danger" data-action="delete">删除任务</button>
+            </div></details>
           </div>
-        </article>
-      `;
+        </article>`;
     }
 
     function renderHistory() {
@@ -1338,12 +667,13 @@
       if (!task) return;
 
       const action = button.dataset.action;
+      const previousTask = { ...task };
       if (action === "complete") {
         task.status = "completed";
         task.focused = false;
         task.completedAt = nowIso();
         touchTask(task);
-        saveState("已完成");
+        saveWithUndo("已完成，向前一步。", previousTask);
       }
 
       if (action === "focus") {
@@ -1365,14 +695,14 @@
         task.completedAt = null;
         task.order = nextOrderForQuadrant(task.quadrant, true);
         touchTask(task);
-        saveState("已恢复");
+        saveWithUndo("已恢复到待办", previousTask);
       }
 
       if (action === "delete") {
         const ok = confirm("删除「" + task.title + "」？");
         if (!ok) return;
         state.tasks = state.tasks.filter(item => item.id !== task.id);
-        saveState("已删除");
+        saveWithUndo("任务已删除", previousTask);
       }
     }
 
@@ -1388,9 +718,13 @@
       }, { offset: Number.NEGATIVE_INFINITY, element: null }).element;
     }
 
+    let dragCommitted = false;
+    let draggingId = null;
     function handleDragStart(event) {
       const card = event.target.closest(".task");
-      if (!card || event.target.closest("button, input, select, textarea, a")) return;
+      if (!card || filtersActive() || event.target.closest("button, input, select, textarea, a, summary")) { event.preventDefault(); return; }
+      dragCommitted = false;
+      draggingId = card.dataset.id;
       event.dataTransfer.effectAllowed = "move";
       event.dataTransfer.setData("text/plain", card.dataset.id);
       card.classList.add("dragging");
@@ -1399,6 +733,8 @@
     function handleDragEnd(event) {
       const card = event.target.closest(".task");
       if (card) card.classList.remove("dragging");
+      if (!dragCommitted) renderBoard();
+      draggingId = null;
     }
 
     function handleDragOver(event) {
@@ -1422,8 +758,9 @@
 
     function handleDrop(event) {
       const zone = event.target.closest("[data-dropzone]");
-      if (!zone) return;
+      if (!zone || !draggingId || !els.board.querySelector(".task.dragging")) return;
       event.preventDefault();
+      dragCommitted = true;
       persistBoardOrder();
       saveState("排序已保存");
     }
@@ -1453,16 +790,49 @@
       const task = createTask(
         title,
         els.newQuadrant.value,
-        els.newCategory.value || els.newCategory.placeholder || "未归类",
+        els.newCategory.value.trim() || "未归类",
         "",
         nextOrderForQuadrant(els.newQuadrant.value, true)
       );
       state.tasks.push(task);
       els.newTitle.value = "";
-      saveState("已新增");
+      clearFilters();
+      if (task.quadrant === "ongoing") view.ongoingOpen = true;
+      saveState("已添加任务");
+      els.newTitle.focus();
     });
 
-    els.board.addEventListener("click", handleTaskAction);
+    function clearFilters() {
+      view.query = ""; view.category = ""; view.mode = "all";
+      document.querySelector("#searchInput").value = "";
+      document.querySelector("#categoryFilter").value = "";
+      renderBoard();
+    }
+    document.querySelector("#searchInput").addEventListener("input", event => { view.query = event.target.value.trim(); renderBoard(); });
+    document.querySelector("#categoryFilter").addEventListener("change", event => { view.category = event.target.value; renderBoard(); });
+    document.querySelector("#clearFilters").addEventListener("click", clearFilters);
+    document.querySelectorAll("[data-view]").forEach(button => button.addEventListener("click", () => { view.mode = button.dataset.view; renderBoard(); }));
+    document.querySelector("#focusList").addEventListener("click", event => {
+      handleTaskAction(event);
+      if (event.target.closest("[data-pick-focus]")) {
+        clearFilters();
+        const star = els.board.querySelector('[data-action="focus"][aria-pressed="false"]');
+        if (star) { star.scrollIntoView({ block: "center", behavior: "smooth" }); star.focus({ preventScroll: true }); }
+        else { els.newTitle.focus(); showToast("先添加一项待办，再加入今日聚焦"); }
+      }
+    });
+    els.board.addEventListener("click", event => {
+      handleTaskAction(event);
+      const addButton = event.target.closest("[data-add]");
+      if (addButton) { els.newQuadrant.value = addButton.dataset.add; els.newTitle.focus(); els.newTitle.scrollIntoView({ block: "center", behavior: "smooth" }); }
+    });
+    document.addEventListener("keydown", event => {
+      if (event.key === "/" && !event.metaKey && !event.ctrlKey && !event.altKey && !els.editDialog.open && !event.target.closest('input, textarea, select, [contenteditable="true"]')) {
+        event.preventDefault(); document.querySelector("#searchInput").focus();
+      }
+      if (event.key === "Escape") document.querySelectorAll(".data-menu[open], .task-menu[open]").forEach(menu => { menu.open = false; menu.querySelector("summary").focus(); });
+    });
+    document.addEventListener("click", event => document.querySelectorAll(".data-menu[open], .task-menu[open]").forEach(menu => { if (!menu.contains(event.target)) menu.open = false; }));
     els.board.addEventListener("dragstart", handleDragStart);
     els.board.addEventListener("dragend", handleDragEnd);
     els.board.addEventListener("dragover", handleDragOver);
@@ -1520,7 +890,7 @@
         if (!imported || !Array.isArray(imported.tasks)) {
           throw new Error("Invalid JSON");
         }
-        const ok = confirm("上传备份会替换当前本地待办，继续？");
+        const ok = confirm("恢复备份将替换当前待办，并同步到云端。建议先下载备份，继续？");
         if (!ok) return;
         state = {
           version: imported.version || 1,
@@ -1537,16 +907,16 @@
     });
 
     els.resetBtn.addEventListener("click", () => {
-      const ok = confirm("用初始待办替换当前本地数据？");
+      const ok = confirm("初始待办将替换当前所有待办，并同步到云端。建议先下载备份，继续？");
       if (!ok) return;
       state = createSeedState();
       saveState("已载入初始待办");
     });
 
     setupOptions();
+    els.newQuadrant.value = "important_urgent";
     render();
-    syncFromCloud();
-    showToast("待办已加载");
+    if (!isLocalPreview) syncFromCloud();
   </script>
 </body>
 </html>
