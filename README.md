@@ -29,3 +29,21 @@ python3 scripts/export-voyage-offline.py /path/to/voyage-offline.html
 资料页与文章正文使用 `media/optimized/` 下按内容命名的 WebP；图解和二维码采用原分辨率无损压缩，头像采用高质量压缩。原始图片与查看原图链接保留。页面图片按阅读位置加载，并预留尺寸防止跳动。
 
 发布配置对公开 HTML、CSS、JS、JSON 和 SVG 开启传输压缩与缓存校验；按内容命名的图片长期缓存，更新图片时会自动使用新地址。
+
+
+## 搜索与 AI 阅读入口（2026-11-13）
+
+新增 `/guides/` 起步指南、作者与公开案例说明；`/read/` 提供现有文章的完整静态正文。既有正文源文件不变。修改现有 `articles/data.js` / `articles/content/*.js` 或指南源 `scripts/discovery/guides.json` 后，执行：
+
+```sh
+python3 scripts/build-discovery.py
+python3 scripts/check-discovery.py
+```
+
+提交生成的页面、`sitemap.xml`、`robots.txt` 和 manifest。部署也会运行构建与验证。网站地图采用公开地址白名单，不包含 CRM、待办、内部脚本或验证文件。既有文章查询地址在主站 301 到完整阅读页；未知地址返回真实 404。
+
+`googlecde840be1546cdf3.html` 是站主 Google Search Console 验证文件，勿移除。IndexNow 验证文件名保存在 `scripts/discovery/indexnow-key-name.txt`，这是公开域名验证标记，不是私密 API 凭据。
+
+部署后 `scripts/discovery/verify-live.py` 检查 47 个公开地址的实际内容、旧文章跳转、404 与抓取规则。部署生成 `search-verification` 工作流附件（保存 14 天）。IndexNow 提交回执只表示接收，不代表收录。
+
+新增汇总访问日志 `/var/log/nginx/qiaoboose-discovery.log` 只记录时间、路径、状态、固定来源类别和声明的爬虫类别，不记录 IP、完整来源网址、查询参数、Cookie 或正文。用 `scripts/discovery/report-traffic.py` 从标准输入读取并汇总。统计单位是请求，不是独立访客；服务页请求不是咨询或成交。真实咨询通过来访者自述和“官网指南”备注另行确认。日志由系统现有 nginx logrotate 管理。

@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /crm-api/
+Disallow: /todo-api/
+Disallow: /server/
+Disallow: /scripts/
+Disallow: /output/
+
+Sitemap: https://qiaoboose.com/sitemap.xml

@@ -14,6 +14,11 @@ jobs:
       - name: Checkout site
         uses: actions/checkout@v4
 
+      - name: Build and verify search pages
+        run: |
+          python3 scripts/build-discovery.py
+          python3 scripts/check-discovery.py
+
       - name: Check ICP footer
         run: grep -q "粤ICP备2026086998号" index.html
 
@@ -88,6 +93,76 @@ jobs:
 
             cp /etc/nginx/conf.d/ability-intake.conf /etc/nginx/conf.d/ability-intake.conf.bak.$(date +%F-%H%M%S)
             cat > /etc/nginx/conf.d/ability-intake.conf <<'"'"'NGINX'"'"'
+          map $http_referer $discovery_ref {
+              default direct-or-other;
+              ~*^https?://(www\.)?google\. search-google;
+              ~*^https?://(www\.)?bing\. search-bing;
+              ~*^https?://(www\.)?baidu\. search-baidu;
+              ~*^https?://(www\.)?chatgpt\.com/ ai-chatgpt;
+              ~*^https?://chat\.openai\.com/ ai-chatgpt;
+              ~*^https?://(www\.)?perplexity\.ai/ ai-perplexity;
+              ~*^https?://gemini\.google\.com/ ai-gemini;
+              ~*^https?://(www\.)?doubao\.com/ ai-doubao;
+              ~*^https?://chat\.deepseek\.com/ ai-deepseek;
+              ~*^https?://(www\.)?kimi\.(com|moonshot\.cn)/ ai-kimi;
+              ~*^https?://(www\.)?qiaoboose\.com/(guides|read)/ site-guides;
+          }
+          map $arg_utm_source $discovery_source {
+              default $discovery_ref;
+              ~*^chatgpt(\.com)?$ ai-chatgpt;
+              ~*^perplexity(\.ai)?$ ai-perplexity;
+          }
+          map $http_user_agent $discovery_bot {
+              default browser-or-other;
+              ~*Qiaoboose-SEO-Check verification;
+              ~*OAI-SearchBot claimed-oai-search;
+              ~*ChatGPT-User claimed-chatgpt-user;
+              ~*Googlebot claimed-googlebot;
+              ~*bingbot claimed-bingbot;
+              ~*Baiduspider claimed-baidu;
+              ~*PerplexityBot claimed-perplexity;
+              ~*GPTBot claimed-gptbot;
+              ~*Bytespider claimed-bytespider;
+          }
+          map $uri $discovery_loggable {
+              default 0;
+              / 1;
+              ~^/(guides|read)/ 1;
+              ~^/[^/]+\.html$ 1;
+              ~^/(resources|latest-event)/ 1;
+              /crm.html 0;
+              /todo.html 0;
+          }
+          log_format discovery escape=json "{\"time\":\"$time_iso8601\",\"path\":\"$uri\",\"status\":\"$status\",\"source\":\"$discovery_source\",\"bot\":\"$discovery_bot\"}";
+          map $arg_id $legacy_article_path {
+              default "";
+              "wx-5446e00ed4e3" "/read/wx-5446e00ed4e3/";
+              "wx-eaaf59b4a851" "/read/wx-eaaf59b4a851/";
+              "wx-2f1e5caac5d9" "/read/wx-2f1e5caac5d9/";
+              "wx-d0e27667d06e" "/read/wx-d0e27667d06e/";
+              "wx-124d85554f3c" "/read/wx-124d85554f3c/";
+              "wx-b832ebc17238" "/read/wx-b832ebc17238/";
+              "wx-a8d873e5c45c" "/read/wx-a8d873e5c45c/";
+              "wx-3b95d79a744b" "/read/wx-3b95d79a744b/";
+              "wx-4d10d1d15b7c" "/read/wx-4d10d1d15b7c/";
+              "wx-286bbbae1dbb" "/read/wx-286bbbae1dbb/";
+              "pub-fa073c3d" "/read/pub-fa073c3d/";
+              "pub-6a49c7c0" "/read/pub-6a49c7c0/";
+              "pub-2e15284f" "/read/pub-2e15284f/";
+              "pub-53941e67" "/read/pub-53941e67/";
+              "pub-116db63b" "/read/pub-116db63b/";
+              "pub-a26dcd97" "/read/pub-a26dcd97/";
+              "pub-0293c580" "/read/pub-0293c580/";
+              "pub-101060b1" "/read/pub-101060b1/";
+              "pub-ea121f8c" "/read/pub-ea121f8c/";
+              "pub-6dccae27" "/read/pub-6dccae27/";
+              "pub-7489aaba" "/read/pub-7489aaba/";
+              "pub-ffdd6db0" "/read/pub-ffdd6db0/";
+              "pub-5dd4fb5a" "/read/pub-5dd4fb5a/";
+              "pub-c2ed3a6b" "/read/pub-c2ed3a6b/";
+              "pub-4790139b" "/read/pub-4790139b/";
+          }
+
           server {
               listen 80;
               server_name qiaoboose.com www.qiaoboose.com intake.qiaoboose.com;
@@ -123,6 +198,21 @@ jobs:
 
               root /var/www/qiaoboose-site;
               index index.html;
+              access_log /var/log/nginx/qiaoboose-discovery.log discovery if=$discovery_loggable;
+
+              location = /robots.txt { try_files $uri =404; default_type text/plain; }
+              location = /sitemap.xml { try_files $uri =404; default_type application/xml; }
+              location = /article.html {
+                  if ($legacy_article_path != "") { return 301 $legacy_article_path; }
+                  try_files $uri =404;
+                  add_header X-Robots-Tag "noindex, follow" always;
+              }
+              location = /crm.html { try_files $uri =404; add_header X-Robots-Tag "noindex, nofollow" always; }
+              location = /todo.html { try_files $uri =404; add_header X-Robots-Tag "noindex, nofollow" always; }
+              location ^~ /scripts/ { return 404; }
+              location ^~ /output/ { return 404; }
+              location ^~ /components/ { return 404; }
+
 
               # The roadshow document stays fresh; content-hashed images are reusable.
               location = /latest-event/voyage.html {
@@ -147,7 +237,7 @@ jobs:
               # Revalidate mutable documents; compress public text assets in transit.
               # API proxies above keep their own behavior.
               location / {
-                  try_files $uri $uri/ /index.html;
+                  try_files $uri $uri/ =404;
                   gzip on;
                   gzip_vary on;
                   gzip_min_length 1024;
@@ -192,3 +282,27 @@ jobs:
             nginx -t
             nginx -s reload
           '
+
+      - name: Verify published search pages
+        run: |
+          mkdir -p /tmp/seo-evidence
+          python3 scripts/discovery/verify-live.py > /tmp/seo-evidence/live-check.json
+
+      - name: Notify IndexNow
+        continue-on-error: true
+        run: python3 scripts/discovery/submit-indexnow.py > /tmp/seo-evidence/indexnow.json
+
+      - name: Collect aggregate discovery baseline
+        env:
+          ALIYUN_HOST: ${{ secrets.ALIYUN_HOST }}
+          ALIYUN_USER: ${{ secrets.ALIYUN_USER }}
+        run: |
+          ssh -i ~/.ssh/aliyun_deploy_key "$ALIYUN_USER@$ALIYUN_HOST" 'cat /var/log/nginx/qiaoboose-discovery.log' | python3 scripts/discovery/report-traffic.py > /tmp/seo-evidence/traffic.json
+
+      - name: Save search verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: search-verification
+          path: /tmp/seo-evidence/
+          retention-days: 14
