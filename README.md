@@ -47,3 +47,5 @@ python3 scripts/check-discovery.py
 部署后 `scripts/discovery/verify-live.py` 检查 47 个公开地址的实际内容、旧文章跳转、404 与抓取规则。部署生成 `search-verification` 工作流附件（保存 14 天）。IndexNow 提交回执只表示接收，不代表收录。
 
 新增汇总访问日志 `/var/log/nginx/qiaoboose-discovery.log` 只记录时间、路径、状态、固定来源类别和声明的爬虫类别，不记录 IP、完整来源网址、查询参数、Cookie 或正文。用 `scripts/discovery/report-traffic.py` 从标准输入读取并汇总。统计单位是请求，不是独立访客；服务页请求不是咨询或成交。真实咨询通过来访者自述和“官网指南”备注另行确认。日志由系统现有 nginx logrotate 管理。
+
+自动验收的所有请求（包括模拟爬虫名称的探测）都附带 `Qiaoboose-SEO-Check` 标记，汇总时单列为 `verificationRequests`。标记修正前的日志可能把模拟探测计入 `claimed-*`；这部分历史计数不能作为真实爬虫访问证据，且不能仅凭 User-Agent 判断爬虫身份。

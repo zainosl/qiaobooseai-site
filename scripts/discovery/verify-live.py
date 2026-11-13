@@ -5,6 +5,8 @@ from pathlib import Path
 root=Path(__file__).resolve().parents[2];base='https://qiaoboose.com'
 m=json.loads((root/'scripts/discovery/manifest.json').read_text())
 def get(path,ua='Qiaoboose-SEO-Check/1.0'):
+    # Keep crawler-name access probes identifiable in the discovery log too.
+    if 'Qiaoboose-SEO-Check/' not in ua:ua+=' Qiaoboose-SEO-Check/1.0'
     req=urllib.request.Request(base+path,headers={'User-Agent':ua})
     try:
         with urllib.request.urlopen(req,timeout=30) as r:return r.status,r.url,dict(r.headers),r.read()
