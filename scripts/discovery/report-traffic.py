@@ -10,6 +10,12 @@ for line in sys.stdin:
     if r.get('bot')!='browser-or-other':bots[r.get('bot','unknown')]+=1;continue
     totals['browserOrOtherRequests']+=1
     if r.get('status')!='200':continue
-    sources[r.get('source','direct-or-other')]+=1;pages[r.get('path','unknown')]+=1
-    if r.get('source')=='site-guides' and r.get('path') in ['/diagnosis.html','/consultation.html','/first-order-sprint.html','/resources/','/calibrator.html']:steps[r['path']]+=1
+    sources[r.get('source','direct-or-other')]+=1
+    path=r.get('path','unknown')
+    # nginx logs the internal index.html URI after directory resolution.
+    if path.endswith('/index.html'):path=path[:-10]
+    if not (path.endswith('/') or path.endswith('.html')):
+        totals['successfulNonPageRequests']+=1;continue
+    totals['successfulPageRequests']+=1;pages[path]+=1
+    if r.get('source')=='site-guides' and path in ['/diagnosis.html','/consultation.html','/first-order-sprint.html','/resources/','/calibrator.html']:steps[path]+=1
 print(json.dumps({'metric':'HTTP requests; not visitors or confirmed consultations','dateCounts':dates,'totals':totals,'sources':sources,'claimedCrawlerRequests':bots,'topPages':dict(pages.most_common(30)),'guideToServiceOrToolRequests':steps,'limits':['User agents and referrers may be absent or spoofed.','Logs collected before the verification-marker fix may include simulated crawlers under claimed-*; do not count these as verified crawler visits.','Bots without a recognized user agent remain in browser-or-other.','A service page request is not a lead or payment.','Confirm consultations manually using the 官网指南 contact note.']},ensure_ascii=False,indent=2))
