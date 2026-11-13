@@ -64,8 +64,8 @@ def page(path,title,summary,body,kind='Article',date=DATE,extra=None):
 def layout(body,sidebar=''):
     return '<div class="reading-layout"><article class="reading-body">'+body+'</article><aside class="reading-side" aria-label="继续阅读">'+(sidebar or '<b>找到适合的下一步</b><a href="/guides/">按问题阅读指南</a><a href="/calibrator.html">先做免费路径自检</a><a href="/guides/case-evidence/">查看公开交付样张</a><a href="/guides/choose-support/">了解服务如何选择</a>')+'</aside></div>'
 
-cards=''.join(f'<a class="guide-card" href="/guides/{g["slug"]}/"><span class="guide-number">0{i+1} / 起步问题</span><h2>{E(g["title"])}</h2><p>{E(g["summary"])}</p></a>' for i,g in enumerate(guides))
-page('/guides/','一人公司与个人事业起步指南','从能力、需求、客户、AI 协作到服务选择。先判断当前卡点，再完成一轮真实验证。', '<div class="guide-grid">'+cards+'</div><section class="next-step"><h2>先看真实材料，再判断是否适合自己</h2><p><a href="/guides/about/">了解乔不不斯</a> · <a href="/guides/case-evidence/">查看公开案例与证据边界</a> · <a href="/read/">阅读完整文章</a></p></section>',kind='CollectionPage')
+cards=''.join(f'<section class="guide-card"><span class="guide-number">0{i+1} / 起步问题</span><h2><a href="/guides/{g["slug"]}/">{E(g["title"])}</a></h2><p>{E(g["summary"])}</p></section>' for i,g in enumerate(guides))
+page('/guides/','一人公司与个人事业起步指南','从能力、需求、客户、AI 协作到服务选择。先判断当前卡点，再完成一轮真实验证。', '<article class="reading-body"><h2>五个起步问题</h2><div class="guide-grid">'+cards+'</div></article><section class="next-step"><h2>先看真实材料，再判断是否适合自己</h2><p><a href="/guides/about/">了解乔不不斯</a> · <a href="/guides/case-evidence/">查看公开案例与证据边界</a> · <a href="/read/">阅读完整文章</a></p></section>',kind='CollectionPage')
 for g in guides:
     body=''.join(f'<section id="step-{i+1}"><h2>{E(h)}</h2>{s}</section>' for i,(h,s) in enumerate(g['sections']))
     body+='<section><h2>依据与延伸阅读</h2><p>本指南依据乔不不斯官网已有公开文章与服务说明整理。以下链接保留完整论述与适用条件。</p><ul>'+''.join(f'<li><a href="{u}">{E(t)}</a></li>' for u,t in g['sources'])+'</ul></section>'
