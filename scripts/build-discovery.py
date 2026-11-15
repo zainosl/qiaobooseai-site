@@ -65,12 +65,18 @@ def layout(body,sidebar=''):
     return '<div class="reading-layout"><article class="reading-body">'+body+'</article><aside class="reading-side" aria-label="继续阅读">'+(sidebar or '<b>找到适合的下一步</b><a href="/guides/">按问题阅读指南</a><a href="/calibrator.html">先做免费路径自检</a><a href="/guides/case-evidence/">查看公开交付样张</a><a href="/guides/choose-support/">了解服务如何选择</a>')+'</aside></div>'
 
 cards=''.join(f'<section class="guide-card"><span class="guide-number">0{i+1} / 起步问题</span><h2><a href="/guides/{g["slug"]}/">{E(g["title"])}</a></h2><p>{E(g["summary"])}</p></section>' for i,g in enumerate(guides))
-page('/guides/','一人公司与个人事业起步指南','从能力、需求、客户、AI 协作到服务选择。先判断当前卡点，再完成一轮真实验证。', '<article class="reading-body"><h2>五个起步问题</h2><div class="guide-grid">'+cards+'</div></article><section class="next-step"><h2>先看真实材料，再判断是否适合自己</h2><p><a href="/guides/about/">了解乔不不斯</a> · <a href="/guides/case-evidence/">查看公开案例与证据边界</a> · <a href="/read/">阅读完整文章</a></p></section>',kind='CollectionPage')
+page('/guides/','一人公司与个人事业起步指南','从能力、需求、客户、AI 协作到服务选择。先判断当前卡点，再完成一轮真实验证。', '<article class="reading-body"><h2>五个起步问题</h2><div class="guide-grid">'+cards+'</div><section><h2>把阅读变成一份可以讨论的方案</h2><p>已经有能力和方向，却说不清具体卖什么？使用<a href="/guides/small-service-template/">小服务说明模板</a>，写清对象、交付、报价与边界，再记录真实反馈。可直接复制或下载填写。</p></section></article><section class="next-step"><h2>先看真实材料，再判断是否适合自己</h2><p><a href="/guides/about/">了解乔不不斯</a> · <a href="/guides/case-evidence/">查看公开案例与证据边界</a> · <a href="/read/">阅读完整文章</a></p></section>',kind='CollectionPage',extra={'dateModified':'2026-11-15'})
 for g in guides:
     body=''.join(f'<section id="step-{i+1}"><h2>{E(h)}</h2>{s}</section>' for i,(h,s) in enumerate(g['sections']))
     body+='<section><h2>依据与延伸阅读</h2><p>本指南依据乔不不斯官网已有公开文章与服务说明整理。以下链接保留完整论述与适用条件。</p><ul>'+''.join(f'<li><a href="{u}">{E(t)}</a></li>' for u,t in g['sources'])+'</ul></section>'
     sidebar='<b>本页阅读路径</b>'+''.join(f'<a href="#step-{i+1}">{i+1}. {E(h)}</a>' for i,(h,_) in enumerate(g['sections']))+'<hr><a href="/guides/">查看其他起步问题</a><a href="/guides/about/">关于作者与服务</a><a href="/guides/start/">带着具体问题联系我</a>'
+    if g['slug'] in ('career-to-business','validate-demand'):
+        sidebar+='<a href="/guides/small-service-template/">填写小服务说明模板</a>'
     page('/guides/'+g['slug']+'/',g['title'],g['summary'],layout(body,sidebar))
+
+template_body=(ROOT/'scripts/discovery/small-service.html').read_text()
+template_side='<b>填写与使用</b><a href="#template">八项填写模板</a><a href="#example">假设示例</a><a href="#feedback">记录真实反馈</a><a href="#questions">常见卡点</a><a href="/guides/small-service-template/worksheet.txt" download="小服务说明模板.txt">下载纯文本模板</a><hr><a href="/guides/start/">带着初稿联系我</a>'
+page('/guides/small-service-template/','如何把经验变成可报价的小服务？附服务说明模板','用八项模板写清服务对象、具体问题、交付、能力依据、时间、费用、边界与联系入口；附假设示例和真实反馈记录，可复制或下载填写。',layout(template_body,template_side),date='2026-11-15')
 
 about='''<section><h2>我主要帮助谁</h2><p>我是乔不不斯，围绕 AI Native 一人公司与个人事业起步持续实践和写作。目前的服务主要面向已有专业经验、能力材料或业务方向，希望进一步验证个人商业路径的人。</p><p>我们一起处理的问题包括：哪些能力可以独立提供价值、它们适合解决谁的什么问题、如何形成一个小产品，以及怎样通过真实沟通和购买反馈决定下一步。</p></section>
 <section><h2>可以从哪里了解我</h2><p><a href="/">官网首页</a>记录了我的职业与转型经历，包括 AI 产品及商业化工作背景、离开职场后的能力拆解和个人业务验证。这些属于本人公开自述。</p><p><a href="/read/">公开文章目录</a>提供完整方法与实践过程。你可以直接阅读论证，再判断是否与自己的处境相关。<a href="/capability-diagnosis-case.html">脱敏案例样张</a>则展示了能力资产与方向评审的交付结构。</p><p>职业阶段的业务成绩、个人业务收入和客户获得的结果是不同口径，应分别判断。本站不将个人经历当作每位客户都能复制的收益承诺。</p></section>

@@ -29,6 +29,11 @@ for path in ['/seo-nonexistent-20261113','/guides/not-a-page/','/scripts/discove
     assert get(path)[0]==404,('expected real 404',path)
 for path in ['/crm.html','/todo.html']:
     status,_,headers,_=get(path);assert status==200 and 'noindex' in headers.get('X-Robots-Tag',''),('tool indexing guard',path)
+downloads=['/guides/small-service-template/worksheet.txt']
+for path in downloads:
+    status,_,headers,data=get(path)
+    assert status==200 and 'text/plain' in headers.get('Content-Type',''),('download response',path,status)
+    assert data==(root/path.lstrip('/')).read_bytes(),('download mismatch',path)
 for ua in ['Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)','Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)','OAI-SearchBot/1.3; +https://openai.com/searchbot','Baiduspider']:
     status,_,_,data=get('/guides/',ua);assert status==200 and '一人公司与个人事业起步指南'.encode() in data,('crawler access',ua)
-print(json.dumps({'pages':results,'robotAndSitemap':'pass','legacyRedirects':len(m['articleIds']),'real404':'pass','privateToolNoindex':'pass','crawlerUserAgentAccess':'pass (simulated requests; not proof of actual crawler visits)'},ensure_ascii=False,indent=2))
+print(json.dumps({'pages':results,'robotAndSitemap':'pass','legacyRedirects':len(m['articleIds']),'real404':'pass','privateToolNoindex':'pass','downloads':downloads,'crawlerUserAgentAccess':'pass (simulated requests; not proof of actual crawler visits)'},ensure_ascii=False,indent=2))
