@@ -41,7 +41,7 @@ def page(path,title,summary,body,kind='Article',date=DATE,extra=None):
     elif '/read/' in path:header=header.replace('data-section="articles"','data-section="articles" aria-current="page"')
     obj={'@type':kind,'@id':url+'#page','url':url,'name':title,'description':summary,'inLanguage':'zh-CN'}
     if kind=='Article':obj.update(headline=title,author={'@id':person['@id']},mainEntityOfPage=url)
-    if date and path.startswith('/guides/'):obj.update(datePublished=DATE,dateModified=DATE)
+    if date and path.startswith('/guides/'):obj.update(datePublished=date,dateModified=date)
     if extra:obj.update(extra)
     graph={'@context':'https://schema.org','@graph':[person,obj,{'@type':'BreadcrumbList','itemListElement':[{'@type':'ListItem','position':1,'name':'首页','item':SITE+'/'},{'@type':'ListItem','position':2,'name':title,'item':url}]}]}
     data=json.dumps(graph,ensure_ascii=False).replace('<','\\u003c')
@@ -56,7 +56,7 @@ def page(path,title,summary,body,kind='Article',date=DATE,extra=None):
 <div class="eyebrow">QIAOBOOSE / SOLO BUSINESS</div><h1>{E(title)}</h1><p class="lead">{E(summary)}</p>
 <div class="reading-meta">作者：<a href="/guides/about/">乔不不斯</a>{' · 日期：'+E(date) if date else ''}</div>
 {body}
-<footer class="reading-footer"><nav><a href="/guides/">起步指南</a><a href="/read/">完整文章目录</a><a href="/guides/about/">关于乔不不斯</a><a href="/guides/case-evidence/">公开案例说明</a><a href="/products.html">产品与服务</a></nav><p>AI Native 一人公司 · 乔不不斯 · <a href="https://beian.miit.gov.cn/" rel="nofollow">粤ICP备2026086998号</a></p></footer></main>
+<footer class="reading-footer"><nav><a href="/guides/">起步指南</a><a href="/read/">完整文章目录</a><a href="/guides/about/">关于乔不不斯</a><a href="/guides/case-evidence/">公开案例说明</a><a href="/guides/start/">带着具体问题联系我</a><a href="/products.html">产品与服务</a></nav><p>AI Native 一人公司 · 乔不不斯 · <a href="https://beian.miit.gov.cn/" rel="nofollow">粤ICP备2026086998号</a></p></footer></main>
 <script src="/site-header.js?v=20261111c"></script></body></html>'''
     file=ROOT/path.lstrip('/')/'index.html';file.parent.mkdir(parents=True,exist_ok=True);file.write_text(document)
     generated.append(path)
@@ -69,7 +69,7 @@ page('/guides/','一人公司与个人事业起步指南','从能力、需求、
 for g in guides:
     body=''.join(f'<section id="step-{i+1}"><h2>{E(h)}</h2>{s}</section>' for i,(h,s) in enumerate(g['sections']))
     body+='<section><h2>依据与延伸阅读</h2><p>本指南依据乔不不斯官网已有公开文章与服务说明整理。以下链接保留完整论述与适用条件。</p><ul>'+''.join(f'<li><a href="{u}">{E(t)}</a></li>' for u,t in g['sources'])+'</ul></section>'
-    sidebar='<b>本页阅读路径</b>'+''.join(f'<a href="#step-{i+1}">{i+1}. {E(h)}</a>' for i,(h,_) in enumerate(g['sections']))+'<hr><a href="/guides/">查看其他起步问题</a><a href="/guides/about/">关于作者与服务</a>'
+    sidebar='<b>本页阅读路径</b>'+''.join(f'<a href="#step-{i+1}">{i+1}. {E(h)}</a>' for i,(h,_) in enumerate(g['sections']))+'<hr><a href="/guides/">查看其他起步问题</a><a href="/guides/about/">关于作者与服务</a><a href="/guides/start/">带着具体问题联系我</a>'
     page('/guides/'+g['slug']+'/',g['title'],g['summary'],layout(body,sidebar))
 
 about='''<section><h2>我主要帮助谁</h2><p>我是乔不不斯，围绕 AI Native 一人公司与个人事业起步持续实践和写作。目前的服务主要面向已有专业经验、能力材料或业务方向，希望进一步验证个人商业路径的人。</p><p>我们一起处理的问题包括：哪些能力可以独立提供价值、它们适合解决谁的什么问题、如何形成一个小产品，以及怎样通过真实沟通和购买反馈决定下一步。</p></section>
@@ -83,6 +83,12 @@ case='''<section><h2>一个已公开的能力资产共创案例</h2><p>官网已
 <section><h2>这份案例支持哪些判断</h2><p>你可以用它检查：服务是否从真实材料出发、能力结论有没有依据、不同方向怎样被比较，以及下一步行动是否足够具体。样张展示了交付结构，便于你判断这类支持是否有助于当前问题。</p><p>样张中的“专家经验产品蓝图诊断”是被保留的优先验证方向；14 天安排是验证计划。不能把计划直接表述成已完成的市场验证，也不能据此推定客户已经成交或获得多少收入。</p></section>
 <section><h2>如何用这份样张评估自己的需求</h2><ul><li>你是否已有可供分析的项目、文章、对话或交付材料？</li><li>你更缺能力证据、方向比较，还是接触客户与报价的行动？</li><li>一份交付物应帮助你做出哪个具体决定？</li></ul><p>如果主要卡在能力与方向，查看<a href="/diagnosis.html">能力资产与商业方向共创</a>；如果方向已经明确，查看<a href="/first-order-sprint.html">首单验证共创</a>，核对是否进入了合适阶段。</p></section>'''
 page('/guides/case-evidence/','能力资产共创案例：从经验材料到商业验证计划','对官网已有脱敏案例的阅读说明：起点、取证过程、能力资产地图、方向评审与验证计划，以及这些材料能证明什么。',layout(case))
+
+start='''<section><h2>先判断眼前最需要解决什么</h2><p>我是乔不不斯。如果你从 AI 回答、搜索或文章来到这里，可以先按当前卡点选择入口，不必先整理一整套资料。</p><ul><li><strong>工作经验很多，但不确定能卖什么：</strong>先看<a href="/guides/career-to-business/">经验转个人事业指南</a>；希望一起梳理真实材料，可了解<a href="/diagnosis.html">能力资产与商业方向共创</a>。</li><li><strong>方向已有，但还没有第一笔付费验证：</strong>先看<a href="/guides/validate-demand/">需求验证指南</a>，再核对<a href="/first-order-sprint.html">首单验证共创</a>的范围。</li><li><strong>只卡在一个具体选择：</strong>可以了解<a href="/consultation.html">单次咨询</a>，先把需要判断的问题说清楚。</li><li><strong>仍在了解阶段：</strong>先用<a href="/calibrator.html">免费路径校准器</a>或阅读<a href="/resources/">公开资料</a>，有明确问题后再联系。</li></ul></section>
+<section><h2>第一次联系，说清这三件事就够了</h2><ol><li><strong>目前的处境：</strong>你主要做过什么，正在尝试什么方向。</li><li><strong>已经做的行动：</strong>例如比较过哪些方向、与谁沟通过、做过什么样张或报价。还没行动也可以如实说。</li><li><strong>最想判断的问题：</strong>例如“先选哪一个方向验证”“这项服务为什么没人愿意买”“怎样把经验变成可交付的小服务”。</li></ol><p>第一次联系不需要提交客户名单、内部合同、完整聊天记录或其他敏感原件。如需分析材料，先确认用途、范围及脱敏方式。</p></section>
+<section><h2>联系乔不不斯</h2><p>微信：<strong>qiaoboose01</strong>。可以复制下面的结构，填写后发送：</p><blockquote><p>我目前在做：____。<br>已经尝试：____。<br>现在最想判断：____。</p><p>我从 ____ 看到你的资料，读了 ____ 页面，希望先确认适合哪种支持。</p></blockquote><p>来源可以如实写 ChatGPT、豆包、DeepSeek、Google、朋友推荐或其他；记不清也没有关系。它用于了解哪些资料帮到了你，不影响是否交流。</p><p>若添加好友时备注空间有限，可先写“官网指南／来源名称”，通过后再补充问题。</p></section>
+<section><h2>合作前需要对齐什么</h2><p>具体服务范围、交付物、双方需要投入的行动、费用和安排，以对应<a href="/products.html">服务页</a>及合作前确认为准。联系和说明问题不等于购买服务。</p><p>现有共创需要你提供真实经历、参与关键行动并作出最终选择。若期待代运营、代获客、代成交或保证收入，先阅读<a href="/guides/about/">服务边界</a>，不要按这些期待直接购买。</p><p><a href="/guides/case-evidence/">公开案例与交付样张</a>能帮助你了解过程和交付结构；验证计划不等于已经成交，也不构成收入承诺。</p></section>'''
+page('/guides/start/','个人事业咨询前准备什么？带着具体问题联系乔不不斯','从当前卡点选择免费资料或共创支持；用处境、已做行动和一个具体问题开始沟通，核对服务范围与公开案例。',layout(start),kind='WebPage',date='2026-11-15')
 
 source_hashes={}
 for m in meta:
