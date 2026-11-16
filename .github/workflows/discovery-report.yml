@@ -30,7 +30,7 @@ jobs:
         run: |
           set -o pipefail
           mkdir -p /tmp/discovery-report
-          ssh -o BatchMode=yes -o ConnectTimeout=20 -i ~/.ssh/aliyun_deploy_key "$ALIYUN_USER@$ALIYUN_HOST" 'cat /var/log/nginx/qiaoboose-discovery.log' | python3 scripts/discovery/report-traffic.py > /tmp/discovery-report/traffic.json
+          ssh -o BatchMode=yes -o ConnectTimeout=20 -i ~/.ssh/aliyun_deploy_key "$ALIYUN_USER@$ALIYUN_HOST" 'set -e; for log in /var/log/nginx/qiaoboose-discovery.log /var/log/nginx/qiaoboose-discovery.log.[0-9]*; do [ -f "$log" ] || continue; case "$log" in *.gz) gzip -cd -- "$log" ;; *) cat -- "$log" ;; esac; done' | python3 scripts/discovery/report-traffic.py > /tmp/discovery-report/traffic.json
       - name: Save aggregate only
         uses: actions/upload-artifact@v4
         with:
