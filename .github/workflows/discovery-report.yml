@@ -1,0 +1,42 @@
+name: Read discovery traffic
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '40 1 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure existing server connection
+        env:
+          ALIYUN_HOST: ${{ secrets.ALIYUN_HOST }}
+          ALIYUN_SSH_KEY: ${{ secrets.ALIYUN_SSH_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "$ALIYUN_SSH_KEY" > ~/.ssh/aliyun_deploy_key
+          chmod 600 ~/.ssh/aliyun_deploy_key
+          ssh-keyscan -H "$ALIYUN_HOST" >> ~/.ssh/known_hosts
+      - name: Read privacy-minimized access summary
+        env:
+          ALIYUN_HOST: ${{ secrets.ALIYUN_HOST }}
+          ALIYUN_USER: ${{ secrets.ALIYUN_USER }}
+        run: |
+          set -o pipefail
+          mkdir -p /tmp/discovery-report
+          ssh -o BatchMode=yes -o ConnectTimeout=20 -i ~/.ssh/aliyun_deploy_key "$ALIYUN_USER@$ALIYUN_HOST" 'cat /var/log/nginx/qiaoboose-discovery.log' | python3 scripts/discovery/report-traffic.py > /tmp/discovery-report/traffic.json
+      - name: Save aggregate only
+        uses: actions/upload-artifact@v4
+        with:
+          name: discovery-traffic
+          path: /tmp/discovery-report/traffic.json
+          retention-days: 35
+      - name: Remove temporary connection key
+        if: always()
+        run: rm -f ~/.ssh/aliyun_deploy_key

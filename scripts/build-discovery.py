@@ -77,7 +77,7 @@ for g in guides:
 
 template_body=(ROOT/'scripts/discovery/small-service.html').read_text()
 template_side='<b>填写与使用</b><a href="#template">八项填写模板</a><a href="#example">假设示例</a><a href="#feedback">记录真实反馈</a><a href="#questions">常见卡点</a><a href="/guides/small-service-template/worksheet.txt" download="小服务说明模板.txt">下载纯文本模板</a><hr><a href="/guides/start/">带着初稿联系我</a>'
-page('/guides/small-service-template/','如何把经验变成可报价的小服务？附服务说明模板','用八项模板写清服务对象、具体问题、交付、能力依据、时间、费用、边界与联系入口；附假设示例和真实反馈记录，可复制或下载填写。',layout(template_body,template_side),date='2026-11-15')
+page('/guides/small-service-template/','如何把经验变成可报价的小服务？附服务说明模板','用八项模板写清服务对象、具体问题、交付、能力依据、时间、费用、边界与联系入口；附假设示例和真实反馈记录，可复制或下载填写。',layout(template_body,template_side),date='2026-11-15',extra={'dateModified':'2026-11-16'})
 
 about='''<section><h2>我主要帮助谁</h2><p>我是乔不不斯，围绕 AI Native 一人公司与个人事业起步持续实践和写作。目前的服务主要面向已有专业经验、能力材料或业务方向，希望进一步验证个人商业路径的人。</p><p>我们一起处理的问题包括：哪些能力可以独立提供价值、它们适合解决谁的什么问题、如何形成一个小产品，以及怎样通过真实沟通和购买反馈决定下一步。</p></section>
 <section><h2>可以从哪里了解我</h2><p><a href="/">官网首页</a>记录了我的职业与转型经历，包括 AI 产品及商业化工作背景、离开职场后的能力拆解和个人业务验证。这些属于本人公开自述。</p><p><a href="/read/">公开文章目录</a>提供完整方法与实践过程。你可以直接阅读论证，再判断是否与自己的处境相关。<a href="/capability-diagnosis-case.html">脱敏案例样张</a>则展示了能力资产与方向评审的交付结构。</p><p>职业阶段的业务成绩、个人业务收入和客户获得的结果是不同口径，应分别判断。本站不将个人经历当作每位客户都能复制的收益承诺。</p></section>

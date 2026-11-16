@@ -49,3 +49,5 @@ python3 scripts/check-discovery.py
 新增汇总访问日志 `/var/log/nginx/qiaoboose-discovery.log` 只记录时间、路径、状态、固定来源类别和声明的爬虫类别，不记录 IP、完整来源网址、查询参数、Cookie 或正文。用 `scripts/discovery/report-traffic.py` 从标准输入读取并汇总。统计单位是请求，不是独立访客；服务页请求不是咨询或成交。真实咨询通过来访者自述和“官网指南”备注另行确认。日志由系统现有 nginx logrotate 管理。
 
 自动验收的所有请求（包括模拟爬虫名称的探测）都附带 `Qiaoboose-SEO-Check` 标记，汇总时单列为 `verificationRequests`。标记修正前的日志可能把模拟探测计入 `claimed-*`；这部分历史计数不能作为真实爬虫访问证据，且不能仅凭 User-Agent 判断爬虫身份。
+
+`Read discovery traffic` 每周一北京时间09:40及手动触发，只读取既有访问日志，不部署网站、不重启服务。汇总附件 `discovery-traffic` 保留35天，包含生成时间及实际日志起止时间。v2 的来源统计只含成功HTML页面请求，下载单列，不能与旧版含资源的来源总数直接比较。未标记的人工验收及AI读取测试无法完全识别，剩余请求不能直接记为真实访客或AI获客。
