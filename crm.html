@@ -15,9 +15,13 @@
   --border:rgba(255,255,255,0.07); --border2:rgba(255,255,255,0.12);
   --accent-dim:rgba(88,225,193,0.10); --accent-soft:rgba(88,225,193,0.05);
   --danger:#F6B66B;
+  --board-column:rgba(19,22,26,.55); --board-card:var(--bg3);
   --font-sans:'Noto Sans SC',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
   --font-mono:'DM Mono',ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
   --radius-sharp:2px; --radius-card:12px;
+}
+html[data-theme="light"]{
+  --board-column:var(--bg3); --board-card:var(--bg2);
 }
 *,*::before,*::after{box-sizing:border-box;}
 html,body{margin:0;min-height:100%;}
@@ -133,7 +137,7 @@ select.filter{cursor:pointer;}
 }
 .upsell-btn:hover{background:var(--accent); color:var(--bg); border-style:solid;}
 .col{
-  background:rgba(19,22,26,.55); border:1px solid var(--border); border-radius:var(--radius-card);
+  background:var(--board-column); border:1px solid var(--border); border-radius:var(--radius-card);
   min-height:120px; display:flex; flex-direction:column;
 }
 .col-head{
@@ -150,7 +154,7 @@ select.filter{cursor:pointer;}
 .col-body.drag-over{background:var(--accent-soft); outline:1px dashed var(--accent);}
 
 .ccard{
-  background:var(--bg3); border:1px solid var(--border); border-radius:var(--radius-sharp);
+  background:var(--board-card); border:1px solid var(--border); border-radius:var(--radius-sharp);
   border-top:1px solid rgba(88,225,193,.16);
   padding:13px 13px 11px; cursor:grab; transition:border-color .15s,transform .15s;
 }
@@ -480,6 +484,7 @@ const STAGES = [
   {key:'biz_run',              track:'delivery', label:'商业模式跑通', dot:'#C4F970'},
   {key:'served',               track:'delivery', label:'服务完成',     dot:'#3BB89A'},
   {key:'aftercare',            track:'delivery', label:'售后中',       dot:'#7AF2D8'},
+  {key:'cancelled',            track:'delivery', label:'已取消',       dot:'#6F7682'},
 ];
 const STAGE_MAP = Object.fromEntries(STAGES.map(s=>[s.key,s]));
 const stagesOf = (track)=>STAGES.filter(s=>s.track===track);
@@ -715,7 +720,7 @@ function render(){
 function renderStats(){
   const total=data.length;
   const inSales=data.filter(c=>!['lost','abandoned','won'].includes(stageOf(c,'sales'))).length;
-  const inDelivery=data.filter(c=>isInDeliveryFlow(c)&&!['served','aftercare'].includes(stageOf(c,'delivery'))).length;
+  const inDelivery=data.filter(c=>isInDeliveryFlow(c)&&!['served','aftercare','cancelled'].includes(stageOf(c,'delivery'))).length;
   const won=data.filter(c=>['won','reactivation'].includes(stageOf(c,'sales'))).length;
   document.getElementById('statRow').innerHTML=
     `<div class="stat"><b>${total}</b><span>客户总数</span></div>
