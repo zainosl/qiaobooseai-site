@@ -73,7 +73,7 @@ for g in guides:
     sidebar='<b>本页阅读路径</b>'+''.join(f'<a href="#step-{i+1}">{i+1}. {E(h)}</a>' for i,(h,_) in enumerate(g['sections']))+'<hr><a href="/guides/">查看其他起步问题</a><a href="/guides/about/">关于作者与服务</a><a href="/guides/start/">带着具体问题联系我</a>'
     if g['slug'] in ('career-to-business','validate-demand'):
         sidebar+='<a href="/guides/small-service-template/">填写小服务说明模板</a>'
-    page('/guides/'+g['slug']+'/',g['title'],g['summary'],layout(body,sidebar))
+    page('/guides/'+g['slug']+'/',g['title'],g['summary'],layout(body,sidebar),extra={'dateModified':g['modified']} if g.get('modified') else None)
 
 template_body=(ROOT/'scripts/discovery/small-service.html').read_text()
 template_side='<b>填写与使用</b><a href="#template">八项填写模板</a><a href="#example">假设示例</a><a href="#feedback">记录真实反馈</a><a href="#questions">常见卡点</a><a href="/guides/small-service-template/worksheet.txt" download="小服务说明模板.txt">下载纯文本模板</a><hr><a href="/guides/start/">带着初稿联系我</a>'
