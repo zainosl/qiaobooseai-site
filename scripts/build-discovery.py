@@ -66,7 +66,21 @@ def layout(body,sidebar=''):
     return '<div class="reading-layout"><article class="reading-body">'+body+'</article><aside class="reading-side" aria-label="继续阅读">'+(sidebar or '<b>找到适合的下一步</b><a href="/guides/">按问题阅读指南</a><a href="/calibrator.html">先做免费路径自检</a><a href="/guides/case-evidence/">查看公开交付样张</a><a href="/guides/choose-support/">了解服务如何选择</a>')+'</aside></div>'
 
 cards=''.join(f'<section class="guide-card"><span class="guide-number">0{i+1} / 起步问题</span><h2><a href="/guides/{g["slug"]}/">{E(g["title"])}</a></h2><p>{E(g["summary"])}</p></section>' for i,g in enumerate(guides))
-page('/guides/','一人公司与个人事业起步指南','从能力、需求、客户、AI 协作到服务选择。先判断当前卡点，再完成一轮真实验证。', '<article class="reading-body"><h2>五个起步问题</h2><div class="guide-grid">'+cards+'</div><section><h2>把阅读变成一份可以讨论的方案</h2><p>已经有能力和方向，却说不清具体卖什么？使用<a href="/guides/small-service-template/">小服务说明模板</a>，写清对象、交付、报价与边界，再记录真实反馈。可直接复制或下载填写。</p></section></article><section class="next-step"><h2>先看真实材料，再判断是否适合自己</h2><p><a href="/guides/about/">了解乔不不斯</a> · <a href="/guides/case-evidence/">查看公开案例与证据边界</a> · <a href="/read/">阅读完整文章</a></p></section>',kind='CollectionPage',extra={'dateModified':'2026-11-15'})
+guides_intro = '''<section id="what-is-a-one-person-business">
+<h2>什么是一人公司？</h2>
+<p>在这份指南里，一人公司指一个人决定服务谁、卖什么、怎样交付，并承担经营结果的一门生意。你可以借助 AI 做资料整理，也可以和他人合作。起步时最值得弄清的是：谁有一个你能解决的问题，他愿意为哪项结果付费？</p>
+</section>
+<section id="first-offer">
+<h2>从工作经验到第一单，怎么试一次？</h2>
+<p>举个假设的例子。你做过项目管理，经常帮同事把延期的任务重新排顺。想用周末做咨询，可以这样试：</p>
+<ol>
+<li><strong>把经验缩成一个能交付的结果。</strong>先服务“下周要上线、还说不清哪些任务会拖期的小团队”。约一次 60 分钟的梳理，会后给对方一张风险清单，列明每个堵点、负责人和下一步。</li>
+<li><strong>找一个遇到过这个问题的人。</strong>约一位带过小团队的前同事，问：“你上次赶上线时，哪件事最晚才发现会拖期？后来怎么解决的？”先听他讲经过，再判断这张清单能不能帮上忙。</li>
+<li><strong>给一次真实报价。</strong>如果对方手上正有类似项目，就写清交付、费用和时间，问他是否愿意按这个范围预约。愿意发排期表，说明他愿意继续讨论；接受报价、约好时间、实际付款，分别记下来。</li>
+</ol>
+<p>对方如果只说“挺有用”，可以追问他现在用什么办法、哪里还费时间，再决定要不要改服务。轮到你自己试时，先用<a href="/guides/small-service-template/">小服务说明模板</a>写出第一版；还不知道去哪找人，就读<a href="/guides/first-customers/">寻找第一批客户的具体做法</a>。</p>
+</section>'''
+page('/guides/','一人公司与个人事业起步指南','了解什么是一人公司。跟着一个项目管理的例子，把工作经验写成可交付的小服务，找到第一位潜在客户，试一次真实报价。', '<article class="reading-body">'+guides_intro+'<h2>五个起步问题</h2><div class="guide-grid">'+cards+'</div><section><h2>把阅读变成一份可以讨论的方案</h2><p>已经有能力和方向，却说不清具体卖什么？使用<a href="/guides/small-service-template/">小服务说明模板</a>，写清对象、交付、报价与边界，再记录真实反馈。可直接复制或下载填写。</p></section></article><section class="next-step"><h2>先看真实材料，再判断是否适合自己</h2><p><a href="/guides/about/">了解乔不不斯</a> · <a href="/guides/case-evidence/">查看公开案例与证据边界</a> · <a href="/read/">阅读完整文章</a></p></section>',kind='CollectionPage',extra={'dateModified':'2026-11-23'})
 for g in guides:
     body=''.join(f'<section id="step-{i+1}"><h2>{E(h)}</h2>{s}</section>' for i,(h,s) in enumerate(g['sections']))
     body+='<section><h2>依据与延伸阅读</h2><p>本指南依据乔不不斯官网已有公开文章与服务说明整理。以下链接保留完整论述与适用条件。</p><ul>'+''.join(f'<li><a href="{u}">{E(t)}</a></li>' for u,t in g['sources'])+'</ul></section>'
