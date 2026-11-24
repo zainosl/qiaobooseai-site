@@ -165,7 +165,21 @@
     font-family: var(--font-mono); font-size: clamp(180px, 32vw, 420px);
     font-weight: 500; color: rgba(88,225,193,0.035); line-height: 1; user-select: none; pointer-events: none; z-index: 0;
   }
-  .hero-inner { position: relative; z-index: 1; max-width: 920px; }
+  .hero-inner {
+    position: relative; z-index: 1;
+    display: grid; grid-template-columns: minmax(0, 1fr) min(20%, 210px);
+    align-items: center; gap: clamp(24px, 4vw, 56px);
+  }
+  .hero-person { text-align: center; }
+  .hero-person img { display: block; width: 100%; height: auto; margin-inline: auto; border-radius: 50%; }
+  .hero-person figcaption { margin-top: 12px; color: var(--muted); font-size: 13px; }
+  .hero-person strong { color: var(--text); font-size: 17px; }
+  @media (max-width: 768px) {
+    .hero-inner { grid-template-columns: 1fr; gap: 28px; }
+    .hero-person { justify-self: start; display: flex; align-items: center; gap: 12px; }
+    .hero-person img { width: 88px; }
+    .hero-person figcaption { margin-top: 0; }
+  }
   .hero-tag {
     display: inline-block; font-family: var(--font-mono);
     font-size: 11px; letter-spacing: 0.2em; color: var(--accent);
@@ -452,21 +466,27 @@
   <section class="hero">
     <div class="hero-deco">1</div>
     <div class="wrap hero-inner">
-      <span class="hero-tag">乔不不斯 · AI Native · 一人公司</span>
-      <h1 class="hero-title">
-        用 <em>1 个月</em>，从 0 到 1 跑通<br>
-        <em>AI Native</em> 一人公司<em>变现</em>
-      </h1>
-      <p class="hero-sub">帮本来能创造更大价值的职场人，先拆清能力、找准方向，再把方向做成产品、完成变现。</p>
-      <div class="hero-actions">
-        <a class="btn btn-primary" href="#services">查看我的服务 →</a>
-        <a class="btn btn-secondary" href="#about-project">了解项目</a>
+      <div>
+        <span class="hero-tag">乔不不斯 · AI Native · 一人公司</span>
+        <h1 class="hero-title">
+          用 <em>1 个月</em>，从 0 到 1 跑通<br>
+          <em>AI Native</em> 一人公司<em>变现</em>
+        </h1>
+        <p class="hero-sub">帮本来能创造更大价值的职场人，先拆清能力、找准方向，再把方向做成产品、完成变现。</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#services">查看我的服务 →</a>
+          <a class="btn btn-secondary" href="#about-project">了解项目</a>
+        </div>
+        <div class="tags">
+          <span class="tag-pill">实现人生使命</span>
+          <span class="tag-pill">享受认知进化</span>
+          <span class="tag-pill">享受自由生活</span>
+        </div>
       </div>
-      <div class="tags">
-        <span class="tag-pill">实现人生使命</span>
-        <span class="tag-pill">享受认知进化</span>
-        <span class="tag-pill">享受自由生活</span>
-      </div>
+      <figure class="hero-person">
+        <img src="latest-event/voyage-assets/portrait.d0c8254bbbbf.webp" alt="乔不不斯的照片" width="512" height="512">
+        <figcaption><strong>乔不不斯</strong> qiaoboose</figcaption>
+      </figure>
     </div>
   </section>
 
