@@ -187,12 +187,16 @@
     padding: 6px 15px; border-radius: 2px; margin-bottom: 34px;
   }
   .hero-title {
-    font-size: clamp(38px, 5.6vw, 76px); font-weight: 900;
-    line-height: 1.08; letter-spacing: -0.035em; margin-bottom: 30px;
+    font-size: clamp(30px, 4.15vw, 60px); font-weight: 900;
+    line-height: 1.15; letter-spacing: -0.035em; margin-bottom: 22px;
+  }
+  @media (max-width: 768px) {
+    .hero .hero-title { font-size: clamp(22px, 7vw, 43px) !important; }
   }
   .hero-title em { color: var(--accent); font-style: normal; }
-  .hero-sub { font-size: clamp(15px, 1.6vw, 20px); font-weight: 300; color: var(--muted); line-height: 1.75; max-width: 600px; margin-bottom: 38px; }
+  .hero-sub { font-size: clamp(15px, 1.6vw, 20px); font-weight: 300; color: var(--muted); line-height: 1.75; max-width: 600px; margin-bottom: 20px; }
   .hero-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 40px; }
+  .hero .hero-actions { margin: 26px 0 0; }
   .tags { display: flex; gap: 12px; flex-wrap: wrap; }
   .tag-pill { font-size: 13px; color: var(--muted); border: 1px solid var(--border2); padding: 6px 18px; border-radius: 2px; letter-spacing: 0.04em; transition: all .3s; }
   .tag-pill:hover { border-color: var(--accent); color: var(--accent); }
@@ -469,18 +473,19 @@
       <div>
         <span class="hero-tag">乔不不斯 · AI Native · 一人公司</span>
         <h1 class="hero-title">
-          用 <em>1 个月</em>，从 0 到 1 跑通<br>
+          帮助职场人，知识服务老师，<br>
+          从 0 到 1 跑通<br>
           <em>AI Native</em> 一人公司<em>变现</em>
         </h1>
-        <p class="hero-sub">帮本来能创造更大价值的职场人，先拆清能力、找准方向，再把方向做成产品、完成变现。</p>
-        <div class="hero-actions">
-          <a class="btn btn-primary" href="#services">查看我的服务 →</a>
-          <a class="btn btn-secondary" href="#about-project">了解项目</a>
-        </div>
+        <p class="hero-sub">帮本来能创造更大价值的职场人和知识服务老师，找准方向，再把方向做成产品、获客、完成变现。</p>
         <div class="tags">
           <span class="tag-pill">实现人生使命</span>
           <span class="tag-pill">享受认知进化</span>
           <span class="tag-pill">享受自由生活</span>
+        </div>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="resources/">领取一人公司起盘资料</a>
+          <a class="btn btn-secondary" href="products.html">查看更多服务</a>
         </div>
       </div>
       <figure class="hero-person">
