@@ -6,7 +6,7 @@
   } = window.ClosedLoop;
   const app = document.getElementById('app');
   const pendingKey = 'closed-loop-pending-report-v4';
-  const state = { screen:'home', answers:{}, record:null, result:null, snapshot:null, receipt:null, failure:null };
+  const state = { screen:'home', answers:{}, record:null, result:null, snapshot:null, receipt:null, failure:null, reviewEditing:false };
   const html = value => String(value ?? '').replace(/[&<>"']/g, ch =>
     ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'})[ch]);
   const string = value => String(value ?? '').trim();
@@ -319,7 +319,10 @@
       possible_business_forms:'考虑的业务形态',problem_solving_style:'遇到卡点时的做法',
       growth_investment_behavior:'过去一年的投入',support_preference:'支持偏好',current_time_focus:'当前时间投入'
     };
-    const background = activeFields('profile',a).map(field => [profileNames[field.id],answerText(field,a)]);
+    const background = activeFields('profile',a).flatMap(field => [
+      [profileNames[field.id],answerText(field,a)],
+      ...(field.extraKey && a[field.extraKey] ? [[field.extra,a[field.extraKey]]] : [])
+    ]).filter(([,value]) => value);
     const facts = [
       ['选方向',q.direction],['市场天花板',q.marketCeiling],['机会窗口',q.marketCycle],['竞争壁垒',q.marketEntry],
       ['细分用户场景',q.userScenario],['选用户',q.demand],['做产品',q.offer],['付款与交付',q.delivery],['获客',q.acquisition],['AI 提效',q.aiUse]
@@ -331,51 +334,73 @@
       expansion:'收入模式',newMode:'正在验证的新模式',operations:'现有经营记录',expansionEvidence:'新模式反馈',
       aiImpact:'影响进度的工作',forecastDecision:'预判后的投入决定'
     };
-    const details = activeFields('evidence',a).filter(field => field.type !== 'text').map(field => [detailNames[field.id] || field.label,answerText(field,a)]);
-    const written = writtenAnswers(a);
-    return `<section class="card confirm-summary">
-      <h2>你亲自填写的内容</h2>
-      ${written.length ? summaryRows(written) : '<p class="note">这次没有填写文字补充。</p>'}
-    </section>
-    <section class="card confirm-summary">
-      <h2>你的背景与业务情况</h2>
-      ${summaryRows([['当前情况',answerText(q.scenario,a)],...background])}
-    </section>
-    <section class="card confirm-summary">
-      <h2>你已经做到哪里</h2>
-      ${summaryRows(facts)}
-    </section>
-    ${details.some(([,value]) => value) ? `<section class="card confirm-summary">
-      <h2>影响判断的事实</h2>
-      ${summaryRows(details)}
-    </section>` : ''}`;
+    const details = activeFields('evidence',a)
+      .map(field => [detailNames[field.id] || field.label,answerText(field,a)])
+      .filter(([,value]) => value);
+    const section = (title,rows,screen,empty = '') => {
+      const action = empty && !rows.length ? '补充' : '修改';
+      return `<section class="card confirm-summary">
+        <div class="confirm-heading"><h2>${title}</h2>
+          <button type="button" class="review-edit" data-action="review-${screen}" aria-label="${action}${title}">${action}</button>
+        </div>${summaryRows(rows) || (empty ? `<p class="note">${empty}</p>` : '')}
+      </section>`;
+    };
+    return [
+      section('当前情况',[['当前情况',answerText(q.scenario,a)],['情况补充',a.context]],'issue'),
+      section('五环进展与 AI 提效',facts,'stage'),
+      ...(details.length ? [section('补核事实',details,'evidence')] : []),
+      section('选填资料',background,'profile','未补充，可直接生成报告。')
+    ].join('');
+  }
+
+  function fieldComplete(field) {
+    const value = state.answers[field.id];
+    return field.type === 'radio' ? Object.hasOwn(field.options,value) : Boolean(string(value));
+  }
+
+  function questionProgress() {
+    const required = activeFields(state.screen,state.answers).filter(item => item.required !== false);
+    return required.length ? '本步必答 ' + required.filter(fieldComplete).length + ' / ' + required.length : '';
+  }
+
+  function updateQuestionProgress() {
+    const progress = app.querySelector('#question-progress');
+    const text = questionProgress();
+    if (progress && progress.textContent !== text) progress.textContent = text;
   }
 
   function formScreen() {
+    const screen = state.screen;
     const steps = surveySteps(state.answers);
-    const fields = activeFields(state.screen,state.answers).map(renderField).join('');
-    const currentIndex = steps.indexOf(state.screen);
+    const fields = activeFields(screen,state.answers).map(renderField).join('');
+    const currentIndex = steps.indexOf(screen);
     const tip = {
-      issue:'先选一项最接近你的情况，下面也可以补充自己的描述。',
-      stage:'按同一项业务最近发生的情况回答。还没尝试过的环节，也可以按实际情况选择。',
-      evidence:'下面的问题由上一页的回答决定。每题会说明在核对哪条信息，以及为什么需要补问。',
-      profile:'这些信息都可以选填。建议补充你愿意分享的内容，方便后续沟通和服务更快了解你的背景。',
-      confirm:'请核对我们根据你的回答整理的情况。确认后就可以生成诊断报告。'
-    }[state.screen];
+      issue:'先选一项最接近你的情况，也可以补充自己的描述。',
+      stage:'按同一项业务最近发生的情况回答。还没尝试过的环节，按实际进展选就可以。',
+      evidence:'根据你前面的回答，补充几项会影响判断的事实。',
+      profile:'这一步可以跳过。愿意补充的话，可以帮助我们更了解你的背景，减少后续沟通时重复询问个人情况的时间。',
+      confirm:'确认以下内容后，就可以生成诊断报告。'
+    }[screen];
     const questions = `<div id="question-fields" class="form-card">${fields}</div>`;
-    return `<section class="narrow">
-      <ol class="progress" aria-label="诊断进度" style="--steps:${steps.length}">${steps.map((screen,i) =>
-        `<li ${i === currentIndex ? 'aria-current="step"' : i < currentIndex ? 'class="done"' : ''}>${stepLabels[stepOrder.indexOf(screen)]}</li>`).join('')}</ol>
-      <h1 class="page-title" tabindex="-1" id="page-title">${stepTitles[state.screen]}</h1>
+    const action = screen === 'confirm' ? '生成诊断报告'
+      : screen === 'profile' || state.reviewEditing ? '前往确认生成' : '下一步';
+    return `<section class="narrow survey" data-screen="${screen}">
+      <ol class="progress" aria-label="诊断进度" style="--steps:${steps.length}">${steps.map((step,i) =>
+        `<li ${i === currentIndex ? 'aria-current="step"' : i < currentIndex ? 'class="done"' : ''}>${stepLabels[stepOrder.indexOf(step)]}</li>`).join('')}</ol>
+      <h1 class="page-title" tabindex="-1" id="page-title">${stepTitles[screen]}</h1>
       <p class="form-intro">${tip}</p>
-      ${state.screen === 'profile' && !steps.includes('evidence') ? '<p class="note">已收集到生成本次诊断所需的事实，接下来可以选填资料。</p>' : ''}
       <form id="quiz" novalidate>
-        ${state.screen === 'profile' ? '<p class="profile-skip"><button type="submit" class="btn">直接查看情况总结</button></p>' : ''}
-        ${state.screen === 'confirm' ? interimSummary() : `<section class="card question-panel">${questions}</section>`}
-        <p class="error form-message" id="error" role="alert"></p>
-        ${state.screen === 'confirm' ? `<p class="note save-hint">${transport.live ? '生成时会提交填写内容，用于诊断记录和本轮服务跟进。' : '本地试用在当前设备生成报告。'}</p>` : ''}
-        <div class="form-foot">${button(state.screen === 'issue' ? '返回首页' : '上一步','back')}
-          <button type="submit" class="btn primary">${state.screen === 'confirm' ? '生成诊断报告' : state.screen === 'profile' ? '查看情况总结' : '下一步'}</button></div>
+        ${screen === 'confirm' ? interimSummary() : screen === 'profile'
+          ? `<details class="profile-fields"><summary><span class="when-closed">展开选填资料</span><span class="when-open">收起选填资料</span></summary>${questions}</details>`
+          : `<section class="question-panel">${questions}</section>`}
+        ${screen === 'confirm' ? `<p class="note save-hint">${transport.live ? '生成时会提交填写内容，用于诊断记录和本轮服务跟进。' : '本地试用在当前设备生成报告。'}</p>` : ''}
+        <div class="form-advance">
+          <p class="error form-message" id="error" role="alert"></p>
+          <div class="form-foot">${button(screen === 'issue' ? '返回首页' : '上一步','back')}
+            <span id="question-progress" class="question-progress" aria-live="polite">${questionProgress()}</span>
+            <button type="submit" class="btn primary">${action}</button>
+          </div>
+        </div>
       </form>
     </section>`;
   }
@@ -456,19 +481,19 @@
   }
 
   function stageOverview(result) {
-    const location = result.stage === 'unconfirmed' ? html(result.progress + '。' + result.action)
-      : result.provisional ? `现有证据暂按 <strong>${html(result.stageLabel)}</strong> 定位。${html(result.progress)}。`
-      : `你的当前阶段是 <strong>${html(result.stageLabel)}</strong>。`;
+    const current = businessStages.find(item => item.key === result.stage);
     return `<section class="card business-stages" aria-labelledby="business-stages-title">
-      <h3 id="business-stages-title">经营阶段定位</h3>
-      <p class="note">${location}</p>
+      <h3 id="business-stages-title">经营阶段</h3>
       <ol class="stage-cards">
         ${businessStages.map(item => `<li ${result.stage === item.key ? 'aria-current="step"' : ''}>
-          <div class="stage-card-heading"><strong>${item.label}</strong>${result.stage === item.key ? `<span>${result.provisional ? '暂按此阶段' : '你在这里'}</span>` : ''}</div>
+          <div class="stage-card-heading"><strong>${item.label}</strong>${result.stage === item.key ? `<span>${result.provisional ? '暂按' : '当前'}</span>` : ''}</div>
           <h4>${item.title}</h4>
-          <p>${item.boundary}</p>
         </li>`).join('')}
       </ol>
+      <p class="note stage-reading">${html(current?.boundary || result.action)}</p>
+      <details class="evidence-more"><summary>查看三个阶段的标准</summary>
+        ${summaryRows(businessStages.map(item => [item.label,item.boundary]))}
+      </details>
     </section>`;
   }
 
@@ -490,7 +515,9 @@
     const timingByKey = showTiming ? diagnosticTiming(result) : new Map();
     return `<ul class="score-bars" id="${id}" aria-label="五环业务与 AI 提效评分">
       ${result.map.map(axis => `<li data-score-band="${scoreBand(axis.score)}" ${axis.key === 'ai' ? 'data-ai' : ''} ${axis.score === 0 ? 'data-zero' : ''} ${timingByKey.has(axis.key) ? 'data-priority' : ''}>
-        <div class="score-bar-heading"><strong>${html(axis.label + (axis.key === 'ai' ? ' · 贯穿五环' : ''))}</strong>
+        <div class="score-bar-heading"><strong>${showTiming
+          ? `<a class="score-link" href="#${executionTarget(axis.key)}">${html(axis.label)} <span aria-hidden="true">↘</span></a>`
+          : html(axis.label + (axis.key === 'ai' ? ' · 贯穿五环' : ''))}</strong>
         ${timingByKey.has(axis.key) ? `<span class="diagnostic-priority">${html(timingByKey.get(axis.key))}</span>` : ''}
         <span class="score-value">${scoreText(axis)}</span></div>
         <div class="score-track" aria-hidden="true">
@@ -521,11 +548,9 @@
   }
 
   function diagnosticMap(result) {
-    const target = result.priorityAxis ? executionTarget(result.priorityAxis) : 'report-execution-title';
     return `<section class="card diagnostic-map" aria-labelledby="diagnostic-map-title">
       <h3 id="diagnostic-map-title">经营诊断图谱</h3>
       ${diagnosticCharts(result)}
-      <p class="diagnostic-next"><strong>本轮行动</strong> <a href="#${target}">${html(result.title)}</a></p>
       ${result.stage === 'scale' ? '<p class="note">图谱的分数来自主业务。新增收入模式的优先事项根据实际试点反馈判断。</p>' : ''}
       <p class="note">${html(scoreBasis)}</p>
       <details class="evidence-more"><summary>核对分数依据和原始回答</summary>
@@ -581,10 +606,10 @@
         <h5>怎么做</h5>
         <p>${html(item.action)}</p>
       </div>
-      <div class="path-links">
-        <h5>与其他环节的关系</h5>
+      <details class="path-links">
+        <summary>与其他环节的关系</summary>
         ${summaryRows(item.links.filter(([label]) => label !== 'AI 提效'))}
-      </div>
+      </details>
       <div class="path-score">
         <span data-score-band="${scoreBand(axis.score)}">当前 <strong>${scoreText(axis)}</strong></span>
         <p><strong>5 分标准</strong> ${html(item.fullScore)}</p>
@@ -657,8 +682,8 @@
       <section class="card summary" aria-labelledby="page-title">
         <div class="summary-lead">
           <h1 class="page-title" tabindex="-1" id="page-title">诊断总结</h1>
-          ${reportSummaryPriorities(r)}
           <h2 class="summary-conclusion">${html(r.title)}</h2>
+          ${reportSummaryPriorities(r)}
           ${note ? `<p class="result-context">${html(note)}</p>` : ''}
         </div>
         <div class="summary-aside">
@@ -666,18 +691,25 @@
           <div class="result-meta"><span class="stage-tag">${html((r.provisional ? '暂按 ' : '') + headline)}</span><span>${html(r.progress)}</span></div>
           ${r.path.length ? r.ai?.primary
             ? '<a class="summary-link" href="#report-ai-title">看 AI 优先任务 <span aria-hidden="true">↓</span></a>'
-            : '<a class="summary-link" href="#report-execution-title">看这轮先做什么 <span aria-hidden="true">↓</span></a>' : ''}
+            : `<a class="summary-link" href="#${r.priorityAxis ? executionTarget(r.priorityAxis) : 'report-execution-title'}">看这轮先做什么 <span aria-hidden="true">↓</span></a>` : ''}
         </div>
       </section>
+      <nav class="report-contents" aria-label="报告目录">
+        ${r.map.length ? '<a href="#diagnostic-map-title">查看评分</a><a href="#report-path-title">五环行动</a>' : ''}
+        <a href="#report-execution-title">执行步骤</a>
+        ${r.ai ? '<a href="#report-ai-title">AI 提效</a>' : ''}
+        ${voyage ? '<a href="#voyage-form">上船卡</a>' : ''}
+        <a href="#report-download">下载报告</a>
+      </nav>
       <section class="report-detail" aria-labelledby="report-detail-title">
-      <h2 id="report-detail-title">诊断详细报告</h2>
+      <h2 id="report-detail-title" class="sr-only">诊断详细报告</h2>
         ${r.map.length ? `<div class="report-overview">${stageOverview(r)}${diagnosticMap(r)}</div>` : ''}
         ${r.map.length ? reportPath(r) : ''}
         ${reportExecution(r)}
         ${r.ai ? reportAi(r) : ''}
       </section>
       ${voyage ? renderCard(voyage) : ''}
-      <div class="actions report-actions">
+      <div class="actions report-actions" id="report-download">
         ${button('下载完整诊断报告','download','primary')}
         ${button('重新回答','edit')}
       </div>
@@ -754,7 +786,7 @@
 
   function reset() {
     clearPending();
-    Object.assign(state,{ answers:{}, record:null, result:null, snapshot:null, receipt:null, failure:null });
+    Object.assign(state,{ answers:{}, record:null, result:null, snapshot:null, receipt:null, failure:null, reviewEditing:false });
   }
 
   async function saveReport(retry = false) {
@@ -926,7 +958,10 @@
 
   app.addEventListener('input', event => {
     const control = event.target;
-    if (control.form?.id === 'quiz' && ['text','textarea'].includes(control.type)) state.answers[control.name] = control.value;
+    if (control.form?.id === 'quiz' && ['text','textarea'].includes(control.type)) {
+      state.answers[control.name] = control.value;
+      updateQuestionProgress();
+    }
     const form = control.form;
     if (form?.id === 'voyage-form' && (voyagePreview || form.dataset.generating)) {
       form.nextElementSibling.hidden = true;
@@ -973,6 +1008,7 @@
       group.querySelector('.extra-field').hidden = !(Array.isArray(choice) ? choice.includes('其他') : choice === '其他');
     }
     if (state.screen !== 'confirm') syncFields();
+    updateQuestionProgress();
   });
 
   app.addEventListener('submit', event => {
@@ -985,11 +1021,17 @@
     const screen = state.screen;
     const a = state.answers;
     const error = document.getElementById('error');
-    const missing = activeFields(screen,a).find(item =>
-      item.required !== false && (item.type === 'radio' ? !Object.hasOwn(item.options,a[item.id]) : !string(a[item.id])));
+    const missing = activeFields(screen,a).find(item => item.required !== false && !fieldComplete(item));
     if (missing) {
       error.textContent = '请先回答「' + missing.label + '」';
       app.querySelector('[data-field="' + missing.id + '"] :is(input,textarea)')?.focus();
+      return;
+    }
+    if (state.reviewEditing && screen !== 'confirm') {
+      const nextRequired = ['issue','stage','evidence'].find(step =>
+        activeFields(step,a).some(field => field.required !== false && !fieldComplete(field)));
+      if (!nextRequired) state.reviewEditing = false;
+      render(nextRequired || 'confirm');
       return;
     }
     switch (screen) {
@@ -1004,7 +1046,13 @@
   document.addEventListener('click', event => {
     const trigger = event.target.closest('button[data-action]');
     if (!trigger || state.screen === 'loading') return;
-    switch (trigger.dataset.action) {
+    const action = trigger.dataset.action;
+    if (state.screen === 'confirm' && action.startsWith('review-')) {
+      state.reviewEditing = true;
+      render(action.slice('review-'.length));
+      return;
+    }
+    switch (action) {
       case 'home': render('home'); break;
       case 'start': reset(); render('issue'); break;
       case 'back': {
