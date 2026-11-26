@@ -29,6 +29,7 @@
   "pages": [
     "/",
     "/products.html",
+    "/business-loop-diagnosis/",
     "/diagnosis.html",
     "/closed-loop-diagnosis.html",
     "/first-order-sprint.html",

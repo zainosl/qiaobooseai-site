@@ -32,34 +32,58 @@ jobs:
           chmod 600 ~/.ssh/aliyun_deploy_key
           ssh-keyscan -H "$ALIYUN_HOST" >> ~/.ssh/known_hosts
 
-      - name: Deploy static site
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Deploy closed-loop data collection
         env:
           ALIYUN_HOST: ${{ secrets.ALIYUN_HOST }}
           ALIYUN_USER: ${{ secrets.ALIYUN_USER }}
+          CLOSED_LOOP_FEISHU_CONFIG: ${{ secrets.CLOSED_LOOP_FEISHU_CONFIG }}
         run: |
-          tar \
-            --exclude='.git' \
-            --exclude='.github' \
-            --exclude='server' \
-            -czf /tmp/qiaoboose-site.tar.gz .
-
-          ssh -i ~/.ssh/aliyun_deploy_key "$ALIYUN_USER@$ALIYUN_HOST" '
+          set -eu
+          test -n "$CLOSED_LOOP_FEISHU_CONFIG"
+          dest="$ALIYUN_USER@$ALIYUN_HOST"
+          archive="/tmp/qiaoboose-closed-loop-${GITHUB_RUN_ID}.tar.gz"
+          if ! ssh -i ~/.ssh/aliyun_deploy_key "$dest" 'test -x /opt/qiaoboose-closed-loop/node'; then
+            runtime="/tmp/qiaoboose-closed-loop-node-${GITHUB_RUN_ID}"
+            scp -i ~/.ssh/aliyun_deploy_key "$(command -v node)" "$dest:$runtime"
+            ssh -i ~/.ssh/aliyun_deploy_key "$dest" "set -e; install -d -m 0755 /opt/qiaoboose-closed-loop; install -m 0755 '$runtime' /opt/qiaoboose-closed-loop/node; rm -f '$runtime'"
+          fi
+          printf '%s\n' "$CLOSED_LOOP_FEISHU_CONFIG" | ssh -i ~/.ssh/aliyun_deploy_key "$dest" '
             set -e
-            rm -rf /tmp/qiaoboose-site-next
-            mkdir -p /tmp/qiaoboose-site-next
+            umask 077
+            file=$(mktemp /etc/.qiaoboose-closed-loop.XXXXXX)
+            trap "rm -f \"$file\"" EXIT
+            cat > "$file"
+            for name in FEISHU_APP_ID FEISHU_APP_SECRET FEISHU_BITABLE_APP_TOKEN; do
+              test "$(grep -c -E "^${name}=[a-zA-Z0-9_-]+$" "$file")" -eq 1
+            done
+            test "$(wc -l < "$file")" -eq 3
+            mv "$file" /etc/qiaoboose-closed-loop.env
           '
-
-          scp -i ~/.ssh/aliyun_deploy_key /tmp/qiaoboose-site.tar.gz "$ALIYUN_USER@$ALIYUN_HOST:/tmp/qiaoboose-site.tar.gz"
-
-          ssh -i ~/.ssh/aliyun_deploy_key "$ALIYUN_USER@$ALIYUN_HOST" '
-            set -e
-            tar -xzf /tmp/qiaoboose-site.tar.gz -C /tmp/qiaoboose-site-next
-            rm -rf /var/www/qiaoboose-site
-            mv /tmp/qiaoboose-site-next /var/www/qiaoboose-site
-            rm -f /tmp/qiaoboose-site.tar.gz
-            nginx -t
-            nginx -s reload
-          '
+          tar -czf "$archive" -C server/closed-loop .
+          scp -i ~/.ssh/aliyun_deploy_key "$archive" "$dest:$archive"
+          ssh -i ~/.ssh/aliyun_deploy_key "$dest" "bash -s -- $archive" <<'REMOTE'
+          set -eu
+          cd /opt/qiaoboose-closed-loop
+          tar -xzf "$1"
+          rm -f "$1"
+          ./node --check server.cjs
+          ./node --check api/submit-closed-loop.js
+          install -m 0644 qiaoboose-closed-loop.service /etc/systemd/system/qiaoboose-closed-loop.service
+          systemctl daemon-reload
+          systemctl enable qiaoboose-closed-loop.service
+          systemctl restart qiaoboose-closed-loop.service
+          for attempt in 1 2 3 4 5; do
+            status="$(curl -sS -o /dev/null -w '%{http_code}' --max-time 3 -X OPTIONS -H 'Origin: https://qiaoboose.com' http://127.0.0.1:8791/api/submit-closed-loop)" || true
+            if test "$status" = 204; then exit 0; fi
+            sleep 1
+          done
+          systemctl status --no-pager qiaoboose-closed-loop.service
+          exit 1
+          REMOTE
 
       - name: Deploy CRM cloud store
         env:
@@ -178,6 +202,14 @@ jobs:
               include /etc/letsencrypt/options-ssl-nginx.conf;
               ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
 
+              location = /api/submit-closed-loop {
+                  client_max_body_size 64k;
+                  proxy_pass http://127.0.0.1:8791;
+                  proxy_read_timeout 11s;
+                  proxy_http_version 1.1;
+                  proxy_set_header Host $host;
+              }
+
               location /crm-api/ {
                   proxy_pass http://127.0.0.1:8790/;
                   proxy_http_version 1.1;
@@ -282,6 +314,40 @@ jobs:
             nginx -t
             nginx -s reload
           '
+
+      - name: Deploy static site
+        env:
+          ALIYUN_HOST: ${{ secrets.ALIYUN_HOST }}
+          ALIYUN_USER: ${{ secrets.ALIYUN_USER }}
+        run: |
+          tar \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='server' \
+            -czf /tmp/qiaoboose-site.tar.gz .
+
+          ssh -i ~/.ssh/aliyun_deploy_key "$ALIYUN_USER@$ALIYUN_HOST" '
+            set -e
+            rm -rf /tmp/qiaoboose-site-next
+            mkdir -p /tmp/qiaoboose-site-next
+          '
+
+          scp -i ~/.ssh/aliyun_deploy_key /tmp/qiaoboose-site.tar.gz "$ALIYUN_USER@$ALIYUN_HOST:/tmp/qiaoboose-site.tar.gz"
+
+          ssh -i ~/.ssh/aliyun_deploy_key "$ALIYUN_USER@$ALIYUN_HOST" '
+            set -e
+            tar -xzf /tmp/qiaoboose-site.tar.gz -C /tmp/qiaoboose-site-next
+            rm -rf /var/www/qiaoboose-site
+            mv /tmp/qiaoboose-site-next /var/www/qiaoboose-site
+            rm -f /tmp/qiaoboose-site.tar.gz
+            nginx -t
+            nginx -s reload
+          '
+
+      - name: Verify public closed-loop submission route
+        run: |
+          status="$(curl --silent --show-error --max-time 15 --output /dev/null --write-out '%{http_code}' --request OPTIONS --header 'Origin: https://qiaoboose.com' https://qiaoboose.com/api/submit-closed-loop)"
+          test "$status" = 204
 
       - name: Verify published search pages
         run: |

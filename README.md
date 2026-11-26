@@ -51,3 +51,7 @@ python3 scripts/check-discovery.py
 自动验收的所有请求（包括模拟爬虫名称的探测）都附带 `Qiaoboose-SEO-Check` 标记，汇总时单列为 `verificationRequests`。标记修正前的日志可能把模拟探测计入 `claimed-*`；这部分历史计数不能作为真实爬虫访问证据，且不能仅凭 User-Agent 判断爬虫身份。
 
 `Read discovery traffic` 每周一北京时间09:40及手动触发，只读取当前及已轮转保留的访问日志，不部署网站、不重启服务。汇总附件 `discovery-traffic` 保留35天，包含生成时间及实际日志起止时间，以附件实际覆盖范围为准。v2 的来源统计只含成功HTML页面请求，下载单列，不能与旧版含资源的来源总数直接比较。未标记的人工验收及AI读取测试无法完全识别，剩余请求不能直接记为真实访客或AI获客。
+
+## 一人公司商业闭环诊断
+
+`/business-loop-diagnosis/` 由官网产品页进入，问卷通过 `/api/submit-closed-loop` 写入指定飞书表。接收服务只监听本机 8791，配置位于服务器的 `/etc/qiaoboose-closed-loop.env`，从已授权的飞书应用提供，按服务器私有配置管理。Node 22 运行时位于 `/opt/qiaoboose-closed-loop/node`。发布流程先启动接收服务再发布页面。

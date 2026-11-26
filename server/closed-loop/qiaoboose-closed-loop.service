@@ -1,0 +1,18 @@
+[Unit]
+Description=Qiaoboose business loop diagnosis
+After=network-online.target
+
+[Service]
+Type=simple
+DynamicUser=true
+EnvironmentFile=/etc/qiaoboose-closed-loop.env
+ExecStart=/opt/qiaoboose-closed-loop/node /opt/qiaoboose-closed-loop/server.cjs
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

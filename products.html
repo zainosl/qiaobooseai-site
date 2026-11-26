@@ -427,6 +427,7 @@
   .prod-card.free { background: var(--bg2); }
   .prod-card.free:hover { border-color: var(--border2); }
   .prod-card.free .prod-ico { background: rgba(169,176,186,0.08); border-color: var(--border2); color: var(--muted); }
+  @media (min-width: 1050px) { .free-tools-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
   .sec-head { display: flex; align-items: center; gap: 18px; margin: 44px 0 8px; }
   .sec-kicker { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; color: var(--accent); text-transform: uppercase; white-space: nowrap; }
   .sec-line { flex: 1; height: 1px; background: var(--border); }
@@ -632,8 +633,23 @@
         <span class="sec-kicker">FREE TOOLS · 免费前置工具</span>
         <span class="sec-line"></span>
       </div>
-      <p class="lead" style="margin-top:0;margin-bottom:8px;">这两个工具完全免费，用来先做阶段自测或寻找潜在客户渠道，再判断是否需要进入产品 A、产品 B 或只做一次咨询。</p>
-      <div class="prod-grid">
+      <p class="lead" style="margin-top:0;margin-bottom:8px;">可以免费诊断一人公司的经营进展、做路径自测，或查找潜在客户渠道。</p>
+      <div class="prod-grid free-tools-grid">
+        <div class="prod-card free" data-glyph="LOOP">
+          <div class="prod-top">
+            <div class="prod-ico">↻</div>
+            <span class="prod-badge free">免费 · 经营诊断</span>
+          </div>
+          <div class="prod-label">BUSINESS LOOP DIAGNOSIS</div>
+          <div class="prod-title">一人公司商业闭环诊断</div>
+          <p class="prod-desc">按实际经营进展答题，看看五个业务环节分别做到哪一步、这一轮先解决什么。</p>
+          <ul class="prod-points">
+            <li>定位当前经营阶段</li>
+            <li>查看五环业务和 AI 提效评分</li>
+            <li>获得具体行动建议并下载报告</li>
+          </ul>
+          <a class="btn btn-secondary" href="/business-loop-diagnosis/">开始商业闭环诊断 →</a>
+        </div>
         <div class="prod-card free" data-glyph="PATH">
           <div class="prod-top">
             <div class="prod-ico">◎</div>

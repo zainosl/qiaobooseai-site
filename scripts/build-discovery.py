@@ -124,7 +124,7 @@ for m in meta:
     page('/read/'+m['id']+'/',m['title'],summary,layout(body),date=m.get('date'))
 page('/read/','乔不不斯文章目录：一人公司、商业验证与 AI 实战','完整阅读乔不不斯关于个人事业、一人公司、商业验证、获客增长与 AI 协作的公开文章。','<ul class="archive-list">'+''.join(f'<li><small>{E(m["date"])} · {E(m["cat"])}</small><a href="/read/{m["id"]}/">{E(m["title"])}</a></li>' for m in meta)+'</ul>',kind='CollectionPage',date=None)
 
-existing=['/','/products.html','/diagnosis.html','/closed-loop-diagnosis.html','/first-order-sprint.html','/consultation.html','/calibrator.html','/potential-customer-channels.html','/capability-diagnosis-case.html','/articles.html','/latest-event/','/latest-event/voyage.html','/resources/']
+existing=['/','/products.html','/business-loop-diagnosis/','/diagnosis.html','/closed-loop-diagnosis.html','/first-order-sprint.html','/consultation.html','/calibrator.html','/potential-customer-channels.html','/capability-diagnosis-case.html','/articles.html','/latest-event/','/latest-event/voyage.html','/resources/']
 ns='http://www.sitemaps.org/schemas/sitemap/0.9'
 ET.register_namespace('',ns);xml=ET.Element('{'+ns+'}urlset')
 for path in existing+generated:
