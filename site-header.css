@@ -31,6 +31,10 @@ html[data-theme="light"] #q-site-header { --q-bg:rgba(238,242,240,.95);--q-panel
 #q-site-header .q-group-label>span { color:var(--q-accent);font-size:9px;letter-spacing:.4px;border:1px solid var(--q-border);border-radius:3px;padding:0 5px; }
 #q-site-header .q-service { display:flex;align-items:center;gap:13px;padding:12px;border-radius:7px;transition:background .16s; }
 #q-site-header .q-service:hover { background:var(--q-soft); }
+#q-site-header .q-service.q-featured { background:var(--q-icon); }
+#q-site-header .q-featured .q-service-copy b,
+#q-site-header .q-featured .q-service-arrow { color:var(--q-accent); }
+#q-site-header .q-featured .q-service-arrow { opacity:1; }
 #q-site-header .q-service-icon { display:grid;place-items:center;flex:0 0 35px;height:35px;color:var(--q-accent);background:var(--q-icon);border:1px solid var(--q-border);border-radius:8px; }
 #q-site-header .q-service-icon svg { width:19px;height:19px; }
 #q-site-header .q-service-copy { min-width:0;flex:1; }

@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>产品服务 · AI Native 一人公司 · 乔不不斯</title>
-<meta name="description" content="有经验却选不定方向，或方向明确却迟迟卖不出第一单？选择与你当前卡点匹配的一人公司共创服务。">
+<meta name="description" content="先免费做一人公司商业闭环诊断，了解经营阶段、五环进度和下一步，再选择适合自己的共创或咨询服务。">
 <link rel="canonical" href="https://qiaoboose.com/products.html">
 <meta property="og:title" content="产品服务 · AI Native 一人公司 · 乔不不斯">
 <meta property="og:type" content="website">
@@ -427,7 +427,11 @@
   .prod-card.free { background: var(--bg2); }
   .prod-card.free:hover { border-color: var(--border2); }
   .prod-card.free .prod-ico { background: rgba(169,176,186,0.08); border-color: var(--border2); color: var(--muted); }
-  @media (min-width: 1050px) { .free-tools-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  .featured-product { margin: 20px 0 clamp(44px, 7vw, 72px); padding: clamp(24px, 5vw, 52px); border: 1px solid var(--border2); border-top: 3px solid var(--accent); background: linear-gradient(180deg, var(--accent-dim), var(--bg2)); }
+  .featured-product .prod-badge { display: inline-block; margin-bottom: 16px; background: var(--accent-dim); color: var(--accent); }
+  .featured-product .block-title { text-wrap: balance; }
+  .featured-product .lead { margin: 14px 0; }
+  .featured-product .prod-points { margin-bottom: 24px; }
   .sec-head { display: flex; align-items: center; gap: 18px; margin: 44px 0 8px; }
   .sec-kicker { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; color: var(--accent); text-transform: uppercase; white-space: nowrap; }
   .sec-line { flex: 1; height: 1px; background: var(--border); }
@@ -485,12 +489,15 @@
       <details class="q-products"><summary data-section="products" aria-current="page">产品服务 <svg class="q-chevron" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="m3 4.5 3 3 3-3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></summary>
         <div class="q-dropdown">
           <div class="q-dropdown-heading"><span>找到适合你的下一步</span><a href="products.html">查看全部 <span aria-hidden="true">→</span></a></div>
+          <div class="q-service-group">
+<a class="q-service q-featured" href="business-loop-diagnosis/"><span class="q-service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5M6 8a7 7 0 0 1 12-1l2 5M4 12l2 5a7 7 0 0 0 12-1"/></svg></span><span class="q-service-copy"><b>一人公司商业闭环诊断</b><span>首推免费评测 · 看看这轮先做什么</span></span><span class="q-service-arrow" aria-hidden="true">↗</span></a>
+          </div>
           <div class="q-service-group"><div class="q-group-label">共创与咨询</div>
 <a class="q-service" href="diagnosis.html"><span class="q-service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="m16 8-2.5 5.5L8 16l2.5-5.5Z"/></svg></span><span class="q-service-copy"><b>能力资产与商业方向共创</b><span>梳理你的本事，找到值得验证的方向</span></span><span class="q-service-arrow" aria-hidden="true">↗</span></a>
 <a class="q-service" href="first-order-sprint.html"><span class="q-service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V4m0 0c4-4 8 4 14 0v10c-6 4-10-4-14 0"/></svg></span><span class="q-service-copy"><b>0–1 首单验证共创</b><span>从最小产品到真实触达，验证第一单</span></span><span class="q-service-arrow" aria-hidden="true">↗</span></a>
 <a class="q-service" href="consultation.html"><span class="q-service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11.5a8 8 0 0 1-8 8H5l-3 2v-10a9 9 0 1 1 18 0Z"/><path d="M7 10h8M7 14h5"/></svg></span><span class="q-service-copy"><b>一人公司单次咨询</b><span>带着眼前的问题，一起理清下一步</span></span><span class="q-service-arrow" aria-hidden="true">↗</span></a>
           </div>
-          <div class="q-service-group q-free-group"><div class="q-group-label">先用免费工具试一试 <span>免费</span></div>
+          <div class="q-service-group q-free-group"><div class="q-group-label">其他免费工具 <span>免费</span></div>
 <a class="q-service" href="calibrator.html"><span class="q-service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.5 6H15a3 3 0 0 1 0 6H9a3 3 0 0 0 0 6h6.5"/></svg></span><span class="q-service-copy"><b>一人公司路径校准器</b><span>识别当前阶段，校准下一步行动</span></span><span class="q-service-arrow" aria-hidden="true">↗</span></a>
 <a class="q-service" href="potential-customer-channels.html"><span class="q-service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20v-2a6 6 0 0 1 12 0v2M16 5a3 3 0 0 1 0 6m2 3a5 5 0 0 1 3 4v2"/></svg></span><span class="q-service-copy"><b>潜在客户渠道库</b><span>找到第一批值得接触的种子用户</span></span><span class="q-service-arrow" aria-hidden="true">↗</span></a>
           </div>
@@ -513,7 +520,18 @@
   <section class="block" id="products" style="padding-top:clamp(56px,9vh,96px);padding-bottom:clamp(48px,7vh,72px);">
     <div class="wrap reveal">
       <span class="eyebrow">PRODUCTS &amp; SERVICES</span>
-      <h1 class="block-title">你现在卡在<em class="accent">“选方向”</em>，<br>还是卡在<em class="accent">“拿首单”</em>？</h1>
+      <section class="featured-product" aria-labelledby="featured-product-title">
+        <span class="prod-badge">首推 · 免费评测</span>
+        <h1 class="block-title" id="featured-product-title">一人公司商业闭环诊断</h1>
+        <p class="lead">按你的实际进展答题，看看业务做到哪一步，这一轮先解决什么。</p>
+        <ul class="prod-points">
+          <li>定位当前经营阶段</li>
+          <li>查看五环业务和 AI 提效评分</li>
+          <li>获取下一步行动建议，下载完整诊断报告</li>
+        </ul>
+        <a class="btn btn-primary" href="/business-loop-diagnosis/">开始商业闭环诊断 →</a>
+      </section>
+      <h2 class="block-title">你现在卡在<em class="accent">“选方向”</em>，<br>还是卡在<em class="accent">“拿首单”</em>？</h2>
       <p class="lead" style="margin-top:20px;max-width:780px;">你可能已经学过方法、问过 AI、看过许多案例。可真正让人停住的，通常不是不知道应该做什么，而是：<span class="accent">不敢把未来押在一个不像自己的方向上</span>，或者<span class="accent">迟迟没有让真实客户对产品作出反应</span>。这里没有固定升级路线，只解决你眼前最关键的一步。</p>
 
       <div class="route-map" aria-label="服务路径分流">
@@ -633,23 +651,8 @@
         <span class="sec-kicker">FREE TOOLS · 免费前置工具</span>
         <span class="sec-line"></span>
       </div>
-      <p class="lead" style="margin-top:0;margin-bottom:8px;">可以免费诊断一人公司的经营进展、做路径自测，或查找潜在客户渠道。</p>
-      <div class="prod-grid free-tools-grid">
-        <div class="prod-card free" data-glyph="LOOP">
-          <div class="prod-top">
-            <div class="prod-ico">↻</div>
-            <span class="prod-badge free">免费 · 经营诊断</span>
-          </div>
-          <div class="prod-label">BUSINESS LOOP DIAGNOSIS</div>
-          <div class="prod-title">一人公司商业闭环诊断</div>
-          <p class="prod-desc">按实际经营进展答题，看看五个业务环节分别做到哪一步、这一轮先解决什么。</p>
-          <ul class="prod-points">
-            <li>定位当前经营阶段</li>
-            <li>查看五环业务和 AI 提效评分</li>
-            <li>获得具体行动建议并下载报告</li>
-          </ul>
-          <a class="btn btn-secondary" href="/business-loop-diagnosis/">开始商业闭环诊断 →</a>
-        </div>
+      <p class="lead" style="margin-top:0;margin-bottom:8px;">可以做路径自测，或查找潜在客户渠道。</p>
+      <div class="prod-grid">
         <div class="prod-card free" data-glyph="PATH">
           <div class="prod-top">
             <div class="prod-ico">◎</div>
