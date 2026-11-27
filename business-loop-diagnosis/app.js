@@ -303,14 +303,6 @@
       `<div><dt>${html(label)}</dt><dd>${html(value)}</dd></div>`).join('')}</dl>` : '';
   }
 
-  function writtenAnswers(a) {
-    return stepOrder.flatMap(screen => activeFields(screen,a)).flatMap(field => {
-      if (field.type === 'text' && a[field.id]) return [[field.label,a[field.id]]];
-      if (field.extraKey && a[field.extraKey]) return [[field.extra,a[field.extraKey]]];
-      return [];
-    });
-  }
-
   function interimSummary() {
     const a = snapshot();
     const profileNames = {
@@ -821,6 +813,29 @@
     }
   }
 
+  function markdownAnswers(answers, submitted) {
+    const sections = stepOrder.flatMap((screen,index) => {
+      const rows = activeFields(screen,answers).flatMap(field => {
+        const entry = submitted?.[field.id];
+        const value = entry?.value ?? answerText(field,answers);
+        const extra = entry?.extra ?? answers[field.extraKey];
+        return [
+          [entry?.label || field.label,Array.isArray(value) ? value.join('、') : value],
+          ...(field.extraKey && extra ? [[field.extra,extra]] : [])
+        ].filter(([,answer]) => string(answer));
+      });
+      if (!rows.length) return [];
+      return ['### ' + stepLabels[index], '',
+        ...rows.flatMap(([label,value]) => [
+          '**' + md(label) + '**', '',
+          ...String(value).split(/\r\n|\r|\n/).map(line =>
+            '> ' + md(line).replace(/([#!~+.=-])/g, '\\$1')),
+          ''
+        ])];
+    });
+    return sections.length ? ['## 用户填写数据', '', ...sections] : [];
+  }
+
   function markdown(voyage = null) {
     const r = state.result;
     const a = state.snapshot;
@@ -869,9 +884,6 @@
         ...item.links.filter(([label]) => label !== 'AI 提效').map(([label,detail]) => '  - 与' + md(label) + '的关系 · ' + md(detail))
       ]), '');
     }
-    if (r.evidence.length) lines.push('### 原始回答', '', ...r.evidence.map(row => '- ' + row.label + ' · ' + md(row.value)), '');
-    const written = writtenAnswers(a);
-    if (written.length) lines.push('### 文字补充', '', ...written.map(([label,value]) => '- ' + md(label) + ' · ' + md(value)), '');
     lines.push('### 现在怎么做', '');
     if (!r.priorityAxis) lines.push('#### ' + md(r.title), '', ...mainTask, '');
     for (const [index,item] of businessPath.entries()) {
@@ -893,6 +905,7 @@
         lines.push('', '先保存这张卡，开船时提交。三个月后用同样的标准比较五环业务和 AI 提效得分。');
       }
     }
+    lines.push(...markdownAnswers(a,state.record.answer_details));
     return lines.join('\n') + '\n';
   }
 
