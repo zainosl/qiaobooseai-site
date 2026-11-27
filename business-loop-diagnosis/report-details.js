@@ -446,16 +446,21 @@
 
   function voyageCardDetails(result, voyage) {
     const stage = (result.provisional ? '暂按 ' : '') + (result.stageLabel || '独立工作任务') + ' · ' + result.progress;
+    // The path is already in five-ring order. Keep it here so the same
+    // priorities read in that order on the page, in the PNG and in Markdown.
+    const items = result.path.filter(item => ['current','parallel'].includes(item.schedule));
+    const businessItems = items.filter(item => item.key !== 'ai');
+    const topicNames = businessItems.map(item => api.topics[item.key === 'acquisition' ? 'sales' : item.key].name);
     const boarding = [
-      ['航海上船任务专题',voyage.name],
+      ['航海上船任务专题',topicNames.join('、') || voyage.name],
+      ...(topicNames.length && topicNames[0] !== voyage.name ? [['首个上船专题',voyage.name]] : []),
       ['上船前准备',voyage.material],
       ['上船后首个专题的预期产出',voyage.output]
     ];
     if (result.stage === 'work') {
       return {stage,business:[],boarding,ai:[['本轮 AI 行动',result.action || voyage.task]]};
     }
-    const items = priorityItems(result);
-    const business = items.filter(item => item.key !== 'ai').map(item => [
+    const business = businessItems.map(item => [
       item.label + ' · ' + item.timing + (items.length > 1 ? '（' + item.role + '）' : ''),
       item.schedule === 'current' ? result.title : item.action
     ]);
