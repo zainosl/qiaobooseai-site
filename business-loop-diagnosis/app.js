@@ -1056,6 +1056,10 @@
     }
   });
 
+  document.querySelector('#q-site-header')?.addEventListener('click', event => {
+    if (state.screen === 'loading' && event.target.closest('a[href]')) event.preventDefault();
+  });
+
   document.addEventListener('click', event => {
     const trigger = event.target.closest('button[data-action]');
     if (!trigger || state.screen === 'loading') return;
@@ -1066,7 +1070,6 @@
       return;
     }
     switch (action) {
-      case 'home': render('home'); break;
       case 'start': reset(); render('issue'); break;
       case 'back': {
         const steps = surveySteps(state.answers);

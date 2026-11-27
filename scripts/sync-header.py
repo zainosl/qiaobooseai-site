@@ -3,7 +3,7 @@
 from pathlib import Path
 import re
 ROOT = Path(__file__).resolve().parent.parent
-PAGES = {'index.html':'home','products.html':'products','diagnosis.html':'products','closed-loop-diagnosis.html':'products','first-order-sprint.html':'products','consultation.html':'products','calibrator.html':'products','potential-customer-channels.html':'products','capability-diagnosis-case.html':'products','articles.html':'articles','article.html':'articles','latest-event/index.html':'events','latest-event/voyage.html':'events','resources/index.html':'resources'}
+PAGES = {'index.html':'home','products.html':'products','business-loop-diagnosis/index.html':'products','diagnosis.html':'products','closed-loop-diagnosis.html':'products','first-order-sprint.html':'products','consultation.html':'products','calibrator.html':'products','potential-customer-channels.html':'products','capability-diagnosis-case.html':'products','articles.html':'articles','article.html':'articles','latest-event/index.html':'events','latest-event/voyage.html':'events','resources/index.html':'resources'}
 for name, section in PAGES.items():
     path = ROOT/name; source = path.read_text(); base = '../' * (len(Path(name).parts)-1)
     header = (ROOT/'components/site-header.html').read_text().replace('{{base}}',base).replace(f'data-section="{section}"', f'data-section="{section}" aria-current="page"')
