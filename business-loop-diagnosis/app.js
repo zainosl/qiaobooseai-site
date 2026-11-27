@@ -6,7 +6,7 @@
   } = window.ClosedLoop;
   const app = document.getElementById('app');
   const pendingKey = 'closed-loop-pending-report-v4';
-  const state = { screen:'home', answers:{}, record:null, result:null, snapshot:null, receipt:null, failure:null, reviewEditing:false };
+  const state = { screen:'home', answers:{}, record:null, result:null, snapshot:null, receipt:null, failure:null, reviewEditing:false, profileOpen:false };
   const html = value => String(value ?? '').replace(/[&<>"']/g, ch =>
     ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'})[ch]);
   const string = value => String(value ?? '').trim();
@@ -56,6 +56,13 @@
     return `<button type="button" class="btn ${extra}" data-action="${action}">${label}</button>`;
   }
 
+  function startButton() {
+    const hasDraft = Object.keys(state.answers).length > 0;
+    const label = hasDraft ? '继续我的诊断' : '开始我的诊断';
+    return button(label + ' <span aria-hidden="true">→</span>','start','primary')
+      + (hasDraft ? button('开始新的诊断','restart') : '');
+  }
+
   function caseSection() {
     return `<section class="entry-cases" aria-labelledby="case-title">
       <div class="entry-wrap">
@@ -81,7 +88,7 @@
           </li>`).join('')}
         </ul>
         <div class="entry-actions entry-cases-actions">
-          ${button('开始我的诊断 <span aria-hidden="true">→</span>','start','primary')}
+          ${startButton()}
         </div>
       </div>
     </section>`;
@@ -105,7 +112,7 @@
               <ul><li>有专业经验，想转型做知识服务的职场人</li><li>收入还不稳定的知识服务 IP、教练和咨询师</li></ul>
             </section>
             <div class="entry-actions">
-              ${button('开始我的诊断 <span aria-hidden="true">→</span>','start','primary')}
+              ${startButton()}
               <p>从你正在尝试的业务开始。</p>
             </div>
           </div>
@@ -244,6 +251,18 @@
     return result;
   }
 
+  const coreAnswerKeys = new Set([q.scenario,q.context,...businessFields].map(field => field.id));
+
+  function discardHiddenFollowUps() {
+    // Removing an obsolete answer may make further dependent questions disappear.
+    while (true) {
+      const visible = new Set(evidenceFields(state.answers).map(field => field.id));
+      const obsolete = Object.keys(state.answers).filter(key => q[key] && !coreAnswerKeys.has(key) && !visible.has(key));
+      if (!obsolete.length) return;
+      for (const key of obsolete) delete state.answers[key];
+    }
+  }
+
   function renderField(item) {
     const { id, label, options, type, hint, required, rows, extra, extraKey, max, optionExamples } = item;
     const value = state.answers[id] || '';
@@ -350,6 +369,10 @@
     return field.type === 'radio' ? Object.hasOwn(field.options,value) : Boolean(string(value));
   }
 
+  function firstIncompleteStep(steps) {
+    return steps.find(step => activeFields(step,state.answers).some(field => field.required !== false && !fieldComplete(field)));
+  }
+
   function questionProgress() {
     const required = activeFields(state.screen,state.answers).filter(item => item.required !== false);
     return required.length ? '本步必答 ' + required.filter(fieldComplete).length + ' / ' + required.length : '';
@@ -383,7 +406,7 @@
       <p class="form-intro">${tip}</p>
       <form id="quiz" novalidate>
         ${screen === 'confirm' ? interimSummary() : screen === 'profile'
-          ? `<details class="profile-fields"><summary><span class="when-closed">展开选填资料</span><span class="when-open">收起选填资料</span></summary>${questions}</details>`
+          ? `<details class="profile-fields" ${state.profileOpen ? 'open' : ''}><summary><span class="when-closed">展开选填资料</span><span class="when-open">收起选填资料</span></summary>${questions}</details>`
           : `<section class="question-panel">${questions}</section>`}
         ${screen === 'confirm' ? `<p class="note save-hint">${transport.live ? '生成时会提交填写内容，用于诊断记录和本轮服务跟进。' : '本地试用在当前设备生成报告。'}</p>` : ''}
         <div class="form-advance">
@@ -703,7 +726,8 @@
       ${voyage ? renderCard(voyage) : ''}
       <div class="actions report-actions" id="report-download">
         ${button('下载完整诊断报告','download','primary')}
-        ${button('重新回答','edit')}
+        ${button('修改本次答卷','edit')}
+        ${button('开始新的诊断','restart')}
       </div>
       ${state.receipt?.preview ? '<p class="note save-hint">本地试用 · 可下载本次结果。</p>' : ''}
     </article>`;
@@ -749,36 +773,56 @@
     app.querySelector('#page-title')?.focus({preventScroll:true});
     window.scrollTo({top:0,behavior:'instant'});
     stopCaseRail = screen === 'home' ? mountCaseRail() : () => {};
+    if (screen !== 'loading') rememberSession();
   }
 
   function clearPending() {
     try { sessionStorage.removeItem(pendingKey); } catch {}
   }
 
-  function restorePending() {
+  function restoreScreen() {
     try {
       const pending = JSON.parse(sessionStorage.getItem(pendingKey));
-      if (!pending?.record?.submission_id || !pending.snapshot) return false;
-      state.answers = {...pending.snapshot};
-      state.snapshot = pending.snapshot;
-      state.result = describeDiagnosis(state.snapshot,diagnose(state.snapshot));
-      state.record = pending.record;
-      state.failure = pending.failure || 'interrupted';
-      return true;
+      if (!pending || typeof pending !== 'object') return 'home';
+      if (pending.record?.submission_id && pending.snapshot) {
+        state.snapshot = pending.snapshot;
+        state.result = describeDiagnosis(state.snapshot,diagnose(state.snapshot));
+        state.record = pending.record;
+        const receipt = pending.receipt;
+        const matches = receipt?.ok === true && typeof receipt.record_id === 'string' && receipt.record_id.trim()
+          && (receipt.submission_id === state.record.submission_id
+            || !transport.live && receipt.preview && receipt.record_id === 'preview-' + state.record.submission_id);
+        state.receipt = matches ? receipt : null;
+      }
+      state.answers = {...(pending.answers || state.snapshot)};
+      state.reviewEditing = Boolean(pending.reviewEditing);
+      state.profileOpen = Boolean(pending.profileOpen);
+      if (pending.screen === 'home') return 'home';
+      if (stepOrder.includes(pending.screen)) {
+        const preceding = stepOrder.slice(0,stepOrder.indexOf(pending.screen));
+        return firstIncompleteStep(preceding) || pending.screen;
+      }
+      if (pending.screen === 'report' && state.receipt) return 'report';
+      if (state.record) {
+        state.failure = ['rejected','notConfigured','offline','unconfirmed'].includes(pending.failure) ? pending.failure : 'interrupted';
+        return 'error';
+      }
+      return Object.keys(state.answers).length ? 'issue' : 'home';
     } catch {
-      clearPending();
-      return false;
+      reset();
+      return 'home';
     }
   }
 
-  function rememberPending(failure) {
-    if (!transport.live || !state.record) return;
-    try { sessionStorage.setItem(pendingKey,JSON.stringify({snapshot:state.snapshot,record:state.record,failure})); } catch {}
+  function rememberSession() {
+    if (state.screen === 'home' && !Object.keys(state.answers).length) return;
+    const {screen,answers,snapshot,record,receipt,failure,reviewEditing,profileOpen} = state;
+    try { sessionStorage.setItem(pendingKey,JSON.stringify({screen,answers,snapshot,record,receipt,failure,reviewEditing,profileOpen})); } catch {}
   }
 
   function reset() {
     clearPending();
-    Object.assign(state,{ answers:{}, record:null, result:null, snapshot:null, receipt:null, failure:null, reviewEditing:false });
+    Object.assign(state,{ answers:{}, record:null, result:null, snapshot:null, receipt:null, failure:null, reviewEditing:false, profileOpen:false });
   }
 
   async function saveReport(retry = false) {
@@ -795,18 +839,21 @@
         state.result = describeDiagnosis(state.snapshot,diagnose(state.snapshot));
         state.record = transport.prepare(state.snapshot,state.result,activeVoyage(state.result));
       }
-      rememberPending();
+      if (state.receipt) {
+        render('report');
+        return;
+      }
+      state.failure = null;
+      rememberSession();
       const wait = 2000 + Math.floor(Math.random() * 3001);
       slowMessage = setTimeout(() => {
         app.querySelector('#report-save-status').textContent = '保存比平时慢一些。答卷还在，请稍等。';
       },8000);
       const minimumWait = new Promise(resolve => setTimeout(resolve,wait));
       [state.receipt] = await Promise.all([transport.submit(state.record),minimumWait]);
-      clearPending();
       render('report');
     } catch (error) {
       state.failure = state.record ? (['offline','rejected','unconfirmed','notConfigured'].includes(error.code) ? error.code : 'unconfirmed') : 'generation';
-      rememberPending(state.failure);
       render('error');
     } finally {
       clearTimeout(slowMessage);
@@ -969,11 +1016,24 @@
 
   window.addEventListener('qiaoboosi:themechange',drawReportRadar);
 
+  app.addEventListener('toggle', event => {
+    if (event.target.matches('.profile-fields')) {
+      state.profileOpen = event.target.open;
+      rememberSession();
+    }
+  },true);
+
   app.addEventListener('input', event => {
     const control = event.target;
     if (control.form?.id === 'quiz' && ['text','textarea'].includes(control.type)) {
       state.answers[control.name] = control.value;
+      if (control.getAttribute('aria-invalid') === 'true' && string(control.value)) {
+        control.removeAttribute('aria-invalid');
+        control.removeAttribute('aria-describedby');
+        app.querySelector('#error').textContent = '';
+      }
       updateQuestionProgress();
+      rememberSession();
     }
     const form = control.form;
     if (form?.id === 'voyage-form' && (voyagePreview || form.dataset.generating)) {
@@ -987,9 +1047,12 @@
     const control = event.target;
     if (control.form?.id !== 'quiz' || !['radio','checkbox'].includes(control.type)) return;
     const error = app.querySelector('#error');
-    error.textContent = '';
     const key = control.name;
     const group = control.closest('fieldset[data-field]');
+    const invalid = group.querySelector('[aria-invalid]');
+    invalid?.removeAttribute('aria-invalid');
+    invalid?.removeAttribute('aria-describedby');
+    if (!app.querySelector('[aria-invalid]')) error.textContent = '';
     if (control.type === 'checkbox') {
       const choices = [...group.querySelectorAll('input:checked')].map(node => node.value);
       if (group.dataset.max && choices.length > Number(group.dataset.max)) {
@@ -1006,7 +1069,7 @@
           offer:['fulfillment','repeatDelivery','sale','reply','quoteDate','stagePayment'],
           delivery:['deliveryProof','fulfillment','repeatDelivery','sale','reply','quoteDate','stagePayment'],
           acquisition:['acquisitionProof','repeatDelivery','sale','reply','quoteDate','stagePayment'],
-          acquisitionProof:['repeatDelivery','stagePayment'],
+          acquisitionProof:['repeatDelivery'],
           stagePayment:['fulfillment','repeatDelivery','reply','quoteDate','aiImpact'],
           aiUse:['aiImpact'],
           expansion:['newMode','expansionEvidence','operations'],
@@ -1016,12 +1079,19 @@
       }
       state.answers[key] = control.value;
     }
+    discardHiddenFollowUps();
     if (group?.querySelector('.extra-field')) {
       const choice = state.answers[key];
       group.querySelector('.extra-field').hidden = !(Array.isArray(choice) ? choice.includes('其他') : choice === '其他');
+      if (group.querySelector('.extra-field').hidden) {
+        const extra = group.querySelector('.extra-field input');
+        extra.value = '';
+        delete state.answers[extra.name];
+      }
     }
     if (state.screen !== 'confirm') syncFields();
     updateQuestionProgress();
+    rememberSession();
   });
 
   app.addEventListener('submit', event => {
@@ -1037,12 +1107,22 @@
     const missing = activeFields(screen,a).find(item => item.required !== false && !fieldComplete(item));
     if (missing) {
       error.textContent = '请先回答「' + missing.label + '」';
-      app.querySelector('[data-field="' + missing.id + '"] :is(input,textarea)')?.focus();
+      const control = app.querySelector('[data-field="' + missing.id + '"] :is(input,textarea)');
+      control?.setAttribute('aria-invalid','true');
+      control?.setAttribute('aria-describedby','error');
+      control?.focus();
       return;
     }
+    if (screen === 'confirm') {
+      const incomplete = firstIncompleteStep(['issue','stage','evidence']);
+      if (incomplete) {
+        state.reviewEditing = true;
+        render(incomplete);
+        return;
+      }
+    }
     if (state.reviewEditing && screen !== 'confirm') {
-      const nextRequired = ['issue','stage','evidence'].find(step =>
-        activeFields(step,a).some(field => field.required !== false && !fieldComplete(field)));
+      const nextRequired = firstIncompleteStep(['issue','stage','evidence']);
       if (!nextRequired) state.reviewEditing = false;
       render(nextRequired || 'confirm');
       return;
@@ -1056,21 +1136,23 @@
     }
   });
 
-  document.querySelector('#q-site-header')?.addEventListener('click', event => {
-    if (state.screen === 'loading' && event.target.closest('a[href]')) event.preventDefault();
-  });
-
   document.addEventListener('click', event => {
+    if (state.screen === 'loading' && event.target.closest('a[href]')) {
+      event.preventDefault();
+      return;
+    }
     const trigger = event.target.closest('button[data-action]');
     if (!trigger || state.screen === 'loading') return;
     const action = trigger.dataset.action;
     if (state.screen === 'confirm' && action.startsWith('review-')) {
       state.reviewEditing = true;
+      if (action === 'review-profile') state.profileOpen = true;
       render(action.slice('review-'.length));
       return;
     }
     switch (action) {
-      case 'start': reset(); render('issue'); break;
+      case 'start': render('issue'); break;
+      case 'restart': reset(); render('issue'); break;
       case 'back': {
         const steps = surveySteps(state.answers);
         render(steps[steps.indexOf(state.screen) - 1] || 'home');
@@ -1078,11 +1160,12 @@
       }
       case 'retry': void saveReport(true); break;
       case 'download': download(); break;
-      case 'edit': clearPending(); render(state.screen === 'error' ? 'confirm' : 'issue'); break;
+      case 'edit': render(state.screen === 'error' ? 'confirm' : 'issue'); break;
     }
   });
 
-  if (restorePending()) render('error');
+  const restored = restoreScreen();
+  if (restored !== 'home') render(restored);
   else {
     app.innerHTML = home();
     stopCaseRail = mountCaseRail();

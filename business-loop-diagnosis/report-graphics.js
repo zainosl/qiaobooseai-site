@@ -36,10 +36,7 @@
       ctx.lineTo(...point(i,5 * step));
       ctx.stroke();
     });
-    const values = axes.map(axis => axis.score);
-    const hasArea = values.some((value,i) => value > 0 && values[(i + 1) % values.length] > 0);
-    // Give degenerate polygons a small visible area.
-    polygon(values.map((value,i) => point(i,hasArea ? value * step : Math.max(value * step,5))));
+    polygon(axes.map((axis,i) => point(i,axis.score * step)));
     ctx.fillStyle = color.accent;
     ctx.globalAlpha = .25;
     ctx.fill();

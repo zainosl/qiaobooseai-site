@@ -413,7 +413,7 @@
 
   function businessFollowUps(reported) {
     const a = resolvedOperatingAnswers(reported);
-    const fields = stageFields(reported).filter(field => ![q.delivery,q.acquisition,q.stageNote].includes(field));
+    const fields = stageFields(a).filter(field => ![q.delivery,q.acquisition,q.stageNote].includes(field));
     const clearTopics = forecastTopics.filter(([key]) => a[key] === 'clear');
     if (clearTopics.length) {
       const topics = clearTopics.map(([,label]) => label).join('、');
@@ -427,9 +427,10 @@
       fields.unshift({...field,hint});
     }
     if (conflictingPayment(reported)) {
-      if (reported.sale === 'paid') fields.push(q.sale);
-      fields.push(q.stagePayment);
-      if (a === reported) return [...fields,q.record];
+      const payment = reported.sale === 'paid' ? [q.sale,q.stagePayment] : [q.stagePayment];
+      if (a === reported) return [...fields.filter(field => field !== q.acquisitionProof),...payment,q.record];
+      const proof = fields.indexOf(q.acquisitionProof);
+      fields.splice(proof < 0 ? fields.length : proof,0,...payment);
     }
     const current = stage(a);
     if (current.key === 'repeat' && a.expansion && !newModel(a)) fields.push(q.operations);

@@ -66,14 +66,18 @@ function structuredFields(record) {
   }
   for (const [name,items] of Object.entries(grouped)) add(name,items.join('\n'));
   const result = record.computed;
-  for (const [key,name] of resultColumns) add(name,result[key]);
   const actions = Array.isArray(result.action_path) ? result.action_path : [];
+  const axes = Array.isArray(result.diagnostic_map) ? result.diagnostic_map : [];
+  const currentAxis = axes.find(axis => axis?.key && axis.key === result.priority_axis);
+  const legacyLabel = ['最优先处理','优先核实'].includes(result.priority_label) ? '' : result.priority_label;
+  const priority = currentAxis?.label || actions.find(item => item?.schedule === 'current')?.label || legacyLabel;
+  for (const [key,name] of resultColumns) add(name,key === 'priority_label' ? priority : result[key]);
   add('同时处理的业务环',actions.find(item => item?.schedule === 'parallel')?.label);
   const milestones = Array.isArray(result.closure_milestones) ? result.closure_milestones : [];
   for (const label of ['稳定交付','稳定获客']) {
     add(label + '结果',milestones.find(item => item?.label === label)?.statusLabel);
   }
-  const scores = new Map((Array.isArray(result.diagnostic_map) ? result.diagnostic_map : [])
+  const scores = new Map(axes
     .filter(item => item && Number.isInteger(item.score) && item.score >= 0 && item.score <= 5)
     .map(item => [item.key,item.score]));
   for (const [key,name] of scoreColumns) {

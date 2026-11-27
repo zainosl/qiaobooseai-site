@@ -662,6 +662,8 @@ body:has(.entry-page) footer { background: var(--entry-paper); }
 .survey .form-intro { max-width: 57ch; }
 #quiz .option:hover { border-color: var(--accent-border); }
 #quiz .option:focus-within, #quiz .option:has(input:checked) { border-color: var(--accent); }
+#quiz [data-field]:has([aria-invalid="true"]) :is(legend,.field-title) { color: var(--danger); }
+#quiz .control[aria-invalid="true"] { border-color: var(--danger); }
 #quiz :is([data-field], input, textarea) { scroll-margin-block-end: 98px; }
 .form-advance {
   position: sticky;
