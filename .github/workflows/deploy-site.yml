@@ -327,16 +327,16 @@ jobs:
           SSH_OPTS="-i $HOME/.ssh/aliyun_deploy_key -o ServerAliveInterval=15 -o ServerAliveCountMax=4 -o ConnectTimeout=15"
           DEST="$ALIYUN_USER@$ALIYUN_HOST"
 
-          if ssh $SSH_OPTS "$DEST" 'command -v rsync >/dev/null 2>&1'; then
-            ssh $SSH_OPTS "$DEST" 'mkdir -p /var/www/qiaoboose-site'
-            rsync -az --delete --timeout=60 \
+          if ssh $SSH_OPTS "$DEST" 'command -v rsync >/dev/null 2>&1 && mkdir -p /var/www/qiaoboose-site' \
+            && rsync -az --delete --timeout=45 \
               -e "ssh $SSH_OPTS" \
               --exclude='.git' \
               --exclude='.github' \
               --exclude='server' \
-              ./ "$DEST:/var/www/qiaoboose-site/"
+              ./ "$DEST:/var/www/qiaoboose-site/"; then
             ssh $SSH_OPTS "$DEST" 'nginx -t && nginx -s reload'
           else
+            echo "rsync unavailable or incompatible; falling back to tar + scp"
             tar \
               --exclude='.git' \
               --exclude='.github' \
@@ -349,7 +349,13 @@ jobs:
               mkdir -p /tmp/qiaoboose-site-next
             '
 
-            scp -C -i ~/.ssh/aliyun_deploy_key -o ServerAliveInterval=15 -o ServerAliveCountMax=4 /tmp/qiaoboose-site.tar.gz "$DEST:/tmp/qiaoboose-site.tar.gz"
+            for attempt in 1 2 3; do
+              if scp -i "$HOME/.ssh/aliyun_deploy_key" -o ServerAliveInterval=15 -o ServerAliveCountMax=4 -o ConnectTimeout=15 /tmp/qiaoboose-site.tar.gz "$DEST:/tmp/qiaoboose-site.tar.gz"; then
+                break
+              fi
+              if [ "$attempt" -eq 3 ]; then exit 1; fi
+              sleep 3
+            done
 
             ssh $SSH_OPTS "$DEST" '
               set -e
