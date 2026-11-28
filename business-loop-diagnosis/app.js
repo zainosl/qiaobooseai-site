@@ -850,7 +850,8 @@
       rememberSession();
       const wait = 3000 + Math.floor(Math.random() * 12001);
       slowMessage = setTimeout(() => {
-        app.querySelector('#report-save-status').textContent = '保存比平时慢一些。答卷还在，请稍等。';
+        const statusEl = app.querySelector('#report-save-status');
+        if (statusEl) statusEl.textContent = '保存比平时慢一些。答卷还在，请稍等。';
       },18000);
       const minimumWait = new Promise(resolve => setTimeout(resolve,wait));
       [state.receipt] = await Promise.all([transport.submit(state.record),minimumWait]);

@@ -845,32 +845,84 @@ body:has(.entry-page) footer { background: var(--entry-paper); }
 @media (max-width: 960px) {
   .entry-problem-rows { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .entry-problem-rows > li, .entry-problem-rows > li:nth-child(n+4) { grid-column: auto; }
-  .execution-flow { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-  .execution-flow > li::after { display: none; }
 }
 @media (max-width: 820px) {
   .case-grid { grid-template-columns: minmax(0, 1fr); }
   .path-list > li { grid-template-columns: minmax(0, 1fr); }
   .path-links { padding-inline-start: 0; padding-top: 12px; border-inline-start: 0; border-top: 1px solid var(--border); }
+  .diagnostic-charts, .report-ai-overview { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 740px) {
-  .entry-hero { grid-template-columns: minmax(0, 1fr); gap: 32px; }
-  .entry-hero h1 { font-size: clamp(43px, 9.5vw, 66px); }
-  .entry-promise { font-size: clamp(1rem, 3.7vw, 1.24rem); }
-  .entry-person { width: min(100%, 470px); justify-self: center; }
-  .entry-contents dl { grid-template-columns: minmax(0, 1fr); }
+  .entry-hero { grid-template-columns: minmax(0, 1fr); gap: 28px; padding-block: 28px 36px; }
+  .entry-hero h1 { font-size: clamp(38px, 9.5vw, 58px); }
+  .entry-promise { margin-top: 16px; gap: 11px; }
+  .entry-promise-lead { font-size: .98rem; }
+  .entry-loop-pills { gap: 6px; }
+  .entry-loop-pills li { padding: 5px 11px; font-size: .86rem; }
+  .entry-promise-result { font-size: 1.06rem; }
+  .entry-fit { margin-top: 18px; padding: 13px 15px; }
+  .entry-fit li { font-size: .96rem; }
+  .entry-person { width: min(100%, 440px); justify-self: center; padding-inline: 0; }
+  .entry-problem-rows { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  .entry-contents dl { grid-template-columns: minmax(0, 1fr); gap: 14px; }
   .entry-cases-heading { align-items: start; flex-wrap: wrap; }
+  .stage-cards { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+  .execution-flow {
+    display: flex;
+    overflow-x: auto;
+    gap: 20px;
+    padding-bottom: 8px;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+  }
+  .execution-flow > li { flex: 0 0 132px; scroll-snap-align: start; }
+  .execution-flow > li:not(:last-child)::after { right: -16px; display: block; }
 }
-@media (max-width: 500px) {
-  .entry-hero h1 { font-size: clamp(37px, 9.9vw, 49px); }
-  .entry-fit { gap: 6px 11px; }
-  .entry-actions { align-items: start; flex-direction: column; }
-  .entry-cases-actions { align-items: center; }
-  .entry-person-profile { width: calc(100% - 16px); }
-  .entry-person img { aspect-ratio: 1.43; }
-  .entry-problem-rows { grid-template-columns: minmax(0, 1fr); }
-  .entry-problem-rows > li:nth-child(n) { grid-column: auto; gap: 5px; }
-  .case-rail { grid-auto-columns: 88%; }
+@media (max-width: 530px) {
+  .entry-hero h1 { font-size: clamp(34px, 9.6vw, 44px); }
+  .entry-actions { flex-direction: column; align-items: stretch; gap: 10px; margin-top: 20px; }
+  .entry-actions .btn, .entry-cases-actions .btn { width: 100%; min-height: 54px; padding-inline: 20px; font-size: 1.05rem; }
+  .entry-actions p { text-align: center; font-size: .88rem; }
+  .entry-person-profile { width: calc(100% - 8px); margin-top: -18px; padding: 18px 16px 20px; }
+  .entry-person-profile ul { gap: 6px; font-size: .84rem; }
+  .entry-person-purpose p { font-size: .9rem; }
+  .entry-person img { aspect-ratio: 1.35; }
+  .entry-problems, .entry-contents, .entry-cases { padding-block: 38px; }
+  .entry-page :is(.entry-problems, .entry-contents, .entry-cases) h2 { font-size: clamp(26px, 7.2vw, 34px); }
+  .entry-problem-rows > li, .entry-contents dl > div, .case-card { padding: 18px 16px; border-radius: 14px; }
+  .case-quote { padding: 10px 12px; font-size: .96rem; }
+  .stage-field-group { padding: 13px 12px; border-radius: 14px; gap: 11px; }
+  .stage-group-head { gap: 10px; align-items: flex-start; }
+  .stage-group-num { width: 30px; height: 30px; font-size: .82rem; }
+  .stage-group-head h2 { font-size: 1.04rem; }
+  .stage-group-head p { font-size: .82rem; }
+  .report { gap: 16px; }
+  .report .summary { padding: 20px 16px; border-radius: 16px; gap: 18px; }
+  .summary .summary-conclusion { font-size: clamp(22px, 6.4vw, 30px); }
+  .report-contents {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 2px;
+  }
+  .report-contents::-webkit-scrollbar { display: none; }
+  .report-contents a { flex-shrink: 0; padding-inline: 10px; font-size: .84rem; }
+  .stage-cards li, .stage-cards li[aria-current='step'] { padding: 13px 14px; }
+  .stage-card-heading strong { font-size: 1.08rem; }
+  .stage-card-heading span { font-size: .74rem; padding: 2px 7px; }
+  .stage-cards h4 { font-size: .96rem; }
+  .stage-card-desc { font-size: .86rem; }
+  .report-path { padding: 16px 14px; }
+  .path-list > li { padding: 16px 14px; gap: 12px; }
+  .path-detail p, .path-score p { font-size: .92rem; line-height: 1.66; }
+  .path-links .summary-rows > div { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+  .report-ai-overview > div { padding: 14px 15px; }
+  .ai-verdict-headline { font-size: 1.08rem; }
+  .voyage-intro .btn { width: 100%; }
+  .report-actions { flex-direction: column; align-items: stretch; gap: 10px; }
+  .report-actions .btn { width: 100%; min-height: 48px; }
 }
 
 .sr-only {
@@ -966,14 +1018,16 @@ body:has(.entry-page) footer { background: var(--entry-paper); }
 .score-link { color: var(--text); text-decoration: none; }
 .score-link span { color: var(--accent); font-size: .82em; }
 @media (max-width: 530px) {
-  .survey .form-foot .btn { padding-inline: 10px; }
+  .survey .form-foot .btn { padding-inline: 12px; }
   .question-progress { font-size: .74rem; }
-  .report-contents { gap: 0 2px; }
-  .report-contents a { padding-inline: 8px; }
-  .stage-cards { gap: 5px; }
-  .stage-cards li, .stage-cards li[aria-current='step'] { padding: 6px; }
-  .stage-card-heading { gap: 3px; }
-  .stage-card-heading strong { font-size: .91rem; white-space: nowrap; color: var(--text); }
-  .stage-card-heading span { font-size: .65rem; padding-inline: 4px; }
-  .stage-cards h4 { font-size: .74rem; }
+  .report-contents {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 2px;
+  }
+  .report-contents::-webkit-scrollbar { display: none; }
+  .report-contents a { flex-shrink: 0; padding-inline: 10px; font-size: .84rem; }
 }
