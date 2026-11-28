@@ -17,35 +17,38 @@
   const stepTitles = {issue:'了解你的情况',stage:'核对五环进展',evidence:'核对会影响结论的事实',profile:'补充用户信息（选填）',confirm:'确认并生成'};
   const stepLabels = ['当前情况','五环进展','补核事实','选填资料','确认生成'];
   const entryProblems = [
-    ['方向','几个方向看起来都能做，我该选哪个长期做下去？'],
-    ['预判','这个市场还能做多久，头部对手已经占住机会了吗？'],
-    ['需求','到底哪类人、在什么场景下会需要我的服务？'],
-    ['产品','我该做成什么样的产品？服务做到哪一步算结束？'],
-    ['获客','产品有了，我该去哪里找到第一个客户？']
+    ['01 · 选方向','干了这么多年想出来单干，脑子里有好几个方向都觉得能做，越想越不知道先押哪一个。'],
+    ['02 · 做预判','好不容易看中一个方向，又怕市场太小或红利已过，投入几个月才发现根本赚不到钱。'],
+    ['03 · 选用户','觉得大家应该都需要，发了不少内容却没人真正买单，说不清到底谁会为我掏钱。'],
+    ['04 · 做产品','有专业能力，但不知道怎么包装成能直接卖的服务，交付做到哪一步才算结束。'],
+    ['05 · 获客','服务和方案都准备好了，但客户从哪来全靠缘分，不知道下一单要靠什么动作拿到。']
   ];
   const cases = [
     {
-      user:'用户 A**', focus:'方向取舍', title:'手上好几个方向，哪个值得先试？',
-      problem:'手里的业务想法都说得通，但每个方向面对的人和能提供的帮助各不相同，放在一起很难选。',
-      outcome:'把每个方向都写成「谁在什么情境下会买什么」，再摆在一起比较。她用自己的行业和目标重新梳理了一遍，当场选出一条作为下一轮验证对象。'
+      user:'用户 A**', role:'8 年互联网运营', focus:'方向取舍',
+      quote:'“手头三个方向我都做过，听起来都合理，但拖了半年一个都没真正启动。”',
+      problem:'方向分散、精力被拉扯，迟迟定不下主线。',
+      outcome:'按「谁在什么情境下会买什么」重新拆解并排序，当场收敛出 1 条主线，2 周内约到首批付费意向访谈。'
     },
     {
-      user:'用户 B**', focus:'需求验证', title:'图文故事有人做，谁会为整包服务付钱？',
-      problem:'看到市场上已有不少图文故事，自己也有相近的制作能力，想把它做成一项个人服务。最大的未知是潜在买家是谁。',
-      outcome:'沿着 14 个已有成品查制作分工和付款关系。能查到的证据集中在机构内部制作、志愿参与和团队合作，整包服务的真实买方还需要单独验证。'
+      user:'用户 B**', role:'内容与视觉创作者', focus:'需求验证',
+      quote:'“市场上图文故事很火，我也会做，但一直搞不清到底谁会为整包服务掏钱。”',
+      problem:'想直接做整包服务，但没核实真实买方是谁。',
+      outcome:'沿 14 个真实成品倒查付款关系，发现大多为机构内部制作，整包买方尚不成立；及时止损，转向验证单点需求。'
     },
     {
-      user:'用户 C**', focus:'内容获客', title:'文章一直在发，为什么不知道该改哪里？',
-      problem:'已经能和 AI 一起反复改稿。发出去后，阅读和关注没到预期，很难判断该改选题、改写法，还是改内容方向。',
-      outcome:'回看原本「先写泛话题吸引更多人」的做法，定下了下一步。先选一个潜在客户眼下遇到的具体问题来写，再看发布后的回应。'
+      user:'用户 C**', role:'独立知识博主', focus:'内容获客',
+      quote:'“文章每周都在发，阅读和咨询却没起色，根本不知道该改选题、改写法还是换方向。”',
+      problem:'长期写泛话题引流，内容和真实付费问题脱节。',
+      outcome:'停掉泛科普，锁定目标客户眼下最痛的 1 个具体问题重做选题，发完当周就收到精准私信咨询。'
     },
     {
-      user:'用户 D**', focus:'AI 与提效', title:'知识库攒了很久，AI 做任务时还是用不上？',
-      problem:'已经有自己的知识库，也在用好几个 AI 工具。怎么把积累下来的方法和判断标准接到具体任务上，她一直没想清楚。',
-      outcome:'她当场打开资料，发现工具没有接上自己的知识体系。接下来要补的是知识导航，写清什么任务该调用哪套方法、用什么标准检查结果。'
+      user:'用户 D**', role:'独立咨询师', focus:'AI 提效',
+      quote:'“知识库攒了一大堆，AI 工具买了好几个，但一到真干活还是用不上。”',
+      problem:'工具与个人方法论断层，每次提问都要从零调教。',
+      outcome:'梳理出核心任务的「方法调用路径 + 验收标准」，把高频整理流程接入 AI，单次准备时间直接压减一半以上。'
     }
   ];
-  let stopCaseRail = () => {};
   let voyagePreview = null;
 
   document.querySelector('#footer-note').textContent = transport.live
@@ -60,7 +63,7 @@
     const hasDraft = Object.keys(state.answers).length > 0;
     const label = hasDraft ? '继续我的诊断' : '开始我的诊断';
     return button(label + ' <span aria-hidden="true">→</span>','start','primary')
-      + (hasDraft ? button('开始新的诊断','restart') : '');
+      + (hasDraft ? button('重新开始','restart') : '');
   }
 
   function caseSection() {
@@ -68,22 +71,19 @@
       <div class="entry-wrap">
         <div class="entry-cases-heading">
           <div>
-            <h2 id="case-title">用户诊断案例</h2>
-            <p>来自过往一对一诊断与共创，用户身份已匿名处理。</p>
-          </div>
-          <div class="case-controls">
-            <button class="btn case-arrow" type="button" aria-label="上一张案例" data-rail-step="-1">←</button>
-            <button class="btn case-arrow" type="button" aria-label="下一张案例" data-rail-step="1">→</button>
-            <button class="btn case-pause" type="button" data-rail-pause aria-label="暂停案例轮播">暂停</button>
+            <h2 id="case-title">真实诊断案例</h2>
+            <p>来自过往一对一诊断与共创实战，用户身份已做匿名处理。</p>
           </div>
         </div>
-        <ul class="case-rail" aria-label="案例卡片，可左右滑动" tabindex="0">
+        <ul class="case-grid" aria-label="真实诊断案例">
           ${cases.map(item => `<li>
             <article class="case-card">
-              <p class="case-byline"><strong>${item.user}</strong><span>${item.focus}</span></p>
-              <h3>${item.title}</h3>
-              <p class="case-problem">${item.problem}</p>
-              <dl><dt>诊断发现与建议</dt><dd>${item.outcome}</dd></dl>
+              <p class="case-byline"><strong>${item.user}<em>${item.role}</em></strong><span>${item.focus}</span></p>
+              <blockquote class="case-quote">${item.quote}</blockquote>
+              <dl class="case-facts">
+                <div><dt>核心卡点</dt><dd>${item.problem}</dd></div>
+                <div><dt>诊断后的变化</dt><dd>${item.outcome}</dd></div>
+              </dl>
             </article>
           </li>`).join('')}
         </ul>
@@ -100,30 +100,33 @@
         <section class="entry-hero entry-wrap" aria-labelledby="page-title">
           <div class="entry-hero-copy">
             <h1 id="page-title" tabindex="-1"><span>一人公司</span><span>商业闭环诊断</span></h1>
-            <p class="entry-promise">
-              <span>聚焦 0～1 商业闭环</span>
-              <span class="entry-promise-topics"><span>选方向、做预判、选用户、</span><span>做产品、获客</span></span>
-              <span>AI 提效贯穿五环</span>
-              <span>帮你<strong>看清问题在哪里，给出具体建议。</strong></span>
-              <span>帮你加速完成一人公司 0～1 的商业闭环。</span>
-            </p>
+            <div class="entry-promise">
+              <p class="entry-promise-lead">聚焦 0～1 商业闭环，从 6 个关键维度系统拆解你的业务现状：</p>
+              <ul class="entry-loop-pills" aria-label="诊断维度">
+                <li>选方向</li><li>做预判</li><li>选用户</li><li>做产品</li><li>获客</li><li>AI 提效贯穿五环</li>
+              </ul>
+              <p class="entry-promise-result">帮你<strong>看清当前最关键的卡点，给出能直接落地的下一步建议。</strong></p>
+            </div>
             <section class="entry-fit" aria-labelledby="fit-title">
               <h2 id="fit-title">适合谁</h2>
               <ul><li>有专业经验，想转型做知识服务的职场人</li><li>收入还不稳定的知识服务 IP、教练和咨询师</li></ul>
             </section>
             <div class="entry-actions">
               ${startButton()}
-              <p>从你正在尝试的业务开始。</p>
+              <p>免费诊断 · 约 3–5 分钟出完整报告</p>
             </div>
           </div>
           <aside class="entry-person" aria-labelledby="entry-person-name">
             <img src="./portrait-hero.webp" width="818" height="1280" alt="乔不不斯的照片" fetchpriority="high">
             <div class="entry-person-profile">
-              <h2 id="entry-person-name">乔不不斯</h2>
+              <div class="entry-person-head">
+                <h2 id="entry-person-name">乔不不斯</h2>
+                <span class="person-mbti">ISTP</span>
+              </div>
               <ul>
-                <li>8年AI大厂产品负责人</li>
-                <li>AI Native一人公司实践者</li>
-                <li>转型3个月第一单变现</li>
+                <li>8 年 AI 大厂产品负责人</li>
+                <li>AI Native 一人公司实践者</li>
+                <li>转型 3 个月第一单变现</li>
               </ul>
               <div class="entry-person-purpose">
                 <h3>我做什么</h3>
@@ -134,74 +137,39 @@
         </section>
       </div>
       <section class="entry-problems entry-wrap" aria-labelledby="problems-title">
-        <h2 id="problems-title">你是不是也卡在这里？</h2>
+        <div class="entry-section-head">
+          <h2 id="problems-title">你是不是也卡在这里？</h2>
+          <p>如果你正处在下面任意一种状态，先别盲目继续忙，看看眼下真正卡在哪一环。</p>
+        </div>
         <ul class="entry-problem-rows">${entryProblems.map(([label,problem]) => `<li>
-          <span>${label}</span><strong>${problem}</strong>
+          <span class="problem-tag">${label}</span>
+          <strong>${problem}</strong>
         </li>`).join('')}</ul>
       </section>
       <section class="entry-contents" aria-labelledby="contents-title">
         <div class="entry-wrap">
-          <h2 id="contents-title">诊断报告会告诉你</h2>
+          <h2 id="contents-title">做完诊断，你会拿到什么？</h2>
           <dl>
             <div>
-              <dt>距离完成商业闭环，哪一个环节的缺口最大？</dt>
-              <dd>结合你目前的经营阶段，判断方向、预判、用户、产品、获客中，哪一环最影响进展。</dd>
+              <span class="content-step" aria-hidden="true">01</span>
+              <dt>定位当前最大缺口</dt>
+              <dd>结合你目前的经营阶段，给选方向、做预判、选用户、做产品、获客和 AI 提效逐项打分，一眼看出哪一环最拖进度。</dd>
             </div>
             <div>
-              <dt>为什么要优先调整这一环</dt>
-              <dd>用你做过的尝试和收到的反馈，说清先补这个缺口能推进什么。</dd>
+              <span class="content-step" aria-hidden="true">02</span>
+              <dt>明确这轮的优先顺序</dt>
+              <dd>基于你已经做过的尝试和真实反馈，说清为什么眼下该先补这一环，避免在不该花精力的地方空转。</dd>
             </div>
             <div>
-              <dt>具体怎么调</dt>
-              <dd>给你一个可以先做的动作，以及做完后怎么判断有没有进展。</dd>
+              <span class="content-step" aria-hidden="true">03</span>
+              <dt>一套能直接落地的动作</dt>
+              <dd>拆出具体的下一步执行步骤，以及做完后怎么判断到底有没有推进，同时提供 AI 提效的最小尝试建议。</dd>
             </div>
           </dl>
         </div>
       </section>
       ${caseSection()}
     </div>`;
-  }
-
-  function mountCaseRail() {
-    const rail = app.querySelector('.case-rail');
-    const section = rail.closest('section');
-    const pause = section.querySelector('[data-rail-pause]');
-    const arrows = [...section.querySelectorAll('[data-rail-step]')];
-    const motion = matchMedia('(prefers-reduced-motion: reduce)');
-    let playing = !motion.matches;
-    let inView = false;
-
-    function move(step) {
-      const cards = [...rail.children];
-      const base = cards[0].offsetLeft;
-      const end = Math.max(0,rail.scrollWidth - rail.clientWidth);
-      const stops = [...new Set(cards.map(card => Math.min(card.offsetLeft - base,end)))];
-      const current = stops.reduce((closest,value,i) =>
-        Math.abs(value - rail.scrollLeft) < Math.abs(stops[closest] - rail.scrollLeft) ? i : closest,0);
-      rail.scrollTo({left:stops[(current + step + stops.length) % stops.length],
-        behavior:motion.matches ? 'instant' : 'smooth'});
-    }
-
-    function syncPause() {
-      pause.textContent = playing ? '暂停' : '播放';
-      pause.setAttribute('aria-label', playing ? '暂停案例轮播' : '播放案例轮播');
-    }
-
-    function onMotionChange(event) {
-      playing = !event.matches;
-      syncPause();
-    }
-
-    pause.addEventListener('click',() => { playing = !playing; syncPause(); });
-    arrows.forEach(arrow => arrow.addEventListener('click',() => move(Number(arrow.dataset.railStep))));
-    motion.addEventListener('change',onMotionChange);
-    const observer = new IntersectionObserver(([entry]) => { inView = entry.isIntersecting; }, {threshold:.45});
-    observer.observe(rail);
-    const timer = setInterval(() => {
-      if (playing && inView && !document.hidden && !section.matches(':hover,:focus-within')) move(1);
-    },6500);
-    syncPause();
-    return () => { clearInterval(timer); observer.disconnect(); motion.removeEventListener('change',onMotionChange); };
   }
 
   const activeFields = (screen, a) => {
@@ -285,7 +253,36 @@
     </fieldset>`;
   }
 
+  const stageFieldGroups = [
+    { key:'direction', index:'01', title:'选方向', desc:'确认你目前准备尝试的业务方向清晰到哪一步', ids:['direction'] },
+    { key:'forecast', index:'02', title:'做预判', desc:'评估市场收入空间、机会窗口与进入门槛', ids:['marketCeiling','marketCycle','marketEntry'] },
+    { key:'demand', index:'03', title:'选用户', desc:'确认细分人群、场景与真实需求反馈', ids:['userScenario','demand'] },
+    { key:'product', index:'04', title:'做产品与交付', desc:'确认服务范围、验收标准与实际付款交付情况', ids:['offer','delivery'] },
+    { key:'acquisition', index:'05', title:'获客', desc:'确认新付费客户目前的来源与稳定性', ids:['acquisition'] },
+    { key:'ai', index:'06', title:'AI 提效', desc:'确认目前是否有适合用 AI 提效的具体工作', ids:['aiUse'] }
+  ];
+
+  function renderStageGroups(fields) {
+    const byId = new Map(fields.map(field => [field.id, field]));
+    return stageFieldGroups.map(group => {
+      const items = group.ids.map(id => byId.get(id)).filter(Boolean);
+      if (!items.length) return '';
+      return `<section class="stage-field-group" data-group="${group.key}">
+        <header class="stage-group-head">
+          <span class="stage-group-num">${group.index}</span>
+          <div>
+            <h2>${group.title}</h2>
+            <p>${group.desc}</p>
+          </div>
+          <span class="stage-group-count">${items.length} 题</span>
+        </header>
+        <div class="stage-group-fields">${items.map(renderField).join('')}</div>
+      </section>`;
+    }).join('');
+  }
+
   function syncFields() {
+    if (state.screen === 'stage') return;
     const fields = activeFields(state.screen,state.answers);
     const expected = new Set(fields.map(field => field.id));
     const container = app.querySelector('#question-fields');
@@ -387,7 +384,8 @@
   function formScreen() {
     const screen = state.screen;
     const steps = surveySteps(state.answers);
-    const fields = activeFields(screen,state.answers).map(renderField).join('');
+    const activeList = activeFields(screen,state.answers);
+    const fields = screen === 'stage' ? renderStageGroups(activeList) : activeList.map(renderField).join('');
     const currentIndex = steps.indexOf(screen);
     const tip = {
       issue:'先选一项最接近你的情况，也可以补充自己的描述。',
@@ -496,19 +494,15 @@
   }
 
   function stageOverview(result) {
-    const current = businessStages.find(item => item.key === result.stage);
     return `<section class="card business-stages" aria-labelledby="business-stages-title">
       <h3 id="business-stages-title">经营阶段</h3>
       <ol class="stage-cards">
         ${businessStages.map(item => `<li ${result.stage === item.key ? 'aria-current="step"' : ''}>
-          <div class="stage-card-heading"><strong>${item.label}</strong>${result.stage === item.key ? `<span>${result.provisional ? '暂按' : '当前'}</span>` : ''}</div>
+          <div class="stage-card-heading"><strong>${item.label}</strong>${result.stage === item.key ? `<span>${result.provisional ? '暂按这里' : '你在这'}</span>` : ''}</div>
           <h4>${item.title}</h4>
+          <p class="stage-card-desc">${html(item.boundary)}</p>
         </li>`).join('')}
       </ol>
-      <p class="note stage-reading">${html(current?.boundary || result.action)}</p>
-      <details class="evidence-more"><summary>查看三个阶段的标准</summary>
-        ${summaryRows(businessStages.map(item => [item.label,item.boundary]))}
-      </details>
     </section>`;
   }
 
@@ -568,15 +562,22 @@
       ${diagnosticCharts(result)}
       ${result.stage === 'scale' ? '<p class="note">图谱的分数来自主业务。新增收入模式的优先事项根据实际试点反馈判断。</p>' : ''}
       <p class="note">${html(scoreBasis)}</p>
-      <details class="evidence-more"><summary>核对分数依据和原始回答</summary>
-        ${summaryRows(result.map.map(axis => [axis.label + ' · ' + scoreText(axis),axis.explanation]))}
-        ${evidenceList(result.evidence)}
-      </details>
       <div class="closure-check">
         <h4>完成 0→1 的两个门槛</h4>
         <p>相似客户能稳定拿到约定结果，相近的获客方式也能重复带来真实付费，两项都落实才算完成 0→1。</p>
         <ul>${result.closure.map(item => `<li><div><strong>${html(item.label)}</strong>${statusBadge(item)}</div><p>${html(item.evidence)}</p></li>`).join('')}</ul>
       </div>
+    </section>`;
+  }
+
+  function reportAppendix(result) {
+    if (!result.map.length && !result.evidence?.length) return '';
+    return `<section class="card report-appendix" id="report-appendix" aria-labelledby="report-appendix-title">
+      <h3 id="report-appendix-title">附录：分数依据与原始回答</h3>
+      <details class="evidence-more"><summary>展开核对各项分数依据和原始回答</summary>
+        ${result.map.length ? summaryRows(result.map.map(axis => [axis.label + ' · ' + scoreText(axis),axis.explanation])) : ''}
+        ${evidenceList(result.evidence)}
+      </details>
     </section>`;
   }
 
@@ -591,8 +592,8 @@
     return {current:'data-current',parallel:'data-parallel',deferred:'data-deferred'}[item.schedule] || '';
   }
 
-  function reportPriorityRole(item, showRole) {
-    return showRole && item?.role ? `<span class="priority-role">${html(item.role)}</span>` : '';
+  function reportPriorityRole() {
+    return '';
   }
 
   function reportSummaryPriorities(result) {
@@ -600,8 +601,7 @@
     if (!items.length) return '';
     return `<ul class="summary-priorities" aria-label="本轮优先环节">${items.map(item => `<li>
       <span class="diagnostic-priority">${html(item.timing)}</span>
-      <a href="#${executionTarget(item.key)}">${html(item.label)}</a>
-      ${reportPriorityRole(item,items.length > 1)}
+      <strong>${html(item.label)}</strong>
     </li>`).join('')}</ul>`;
   }
 
@@ -610,21 +610,20 @@
   }
 
   function reportPath(result) {
-    const showRole = priorityItems(result).length > 1;
     const renderItem = item => {
       const axis = result.map.find(axis => axis.key === item.key);
       return `<li ${scheduleAttributes(item)}>
-      <div class="path-item-heading"><h4>${html(item.label)}</h4><span class="path-timing">${html(item.timing)}</span>${reportPriorityRole(item,showRole)}</div>
+      <div class="path-item-heading"><h4>${html(item.label)}</h4><span class="path-timing">${html(item.timing)}</span></div>
       <div class="path-detail">
         <h5>${pathReasonLabel(item)}</h5>
         <p>${html(item.relationship)}</p>
         <h5>怎么做</h5>
         <p>${html(item.action)}</p>
       </div>
-      <details class="path-links">
-        <summary>与其他环节的关系</summary>
+      <div class="path-links">
+        <h5>与其他环节的关系</h5>
         ${summaryRows(item.links.filter(([label]) => label !== 'AI 提效'))}
-      </details>
+      </div>
       <div class="path-score">
         <span data-score-band="${scoreBand(axis.score)}">当前 <strong>${scoreText(axis)}</strong></span>
         <p><strong>5 分标准</strong> ${html(item.fullScore)}</p>
@@ -647,20 +646,21 @@
 
   function reportAi(result) {
     const ai = result.ai;
-    const priorities = priorityItems(result);
     return `<section class="card report-ai" ${ai.primary ? 'data-current' : ''} aria-labelledby="report-ai-title">
       <header class="report-ai-heading"><h3 id="report-ai-title">AI 提效</h3>
         <span class="path-timing">${html(ai.timing)}</span>
-        ${reportPriorityRole(priorities.find(item => item.key === 'ai'),priorities.length > 1)}
+        <span class="ai-score-pill" data-score-band="${scoreBand(ai.axis.score)}">当前进度 <strong>${scoreText(ai.axis)}</strong></span>
       </header>
       <div class="report-ai-overview">
-        <div><h4>当前进展 <span data-score-band="${scoreBand(ai.axis.score)}"><strong>${scoreText(ai.axis)}</strong></span></h4>
-          <p>${html(ai.axis.explanation)}</p>
-          ${ai.impact ? `<p><strong>这次卡在</strong> ${html(ai.impact)}。</p>` : ''}
-          <p class="note"><strong>5 分标准</strong> ${html(ai.fullScore)}</p>
+        <div class="ai-verdict-box">
+          <h4>你现在需要用 AI 提效吗？</h4>
+          <p class="ai-verdict-headline">${html(ai.verdict.need)}</p>
+          <p>${html(ai.verdict.summary)}</p>
+          <p class="note"><strong>现状判断：</strong>${html(ai.axis.explanation)}${ai.impact ? ' 这次卡在：' + html(ai.impact) + '。' : ''}</p>
         </div>
-        <div><h4>优先做什么</h4>
-          ${ai.primary ? `<p><strong>为什么先做</strong> ${html(result.reason)}</p>${mainExecution(result)}` : `<p>${html(ai.task)}</p>`}
+        <div class="ai-try-box">
+          <h4>你可以先从这个尝试开始</h4>
+          ${ai.primary ? `<p><strong>为什么优先做：</strong>${html(result.reason)}</p>${mainExecution(result)}` : `<p class="ai-try-lead">${html(ai.task)}</p><p class="note"><strong>做到什么算有效：</strong>${html(ai.fullScore)}</p>`}
         </div>
       </div>
     </section>`;
@@ -672,16 +672,22 @@
 
   function reportExecution(result) {
     const items = result.path.filter(item => item.key !== 'ai');
-    const showRole = priorityItems(result).length > 1;
+    const flowBar = items.length ? `<ol class="execution-flow" aria-label="五环先后顺序">${items.map((item,index) => `
+      <li ${scheduleAttributes(item)}>
+        <a href="#${executionTarget(item.key)}" class="flow-node">
+          <span class="flow-num">${index + 1}</span>
+          <strong class="flow-label">${html(item.label)}</strong>
+          <span class="flow-timing">${html(item.timing)}</span>
+        </a>
+      </li>`).join('')}</ol>` : '';
     const executionItem = (item,index) => `<li class="execution-item" ${scheduleAttributes(item)} id="${executionTarget(item.key)}">
       <div class="execution-heading"><span class="execution-number" aria-hidden="true">${index + 1}</span>
-        <h4>${html(item.label)}</h4>${item.afterKey
-          ? `<a class="path-timing" href="#${executionTarget(item.afterKey)}">${html(item.timing)}</a>`
-          : `<span class="path-timing">${html(item.timing)}</span>`}${reportPriorityRole(item,showRole)}</div>
+        <h4>${html(item.label)}</h4><span class="path-timing">${html(item.timing)}</span></div>
       <div class="execution-body">${item.key === result.priorityAxis ? mainExecution(result) : `<p>${html(item.action)}</p>`}</div>
     </li>`;
     return `<section class="card report-execution" aria-labelledby="report-execution-title">
       <h3 id="report-execution-title">现在怎么做</h3>
+      ${flowBar}
       ${result.priorityAxis ? '' : `<div class="execution-item" data-current><h4>${html(result.title)}</h4>${mainExecution(result)}</div>`}
       ${items.length ? `<ol class="execution-list" aria-label="按五环业务流程排列">${items.map(executionItem).join('')}</ol>` : ''}
     </section>`;
@@ -704,9 +710,6 @@
         <div class="summary-aside">
           <p class="summary-label">当前阶段</p>
           <div class="result-meta"><span class="stage-tag">${html((r.provisional ? '暂按 ' : '') + headline)}</span><span>${html(r.progress)}</span></div>
-          ${r.path.length ? r.ai?.primary
-            ? '<a class="summary-link" href="#report-ai-title">看 AI 优先任务 <span aria-hidden="true">↓</span></a>'
-            : `<a class="summary-link" href="#${r.priorityAxis ? executionTarget(r.priorityAxis) : 'report-execution-title'}">看这轮先做什么 <span aria-hidden="true">↓</span></a>` : ''}
         </div>
       </section>
       <nav class="report-contents" aria-label="报告目录">
@@ -714,6 +717,7 @@
         <a href="#report-execution-title">执行步骤</a>
         ${r.ai ? '<a href="#report-ai-title">AI 提效</a>' : ''}
         ${voyage ? '<a href="#voyage-form">上船卡</a>' : ''}
+        ${r.map.length || r.evidence?.length ? '<a href="#report-appendix">分数依据附录</a>' : ''}
         <a href="#report-download">下载报告</a>
       </nav>
       <section class="report-detail" aria-labelledby="report-detail-title">
@@ -724,10 +728,10 @@
         ${r.ai ? reportAi(r) : ''}
       </section>
       ${voyage ? renderCard(voyage) : ''}
+      ${reportAppendix(r)}
       <div class="actions report-actions" id="report-download">
         ${button('下载完整诊断报告','download','primary')}
-        ${button('修改本次答卷','edit')}
-        ${button('开始新的诊断','restart')}
+        ${button('重新开始','restart')}
       </div>
       ${state.receipt?.preview ? '<p class="note save-hint">本地试用 · 可下载本次结果。</p>' : ''}
     </article>`;
@@ -735,11 +739,12 @@
 
   function operation() {
     if (state.screen === 'loading') {
-      const status = transport.live ? '正在保存你的答卷并整理诊断报告。' : '正在整理诊断报告。';
+      const status = transport.live ? '正在保存你的答卷并整理诊断报告，生成大约需要几秒钟，请耐心等待，不要关闭或刷新网页。' : '正在整理诊断报告，生成大约需要几秒钟，请耐心等待，不要关闭或刷新网页。';
       return `<section class="card narrow operation" aria-labelledby="page-title">
         <span class="operation-spinner" aria-hidden="true"></span>
         <h1 class="page-title" tabindex="-1" id="page-title">正在生成诊断报告</h1>
         <p id="report-save-status" role="status">${status}</p>
+        <p class="operation-stay-tip">请保持当前页面打开，生成完成后会自动展示完整报告。</p>
         <ol class="operation-steps"><li>核对经营阶段</li><li>找出本轮优先事项</li><li>整理下一步行动</li></ol>
       </section>`;
     }
@@ -764,7 +769,6 @@
   }
 
   function render(screen) {
-    stopCaseRail();
     clearVoyagePreview();
     state.screen = screen;
     app.innerHTML = screen === 'home' ? home() : screen === 'report' ? report()
@@ -772,7 +776,6 @@
     if (screen === 'report') drawReportRadar();
     app.querySelector('#page-title')?.focus({preventScroll:true});
     window.scrollTo({top:0,behavior:'instant'});
-    stopCaseRail = screen === 'home' ? mountCaseRail() : () => {};
     if (screen !== 'loading') rememberSession();
   }
 
@@ -845,10 +848,10 @@
       }
       state.failure = null;
       rememberSession();
-      const wait = 2000 + Math.floor(Math.random() * 3001);
+      const wait = 3000 + Math.floor(Math.random() * 12001);
       slowMessage = setTimeout(() => {
         app.querySelector('#report-save-status').textContent = '保存比平时慢一些。答卷还在，请稍等。';
-      },8000);
+      },18000);
       const minimumWait = new Promise(resolve => setTimeout(resolve,wait));
       [state.receipt] = await Promise.all([transport.submit(state.record),minimumWait]);
       render('report');
@@ -1168,6 +1171,5 @@
   if (restored !== 'home') render(restored);
   else {
     app.innerHTML = home();
-    stopCaseRail = mountCaseRail();
   }
 })();

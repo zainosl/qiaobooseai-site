@@ -42,12 +42,12 @@
     ctx.fill();
     ctx.globalAlpha = 1;
     ctx.strokeStyle = ctx.fillStyle;
-    ctx.lineWidth = 2.8;
+    ctx.lineWidth = 1.4;
     ctx.lineJoin = 'round';
     ctx.stroke();
     axes.forEach((axis,i) => {
       ctx.beginPath();
-      ctx.arc(...point(i,axis.score * step),axis.isPriority ? 6 : 4,0,Math.PI * 2);
+      ctx.arc(...point(i,axis.score * step),axis.isPriority ? 4.8 : 3.2,0,Math.PI * 2);
       ctx.fillStyle = color.accent;
       ctx.fill();
       const [x,y] = point(i,147);

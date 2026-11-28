@@ -455,7 +455,7 @@
       ['航海上船任务专题',topicNames.join('、') || voyage.name],
       ...(topicNames.length && topicNames[0] !== voyage.name ? [['首个上船专题',voyage.name]] : []),
       ['上船前准备',voyage.material],
-      ['上船后首个专题的预期产出',voyage.output]
+      ['完成首个专题后你能拿到',voyage.output]
     ];
     if (result.stage === 'work') {
       return {stage,business:[],boarding,ai:[['本轮 AI 行动',result.action || voyage.task]]};
@@ -527,8 +527,27 @@
       : blocked ? api.aiExperiment(a)
       : validated ? keepDoing.ai
       : '用 AI 整理最近一轮的咨询、订单和交付记录，找出一处最值得改的环节。回看原始记录确认。';
+    const verdict = primary || blocked
+      ? {
+          need:'需要立刻用 AI 减负',
+          summary:'重复耗时或返工已经在拖慢业务推进，值得马上挑最费时的一步做前后对比，把时间省出来。'
+        }
+      : validated
+        ? {
+            need:'已跑通 AI 提效，继续保持并沉淀',
+            summary:'你已经用真实任务验证过 AI 能稳定省时且质量达标，下一步重点是把好用的做法沉淀成固定模板，不用盲目换工具。'
+          }
+        : a.aiUse === 'none'
+          ? {
+              need:'现阶段先把业务跑通，AI 轻量辅助即可',
+              summary:'目前还没出现明显拖慢进度的重复工作，不需要先花大量时间折腾复杂 AI 工具；围绕眼下最优先的业务环，用 AI 帮你整理资料、理清思路就够了。'
+            }
+          : {
+              need:'建议边跑业务边做一次小范围尝试',
+              summary:'你已经有重复或耗时工作，但还没确认 AI 能否真正省时保质。不要一口气重构全流程，选一个眼下最耗时的具体动作试一次即可。'
+            };
     return {
-      axis, primary, task, fullScore:item.fullScore,
+      axis, primary, task, fullScore:item.fullScore, verdict,
       impact:blocked && a.aiImpact !== 'unknown' ? api.questions.aiImpact.options[a.aiImpact] : '',
       timing:primary ? result.priorityLabel : blocked ? '配合业务减阻' : validated ? '保持做法' : '随业务验证'
     };
