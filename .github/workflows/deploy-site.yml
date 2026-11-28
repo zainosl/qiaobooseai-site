@@ -324,7 +324,7 @@ jobs:
           ALIYUN_HOST: ${{ secrets.ALIYUN_HOST }}
           ALIYUN_USER: ${{ secrets.ALIYUN_USER }}
         run: |
-          SSH_OPTS="-i ~/.ssh/aliyun_deploy_key -o ServerAliveInterval=15 -o ServerAliveCountMax=4 -o ConnectTimeout=15"
+          SSH_OPTS="-i $HOME/.ssh/aliyun_deploy_key -o ServerAliveInterval=15 -o ServerAliveCountMax=4 -o ConnectTimeout=15"
           DEST="$ALIYUN_USER@$ALIYUN_HOST"
 
           if ssh $SSH_OPTS "$DEST" 'command -v rsync >/dev/null 2>&1'; then
